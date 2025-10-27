@@ -16,16 +16,16 @@ class TourSeeder extends Seeder
 
         $tours = [
             [
-                'name' => 'Bali Beach Escape',
+                'name' => 'Bali Paradise Escape',
                 'slug' => 'bali-beach-escape',
-                'description' => 'Relax on Bali\'s best beaches with daily excursions and cultural experiences.',
+                'description' => 'Nikmati keindahan alam, budaya, dan kuliner khas Pulau Dewata dalam paket 5 hari 4 malam.',
                 'price' => 499.00,
                 'duration' => 5,
                 'destination_id' => $bali->id,
                 'image' => 'images/tour-bali.svg',
-                'itinerary' => 'Day 1: Arrival\nDay 2: Beach\nDay 3: Temple',
-                'includes' => 'Accommodation, Breakfast, Transfers',
-                'excludes' => 'Flights, Personal expenses',
+                'itinerary' => "Kedatangan & Uluwatu Sunset: Penjemputan di Bandara Ngurah Rai; Check-in hotel di Kuta/Seminyak; Pura Uluwatu & Kecak sunset; Makan malam seafood BBQ di Jimbaran; Menginap di Kuta/Seminyak.\nBudaya & Alam Ubud: Sarapan, berangkat ke Ubud; Tegalalang Rice Terrace; Monkey Forest; Pasar Seni Ubud; Makan siang dengan pemandangan lembah; Menginap di Ubud.\nSunrise di Kintamani & Tirta Empul: Pagi ke Gunung Batur untuk sunrise; Sarapan dengan pemandangan Danau Batur; Kunjungan ke Pura Tirta Empul; Makan siang di Tampaksiring; Santai/spa; Menginap di Ubud/Kintamani.\nNusa Penida Island Adventure: Pagi ke Sanur, speedboat ke Nusa Penida; Kelingking Beach; Angel's Billabong & Broken Beach; Crystal Bay (snorkeling opsional); Kembali ke Bali & makan malam di Sanur; Menginap di Sanur/Nusa Dua.\nBelanja & Kepulangan: Sarapan & waktu bebas; Belanja oleh-oleh di Krisna/The Keranjang Bali; Transfer ke Bandara Ngurah Rai untuk keberangkatan.",
+                'includes' => "Akomodasi hotel bintang 3-4\nTransportasi ber-AC + driver berpengalaman\nTiket objek wisata\nSpeedboat ke Nusa Penida (PP)\n4x sarapan, 3x makan siang, 2x makan malam\nTour guide lokal berlisensi",
+                'excludes' => "Tiket pesawat dari/ke Bali\nPengeluaran pribadi\nAktivitas opsional (spa, watersport)",
                 'featured' => true,
             ],
             [

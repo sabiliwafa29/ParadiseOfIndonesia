@@ -48,6 +48,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
     Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+
+    // Admin: Tour management (protected by is_admin middleware)
+    Route::prefix('admin')->name('admin.')->middleware('is_admin')->group(function () {
+        Route::resource('tours', App\Http\Controllers\Admin\TourController::class);
+    });
 });
+
+// Google Authentication Routes
+Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.login');
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
 
 require __DIR__.'/auth.php';

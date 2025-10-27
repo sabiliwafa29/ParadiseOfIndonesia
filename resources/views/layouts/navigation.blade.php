@@ -19,7 +19,7 @@
                         {{ __('Destinations') }}
                     </x-nav-link>
                     <x-nav-link :href="route('tour-activities.index')" :active="request()->routeIs('tour-activities.*')">
-                        {{ __('Tour Activity') }}
+                        {{ __('Dest. Highlight') }}
                     </x-nav-link>
                     <x-nav-link :href="route('gallery.index')" :active="request()->routeIs('gallery.*')">
                         {{ __('Gallery') }}
@@ -120,7 +120,7 @@
                 {{ __('Destinations') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('tour-activities.index')" :active="request()->routeIs('tour-activities.*')">
-                {{ __('Tour Activity') }}
+                {{ __('Dest. Highlight') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('gallery.index')" :active="request()->routeIs('gallery.*')">
                 {{ __('Gallery') }}

@@ -25,10 +25,16 @@
 
 @section('content')
 <!-- Image Slider -->
-<div class="relative overflow-hidden" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 3 ? 0 : currentSlide + 1 }, 2000)">
+<div class="relative overflow-hidden" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 3 ? 0 : currentSlide + 1 }, 3000)">
     <div class="relative h-[600px]">
         <!-- Slide 1 -->
-        <div class="absolute inset-0 transition-opacity duration-1000" x-show="currentSlide === 0">
+            <div x-cloak class="absolute inset-0" x-show="currentSlide === 0"
+                 x-transition:enter="transition ease-out duration-1000"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-1000"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
             <img src="{{ asset('images/slider/bali.jpg') }}" alt="Bali" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="absolute inset-0 flex items-center justify-center">
@@ -40,7 +46,13 @@
         </div>
         
         <!-- Slide 2 -->
-        <div class="absolute inset-0 transition-opacity duration-1000" x-show="currentSlide === 1">
+            <div x-cloak class="absolute inset-0" x-show="currentSlide === 1"
+                 x-transition:enter="transition ease-out duration-1000"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-1000"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
             <img src="{{ asset('images/slider/raja-ampat.jpg') }}" alt="Raja Ampat" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="absolute inset-0 flex items-center justify-center">
@@ -52,7 +64,13 @@
         </div>
         
         <!-- Slide 3 -->
-        <div class="absolute inset-0 transition-opacity duration-1000" x-show="currentSlide === 2">
+            <div x-cloak class="absolute inset-0" x-show="currentSlide === 2"
+                 x-transition:enter="transition ease-out duration-1000"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-1000"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
             <img src="{{ asset('images/slider/borobudur.jpg') }}" alt="Borobudur" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="absolute inset-0 flex items-center justify-center">
@@ -64,7 +82,13 @@
         </div>
         
         <!-- Slide 4 -->
-        <div class="absolute inset-0 transition-opacity duration-1000" x-show="currentSlide === 3">
+            <div x-cloak class="absolute inset-0" x-show="currentSlide === 3"
+                 x-transition:enter="transition ease-out duration-1000"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-1000"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0">
             <img src="{{ asset('images/slider/komodo.jpg') }}" alt="Komodo Island" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="absolute inset-0 flex items-center justify-center">

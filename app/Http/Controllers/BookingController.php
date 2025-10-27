@@ -27,14 +27,26 @@ class BookingController extends Controller
         $validated = $request->validate([
             'date' => 'required|date|after:today',
             'guests' => 'required|integer|min:1',
+            'guide' => 'sometimes|boolean',
+            'transport' => 'sometimes|boolean',
         ]);
+
+        // Calculate addon costs
+        $guidePrice = $validated['guide'] ?? false ? 50 * $validated['guests'] : 0;
+        $transportPrice = $validated['transport'] ?? false ? 30 * $validated['guests'] : 0;
+        $addonCost = $guidePrice + $transportPrice;
+        $basePrice = $tour->price * $validated['guests'];
+        $totalPrice = $basePrice + $addonCost;
 
         $booking = Booking::create([
             'user_id' => auth()->id(),
             'tour_id' => $tour->id,
             'date' => $validated['date'],
             'guests' => $validated['guests'],
-            'total_price' => $tour->price * $validated['guests'],
+            'guide_service' => $validated['guide'] ?? false,
+            'transport_service' => $validated['transport'] ?? false,
+            'addon_cost' => $addonCost,
+            'total_price' => $totalPrice,
             'status' => 'pending',
         ]);
 
