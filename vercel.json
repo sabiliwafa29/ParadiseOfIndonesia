@@ -1,34 +1,23 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "installCommand": "npm install",
-        "buildCommand": "npm run build"
-      }
-    },
-    {
-      "src": "public/index.php",
-      "use": "@vercel/php"
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.6.0"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "public/build/$1"
+      "dest": "/public/build/$1"
     },
     {
       "src": "/storage/(.*)",
-      "dest": "public/storage/$1"
-    },
-    {
-      "handle": "filesystem"
+      "dest": "/public/storage/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "public/index.php"
+      "dest": "/api/index.php"
     }
-  ]
+  ],
+  "outputDirectory": "public"
 }
