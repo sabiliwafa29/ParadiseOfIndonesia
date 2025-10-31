@@ -105,27 +105,21 @@
 
 @if($booking->status === 'pending')
 @push('scripts')
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
-<script>
+<script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script type="text/javascript">
     const payButton = document.querySelector('#pay-button');
-    const snapToken = '{{ $snapToken }}';
 
-    payButton.addEventListener('click', function(e) {
-        snap.pay(snapToken, {
-            onSuccess: function(result) {
-                window.location.reload();
-            },
-            onPending: function(result) {
-                window.location.reload();
-            },
-            onError: function(result) {
-                alert('Payment failed! Please try again.');
-            },
-            onClose: function() {
-                alert('You closed the payment window without completing the payment.');
-            }
+    if (payButton) {
+        payButton.addEventListener('click', function(e) {
+            // Untuk saat ini, kita tidak memiliki snapToken di sini.
+            // Jika Anda ingin mengaktifkan pembayaran dari halaman ini,
+            // Anda perlu mengambil snapToken dari backend melalui AJAX
+            // atau meneruskannya dari controller jika booking masih pending.
+            alert('Fitur pembayaran dari halaman ini belum diimplementasikan. Silakan lakukan pembayaran dari halaman konfirmasi awal.');
         });
-    });
+    }
 </script>
 @endpush
 @endif

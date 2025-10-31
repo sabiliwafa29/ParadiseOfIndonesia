@@ -12,11 +12,13 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::create([
-            'name' => 'Admin Paradise',
-            'email' => 'admin@paradiseofindonesia.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('paradise123'),
-            'role' => 'admin',
-        ]);
+        \App\Models\User::firstOrCreate(
+            ['email' => 'admin@paradiseofindonesia.com'],
+            [
+                'name' => 'Admin Paradise',
+                'password' => \Illuminate\Support\Facades\Hash::make('paradise123'),
+                'role' => 'admin',
+            ]
+        );
     }
 }

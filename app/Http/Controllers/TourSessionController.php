@@ -11,7 +11,8 @@ class TourSessionController extends Controller
      */
     public function index()
     {
-        //
+        $sessions = \App\Models\TourSession::with('tourPackage')->latest()->paginate(12);
+        return view('tour-sessions.index', compact('sessions'));
     }
 
     /**

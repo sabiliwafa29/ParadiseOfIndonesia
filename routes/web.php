@@ -9,7 +9,7 @@ use App\Http\Controllers\TourActivityController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\TourSessionController;
-use App\Http\Controllers\CarRentController;
+use App\Http\Controllers\TravelServiceController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +32,7 @@ Route::resource('tour-activities', TourActivityController::class);
 Route::resource('gallery', GalleryController::class);
 Route::resource('tour-packages', TourPackageController::class);
 Route::resource('tour-sessions', TourSessionController::class);
-Route::resource('car-rent', CarRentController::class);
+Route::resource('travel-services', TravelServiceController::class);
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 

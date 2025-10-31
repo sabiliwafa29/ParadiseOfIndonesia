@@ -11,7 +11,8 @@ class TourActivityController extends Controller
      */
     public function index()
     {
-        //
+        $activities = \App\Models\TourActivity::latest()->paginate(12);
+        return view('tour-activities.index', compact('activities'));
     }
 
     /**

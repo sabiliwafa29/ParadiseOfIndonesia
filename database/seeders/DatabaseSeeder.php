@@ -16,6 +16,11 @@ class DatabaseSeeder extends Seeder
             DestinationSeeder::class,
             TourSeeder::class,
             AdminUserSeeder::class,
+            TourActivitySeeder::class,
+            GallerySeeder::class,
+            TourPackageSeeder::class,
+            TourSessionSeeder::class,
+            TravelServiceSeeder::class,
         ]);
     }
 }

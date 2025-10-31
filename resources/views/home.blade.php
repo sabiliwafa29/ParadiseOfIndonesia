@@ -174,44 +174,26 @@
         </div>
 
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <!-- Bali Package -->
+            @foreach($tourPackages as $package)
             <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/packages/bali-package.jpg') }}" alt="Bali Package" class="w-full h-48 object-cover">
+                <img src="{{ asset($package->image) }}" alt="{{ $package->name }}" class="w-full h-48 object-cover">
                 <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900">Bali Adventure Package</h3>
-                    <p class="mt-2 text-gray-600">5 Days exploring the best of Bali</p>
+                    <h3 class="text-xl font-semibold text-gray-900">{{ $package->name }}</h3>
+                    <p class="mt-2 text-gray-600">{{ $package->description }}</p>
                     <div class="mt-4 flex items-center justify-between">
-                        <span class="text-emerald-600 font-bold text-xl">Rp 5.000.000</span>
-                        <button class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Book Now</button>
+                        <span class="text-emerald-600 font-bold text-xl">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                        @if($package->tours->isNotEmpty())
+                            <form action="{{ route('bookings.store', $package->tours->first()->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Book Now</button>
+                            </form>
+                        @else
+                            <a href="{{ route('tour-packages.show', $package->id) }}" class="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed">No Tours Available</a>
+                        @endif
                     </div>
                 </div>
             </div>
-
-            <!-- Raja Ampat Package -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/packages/raja-ampat-package.jpg') }}" alt="Raja Ampat Package" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900">Raja Ampat Discovery</h3>
-                    <p class="mt-2 text-gray-600">7 Days diving paradise experience</p>
-                    <div class="mt-4 flex items-center justify-between">
-                        <span class="text-emerald-600 font-bold text-xl">Rp 8.500.000</span>
-                        <button class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Book Now</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Yogyakarta Package -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/packages/yogya-package.jpg') }}" alt="Yogyakarta Package" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold text-gray-900">Yogyakarta Cultural Tour</h3>
-                    <p class="mt-2 text-gray-600">4 Days cultural heritage exploration</p>
-                    <div class="mt-4 flex items-center justify-between">
-                        <span class="text-emerald-600 font-bold text-xl">Rp 3.500.000</span>
-                        <button class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600">Book Now</button>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>

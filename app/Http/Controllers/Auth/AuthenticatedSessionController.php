@@ -15,8 +15,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request) // <-- Tambahkan Request $request
     {
+        // Cek jika ada parameter 'return_to' di URL
+        if ($request->has('return_to')) {
+            // Simpan URL itu sebagai "tujuan" di session
+            session(['url.intended' => $request->return_to]);
+        }
+
         return view('auth.login');
     }
 
@@ -43,6 +49,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->back();
     }
 }

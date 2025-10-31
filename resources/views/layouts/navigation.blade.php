@@ -30,8 +30,8 @@
                     <x-nav-link :href="route('tour-sessions.index')" :active="request()->routeIs('tour-sessions.*')">
                         {{ __('Tour Sessions') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('car-rent.index')" :active="request()->routeIs('car-rent.*')">
-                        {{ __('Car Rent') }}
+                    <x-nav-link :href="route('travel-services.index')" :active="request()->routeIs('travel-services.*')">
+                        {{ __('Travel Services') }}
                     </x-nav-link>
                 </div>
                 <!-- Search Bar -->
@@ -55,7 +55,7 @@
                 </a> -->
 
                 @guest
-                    <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 border-2 border-emerald-500 text-sm font-medium rounded-md text-emerald-500 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-150 ease-in-out mr-3">
+                    <a href="{{ route('login', ['return_to' => url()->current()]) }}" class="inline-flex items-center px-4 py-2 border-2 border-emerald-500 text-sm font-medium rounded-md text-emerald-500 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-150 ease-in-out mr-3">
                         {{ __('Login') }}
                     </a>
                     <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-emerald-500 border border-transparent text-sm font-medium rounded-md text-white hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-150 ease-in-out">
@@ -131,8 +131,8 @@
             <x-responsive-nav-link :href="route('tour-sessions.index')" :active="request()->routeIs('tour-sessions.*')">
                 {{ __('Tour Sessions') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('car-rent.index')" :active="request()->routeIs('car-rent.*')">
-                {{ __('Car Rent') }}
+            <x-responsive-nav-link :href="route('travel-services.index')" :active="request()->routeIs('travel-services.*')">
+                {{ __('Travel Services') }}
             </x-responsive-nav-link>
         </div>
         <!-- Mobile Search Bar -->

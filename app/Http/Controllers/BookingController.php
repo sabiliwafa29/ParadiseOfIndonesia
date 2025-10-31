@@ -24,36 +24,49 @@ class BookingController extends Controller
 
     public function store(Request $request, Tour $tour)
     {
-        $validated = $request->validate([
-            'date' => 'required|date|after:today',
-            'guests' => 'required|integer|min:1',
-            'guide' => 'sometimes|boolean',
-            'transport' => 'sometimes|boolean',
-        ]);
+        try {
+            // Ensure boolean fields are present with false if not checked
+            $request->merge([
+                'guide' => $request->has('guide'),
+                'transport' => $request->has('transport'),
+            ]);
 
-        // Calculate addon costs
-        $guidePrice = $validated['guide'] ?? false ? 50 * $validated['guests'] : 0;
-        $transportPrice = $validated['transport'] ?? false ? 30 * $validated['guests'] : 0;
-        $addonCost = $guidePrice + $transportPrice;
-        $basePrice = $tour->price * $validated['guests'];
-        $totalPrice = $basePrice + $addonCost;
+            $validated = $request->validate([
+                'date' => 'required|date|after:today',
+                'guests' => 'required|integer|min:1',
+                'guide' => 'boolean', // Now it's always present as boolean
+                'transport' => 'boolean', // Now it's always present as boolean
+            ]);
 
-        $booking = Booking::create([
-            'user_id' => auth()->id(),
-            'tour_id' => $tour->id,
-            'date' => $validated['date'],
-            'guests' => $validated['guests'],
-            'guide_service' => $validated['guide'] ?? false,
-            'transport_service' => $validated['transport'] ?? false,
-            'addon_cost' => $addonCost,
-            'total_price' => $totalPrice,
-            'status' => 'pending',
-        ]);
+            // Calculate addon costs
+            $guidePrice = $validated['guide'] ? 50 * $validated['guests'] : 0;
+            $transportPrice = $validated['transport'] ? 30 * $validated['guests'] : 0;
+            $addonCost = $guidePrice + $transportPrice;
+            $basePrice = $tour->price * $validated['guests'];
+            $totalPrice = $basePrice + $addonCost;
 
-        // Get Midtrans payment token
-        $snapToken = $this->midtransService->createTransaction($booking);
+            $booking = Booking::create([
+                'user_id' => auth()->id(),
+                'tour_id' => $tour->id,
+                'date' => $validated['date'],
+                'guests' => $validated['guests'],
+                'guide_service' => $validated['guide'],
+                'transport_service' => $validated['transport'],
+                'addon_cost' => $addonCost,
+                'total_price' => $totalPrice,
+                'status' => 'pending',
+            ]);
 
-        return view('bookings.payment', compact('booking', 'snapToken'));
+            // Get Midtrans payment token
+            $snapToken = $this->midtransService->createTransaction($booking);
+
+            return view('bookings.payment', compact('booking', 'snapToken'));
+        } catch (\Exception $e) {
+            // Untuk debugging, tampilkan error langsung
+            dd($e->getMessage(), $e->getFile(), $e->getLine());
+            // Atau redirect dengan pesan error
+            // return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses pemesanan: ' . $e->getMessage());
+        }
     }
 
     public function show(Booking $booking)

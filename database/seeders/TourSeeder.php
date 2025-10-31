@@ -11,8 +11,8 @@ class TourSeeder extends Seeder
     public function run()
     {
         $bali = Destination::where('slug', 'bali')->first();
-        $raja = Destination::where('slug', 'raja-ampat')->first();
-        $jogja = Destination::where('slug', 'yogyakarta')->first();
+        $raja = Destination::where('slug', 'papua')->first();
+        $jogja = Destination::where('slug', 'jawatengah-yogyakarta')->first();
 
         $tours = [
             [

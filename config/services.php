@@ -38,17 +38,10 @@ return [
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
-    'midtrans' => [
-        'server_key' => env('MIDTRANS_SERVER_KEY'),
-        'client_key' => env('MIDTRANS_CLIENT_KEY'),
-        'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
-        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
-    ],
-
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
 ];

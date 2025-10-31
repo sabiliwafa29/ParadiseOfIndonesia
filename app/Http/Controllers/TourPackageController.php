@@ -11,7 +11,8 @@ class TourPackageController extends Controller
      */
     public function index()
     {
-        //
+        $packages = \App\Models\TourPackage::with('tours')->latest()->paginate(12);
+        return view('tour-packages.index', compact('packages'));
     }
 
     /**

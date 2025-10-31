@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
 
-    <title>{{ config('app.name', 'Paradise Of Indonesia') }}</title>
+        <title>{{ config('app.name', 'Paradise Of Indonesia') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -14,7 +14,6 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     </head>
     <body class="font-sans antialiased">
@@ -48,7 +47,7 @@
             @include('layouts.footer')
             
             <!-- WhatsApp Button -->
-            <a href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20paket%20wisata%20di%20Paradise%20Of%20Indonesia"
+            <a href="https://wa.me/6281585333325?text=Halo,%20saya%20tertarik%20dengan%20paket%20wisata%20di%20Paradise%20Of%20Indonesia"
                 target="_blank"
                 class="fixed bottom-6 right-6 bg-[#25D366] text-white rounded-full p-4 flex items-center gap-2 shadow-lg hover:bg-[#128C7E] transition-all duration-300 group z-50">
                 <!-- WhatsApp Icon -->
