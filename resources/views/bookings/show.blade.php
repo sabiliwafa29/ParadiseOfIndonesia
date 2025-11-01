@@ -103,21 +103,35 @@
     </div>
 </div>
 
-@if($booking->status === 'pending')
+@if($booking->status === 'pending' && $snapToken)
 @push('scripts')
 <script type="text/javascript"
-            src="https://app.sandbox.midtrans.com/snap/snap.js"
-            data-client-key="{{ config('midtrans.client_key') }}"></script>
+        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
     const payButton = document.querySelector('#pay-button');
 
     if (payButton) {
-        payButton.addEventListener('click', function(e) {
-            // Untuk saat ini, kita tidak memiliki snapToken di sini.
-            // Jika Anda ingin mengaktifkan pembayaran dari halaman ini,
-            // Anda perlu mengambil snapToken dari backend melalui AJAX
-            // atau meneruskannya dari controller jika booking masih pending.
-            alert('Fitur pembayaran dari halaman ini belum diimplementasikan. Silakan lakukan pembayaran dari halaman konfirmasi awal.');
+        payButton.addEventListener('click', function () {
+            snap.pay('{{ $snapToken }}', {
+                onSuccess: function(result){
+                    /* You may add your own implementation here */
+                    alert("payment success!"); console.log(result);
+                    window.location.href = "{{ route('my-bookings') }}";
+                },
+                onPending: function(result){
+                    /* You may add your own implementation here */
+                    alert("wating your payment!"); console.log(result);
+                },
+                onError: function(result){
+                    /* You may add your own implementation here */
+                    alert("payment failed!"); console.log(result);
+                },
+                onClose: function(){
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            });
         });
     }
 </script>

@@ -15,18 +15,40 @@ class MidtransService
         Config::$is3ds = true;
     }
 
-    public function createTransaction($order)
+    public function createTransaction($booking)
     {
+        $booking->load('user'); // Eager load the user relationship
+
         $params = [
             'transaction_details' => [
-                'order_id' => $order->id,
-                'gross_amount' => $order->total,
+                'order_id' => $booking->id,
+                'gross_amount' => $booking->total_price,
             ],
+            'item_details' => [
+                [
+                    'price'    => $booking->total_price,
+                    'quantity' => 1,
+                    'name'     => 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)',
+                ]
+            ],
+
+            // 2. Detail Pelanggan (Siapa yang membeli)
             'customer_details' => [
-                'first_name' => $order->customer_name,
-                'email' => $order->customer_email,
-                'phone' => $order->customer_phone,
+                'first_name' => $booking->user->name, // Asumsi Anda punya relasi 'user'
+                'email'      => $booking->user->email,
+                'phone'      => $booking->user->phone, // Asumsi Anda punya 'phone' di model User
             ],
+
+            // 3. Filter Metode Pembayaran (Metode apa yang ingin ditampilkan)
+            'enabled_payments' => [
+                'qris',
+                'bca_va',
+                'bni_va',
+                'bri_va',
+                'mandiri_va',
+                'gopay',
+                'shopeepay'
+            ]
         ];
 
         try {

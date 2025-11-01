@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('payments/midtrans/notification', [PaymentController::class, 'handleNotification']);
-Route::get('payments/{orderId}/token', [PaymentController::class, 'getSnapToken']);
+Route::get('payments/{booking}/token', [PaymentController::class, 'getSnapToken']);

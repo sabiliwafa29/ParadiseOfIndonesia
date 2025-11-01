@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
 
@@ -14,13 +15,10 @@ class PaymentController extends Controller
         $this->midtransService = $midtransService;
     }
 
-    public function getSnapToken($orderId)
+    public function getSnapToken(Booking $booking)
     {
-        // Get order details from WooCommerce
-        $order = $this->getOrderDetails($orderId);
-        
         // Generate Snap Token
-        $snapToken = $this->midtransService->createTransaction($order);
+        $snapToken = $this->midtransService->createTransaction($booking);
         
         return response()->json([
             'snap_token' => $snapToken,
@@ -32,21 +30,15 @@ class PaymentController extends Controller
     {
         $notification = $this->midtransService->handleNotification($request->all());
         
-        // Update order status in WooCommerce based on the payment status
-        $this->updateOrderStatus($notification);
+        // Find the booking by ID
+        $booking = Booking::find($notification->order_id);
+
+        if ($booking) {
+            // Update booking status based on the payment status
+            $booking->payment_status = $notification->transaction_status;
+            $booking->save();
+        }
         
         return response()->json(['success' => true]);
-    }
-
-    private function getOrderDetails($orderId)
-    {
-        // Implement WooCommerce order fetching logic here
-        // You'll need to inject WooCommerceService and use it to get order details
-    }
-
-    private function updateOrderStatus($notification)
-    {
-        // Implement WooCommerce order status update logic here
-        // You'll need to inject WooCommerceService and use it to update order status
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Destination;
 use App\Models\Tour;
-use App\Models\TourPackage; // Add this line
+use App\Models\TourPackage; 
 use Illuminate\Http\Request;
 
 class HomeController extends Controller

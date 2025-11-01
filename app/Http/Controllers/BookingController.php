@@ -72,6 +72,12 @@ class BookingController extends Controller
     public function show(Booking $booking)
     {
         $this->authorize('view', $booking);
-        return view('bookings.show', compact('booking'));
+
+        $snapToken = null;
+        if ($booking->payment_status !== 'paid') {
+            $snapToken = $this->midtransService->createTransaction($booking);
+        }
+
+        return view('bookings.show', compact('booking', 'snapToken'));
     }
 }

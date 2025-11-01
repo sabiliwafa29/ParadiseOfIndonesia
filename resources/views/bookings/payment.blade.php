@@ -23,11 +23,11 @@
 @push('scripts')
 <script type="text/javascript"
         src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('midtrans.client_key') }}"></script>
+        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
     document.getElementById('pay-button').onclick = function(){
         // SnapToken acquired from previous step
-        Snap.pay('{{ $snapToken }}', {
+        snap.pay('{{ $snapToken }}', {
             onSuccess: function(result){
                 /* You may add your own implementation here */
                 alert("payment success!"); console.log(result);
