@@ -9,6 +9,7 @@
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*",
         "ext-pgsql": "*",
+        "ext-mbstring": "*",
         "doctrine/dbal": "^3.10",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
