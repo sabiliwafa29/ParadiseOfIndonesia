@@ -16,48 +16,42 @@ class MidtransService
     }
 
     public function createTransaction($booking)
-    {
-        $booking->load('user'); // Eager load the user relationship
+{
+    $booking->load('user', 'tour');
 
-        $params = [
-            'transaction_details' => [
-                'order_id' => $booking->id,
-                'gross_amount' => $booking->total_price,
+    $params = [
+        'transaction_details' => [
+            'order_id' => 'BOOK-' . $booking->id . '-' . time(), // unik setiap kali
+            'gross_amount' => (int) $booking->total_price, // pastikan integer
+        ],
+        'item_details' => [
+            [
+                'id'       => $booking->tour->id,
+                'price'    => (int) $booking->total_price,
+                'quantity' => 1,
+                'name'     => 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)',
             ],
-            'item_details' => [
-                [
-                    'price'    => $booking->total_price,
-                    'quantity' => 1,
-                    'name'     => 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)',
-                ]
-            ],
+        ],
+        'customer_details' => [
+            'first_name' => $booking->user->name ?? 'Guest',
+            'email'      => $booking->user->email ?? 'noemail@example.com',
+            'phone'      => $booking->user->phone ?? '08123456789',
+        ],
+        'enabled_payments' => [
+            'qris','bca_va','bni_va','bri_va','mandiri_va','gopay','shopeepay',
+        ],
+    ];
 
-            // 2. Detail Pelanggan (Siapa yang membeli)
-            'customer_details' => [
-                'first_name' => $booking->user->name, // Asumsi Anda punya relasi 'user'
-                'email'      => $booking->user->email,
-                'phone'      => $booking->user->phone, // Asumsi Anda punya 'phone' di model User
-            ],
-
-            // 3. Filter Metode Pembayaran (Metode apa yang ingin ditampilkan)
-            'enabled_payments' => [
-                'qris',
-                'bca_va',
-                'bni_va',
-                'bri_va',
-                'mandiri_va',
-                'gopay',
-                'shopeepay'
-            ]
-        ];
-
-        try {
-            $snapToken = Snap::getSnapToken($params);
-            return $snapToken;
-        } catch (\Exception $e) {
-            return null;
-        }
+    try {
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        \Log::info('Midtrans token generated', ['token' => $snapToken, 'params' => $params]);
+        return $snapToken;
+    } catch (\Exception $e) {
+        \Log::error('Midtrans error: ' . $e->getMessage());
+        return null;
     }
+}
+
 
     public function handleNotification($notification)
     {
