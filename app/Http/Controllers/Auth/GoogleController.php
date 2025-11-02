@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
-    public function redirect(Requsest $request)
+    public function redirect(Request $request)
     {
         if ($request->has('return_to')) {
             session(['url.intended' => $request->return_to]);
