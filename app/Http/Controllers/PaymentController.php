@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -15,30 +16,93 @@ class PaymentController extends Controller
         $this->midtransService = $midtransService;
     }
 
+    /**
+     * Generate Snap Token untuk 1 booking
+     */
     public function getSnapToken(Booking $booking)
     {
-        // Generate Snap Token
-        $snapToken = $this->midtransService->createTransaction($booking);
-        
-        return response()->json([
-            'snap_token' => $snapToken,
-            'client_key' => config('services.midtrans.client_key')
-        ]);
+        try {
+            // Pastikan relasi user dan tour sudah diload
+            $booking->load('user', 'tour');
+
+            $snapToken = $this->midtransService->createTransaction($booking);
+
+            if (!$snapToken) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal membuat Snap Token, periksa konfigurasi Midtrans',
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'snap_token' => $snapToken,
+                'client_key' => config('services.midtrans.client_key'),
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('Midtrans Error: '.$th->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat membuat transaksi',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
     }
 
+    /**
+     * Terima notifikasi dari Midtrans (Webhook)
+     */
     public function handleNotification(Request $request)
     {
-        $notification = $this->midtransService->handleNotification($request->all());
-        
-        // Find the booking by ID
-        $booking = Booking::find($notification->order_id);
+        try {
+            // Gunakan service untuk handle notifikasi
+            $notif = $this->midtransService->handleNotification($request);
 
-        if ($booking) {
-            // Update booking status based on the payment status
-            $booking->payment_status = $notification->transaction_status;
-            $booking->save();
+            // MidtransService mengembalikan array (lihat versi kamu sebelumnya)
+            $orderId = $notif['order_id'];
+            $transactionStatus = $notif['transaction_status'];
+
+            $booking = Booking::find($orderId);
+
+            if (!$booking) {
+                return response()->json(['success' => false, 'message' => 'Booking tidak ditemukan'], 404);
+            }
+
+            // Update status booking berdasarkan notifikasi
+            switch ($transactionStatus) {
+                case 'capture':
+                case 'settlement':
+                    $booking->update([
+                        'payment_status' => 'paid',
+                        'status' => 'confirmed',
+                    ]);
+                    break;
+
+                case 'pending':
+                    $booking->update([
+                        'payment_status' => 'pending',
+                    ]);
+                    break;
+
+                case 'deny':
+                case 'expire':
+                case 'cancel':
+                    $booking->update([
+                        'payment_status' => 'failed',
+                        'status' => 'cancelled',
+                    ]);
+                    break;
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Throwable $th) {
+            Log::error('Midtrans Notification Error: '.$th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses notifikasi',
+                'error' => $th->getMessage(),
+            ], 500);
         }
-        
-        return response()->json(['success' => true]);
     }
 }
