@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pickup;
+use App\Models\PickoffDestination;
+use App\Models\TravelService;
 
 class TravelServiceController extends Controller
 {
@@ -34,9 +37,12 @@ class TravelServiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(TravelService $service)
     {
-        //
+        $pickups = Pickup::all();
+        $pickoffdestinations = PickoffDestination::all();
+
+        return view('travel-services.show', compact('service', 'pickups', 'pickoffdestinations'));
     }
 
     /**

@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             TourPackageSeeder::class,
             TourSessionSeeder::class,
             TravelServiceSeeder::class,
+            PickupSeeder::class,
+            PickoffDestinationSeeder::class,
         ]);
     }
 }

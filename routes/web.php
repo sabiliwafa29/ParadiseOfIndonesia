@@ -33,7 +33,9 @@ Route::resource('gallery', GalleryController::class);
 Route::resource('tour-packages', TourPackageController::class);
 Route::resource('tour-sessions', TourSessionController::class);
 Route::resource('travel-services', TravelServiceController::class);
+Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'index']);
 
 
 Route::middleware('auth')->group(function () {
