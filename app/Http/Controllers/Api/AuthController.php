@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('flutter-token')->plainTextToken;
 
-        return response()->json([
+        return response()->json([   
             'user' => $user,
             'token' => $token,
         ]);

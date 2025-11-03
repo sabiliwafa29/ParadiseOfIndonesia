@@ -63,6 +63,7 @@ class BookingController extends Controller
         $snapToken = $this->midtrans->createTransaction($booking);
 
         return response()->json([
+            'success' => true,
             'booking' => $booking,
             'snap_token' => $snapToken,
         ]);

@@ -24,6 +24,50 @@
 @endsection
 
 @section('content')
+<!-- Background Music -->
+<audio id="bg-music" autoplay loop>
+    <source src="{{ asset('audio/bgm.mp3') }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const audio = document.getElementById('bg-music');
+
+        // Coba autoplay
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Jika autoplay diblokir browser, tampilkan tombol Play
+                const btn = document.createElement('button');
+                btn.textContent = "🔊 Play Music";
+                Object.assign(btn.style, {
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    padding: '10px 20px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: '#10B981', // warna emerald Tailwind
+                    color: 'white',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    zIndex: '9999'
+                });
+
+                btn.onclick = () => {
+                    audio.play();
+                    btn.remove();
+                };
+
+                document.body.appendChild(btn);
+            });
+        }
+    });
+</script>
 <!-- Image Slider -->
 <div class="relative overflow-hidden" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 3 ? 0 : currentSlide + 1 }, 3000)">
     <div class="relative h-[600px]">
