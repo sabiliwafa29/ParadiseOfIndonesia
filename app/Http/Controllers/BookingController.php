@@ -57,6 +57,11 @@ class BookingController extends Controller
                 'status' => 'pending',
             ]);
 
+            $booking = Booking::update([
+                'status' => $status,
+            ]);
+
+
             // Get Midtrans payment token
             $snapToken = $this->midtransService->createTransaction($booking);
 

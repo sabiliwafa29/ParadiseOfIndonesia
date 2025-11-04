@@ -27,4 +27,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // ✅ 3. MIDTRANS CALLBACK (tanpa middleware, karena ini dari server Midtrans)
-Route::post('/payments/midtrans/notification', [PaymentController::class, 'handleNotification']);
+Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification']);

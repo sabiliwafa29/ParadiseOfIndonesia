@@ -60,6 +60,7 @@ class PaymentController extends Controller
             $notif = $this->midtransService->handleNotification($request);
 
             // MidtransService mengembalikan array (lihat versi kamu sebelumnya)
+            $bookingId = (int) filter_var($orderId, FILTER_SANITIZE_NUMBER_INT);
             $orderId = $notif['order_id'];
             $transactionStatus = $notif['transaction_status'];
 
