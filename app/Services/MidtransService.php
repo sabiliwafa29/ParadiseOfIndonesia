@@ -22,9 +22,12 @@ class MidtransService
     {
         $booking->load('user', 'tour');
 
+        // ✅ PERBAIKAN: Hapus timestamp, gunakan hanya booking ID
+        $orderId = 'BOOK-' . $booking->id;
+
         $params = [
             'transaction_details' => [
-                'order_id' => 'BOOK-' . $booking->id . '-' . time(),
+                'order_id' => $orderId,
                 'gross_amount' => (int) $booking->total_price,
             ],
             'item_details' => [
@@ -49,7 +52,8 @@ class MidtransService
             $snapToken = \Midtrans\Snap::getSnapToken($params);
             Log::info('Midtrans token generated', [
                 'token' => $snapToken,
-                'order_id' => $params['transaction_details']['order_id'],
+                'order_id' => $orderId,
+                'booking_id' => $booking->id,
             ]);
             return $snapToken;
         } catch (\Exception $e) {
@@ -63,52 +67,63 @@ class MidtransService
      */
     public function handleNotification($notification)
     {
-        $notif = new \Midtrans\Notification();
+        try {
+            $notif = new \Midtrans\Notification();
 
-        $transaction = $notif->transaction_status;
-        $type = $notif->payment_type;
-        $orderId = $notif->order_id;
-        $fraud = $notif->fraud_status;
+            $transaction = $notif->transaction_status;
+            $type = $notif->payment_type;
+            $orderId = $notif->order_id;
+            $fraud = $notif->fraud_status;
 
-        return [
-            'transaction_status' => $transaction,
-            'payment_type' => $type,
-            'order_id' => $orderId,
-            'fraud_status' => $fraud,
-        ];
+            Log::info('Midtrans notification parsed', [
+                'order_id' => $orderId,
+                'transaction_status' => $transaction,
+                'payment_type' => $type,
+                'fraud_status' => $fraud,
+            ]);
+
+            return [
+                'transaction_status' => $transaction,
+                'payment_type' => $type,
+                'order_id' => $orderId,
+                'fraud_status' => $fraud,
+            ];
+        } catch (\Exception $e) {
+            Log::error('Failed to parse Midtrans notification: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function testConnection()
-{
-    try {
-        $params = [
-            'transaction_details' => [
-                'order_id' => 'TEST-' . time(),
-                'gross_amount' => 10000,
-            ],
-            'customer_details' => [
-                'first_name' => 'Test',
-                'email' => 'test@example.com',
-            ],
-        ];
+    {
+        try {
+            $params = [
+                'transaction_details' => [
+                    'order_id' => 'TEST-' . time(),
+                    'gross_amount' => 10000,
+                ],
+                'customer_details' => [
+                    'first_name' => 'Test',
+                    'email' => 'test@example.com',
+                ],
+            ];
 
-        $token = \Midtrans\Snap::getSnapToken($params);
+            $token = \Midtrans\Snap::getSnapToken($params);
 
-        return [
-            'success' => true,
-            'message' => 'Koneksi ke Midtrans BERHASIL ✅',
-            'snap_token' => $token,
-            'environment' => Config::$isProduction ? 'PRODUCTION' : 'SANDBOX',
-        ];
-    } catch (\Exception $e) {
-        return [
-            'success' => false,
-            'message' => 'Gagal konek ke Midtrans ❌',
-            'error' => $e->getMessage(),
-            'environment' => Config::$isProduction ? 'PRODUCTION' : 'SANDBOX',
-            'server_key' => substr(Config::$serverKey, 0, 10) . '...', // potong biar aman
-        ];
+            return [
+                'success' => true,
+                'message' => 'Koneksi ke Midtrans BERHASIL ✅',
+                'snap_token' => $token,
+                'environment' => Config::$isProduction ? 'PRODUCTION' : 'SANDBOX',
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Gagal konek ke Midtrans ❌',
+                'error' => $e->getMessage(),
+                'environment' => Config::$isProduction ? 'PRODUCTION' : 'SANDBOX',
+                'server_key' => substr(Config::$serverKey, 0, 10) . '...', // potong biar aman
+            ];
+        }
     }
-}
-
 }
