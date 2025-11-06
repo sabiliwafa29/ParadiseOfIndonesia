@@ -6,7 +6,7 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
 
-                <h2 class="text-2xl font-bold mb-6">Travel Services</h2>
+                <h2 class="text-2xl font-bold mb-6">Travel Services - Pilih Unit</h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse ($services as $service)
@@ -20,7 +20,7 @@
                                     <span class="font-bold text-xl">Rp {{ number_format($service->price, 0, ',', '.') }}</span>
                                     </div>
                                     <div class="mt-4">
-                                        <a href="{{ route('travel-services.show', $service) }}" class="w-full py-2 bg-emerald-600 text-white rounded-md font-semibold text-center block hover:bg-emerald-700 transition">
+                                        <a href="{{ route('travel-services.booking', $service) }}" class="w-full py-2 bg-emerald-600 text-white rounded-md font-semibold text-center block hover:bg-emerald-700 transition">
                                             Select
                                         </a>
                                     </div>

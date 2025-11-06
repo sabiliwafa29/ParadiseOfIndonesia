@@ -33,7 +33,17 @@ Route::resource('gallery', GalleryController::class);
 Route::resource('tour-packages', TourPackageController::class);
 Route::resource('tour-sessions', TourSessionController::class);
 Route::resource('travel-services', TravelServiceController::class);
-Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
+// routes/web.php
+Route::get('/travel-services/{service}/booking', [TravelServiceController::class, 'booking'])
+    ->name('travel-services.booking');
+
+Route::post('/travel-services/{service}/confirm', [TravelServiceController::class, 'confirm'])
+    ->name('travel-services.confirm');
+Route::post('/travel-services/{service}/pay', [TravelServiceController::class, 'pay'])
+    ->name('travel-services.pay');
+Route::get('/travel-services/payment/success', [TravelServiceController::class, 'paymentSuccess'])
+    ->name('travel-services.payment.success');
+
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'index']);
 
