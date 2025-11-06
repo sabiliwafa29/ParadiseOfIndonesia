@@ -70,15 +70,16 @@ class PaymentController extends Controller
             Log::info("Processing notification - Order ID: {$orderId}, Status: {$transactionStatus}");
 
             // Ekstrak booking ID dari order_id (format: BOOK-123 -> 123)
-            $bookingId = (int) filter_var($orderId, FILTER_SANITIZE_NUMBER_INT);
+            $bookingId = (int) str_replace('BOOK-', '', $orderId);
 
             // ✅ PERBAIKAN: Gunakan $bookingId untuk mencari booking
             $booking = Booking::find($bookingId);
 
             if (!$booking) {
-                Log::warning("Booking not found for ID: {$bookingId}");
+                Log::warning("Booking not found for Order ID: {$orderId}, extracted ID: {$bookingId}");
                 return response()->json(['success' => false, 'message' => 'Booking tidak ditemukan'], 404);
             }
+
 
             // Update status booking berdasarkan notifikasi
             switch ($transactionStatus) {
