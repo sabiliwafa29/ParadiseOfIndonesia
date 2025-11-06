@@ -25,7 +25,7 @@
 
 @section('content')
 <!-- Background Music -->
-<audio id="bg-music" autoplay>
+<audio id="bg-music" autoplay loop>
     <source src="{{ asset('audio/bgm.mp3') }}" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
