@@ -29,26 +29,44 @@
                     {{-- PICKUP LOCATION (Autocomplete) --}}
                     <div class="relative">
                         <label class="block font-semibold mb-2">Pickup Location</label>
-                        <input id="pickup" type="text" name="pickup_name"
-                            placeholder="Search pickup location..."
-                            class="w-full border border-gray-300 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            autocomplete="off">
+                        <div class="relative">
+                            <input id="pickup" type="text" 
+                                placeholder="Search pickup location..."
+                                class="w-full border border-gray-300 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                autocomplete="off">
+                            <div id="pickup-loading" class="absolute right-3 top-2 hidden">
+                                <svg class="animate-spin h-5 w-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
+                        </div>
                         <div id="pickup-suggestions"
-                            class="absolute bg-white border border-gray-300 rounded-md mt-1 w-full hidden max-h-48 overflow-y-auto z-50"></div>
+                            class="absolute bg-white border border-gray-300 rounded-md mt-1 w-full hidden max-h-48 overflow-y-auto z-50 shadow-lg"></div>
                     </div>
 
                     {{-- DESTINATION LOCATION (Autocomplete) --}}
                     <div class="relative">
                         <label class="block font-semibold mb-2">Destination</label>
-                        <input id="destination" type="text" name="destination_name"
-                            placeholder="Search destination..."
-                            class="w-full border border-gray-300 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500"
-                            autocomplete="off">
+                        <div class="relative">
+                            <input id="destination" type="text" 
+                                placeholder="Search destination..."
+                                class="w-full border border-gray-300 rounded-md p-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                autocomplete="off">
+                            <div id="destination-loading" class="absolute right-3 top-2 hidden">
+                                <svg class="animate-spin h-5 w-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
+                        </div>
                         <div id="destination-suggestions"
-                            class="absolute bg-white border border-gray-300 rounded-md mt-1 w-full hidden max-h-48 overflow-y-auto z-50"></div>
+                            class="absolute bg-white border border-gray-300 rounded-md mt-1 w-full hidden max-h-48 overflow-y-auto z-50 shadow-lg"></div>
                     </div>
 
-                    {{-- Hidden untuk koordinat --}}
+                    {{-- Hidden fields untuk ID dan koordinat --}}
+                    <input type="hidden" name="pickup_id" id="pickup_id">
+                    <input type="hidden" name="destination_id" id="destination_id">
                     <input type="hidden" name="pickup_lat" id="pickup_lat">
                     <input type="hidden" name="pickup_lng" id="pickup_lng">
                     <input type="hidden" name="dest_lat" id="dest_lat">
@@ -59,20 +77,20 @@
                         <label class="block font-semibold mb-2">Booking Type</label>
                         <div class="flex space-x-4">
                             <label>
-                                <input type="radio" name="booking_type" value="now" class="mr-2" checked> Book Now
+                                <input type="radio" name="booking_type" value="one-way" class="mr-2" checked> One Way
                             </label>
                             <label>
-                                <input type="radio" name="booking_type" value="later" class="mr-2"> Book for Later
+                                <input type="radio" name="booking_type" value="round-trip" class="mr-2"> Round Trip
                             </label>
                         </div>
                     </div>
 
-                    {{-- JADWAL (Hanya muncul jika "Book for Later") --}}
-                    <div id="schedule-fields" class="hidden">
+                    {{-- JADWAL --}}
+                    <div>
                         <label class="block font-semibold mb-2">Pickup Date & Time</label>
                         <div class="flex space-x-3">
-                            <input type="date" name="schedule_date" class="border-gray-300 rounded-md w-1/2">
-                            <input type="time" name="schedule_time" class="border-gray-300 rounded-md w-1/2">
+                            <input type="date" name="schedule_date" class="border-gray-300 rounded-md w-1/2" required>
+                            <input type="time" name="schedule_time" class="border-gray-300 rounded-md w-1/2" required>
                         </div>
                     </div>
 
@@ -121,14 +139,56 @@ document.addEventListener("DOMContentLoaded", function () {
     let destinationMarker = null;
     const distanceDisplay = document.getElementById('distance');
 
-    // === Fungsi Nominatim Search ===
-    async function searchLocation(query) {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id`);
-        return await res.json();
+    // Debounce timer
+    let searchTimeout = {};
+
+    // === Search Location via API (Database + Nominatim) ===
+    async function searchLocation(query, type) {
+        try {
+            const response = await fetch(`/api/locations/search/${type}?q=${encodeURIComponent(query)}`);
+            if (!response.ok) throw new Error('Search failed');
+            const data = await response.json();
+            return data.results || [];
+        } catch (error) {
+            console.error('Search error:', error);
+            return [];
+        }
+    }
+
+    // === Create or get location ID ===
+    async function createOrGetLocation(location, type) {
+        // If location has ID (from database), return it
+        if (location.id) {
+            return location.id;
+        }
+
+        // If location from Nominatim, create or get from database
+        try {
+            const response = await fetch('/api/locations/create-or-get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="_token"]')?.value
+                },
+                body: JSON.stringify({
+                    name: location.name,
+                    lat: location.lat,
+                    lon: location.lon,
+                    type: type
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to create location');
+            const data = await response.json();
+            return data.id;
+        } catch (error) {
+            console.error('Create location error:', error);
+            return null;
+        }
     }
 
     // === Fungsi set marker di map ===
-    function setMarker(type, lat, lon, name) {
+    async function setMarker(type, lat, lon, name, locationId = null) {
         const icon = L.icon({
             iconUrl: type === 'pickup'
                 ? 'https://cdn-icons-png.flaticon.com/512/684/684908.png'
@@ -141,11 +201,13 @@ document.addEventListener("DOMContentLoaded", function () {
             pickupMarker = L.marker([lat, lon], { icon }).addTo(map).bindPopup(name);
             document.getElementById('pickup_lat').value = lat;
             document.getElementById('pickup_lng').value = lon;
+            document.getElementById('pickup_id').value = locationId || '';
         } else {
             if (destinationMarker) map.removeLayer(destinationMarker);
             destinationMarker = L.marker([lat, lon], { icon }).addTo(map).bindPopup(name);
             document.getElementById('dest_lat').value = lat;
             document.getElementById('dest_lng').value = lon;
+            document.getElementById('destination_id').value = locationId || '';
         }
 
         map.setView([lat, lon], 13);
@@ -170,75 +232,124 @@ document.addEventListener("DOMContentLoaded", function () {
             draggableWaypoints: false,
             routeWhileDragging: false,
             show: false,
-            lineOptions: { styles: [{ color: 'green', opacity: 0.8, weight: 5 }] },
-            createMarker: () => null
+            lineOptions: { 
+                styles: [{ color: 'green', opacity: 0.8, weight: 5 }] 
+            },
+            createMarker: () => null,
+            showAlternatives: false,
+            fitSelectedRoutes: true,
+            collapsible: false
+        }).on('routesfound', function(e) {
+            // Hitung jarak dari route yang ditemukan
+            const routes = e.routes;
+            const distance = routes[0].summary.totalDistance / 1000; // dalam km
+            
+            distanceDisplay.textContent = distance.toFixed(2) + " km";
+            
+            // Hitung total harga
+            const totalPrice = distance * pricePerKm;
+            document.getElementById('total_price').textContent = 
+                "Rp " + totalPrice.toLocaleString('id-ID', { minimumFractionDigits: 0 });
         }).addTo(map);
 
-        // Hitung jarak dari koordinat (dalam km)
-        const distance = map.distance([pickupLat, pickupLng], [destLat, destLng]) / 1000;
-        distanceDisplay.textContent = distance.toFixed(2) + " km";
-
-        // Hitung total harga
-        const totalPrice = distance * pricePerKm;
-        document.getElementById('total_price').textContent = 
-            "Rp " + totalPrice.toLocaleString('id-ID', { minimumFractionDigits: 0 });
+        // Sembunyikan container instruksi routing
+        setTimeout(() => {
+            const routingContainer = document.querySelector('.leaflet-routing-container');
+            if (routingContainer) {
+                routingContainer.style.display = 'none';
+            }
+        }, 100);
     }
 
     // === Autocomplete Handler ===
-    function setupAutocomplete(inputId, suggestionsId, type) {
+    function setupAutocomplete(inputId, suggestionsId, loadingId, type) {
         const input = document.getElementById(inputId);
         const suggestionsBox = document.getElementById(suggestionsId);
+        const loadingIndicator = document.getElementById(loadingId);
 
-        input.addEventListener('input', async function () {
+        input.addEventListener('input', function () {
             const query = this.value.trim();
-            if (query.length < 3) {
+            
+            // Clear previous timeout
+            if (searchTimeout[type]) {
+                clearTimeout(searchTimeout[type]);
+            }
+
+            if (query.length < 2) {
                 suggestionsBox.classList.add('hidden');
+                loadingIndicator.classList.add('hidden');
                 return;
             }
 
-            const results = await searchLocation(query);
-            suggestionsBox.innerHTML = '';
-            if (results.length === 0) {
-                suggestionsBox.classList.add('hidden');
-                return;
-            }
+            // Show loading
+            loadingIndicator.classList.remove('hidden');
+            suggestionsBox.classList.add('hidden');
 
-            results.slice(0, 5).forEach(place => {
-                const div = document.createElement('div');
-                div.className = 'p-2 hover:bg-emerald-100 cursor-pointer text-sm';
-                div.textContent = place.display_name;
-                div.onclick = function () {
-                    input.value = place.display_name;
-                    suggestionsBox.classList.add('hidden');
-                    setMarker(type, place.lat, place.lon, place.display_name);
-                };
-                suggestionsBox.appendChild(div);
-            });
+            // Debounce: wait 500ms before searching
+            searchTimeout[type] = setTimeout(async () => {
+                try {
+                    const results = await searchLocation(query, type);
+                    suggestionsBox.innerHTML = '';
+                    
+                    if (results.length === 0) {
+                        suggestionsBox.innerHTML = '<div class="p-3 text-sm text-gray-500 text-center">No locations found</div>';
+                        suggestionsBox.classList.remove('hidden');
+                        loadingIndicator.classList.add('hidden');
+                        return;
+                    }
 
-            suggestionsBox.classList.remove('hidden');
+                    results.forEach(place => {
+                        const div = document.createElement('div');
+                        div.className = 'p-3 hover:bg-emerald-50 cursor-pointer text-sm border-b border-gray-100 last:border-b-0';
+                        
+                        // Add source indicator
+                        const sourceBadge = place.source === 'database' 
+                            ? '<span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded ml-2">DB</span>'
+                            : '<span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded ml-2">Map</span>';
+                        
+                        div.innerHTML = `
+                            <div class="font-medium">${place.display_name}</div>
+                            ${sourceBadge}
+                        `;
+                        
+                        div.onclick = async function () {
+                            input.value = place.display_name;
+                            suggestionsBox.classList.add('hidden');
+                            loadingIndicator.classList.add('hidden');
+                            
+                            // Get or create location ID
+                            const locationId = await createOrGetLocation(place, type);
+                            
+                            // Set marker with location ID
+                            await setMarker(type, parseFloat(place.lat), parseFloat(place.lon), place.display_name, locationId);
+                        };
+                        
+                        suggestionsBox.appendChild(div);
+                    });
+
+                    suggestionsBox.classList.remove('hidden');
+                    loadingIndicator.classList.add('hidden');
+                } catch (error) {
+                    console.error('Autocomplete error:', error);
+                    suggestionsBox.innerHTML = '<div class="p-3 text-sm text-red-500 text-center">Error loading locations. Please try again.</div>';
+                    suggestionsBox.classList.remove('hidden');
+                    loadingIndicator.classList.add('hidden');
+                }
+            }, 500);
         });
 
         // Tutup jika klik di luar
         document.addEventListener('click', (e) => {
-            if (!suggestionsBox.contains(e.target) && e.target !== input) {
+            if (!suggestionsBox.contains(e.target) && e.target !== input && !loadingIndicator.contains(e.target)) {
                 suggestionsBox.classList.add('hidden');
+                loadingIndicator.classList.add('hidden');
             }
         });
     }
 
     // Aktifkan autocomplete untuk pickup & destination
-    setupAutocomplete('pickup', 'pickup-suggestions', 'pickup');
-    setupAutocomplete('destination', 'destination-suggestions', 'destination');
-
-    // === Toggle jadwal ===
-    const radios = document.querySelectorAll('input[name="booking_type"]');
-    const schedule = document.getElementById('schedule-fields');
-    radios.forEach(r => {
-        r.addEventListener('change', function () {
-            if (this.value === 'later') schedule.classList.remove('hidden');
-            else schedule.classList.add('hidden');
-        });
-    });
+    setupAutocomplete('pickup', 'pickup-suggestions', 'pickup-loading', 'pickup');
+    setupAutocomplete('destination', 'destination-suggestions', 'destination-loading', 'destination');
 });
 </script>
 @endsection

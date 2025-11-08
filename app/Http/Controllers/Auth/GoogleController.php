@@ -48,6 +48,11 @@ class GoogleController extends Controller
 
             Auth::login($user);
 
+            // Redirect admin to admin panel
+            if ($user->role === 'admin') {
+                return redirect()->intended(route('admin.tours.index'));
+            }
+
             return redirect()->intended(route('dashboard'));
         } catch (\Exception $e) {
             return redirect()->route('login')->with('error', 'Google authentication failed.');

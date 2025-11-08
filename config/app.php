@@ -41,8 +41,21 @@ return [
     | application. If disabled, a simple generic error page is shown.
     |
     */
-
+    
     'debug' => (bool) env('APP_DEBUG', false),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Multi-Language Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This configuration is used to set the default language and fallback
+    | language for the application.
+    |
+    */
+    'locale' => 'id', // Default language: Indonesian
+    'fallback_locale' => 'en',
+    'available_locales' => ['en', 'id', 'zh'],
 
     /*
     |--------------------------------------------------------------------------

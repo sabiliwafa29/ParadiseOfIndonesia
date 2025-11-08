@@ -14,7 +14,7 @@
                 <h3 class="font-semibold text-lg">{{ $service->name }}</h3>
                 <p class="text-gray-600">{{ $service->description }}</p>
                 <p class="text-gray-800 font-bold mt-2">
-                    Rp {{ number_format($service->price, 0, ',', '.') }}
+                    Rp {{ number_format($service->price, 0, ',', '.') }} / km
                 </p>
             </div>
 
@@ -23,11 +23,17 @@
                 <p><strong>Pickup:</strong> {{ $pickup->name ?? '-' }}</p>
                 <p><strong>Destination:</strong> {{ $destination->name ?? '-' }}</p>
                 <p><strong>Distance:</strong> {{ $distance }} km</p>
-                <p><strong>Booking Type:</strong> {{ ucfirst($request->booking_type) }}</p>
+                <p><strong>Booking Type:</strong> {{ ucfirst(str_replace('-', ' ', $booking->booking_type ?? 'one-way')) }}</p>
 
-                @if ($request->booking_type === 'later')
-                    <p><strong>Schedule:</strong> {{ $request->schedule_date }} at {{ $request->schedule_time }}</p>
+                @if (isset($booking->schedule_date) && isset($booking->schedule_time))
+                    <p><strong>Schedule:</strong> {{ \Carbon\Carbon::parse($booking->schedule_date)->format('d M Y') }} at {{ $booking->schedule_time }}</p>
                 @endif
+                
+                <p><strong>Total Price:</strong> 
+                    <span class="text-emerald-700 font-bold text-lg">
+                        Rp {{ number_format($booking->total_price ?? ($distance * $service->price), 0, ',', '.') }}
+                    </span>
+                </p>
             </div>
 
             <hr class="my-5">
@@ -35,7 +41,7 @@
             {{-- TOMBOL KONFIRMASI --}}
             <form action="{{ route('travel-services.pay', $service) }}" method="POST">
                 @csrf
-                <input type="hidden" name="booking_confirmed" value="1">
+                <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                 <div class="flex justify-center">
                     <button type="submit" class="bg-emerald-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-emerald-700 transition">
                         Proceed to Payment

@@ -15,60 +15,128 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Public Routes (No Authentication Required)
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::resource('destinations', DestinationController::class);
-Route::resource('tours', TourController::class);
-Route::resource('tour-activities', TourActivityController::class);
-Route::resource('gallery', GalleryController::class);
-Route::resource('tour-packages', TourPackageController::class);
-Route::resource('tour-sessions', TourSessionController::class);
-Route::resource('travel-services', TravelServiceController::class);
-// routes/web.php
-Route::get('/travel-services/{service}/booking', [TravelServiceController::class, 'booking'])
-    ->name('travel-services.booking');
+// Public view routes (bisa diakses tanpa login)
+Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
+Route::get('/destinations/{destination}', [DestinationController::class, 'show'])->name('destinations.show');
 
-Route::post('/travel-services/{service}/confirm', [TravelServiceController::class, 'confirm'])
-    ->name('travel-services.confirm');
-Route::post('/travel-services/{service}/pay', [TravelServiceController::class, 'pay'])
-    ->name('travel-services.pay');
-Route::get('/travel-services/payment/success', [TravelServiceController::class, 'paymentSuccess'])
-    ->name('travel-services.payment.success');
+Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
+Route::get('/tours/{tour}', [TourController::class, 'show'])->name('tours.show');
+
+Route::get('/tour-activities', [TourActivityController::class, 'index'])->name('tour-activities.index');
+Route::get('/tour-activities/{tourActivity}', [TourActivityController::class, 'show'])->name('tour-activities.show');
+
+Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
+
+Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
+Route::get('/tour-packages/{tourPackage}', [TourPackageController::class, 'show'])->name('tour-packages.show');
+
+Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
+Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
+
+Route::get('/travel-services', [TravelServiceController::class, 'index'])->name('travel-services.index');
+Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
-Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'index']);
+Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'index'])->name('travel-map');
 
+Route::post('/language/switch', [App\Http\Controllers\LanguageController::class, 'switch'])
+    ->name('language.switch');
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
     
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    /*
+    |--------------------------------------------------------------------------
+    | USER ROUTES (Admin tidak bisa akses)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['role:user'])->group(function () {
+        
+        // Dashboard User
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+        
+        // Profile Management
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        
+        // Travel Services Booking (hanya user yang bisa booking)
+        Route::prefix('travel-services')->name('travel-services.')->group(function () {
+            Route::get('/{service}/booking', [TravelServiceController::class, 'booking'])->name('booking');
+            Route::post('/{service}/confirm', [TravelServiceController::class, 'confirm'])->name('confirm');
+            Route::post('/{service}/pay', [TravelServiceController::class, 'pay'])->name('pay');
+            Route::get('/payment/success', [TravelServiceController::class, 'paymentSuccess'])->name('payment.success');
+        });
+        
+        // My Bookings
+        Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
+        Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    });
     
-    Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
-    Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
-    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-
-    // Admin: Tour management (protected by is_admin middleware)
-    Route::prefix('admin')->name('admin.')->middleware('is_admin')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN ROUTES (User tidak bisa akses)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        
+        // Admin Dashboard
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Tour Management
         Route::resource('tours', App\Http\Controllers\Admin\TourController::class);
+        
+        // Destination Management (jika ada controller admin)
+        // Route::resource('destinations', App\Http\Controllers\Admin\DestinationController::class);
+        
+        // Travel Service Management (jika ada controller admin)
+        // Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
+        
+        // Booking Management (jika ada controller admin)
+        // Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+        
+        // User Management (jika ada controller admin)
+        // Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+        
+        // Gallery Management (jika ada controller admin)
+        // Route::resource('gallery', App\Http\Controllers\Admin\GalleryController::class);
+        
+        // Tour Activity Management (jika ada controller admin)
+        // Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
+        
+        // Tour Package Management (jika ada controller admin)
+        // Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+        
+        // Tour Session Management (jika ada controller admin)
+        // Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
     });
 });
 
-// Google Authentication Routes
+/*
+|--------------------------------------------------------------------------
+| Google Authentication Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.login');
 Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
 
+/*
+|--------------------------------------------------------------------------
+| Auth Routes (Login, Register, etc.)
+|--------------------------------------------------------------------------
+*/
 require __DIR__.'/auth.php';

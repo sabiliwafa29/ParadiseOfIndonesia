@@ -20,10 +20,15 @@ class MidtransService
      */
     public function createTransaction($booking)
     {
-        $booking->load('user', 'tour');
+        // Load relationships based on booking type
+        if (method_exists($booking, 'tour')) {
+            $booking->load('user', 'tour');
+        } else {
+            $booking->load('user', 'travelService');
+        }
 
-        // ✅ PERBAIKAN: Hapus timestamp, gunakan hanya booking ID
-        $orderId = 'BOOK-' . $booking->id;
+        // Gunakan order_id dari booking jika sudah ada, atau generate baru
+        $orderId = $booking->order_id ?? ('BOOK-' . $booking->id);
 
         $params = [
             'transaction_details' => [
@@ -32,10 +37,12 @@ class MidtransService
             ],
             'item_details' => [
                 [
-                    'id'       => $booking->tour->id,
+                    'id'       => $booking->tour->id ?? $booking->travelService->id ?? $booking->id,
                     'price'    => (int) $booking->total_price,
                     'quantity' => 1,
-                    'name'     => 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)',
+                    'name'     => isset($booking->tour) 
+                        ? 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)'
+                        : 'Travel Service: ' . ($booking->travelService->name ?? 'Service'),
                 ],
             ],
             'customer_details' => [

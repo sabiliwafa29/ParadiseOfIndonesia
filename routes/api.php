@@ -28,3 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // ✅ 3. MIDTRANS CALLBACK (tanpa middleware, karena ini dari server Midtrans)
 Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification']);
+
+// ✅ 4. LOCATION SEARCH (public, untuk autocomplete)
+Route::get('/locations/search/{type}', [App\Http\Controllers\Api\LocationController::class, 'search']);
+Route::post('/locations/create-or-get', [App\Http\Controllers\Api\LocationController::class, 'createOrGet']);

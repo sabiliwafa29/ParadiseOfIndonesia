@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use App\Services\MidtransService;
+use App\Services\OrderIdService;
 
 class BookingController extends Controller
 {
@@ -42,10 +43,17 @@ class BookingController extends Controller
 
         $tour = Tour::findOrFail($validated['tour_id']);
 
-        $guidePrice = ($validated['guide'] ?? false) ? 50 * $validated['guests'] : 0;
-        $transportPrice = ($validated['transport'] ?? false) ? 30 * $validated['guests'] : 0;
+        // Get prices from config
+        $guidePricePerGuest = config('booking.addon_prices.guide', 50);
+        $transportPricePerGuest = config('booking.addon_prices.transport', 30);
+
+        $guidePrice = ($validated['guide'] ?? false) ? $guidePricePerGuest * $validated['guests'] : 0;
+        $transportPrice = ($validated['transport'] ?? false) ? $transportPricePerGuest * $validated['guests'] : 0;
         $addonCost = $guidePrice + $transportPrice;
         $totalPrice = ($tour->price * $validated['guests']) + $addonCost;
+
+        // Generate order ID
+        $orderId = OrderIdService::generate('BOOK');
 
         $booking = Booking::create([
             'user_id' => $request->user()->id,
@@ -57,6 +65,7 @@ class BookingController extends Controller
             'addon_cost' => $addonCost,
             'total_price' => $totalPrice,
             'status' => 'pending',
+            'order_id' => $orderId,
         ]);
 
         // 🔹 Generate Snap Token

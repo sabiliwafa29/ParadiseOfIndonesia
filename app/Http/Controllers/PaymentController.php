@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\TravelServiceBooking;
 use App\Services\MidtransService;
+use App\Services\OrderIdService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -69,19 +71,38 @@ class PaymentController extends Controller
 
             Log::info("Processing notification - Order ID: {$orderId}, Status: {$transactionStatus}");
 
-            // Ekstrak booking ID dari order_id (format: BOOK-123 -> 123)
-            $bookingId = (int) str_replace('BOOK-', '', $orderId);
-
-            // ✅ PERBAIKAN: Gunakan $bookingId untuk mencari booking
-            $booking = Booking::find($bookingId);
+            // Cari booking berdasarkan order_id (support untuk Booking dan TravelServiceBooking)
+            $booking = null;
+            
+            // Coba cari di Booking table (format: BOOK-{id})
+            if (str_starts_with($orderId, 'BOOK-')) {
+                $bookingId = (int) str_replace('BOOK-', '', $orderId);
+                $booking = Booking::find($bookingId);
+            }
+            
+            // Coba cari di TravelServiceBooking table (format: TSB-{timestamp}-{random})
+            if (!$booking && str_starts_with($orderId, 'TSB-')) {
+                $booking = TravelServiceBooking::where('order_id', $orderId)->first();
+            }
+            
+            // Fallback: cari berdasarkan order_id di kedua table
+            if (!$booking) {
+                $booking = Booking::where('payment_id', $orderId)->first();
+                if (!$booking) {
+                    $booking = TravelServiceBooking::where('order_id', $orderId)->first();
+                }
+            }
 
             if (!$booking) {
-                Log::warning("Booking not found for Order ID: {$orderId}, extracted ID: {$bookingId}");
+                Log::warning("Booking not found for Order ID: {$orderId}");
                 return response()->json(['success' => false, 'message' => 'Booking tidak ditemukan'], 404);
             }
 
 
             // Update status booking berdasarkan notifikasi
+            $bookingId = $booking->id;
+            $bookingType = $booking instanceof TravelServiceBooking ? 'TravelServiceBooking' : 'Booking';
+            
             switch ($transactionStatus) {
                 case 'capture':
                     // Untuk kartu kredit, cek fraud_status
@@ -89,13 +110,15 @@ class PaymentController extends Controller
                         $booking->update([
                             'payment_status' => 'paid',
                             'status' => 'confirmed',
+                            'payment_id' => $orderId,
                         ]);
-                        Log::info("Booking {$bookingId} confirmed (capture + accept)");
+                        Log::info("{$bookingType} {$bookingId} confirmed (capture + accept)");
                     } else {
                         $booking->update([
                             'payment_status' => 'pending',
+                            'payment_id' => $orderId,
                         ]);
-                        Log::info("Booking {$bookingId} pending (capture + challenge)");
+                        Log::info("{$bookingType} {$bookingId} pending (capture + challenge)");
                     }
                     break;
 
@@ -103,15 +126,17 @@ class PaymentController extends Controller
                     $booking->update([
                         'payment_status' => 'paid',
                         'status' => 'confirmed',
+                        'payment_id' => $orderId,
                     ]);
-                    Log::info("Booking {$bookingId} confirmed (settlement)");
+                    Log::info("{$bookingType} {$bookingId} confirmed (settlement)");
                     break;
 
                 case 'pending':
                     $booking->update([
                         'payment_status' => 'pending',
+                        'payment_id' => $orderId,
                     ]);
-                    Log::info("Booking {$bookingId} pending");
+                    Log::info("{$bookingType} {$bookingId} pending");
                     break;
 
                 case 'deny':
@@ -120,8 +145,9 @@ class PaymentController extends Controller
                     $booking->update([
                         'payment_status' => 'failed',
                         'status' => 'cancelled',
+                        'payment_id' => $orderId,
                     ]);
-                    Log::info("Booking {$bookingId} cancelled ({$transactionStatus})");
+                    Log::info("{$bookingType} {$bookingId} cancelled ({$transactionStatus})");
                     break;
 
                 default:
