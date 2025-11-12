@@ -19,15 +19,19 @@ return [
     
     // Home Page
     'why_choose' => 'Kenapa Memilih Paradise Of Indonesia?',
-    'tagline' => 'Satu klik, Surga di tangan Anda',
+    'tagline' => 'Satu Klik, Surga di Tangan Anda',
     'comfort' => 'Kenyamanan',
     'comfort_desc' => 'Pelayanan prima dan fasilitas terbaik untuk kenyamanan perjalanan Anda',
-    'security' => 'Keamanan',
-    'security_desc' => 'Jaminan keamanan dan asuransi perjalanan untuk ketenangan Anda',
+    'complete' => 'Destinasi Terlengkap',
+    'complete_desc' => 'Jaminan keamanan dan asuransi perjalanan untuk ketenangan Anda',
     'affordable' => 'Terjangkau',
     'affordable_desc' => 'Harga terjangkau dengan kualitas layanan terbaik',
     'enjoy' => 'Nikmati',
     'enjoy_desc' => 'Nikmati setiap momen perjalanan dengan pengalaman tak terlupakan',
+    'happy' => 'Kebahagiaan',
+    'happy_desc' => 'Kebahagiaan Anda adalah prioritas kami dalam setiap perjalanan yang kami selenggarakan',
+    'custom' => 'Paket Khusus',
+    'custom_desc' => '',
     
     'best_packages' => 'Paket Tour Terbaik',
     'best_packages_desc' => 'Jelajahi destinasi terbaik Indonesia bersama kami',

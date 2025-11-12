@@ -19,15 +19,19 @@ return [
     
     // Home Page
     'why_choose' => 'Why Choose Paradise Of Indonesia?',
-    'tagline' => 'One click, Heaven in your hands',
+    'tagline' => 'One Click, Heaven in Your Hands',
     'comfort' => 'Comfort',
     'comfort_desc' => 'Premium service and best facilities for your travel comfort',
-    'security' => 'Security',
-    'security_desc' => 'Travel security guarantee and insurance for your peace of mind',
+    'complete' => 'Completess Destination',
+    'complete_desc' => 'Wide range of destinations to explore across Indonesia',
     'affordable' => 'Affordable',
     'affordable_desc' => 'Affordable prices with best service quality',
     'enjoy' => 'Enjoy',
     'enjoy_desc' => 'Enjoy every moment of your journey with unforgettable experiences',
+    'happy' => 'Happiness',
+    'happy_desc' => 'Your happiness is our priority in every trip we organize',
+    'custom' => 'Custom Package',
+    'custom_desc' => 'Buat paket perjalanan Anda sendiri yang disesuaikan dengan preferensi Anda.',
     
     'best_packages' => 'Best Tour Packages',
     'best_packages_desc' => 'Explore the best destinations in Indonesia with us',

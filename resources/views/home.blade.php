@@ -154,7 +154,7 @@
             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-500">{{ __('messages.tagline') }}</p>
         </div>
 
-        <div class="mt-8 md:mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-8 md:mt-12 grid grid-cols-3 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <!-- Comfort -->
             <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
@@ -166,15 +166,15 @@
                 <p class="mt-2 text-gray-600 text-center">{{ __('messages.comfort_desc') }}</p>
             </div>
 
-            <!-- Security -->
+            <!-- Complete -->
             <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
                 </div>
-                <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.security') }}</h3>
-                <p class="mt-2 text-gray-600 text-center">{{ __('messages.security_desc') }}</p>
+                <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.complete') }}</h3>
+                <p class="mt-2 text-gray-600 text-center">{{ __('messages.complete_desc') }}</p>
             </div>
 
             <!-- Affordable -->
@@ -197,6 +197,28 @@
                 </div>
                 <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.enjoy') }}</h3>
                 <p class="mt-2 text-gray-600 text-center">{{ __('messages.enjoy_desc') }}</p>
+            </div>
+            
+            <!-- Happy -->
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.happy') }}</h3>
+                <p class="mt-2 text-gray-600 text-center">{{ __('messages.happy_desc') }}</p>
+            </div>
+
+            <!-- Custom Package -->
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.custom') }}</h3>
+                <p class="mt-2 text-gray-600 text-center">{{ __('messages.custom_desc') }}</p>
             </div>
         </div>
     </div>
