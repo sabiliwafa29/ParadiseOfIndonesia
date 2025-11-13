@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class GoogleController extends Controller
 {
@@ -18,8 +19,9 @@ class GoogleController extends Controller
         }
 
         return Socialite::driver('google')
-                                ->with(['prompt' => 'select_account'])
-                                ->redirect();
+            ->stateless()
+            ->with(['prompt' => 'select_account'])
+            ->redirect();
     }
 
     public function callback()
