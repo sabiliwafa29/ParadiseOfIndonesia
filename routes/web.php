@@ -99,13 +99,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         
         // Admin Dashboard
-        Route::get('dashboard', function () {
-            return redirect()->route('admin.dashboard')
-                ->with('login_success', true)
-                ->with('user_name', auth()->user()->name);
-        },
-        [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-
         Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])
         ->name('dashboard');
         
