@@ -19,6 +19,7 @@ return [
     
     // Home Page
     'view_tours' => 'Lihat Tur',
+    'explore_now' => 'Jelajahi Sekarang',
     'slide_title1' => 'Indahnya Bali',
     'slide_desc1' => 'Rasakan keajaiban Pulau Dewata',
     'slide_title2' => 'Surga Raja Ampat',

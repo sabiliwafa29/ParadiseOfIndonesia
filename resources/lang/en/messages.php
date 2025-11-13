@@ -19,6 +19,7 @@ return [
     
     // Home Page
     'view_tours' => 'View Tours',
+    'explore_now' => 'Explore Now',
     'slide_title1' => 'Beautiful Bali',
     'slide_desc1' => 'Experience the magic of the Island of Gods',
     'slide_title2' => 'Raja Ampat Paradise',

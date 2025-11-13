@@ -19,6 +19,7 @@ return [
     
     // Home Page
     'view_tours' => '查看旅游',
+    'explore_now' => '立即探索',
     'slide_title1' => '美丽的巴厘岛',
     'slide_desc1' => '体验众神之岛的魔力',
     'slide_title2' => '拉贾安帕特天堂',

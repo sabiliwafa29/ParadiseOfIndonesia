@@ -37,8 +37,8 @@
     });
 </script>
 
-<!-- Hero Slider with Modern Design -->
-<div class="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 3 ? 0 : currentSlide + 1 }, 5000)">
+<!-- Hero Slider with Modern Design - 8 Slides -->
+<div class="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 7 ? 0 : currentSlide + 1 }, 5000)">
     <div class="relative h-[500px] md:h-[600px] lg:h-[700px]">
         
         <!-- Slide 1 - Bali -->
@@ -49,7 +49,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/bali.jpg') }}" alt="Beautiful Bali" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/bali.jpg') }}" alt="{{ __('messages.slide_title1') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -57,12 +57,12 @@
                         <span class="text-emerald-300 font-medium text-sm md:text-base">🌴 Island Paradise</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                        Beautiful <span class="text-emerald-400">Bali</span>
+                        {{ __('messages.slide_title1') }}
                     </h2>
-                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">Experience the magic of the Island of Gods</p>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc1') }}</p>
                     <div class="pt-4">
                         <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300">
-                            Explore Now
+                            {{ __('messages.explore_now') }}
                             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -80,7 +80,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/raja-ampat.jpg') }}" alt="Raja Ampat Paradise" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/raja-ampat.jpg') }}" alt="{{ __('messages.slide_title2') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -88,12 +88,12 @@
                         <span class="text-blue-300 font-medium text-sm md:text-base">🌊 Underwater Wonder</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                        Raja Ampat <span class="text-blue-400">Paradise</span>
+                        {{ __('messages.slide_title2') }}
                     </h2>
-                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">Discover the world's best diving destination</p>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc2') }}</p>
                     <div class="pt-4">
                         <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
-                            Explore Now
+                            {{ __('messages.explore_now') }}
                             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -111,7 +111,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/borobudur.jpg') }}" alt="Borobudur Temple" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/borobudur.jpg') }}" alt="{{ __('messages.slide_title3') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -119,12 +119,12 @@
                         <span class="text-amber-300 font-medium text-sm md:text-base">🏛️ Ancient Heritage</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                        Majestic <span class="text-amber-400">Borobudur</span>
+                        {{ __('messages.slide_title3') }}
                     </h2>
-                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">Journey through ancient Buddhist architecture</p>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc3') }}</p>
                     <div class="pt-4">
                         <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-amber-500/50 transform hover:scale-105 transition-all duration-300">
-                            Explore Now
+                            {{ __('messages.explore_now') }}
                             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -142,7 +142,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/komodo.jpg') }}" alt="Komodo Island" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/komodo.jpg') }}" alt="{{ __('messages.slide_title4') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -150,12 +150,136 @@
                         <span class="text-red-300 font-medium text-sm md:text-base">🦎 Wildlife Adventure</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                        Komodo <span class="text-red-400">Adventure</span>
+                        {{ __('messages.slide_title4') }}
                     </h2>
-                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">Meet the legendary dragons in their natural habitat</p>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc4') }}</p>
                     <div class="pt-4">
                         <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 transition-all duration-300">
-                            Explore Now
+                            {{ __('messages.explore_now') }}
+                            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 - Kawah Ijen -->
+        <div x-cloak class="absolute inset-0" x-show="currentSlide === 4"
+             x-transition:enter="transition ease-out duration-1000"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-1000"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+            <img src="{{ asset('images/slider/ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center px-4">
+                <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
+                    <div class="inline-block px-4 py-2 bg-cyan-500/20 backdrop-blur-sm rounded-full border border-cyan-500/30 mb-4">
+                        <span class="text-cyan-300 font-medium text-sm md:text-base">🔥 Blue Fire Phenomenon</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                        {{ __('messages.slide_title5') }}
+                    </h2>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc5') }}</p>
+                    <div class="pt-4">
+                        <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-cyan-500/50 transform hover:scale-105 transition-all duration-300">
+                            {{ __('messages.explore_now') }}
+                            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6 - Dieng -->
+        <div x-cloak class="absolute inset-0" x-show="currentSlide === 5"
+             x-transition:enter="transition ease-out duration-1000"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-1000"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+            <img src="{{ asset('images/slider/dieng.jpg') }}" alt="{{ __('messages.slide_title6') }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center px-4">
+                <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
+                    <div class="inline-block px-4 py-2 bg-purple-500/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-4">
+                        <span class="text-purple-300 font-medium text-sm md:text-base">⛰️ Volcanic Landscape</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                        {{ __('messages.slide_title6') }}
+                    </h2>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc6') }}</p>
+                    <div class="pt-4">
+                        <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
+                            {{ __('messages.explore_now') }}
+                            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7 - Toraja -->
+        <div x-cloak class="absolute inset-0" x-show="currentSlide === 6"
+             x-transition:enter="transition ease-out duration-1000"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-1000"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+            <img src="{{ asset('images/slider/toraja.jpg') }}" alt="{{ __('messages.slide_title7') }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center px-4">
+                <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
+                    <div class="inline-block px-4 py-2 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-500/30 mb-4">
+                        <span class="text-orange-300 font-medium text-sm md:text-base">🏡 Cultural Experience</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                        {{ __('messages.slide_title7') }}
+                    </h2>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc7') }}</p>
+                    <div class="pt-4">
+                        <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-orange-500/50 transform hover:scale-105 transition-all duration-300">
+                            {{ __('messages.explore_now') }}
+                            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8 - Traditional Dance -->
+        <div x-cloak class="absolute inset-0" x-show="currentSlide === 7"
+             x-transition:enter="transition ease-out duration-1000"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-1000"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95">
+            <img src="{{ asset('images/slider/culture.jpg') }}" alt="{{ __('messages.slide_title8') }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center px-4">
+                <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
+                    <div class="inline-block px-4 py-2 bg-pink-500/20 backdrop-blur-sm rounded-full border border-pink-500/30 mb-4">
+                        <span class="text-pink-300 font-medium text-sm md:text-base">💃 Living Heritage</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                        {{ __('messages.slide_title8') }}
+                    </h2>
+                    <p class="text-lg md:text-2xl lg:text-3xl text-gray-200 font-light">{{ __('messages.slide_desc8') }}</p>
+                    <div class="pt-4">
+                        <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-pink-500 hover:bg-pink-600 text-white font-semibold rounded-full shadow-2xl hover:shadow-pink-500/50 transform hover:scale-105 transition-all duration-300">
+                            {{ __('messages.explore_now') }}
                             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                             </svg>
@@ -166,7 +290,7 @@
         </div>
     </div>
     
-    <!-- Modern Slider Navigation -->
+    <!-- Modern Slider Navigation - 8 Dots -->
     <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-3">
         <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
                 :class="currentSlide === 0 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
@@ -180,20 +304,33 @@
         <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
                 :class="currentSlide === 3 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
                 @click="currentSlide = 3"></button>
+        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
+                :class="currentSlide === 4 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
+                @click="currentSlide = 4"></button>
+        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
+                :class="currentSlide === 5 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
+                @click="currentSlide = 5"></button>
+        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
+                :class="currentSlide === 6 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
+                @click="currentSlide = 6"></button>
+        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
+                :class="currentSlide === 7 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
+                @click="currentSlide = 7"></button>
     </div>
 </div>
 
-<!-- Why Choose Section - Modern Cards with Hover Effects -->
+<!-- Why Choose Section - 6 Items Grid -->
 <div class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
-            <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">WHY CHOOSE US</span>
+            <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">{{ strtoupper(__('messages.why_choose')) }}</span>
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.why_choose') }}</h2>
             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.tagline') }}</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- Comfort -->
+        <div class="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            
+            <!-- 1. Comfort -->
             <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
@@ -207,21 +344,21 @@
                 </div>
             </div>
 
-            <!-- Security -->
+            <!-- 2. Complete -->
             <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
                     <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-blue-600 transition-colors">{{ __('messages.security') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.security_desc') }}</p>
+                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-blue-600 transition-colors">{{ __('messages.complete') }}</h3>
+                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.complete_desc') }}</p>
                 </div>
             </div>
 
-            <!-- Affordable -->
+            <!-- 3. Affordable -->
             <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
@@ -235,7 +372,7 @@
                 </div>
             </div>
 
-            <!-- Enjoy -->
+            <!-- 4. Enjoy -->
             <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
@@ -248,6 +385,35 @@
                     <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.enjoy_desc') }}</p>
                 </div>
             </div>
+
+            <!-- 5. Happy -->
+            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+                <div class="absolute inset-0 bg-gradient-to-br from-pink-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-pink-600 transition-colors">{{ __('messages.happy') }}</h3>
+                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.happy_desc') }}</p>
+                </div>
+            </div>
+
+            <!-- 6. Custom -->
+            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative">
+                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-indigo-600 transition-colors">{{ __('messages.custom') }}</h3>
+                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.custom_desc') }}</p>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
