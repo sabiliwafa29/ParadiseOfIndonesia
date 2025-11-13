@@ -49,7 +49,7 @@ class GoogleController extends Controller
                 return redirect()->intended(route('admin.tours.index'));
             }
 
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('home'));
         } catch (\Exception $e) {
             \Log::error('Google login failed: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Google authentication failed.');
