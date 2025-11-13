@@ -32,7 +32,7 @@ return [
     'slide_desc5' => '夜晚见证迷人的蓝色火焰',
     'slide_title6' => '迪恩',
     'slide_desc6' => '探索神秘的火山景观',
-    'slide_title7' => '托拉查文化体验',
+    'slide_title7' => '迪恩文化体验',
     'slide_desc7' => '沉浸在丰富的传统和仪式中',
     'slide_title8' => '传统舞蹈与文化',
     'slide_desc8' => '体验充满活力的文化遗产',

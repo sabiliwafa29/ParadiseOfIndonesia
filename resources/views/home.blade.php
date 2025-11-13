@@ -173,7 +173,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/blufire-ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -204,7 +204,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/dieng.jpg') }}" alt="{{ __('messages.slide_title6') }}" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/dieng-sunrise.jpg') }}" alt="{{ __('messages.slide_title6') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -227,7 +227,7 @@
             </div>
         </div>
 
-        <!-- Slide 7 - Toraja -->
+        <!-- Slide 7 - Dieng-Culture -->
         <div x-cloak class="absolute inset-0" x-show="currentSlide === 6"
              x-transition:enter="transition ease-out duration-1000"
              x-transition:enter-start="opacity-0 scale-105"
@@ -235,7 +235,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/toraja.jpg') }}" alt="{{ __('messages.slide_title7') }}" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/dieng-culture.jpg') }}" alt="{{ __('messages.slide_title7') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -266,7 +266,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/culture.jpg') }}" alt="{{ __('messages.slide_title8') }}" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/traditional-dance.jpg') }}" alt="{{ __('messages.slide_title8') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
@@ -319,7 +319,7 @@
     </div>
 </div>
 
-<!-- Why Choose Section - 6 Items Grid -->
+<!-- Why Choose Section - Mobile Optimized: 2 rows x 3 columns -->
 <div class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
@@ -328,89 +328,91 @@
             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.tagline') }}</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Mobile: 2 rows x 3 columns, Desktop: 1 row x 3 columns -->
+        <div class="grid grid-cols-3 gap-4 md:gap-8 lg:grid-cols-3">
             
             <!-- 1. Comfort -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-emerald-600 transition-colors">{{ __('messages.comfort') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.comfort_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-emerald-600 transition-colors">{{ __('messages.comfort') }}</h3>
+                    <!-- Description hidden on mobile, shown on desktop -->
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.comfort_desc') }}</p>
                 </div>
             </div>
 
             <!-- 2. Complete -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-blue-600 transition-colors">{{ __('messages.complete') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.complete_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-blue-600 transition-colors">{{ __('messages.complete') }}</h3>
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.complete_desc') }}</p>
                 </div>
             </div>
 
             <!-- 3. Affordable -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-amber-600 transition-colors">{{ __('messages.affordable') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.affordable_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-amber-600 transition-colors">{{ __('messages.affordable') }}</h3>
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.affordable_desc') }}</p>
                 </div>
             </div>
 
             <!-- 4. Enjoy -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-purple-600 transition-colors">{{ __('messages.enjoy') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.enjoy_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-purple-600 transition-colors">{{ __('messages.enjoy') }}</h3>
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.enjoy_desc') }}</p>
                 </div>
             </div>
 
             <!-- 5. Happy -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-pink-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-pink-600 transition-colors">{{ __('messages.happy') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.happy_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-pink-600 transition-colors">{{ __('messages.happy') }}</h3>
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.happy_desc') }}</p>
                 </div>
             </div>
 
             <!-- 6. Custom -->
-            <div class="group relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
+            <div class="group relative bg-white p-4 md:p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative">
-                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 md:w-16 md:h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 shadow-xl">
+                        <svg class="w-5 h-5 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
                         </svg>
                     </div>
-                    <h3 class="mt-6 text-xl font-bold text-center text-gray-900 group-hover:text-indigo-600 transition-colors">{{ __('messages.custom') }}</h3>
-                    <p class="mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.custom_desc') }}</p>
+                    <h3 class="mt-3 md:mt-6 text-sm md:text-xl font-bold text-center text-gray-900 group-hover:text-indigo-600 transition-colors">{{ __('messages.custom') }}</h3>
+                    <p class="hidden md:block mt-3 text-gray-600 text-center leading-relaxed">{{ __('messages.custom_desc') }}</p>
                 </div>
             </div>
 

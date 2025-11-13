@@ -32,7 +32,7 @@ return [
     'slide_desc5' => 'Witness the mesmerizing blue flames at night',
     'slide_title6' => 'Dieng',
     'slide_desc6' => 'Explore the mystical volcanic landscape',
-    'slide_title7' => 'Toraja Cultural Experience',
+    'slide_title7' => 'Dieng Cultural Experience',
     'slide_desc7' => 'Immerse in rich traditions and rituals',
     'slide_title8' => 'Traditional Dance and Culture',
     'slide_desc8' => 'Experience the vibrant cultural heritage',

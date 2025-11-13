@@ -32,7 +32,7 @@ return [
     'slide_desc5' => 'Saksikan api biru yang memukau di malam hari',
     'slide_title6' => 'Dieng',
     'slide_desc6' => 'Jelajahi lanskap vulkanik yang mistis',
-    'slide_title7' => 'Pengalaman Budaya Toraja',
+    'slide_title7' => 'Budaya Dieng',
     'slide_desc7' => 'Rasakan tradisi dan ritual yang kaya',
     'slide_title8' => 'Tari dan Budaya Tradisional',
     'slide_desc8' => 'Rasakan warisan budaya yang hidup',
