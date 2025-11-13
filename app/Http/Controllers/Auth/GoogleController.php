@@ -54,6 +54,8 @@ class GoogleController extends Controller
             \Log::error('Google login failed: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Google authentication failed.');
         }
+        
+        Log::info('Google Login Success', ['user' => $user]);
     }
 
 }
