@@ -21,8 +21,6 @@ class TourSeeder extends Seeder
                 'price_usd' => 90,
                 'price_idr' => 1350000, // 90 * 15000
                 'price_cny' => 585, // 90 * 6.5
-                'exchange_rate_idr' => 15000,
-                'exchange_rate_cny' => 6.5,
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/tour-bali.svg',
@@ -55,12 +53,17 @@ class TourSeeder extends Seeder
                 ]),
                 'featured' => true,
                 'status' => 'active',
+                'target_market' => 'both',
+                'exchange_rate_idr' => 15000,
+                'exchange_rate_cny' => 6.5,
             ],
             [
                 'name' => 'Adventure Bromo',
                 'slug' => 'adventure-bromo',
                 'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
-                'price' => 95,  // ✅ Perubahan dari 950.000 menjadi 95
+                'price_usd' => 95,
+                'price_idr' => 1425000, // 95 * 15000
+                'price_cny' => 617.5, // 95 * 6.5
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/tour-bali.svg',
@@ -69,12 +72,17 @@ class TourSeeder extends Seeder
                 'excludes' => json_encode([]),
                 'featured' => true,
                 'status' => 'active',
+                'target_market' => 'both',
+                'exchange_rate_idr' => 15000,
+                'exchange_rate_cny' => 6.5,
             ],
             [
                 'name' => 'Tumpak Sewu',
                 'slug' => 'tumpak-sewu',
                 'description' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering dijuluki "Niagara Falls-nya Indonesia"',
-                'price' => 75,  // ✅ Harga yang reasonable
+                'price_usd' => 75,
+                'price_idr' => 1125000, // 75 * 15000
+                'price_cny' => 487.5, // 75 * 6.5
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/tour-tumpak-sewu.svg',
@@ -98,12 +106,17 @@ class TourSeeder extends Seeder
                 ]),
                 'featured' => true,
                 'status' => 'active',
+                'target_market' => 'both',
+                'exchange_rate_idr' => 15000,
+                'exchange_rate_cny' => 6.5,
             ],
             [
                 'name' => 'Bromo Tour',
                 'slug' => 'bromo-tour',
                 'description' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau dengan sunrise ikonik dari Penanjakan',
-                'price' => 85,
+                'price_usd' => 85,
+                'price_idr' => 1275000, // 85 * 15000
+                'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/tour-bromo.svg',
@@ -130,11 +143,16 @@ class TourSeeder extends Seeder
                 ]),
                 'featured' => true,
                 'status' => 'active',
+                'target_market' => 'both',
+                'exchange_rate_idr' => 15000,
+                'exchange_rate_cny' => 6.5,
             ],
         ];
 
         foreach ($tours as $tour) {
             Tour::firstOrCreate(['slug' => $tour['slug']], $tour);
         }
+
+        $this->command->info('✅ Tours seeded successfully!');
     }
 }
