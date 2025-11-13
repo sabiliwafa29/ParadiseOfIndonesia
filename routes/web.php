@@ -12,6 +12,8 @@ use App\Http\Controllers\TourSessionController;
 use App\Http\Controllers\TravelServiceController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
 
 // Public view routes (bisa diakses tanpa login)
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
@@ -133,8 +134,8 @@ Route::middleware('auth')->group(function () {
 | Google Authentication Routes
 |--------------------------------------------------------------------------
 */
-Route::get('auth/google/redirect', [App\Http\Controllers\Auth\GoogleController::class, 'redirect']);
-Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
+Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
 /*
 |--------------------------------------------------------------------------
