@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'is_admin' => \App\Http\Middleware\IsAdmin::class,
         'role' => \App\Http\Middleware\CheckRole::class,
+        'osrm.rate.limit' => \App\Http\Middleware\OsrmRateLimit::class,
     ];
 }

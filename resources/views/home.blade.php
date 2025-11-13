@@ -1,150 +1,146 @@
 @extends('layouts.app')
 @section('content')
 <!-- Background Music -->
+<audio id="bg-music" autoplay loop>
+    <source src="{{ asset('audio/bgm.mp3') }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<!-- Background Music -->
 <audio id="bg-music" loop>
     <source src="{{ asset('audio/bgm.mp3') }}" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const audio = document.getElementById('bg-music');
-        
-        // Buat tombol play music yang selalu muncul
-        const btn = document.createElement('button');
-        btn.innerHTML = '🔊';
-        btn.id = 'music-toggle';
-        Object.assign(btn.style, {
-            position: 'fixed',
-            bottom: '90px',
-            right: '20px',
-            width: '56px',
-            height: '56px',
-            borderRadius: '50%',
-            border: 'none',
-            background: '#10B981',
-            color: 'white',
-            fontSize: '24px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            zIndex: '9999',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'all 0.3s ease'
-        });
-
-        let isPlaying = false;
-
-        btn.onclick = () => {
-            if (isPlaying) {
-                audio.pause();
-                btn.innerHTML = '🔊';
-                btn.style.background = '#10B981';
-            } else {
-                audio.play();
-                btn.innerHTML = '🔇';
-                btn.style.background = '#059669';
-            }
-            isPlaying = !isPlaying;
-        };
-
-        btn.onmouseenter = () => {
-            btn.style.transform = 'scale(1.1)';
-        };
-
-        btn.onmouseleave = () => {
-            btn.style.transform = 'scale(1)';
-        };
-
-        document.body.appendChild(btn);
+document.addEventListener("DOMContentLoaded", function () {
+    const audio = document.getElementById('bg-music');
+    
+    // Tombol kontrol musik
+    const btn = document.createElement('button');
+    btn.innerHTML = '🔊';
+    btn.id = 'music-toggle';
+    Object.assign(btn.style, {
+        position: 'fixed',
+        bottom: '90px',
+        right: '20px',
+        width: '56px',
+        height: '56px',
+        borderRadius: '50%',
+        border: 'none',
+        background: '#10B981',
+        color: 'white',
+        fontSize: '24px',
+        cursor: 'pointer',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+        zIndex: '9999',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'all 0.3s ease'
     });
+
+    let isPlaying = false;
+
+    btn.onclick = () => {
+        if (isPlaying) {
+            audio.pause();
+            btn.innerHTML = '🔊'; // ubah ke icon speaker
+            btn.style.background = '#10B981';
+        } else {
+            audio.play().catch(() => {
+                console.log('Autoplay blocked until user interaction.');
+            });
+            btn.innerHTML = '🔇'; // ubah ke icon mute
+            btn.style.background = '#059669';
+        }
+        isPlaying = !isPlaying;
+    };
+
+    btn.onmouseenter = () => {
+        btn.style.transform = 'scale(1.1)';
+    };
+
+    btn.onmouseleave = () => {
+        btn.style.transform = 'scale(1)';
+    };
+
+    document.body.appendChild(btn);
+
+    // Coba auto-play jika browser mengizinkan
+    audio.play().then(() => {
+        isPlaying = true;
+        btn.innerHTML = '🔇';
+        btn.style.background = '#059669';
+    }).catch(() => {
+        console.log('Autoplay blocked. Waiting for manual play.');
+    });
+});
 </script>
 
-<!-- Image Slider (Responsive Height) -->
-<div class="relative overflow-hidden" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 3 ? 0 : currentSlide + 1 }, 5000)">
+
+<!-- Image Slider (Responsive Height) --><div 
+    class="relative overflow-hidden" 
+    x-data="{ currentSlide: 0, totalSlides: 8 }" 
+    x-init="setInterval(() => { currentSlide = (currentSlide + 1) % totalSlides }, 5000)"
+>
     <div class="relative h-[400px] md:h-[500px] lg:h-[600px]">
-        <!-- Slide 1 -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 0"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-            <img src="{{ asset('images/slider/bali.jpg') }}" alt="Beautiful beaches and temples in Bali, Indonesia" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-            <div class="absolute inset-0 flex items-center justify-center px-4">
-                <div class="text-center text-white max-w-3xl">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Beautiful Bali</h2>
-                    <p class="text-lg md:text-xl lg:text-2xl">Experience the magic of the Island of Gods</p>
+
+        @foreach ([
+            ['bali.jpg', 'Beautiful beaches and temples in Bali, Indonesia', 'slide_title1', 'slide_desc1'],
+            ['raja-ampat.jpg', 'Stunning underwater paradise in Raja Ampat, Indonesia', 'slide_title2', 'slide_desc2'],
+            ['borobudur.jpg', 'Ancient Borobudur Temple in Yogyakarta, Indonesia', 'slide_title3', 'slide_desc3'],
+            ['komodo.jpg', 'Komodo dragons in their natural habitat, Komodo Island Indonesia', 'slide_title4', 'slide_desc4'],
+            ['bluefire-ijen.jpg', 'Bluefire Kawah Ijen Crater', 'slide_title5', 'slide_desc5'],
+            ['dieng-culture.jpg', 'Dieng Culture People', 'slide_title6', 'slide_desc6'],
+            ['dieng-sunrise.jpg', 'Dieng Sunrise', 'slide_title7', 'slide_desc7'],
+            ['traditional-dance.jpg', 'Traditional Dance and Culture', 'slide_title8', 'slide_desc8']
+        ] as $index => [$img, $alt, $titleKey, $descKey])
+            <div 
+                x-cloak 
+                class="absolute inset-0" 
+                x-show="currentSlide === {{ $index }}"
+                x-transition:enter="transition ease-out duration-1000"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-1000"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+            >
+                <img src="{{ asset('images/slider/' . $img) }}" alt="{{ $alt }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                <div class="absolute inset-0 flex items-center justify-center px-4">
+                    <div class="text-center text-white max-w-3xl">
+                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ __("messages.$titleKey") }}</h2>
+                        <p class="text-lg md:text-xl lg:text-2xl">{{ __("messages.$descKey") }}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Slide 2 -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 1"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-            <img src="{{ asset('images/slider/raja-ampat.jpg') }}" alt="Stunning underwater paradise in Raja Ampat, Indonesia" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-            <div class="absolute inset-0 flex items-center justify-center px-4">
-                <div class="text-center text-white max-w-3xl">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Raja Ampat Paradise</h2>
-                    <p class="text-lg md:text-xl lg:text-2xl">Discover the underwater wonder</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 3 -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 2"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-            <img src="{{ asset('images/slider/borobudur.jpg') }}" alt="Ancient Borobudur Temple in Yogyakarta, Indonesia" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-            <div class="absolute inset-0 flex items-center justify-center px-4">
-                <div class="text-center text-white max-w-3xl">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Majestic Borobudur</h2>
-                    <p class="text-lg md:text-xl lg:text-2xl">Journey through ancient history</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 4 -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 3"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-            <img src="{{ asset('images/slider/komodo.jpg') }}" alt="Komodo dragons in their natural habitat, Komodo Island Indonesia" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-            <div class="absolute inset-0 flex items-center justify-center px-4">
-                <div class="text-center text-white max-w-3xl">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Komodo Adventure</h2>
-                    <p class="text-lg md:text-xl lg:text-2xl">Meet the legendary dragons</p>
-                </div>
-            </div>
-        </div>
+        @endforeach
+
     </div>
-    
-    <!-- Slider Navigation -->
+
+    <!-- Bullet Navigation -->
     <div class="absolute bottom-5 left-0 right-0 flex justify-center space-x-2">
-        <button class="w-3 h-3 rounded-full transition" :class="currentSlide === 0 ? 'bg-white' : 'bg-white/50'" @click="currentSlide = 0"></button>
-        <button class="w-3 h-3 rounded-full transition" :class="currentSlide === 1 ? 'bg-white' : 'bg-white/50'" @click="currentSlide = 1"></button>
-        <button class="w-3 h-3 rounded-full transition" :class="currentSlide === 2 ? 'bg-white' : 'bg-white/50'" @click="currentSlide = 2"></button>
-        <button class="w-3 h-3 rounded-full transition" :class="currentSlide === 3 ? 'bg-white' : 'bg-white/50'" @click="currentSlide = 3"></button>
+        <template x-for="i in totalSlides" :key="i">
+            <button 
+                class="w-3 h-3 rounded-full transition" 
+                :class="currentSlide === i - 1 ? 'bg-white' : 'bg-white/50'"
+                @click="currentSlide = i - 1"
+            ></button>
+        </template>
+    </div>
+
+    <!-- Button View Tours -->
+    <div class="absolute bottom-20 left-0 right-0 flex justify-center">
+        <a href="/tours"
+        class="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-20 text-xl md:text-2xl rounded-full shadow-2xl transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300">
+            {{ __('messages.view_tours') }}
+        </a>
+
     </div>
 </div>
+
 
 <!-- Why Choose Paradise Of Indonesia -->
 <div class="py-12 md:py-16 bg-white">
@@ -154,7 +150,7 @@
             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-500">{{ __('messages.tagline') }}</p>
         </div>
 
-        <div class="mt-8 md:mt-12 grid grid-cols-3 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-8 md:mt-12 grid grid-cols-3 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <!-- Comfort -->
             <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
@@ -192,7 +188,9 @@
             <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m8.485-8.485h1M3.515 12.515h1M16.95 7.05l.707-.707M6.343 17.657l.707-.707M16.95 16.95l.707.707M6.343 6.343l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                        </path>
                     </svg>
                 </div>
                 <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.enjoy') }}</h3>
@@ -214,7 +212,9 @@
             <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20 7l-8-4-8 4m16 0v10a2 2 0 01-1 1.732l-7 4a2 2 0 01-2 0l-7-4A2 2 0 014 17V7m16 0L12 11M4 7l8 4">
+                        </path>
                     </svg>
                 </div>
                 <h3 class="mt-4 text-xl font-semibold text-center text-gray-900">{{ __('messages.custom') }}</h3>

@@ -10,14 +10,17 @@ use App\Models\TravelServiceBooking;
 use App\Http\Requests\StoreTravelServiceBookingRequest;
 use App\Services\MidtransService;
 use App\Services\OrderIdService;
+use App\Services\OsrmService;
 
 class TravelServiceController extends Controller
 {
     protected $midtransService;
+    protected $osrmService;
 
-    public function __construct(MidtransService $midtransService)
+    public function __construct(MidtransService $midtransService, OsrmService $osrmService)
     {
         $this->midtransService = $midtransService;
+        $this->osrmService = $osrmService;
     }
 
     /**
@@ -47,13 +50,15 @@ class TravelServiceController extends Controller
         $pickup = Pickup::findOrFail($validated['pickup_id']);
         $destination = PickoffDestination::findOrFail($validated['destination_id']);
 
-        // Hitung jarak menggunakan Haversine formula
-        $distance = $this->calculateDistance(
+        // Hitung jarak menggunakan OSRM dengan fallback ke Haversine
+        $distanceResult = $this->osrmService->calculateDistance(
             $pickup->latitude,
             $pickup->longitude,
             $destination->latitude,
             $destination->longitude
         );
+
+        $distance = $distanceResult['distance'];
 
         // Hitung total price (bisa ditambahkan logic untuk round-trip)
         $basePrice = $service->price;
@@ -86,7 +91,7 @@ class TravelServiceController extends Controller
     {
         // Ambil booking dari database berdasarkan order_id atau booking_id
         $bookingId = $request->input('booking_id');
-        
+
         if (!$bookingId) {
             return redirect()->back()->with('error', 'Booking ID tidak ditemukan');
         }
@@ -107,24 +112,13 @@ class TravelServiceController extends Controller
     }
 
     /**
-     * Calculate distance between two coordinates using Haversine formula
+     * Calculate distance between two coordinates using OSRM with Haversine fallback
+     * This method is kept for backward compatibility but now uses OSRM service
      */
     private function calculateDistance($lat1, $lon1, $lat2, $lon2): float
     {
-        $earthRadius = 6371; // km
-
-        $latDiff = deg2rad($lat2 - $lat1);
-        $lonDiff = deg2rad($lon2 - $lon1);
-
-        $a = sin($latDiff / 2) ** 2 
-            + cos(deg2rad($lat1)) 
-            * cos(deg2rad($lat2)) 
-            * sin($lonDiff / 2) ** 2;
-
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        $distance = $earthRadius * $c;
-
-        return round($distance, 2);
+        $result = $this->osrmService->calculateDistance($lat1, $lon1, $lat2, $lon2);
+        return $result['distance'];
     }
 
     /**
@@ -144,7 +138,7 @@ class TravelServiceController extends Controller
                     'id' => $booking->travelService->id,
                     'price' => (int) $booking->total_price,
                     'quantity' => 1,
-                    'name' => 'Travel Service: ' . $booking->travelService->name 
+                    'name' => 'Travel Service: ' . $booking->travelService->name
                         . ' (' . $booking->booking_type . ')',
                 ],
             ],
@@ -214,7 +208,7 @@ class TravelServiceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource in storage.
      */
     public function destroy(string $id)
     {

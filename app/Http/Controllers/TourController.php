@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tour;
 use App\Models\Destination;
+use App\Services\LocationService;
+
 
 class TourController extends Controller
 {
@@ -13,10 +15,15 @@ class TourController extends Controller
      */
     public function index()
     {
-        $tours = Tour::with('destination')->latest()->paginate(12);
-        return view('tours.index', compact('tours'));
-    }
+        $userMarket = LocationService::getUserMarket();
+        
+        $tours = Tour::forMarket($userMarket)
+            ->where('status', 'active')
+            ->latest()
+            ->paginate(15);
 
+        return view('tours.index', compact('tours', 'userMarket'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -36,9 +43,14 @@ class TourController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Tour $tour)
     {
-        $tour = Tour::with('destination')->where('id', $id)->orWhere('slug', $id)->firstOrFail();
+        // Check if tour is available for this user
+        if (!$tour->isAvailableForUser()) {
+            abort(403, 'This tour is not available in your region.');
+        }
+
+        $tour->load('destination');
         return view('tours.show', compact('tour'));
     }
 

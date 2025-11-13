@@ -19,6 +19,6 @@ class TourPackage extends Model
      */
     public function tours(): BelongsToMany
     {
-        return $this->belongsToMany(Tour::class, 'tour_package_tour');
+        return $this->belongsToMany(Tour::class);
     }
 }

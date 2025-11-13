@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Public view routes (bisa diakses tanpa login)
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
@@ -34,7 +35,7 @@ Route::get('/tour-activities/{tourActivity}', [TourActivityController::class, 's
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
 
 Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
-Route::get('/tour-packages/{tourPackage}', [TourPackageController::class, 'show'])->name('tour-packages.show');
+Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->name('tour-packages.show');
 
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
 Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
@@ -47,6 +48,7 @@ Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'ind
 
 Route::post('/language/switch', [App\Http\Controllers\LanguageController::class, 'switch'])
     ->name('language.switch');
+
 
 /*
 |--------------------------------------------------------------------------

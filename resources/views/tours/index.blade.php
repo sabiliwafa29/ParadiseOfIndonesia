@@ -6,6 +6,12 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold mb-6">Tours</h2>
 
+            @php
+                use App\Services\LocationService;
+                $userCountry = LocationService::detectCountry();
+                $isDomestic = LocationService::isIndonesia();
+            @endphp
+            
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($tours as $tour)
                     <div class="rounded-lg overflow-hidden shadow">

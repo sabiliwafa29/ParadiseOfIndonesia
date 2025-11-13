@@ -123,7 +123,6 @@
 {{-- 🌍 LEAFLET --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <script>
 const pricePerKm = {{ $service->price }};
@@ -134,13 +133,15 @@ document.addEventListener("DOMContentLoaded", function () {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    let routeControl = null;
+    let routeLine = null; // Line untuk route visualization
     let pickupMarker = null;
     let destinationMarker = null;
     const distanceDisplay = document.getElementById('distance');
+    const totalPriceDisplay = document.getElementById('total_price');
 
     // Debounce timer
     let searchTimeout = {};
+    let distanceCalculationTimeout = null;
 
     // === Search Location via API (Database + Nominatim) ===
     async function searchLocation(query, type) {
@@ -214,51 +215,103 @@ document.addEventListener("DOMContentLoaded", function () {
         updateRoute();
     }
 
-    // === Fungsi update rute & hitung jarak ===
-    function updateRoute() {
-        if (routeControl) map.removeControl(routeControl);
+    // === Fungsi update rute & hitung jarak menggunakan OSRM API ===
+    async function updateRoute() {
+        // Clear previous route line
+        if (routeLine) {
+            map.removeLayer(routeLine);
+            routeLine = null;
+        }
 
         const pickupLat = parseFloat(document.getElementById('pickup_lat').value);
         const pickupLng = parseFloat(document.getElementById('pickup_lng').value);
         const destLat = parseFloat(document.getElementById('dest_lat').value);
         const destLng = parseFloat(document.getElementById('dest_lng').value);
 
-        if (!pickupLat || !destLat) return;
+        if (!pickupLat || !pickupLng || !destLat || !destLng) {
+            distanceDisplay.textContent = '-';
+            totalPriceDisplay.textContent = 'Rp 0';
+            return;
+        }
 
-        // Buat routing
-        routeControl = L.Routing.control({
-            waypoints: [L.latLng(pickupLat, pickupLng), L.latLng(destLat, destLng)],
-            addWaypoints: false,
-            draggableWaypoints: false,
-            routeWhileDragging: false,
-            show: false,
-            lineOptions: { 
-                styles: [{ color: 'green', opacity: 0.8, weight: 5 }] 
-            },
-            createMarker: () => null,
-            showAlternatives: false,
-            fitSelectedRoutes: true,
-            collapsible: false
-        }).on('routesfound', function(e) {
-            // Hitung jarak dari route yang ditemukan
-            const routes = e.routes;
-            const distance = routes[0].summary.totalDistance / 1000; // dalam km
-            
-            distanceDisplay.textContent = distance.toFixed(2) + " km";
-            
-            // Hitung total harga
-            const totalPrice = distance * pricePerKm;
-            document.getElementById('total_price').textContent = 
-                "Rp " + totalPrice.toLocaleString('id-ID', { minimumFractionDigits: 0 });
-        }).addTo(map);
+        // Clear previous timeout
+        if (distanceCalculationTimeout) {
+            clearTimeout(distanceCalculationTimeout);
+        }
 
-        // Sembunyikan container instruksi routing
-        setTimeout(() => {
-            const routingContainer = document.querySelector('.leaflet-routing-container');
-            if (routingContainer) {
-                routingContainer.style.display = 'none';
+        // Debounce distance calculation
+        distanceCalculationTimeout = setTimeout(async () => {
+            try {
+                // Show loading state
+                distanceDisplay.textContent = 'Calculating...';
+
+                // Call OSRM API
+                const params = new URLSearchParams({
+                    start_lat: pickupLat.toString(),
+                    start_lng: pickupLng.toString(),
+                    end_lat: destLat.toString(),
+                    end_lng: destLng.toString()
+                });
+
+                const response = await fetch(`/api/distance/calculate?${params}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const distance = data.data.distance;
+                    const method = data.data.method;
+
+                    // Update distance display
+                    distanceDisplay.textContent = `${distance.toFixed(2)} km (${method})`;
+
+                    // Calculate and update total price
+                    const totalPrice = distance * pricePerKm;
+                    totalPriceDisplay.textContent = "Rp " + totalPrice.toLocaleString('id-ID', { minimumFractionDigits: 0 });
+
+                    // Draw route line on map (straight line for visualization)
+                    routeLine = L.polyline([
+                        [pickupLat, pickupLng],
+                        [destLat, destLng]
+                    ], {
+                        color: 'green',
+                        weight: 4,
+                        opacity: 0.8
+                    }).addTo(map);
+
+                    // Fit map to show both markers and route
+                    const group = new L.featureGroup([pickupMarker, destinationMarker, routeLine]);
+                    map.fitBounds(group.getBounds().pad(0.1));
+
+                } else {
+                    throw new Error(data.message || 'Failed to calculate distance');
+                }
+
+            } catch (error) {
+                console.error('Distance calculation error:', error);
+                distanceDisplay.textContent = 'Error calculating distance';
+                totalPriceDisplay.textContent = 'Rp 0';
+
+                // Fallback: draw straight line anyway for visualization
+                routeLine = L.polyline([
+                    [pickupLat, pickupLng],
+                    [destLat, destLng]
+                ], {
+                    color: 'red',
+                    weight: 3,
+                    opacity: 0.6,
+                    dashArray: '10, 10'
+                }).addTo(map);
             }
-        }, 100);
+        }, 500); // 500ms debounce
     }
 
     // === Autocomplete Handler ===

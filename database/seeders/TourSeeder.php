@@ -10,54 +10,131 @@ class TourSeeder extends Seeder
 {
     public function run()
     {
-        $bali = Destination::where('slug', 'bali')->first();
-        $raja = Destination::where('slug', 'papua')->first();
-        $jogja = Destination::where('slug', 'jawatengah-yogyakarta')->first();
+        // Get destination
+        $eastJava = Destination::where('slug', 'east-java')->firstOrFail();
 
         $tours = [
             [
-                'name' => 'Bali Paradise Escape',
-                'slug' => 'bali-beach-escape',
-                'description' => 'Nikmati keindahan alam, budaya, dan kuliner khas Pulau Dewata dalam paket 5 hari 4 malam.',
-                'price' => 499.00,
-                'duration' => 5,
-                'destination_id' => $bali->id,
+                'name' => 'Explore Bromo Midnigt',
+                'slug' => 'explore-bromo-midnigt',
+                'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
+                'price_usd' => 90,
+                'price_idr' => 1350000, // 90 * 15000
+                'price_cny' => 585, // 90 * 6.5
+                'exchange_rate_idr' => 15000,
+                'exchange_rate_cny' => 6.5,
+                'duration' => 2,    
+                'destination_id' => $eastJava->id,
                 'image' => 'images/tour-bali.svg',
-                'itinerary' => "Kedatangan & Uluwatu Sunset: Penjemputan di Bandara Ngurah Rai; Check-in hotel di Kuta/Seminyak; Pura Uluwatu & Kecak sunset; Makan malam seafood BBQ di Jimbaran; Menginap di Kuta/Seminyak.\nBudaya & Alam Ubud: Sarapan, berangkat ke Ubud; Tegalalang Rice Terrace; Monkey Forest; Pasar Seni Ubud; Makan siang dengan pemandangan lembah; Menginap di Ubud.\nSunrise di Kintamani & Tirta Empul: Pagi ke Gunung Batur untuk sunrise; Sarapan dengan pemandangan Danau Batur; Kunjungan ke Pura Tirta Empul; Makan siang di Tampaksiring; Santai/spa; Menginap di Ubud/Kintamani.\nNusa Penida Island Adventure: Pagi ke Sanur, speedboat ke Nusa Penida; Kelingking Beach; Angel's Billabong & Broken Beach; Crystal Bay (snorkeling opsional); Kembali ke Bali & makan malam di Sanur; Menginap di Sanur/Nusa Dua.\nBelanja & Kepulangan: Sarapan & waktu bebas; Belanja oleh-oleh di Krisna/The Keranjang Bali; Transfer ke Bandara Ngurah Rai untuk keberangkatan.",
-                'includes' => "Akomodasi hotel bintang 3-4\nTransportasi ber-AC + driver berpengalaman\nTiket objek wisata\nSpeedboat ke Nusa Penida (PP)\n4x sarapan, 3x makan siang, 2x makan malam\nTour guide lokal berlisensi",
-                'excludes' => "Tiket pesawat dari/ke Bali\nPengeluaran pribadi\nAktivitas opsional (spa, watersport)",
+                'itinerary' => json_encode([
+                    [
+                        'day' => 'DAY 1',
+                        'activities' => [
+                            ['time' => '23:00', 'description' => 'Penjemputan di Surabaya Gubeng & Juanda airport'],
+                            ['time' => '06:00', 'description' => 'Tiba di penanjakan Bromo untuk melihat sunrise']
+                        ]
+                    ],
+                    [
+                        'day' => 'DAY 2',
+                        'activities' => [
+                            ['time' => '08:00', 'description' => 'Kembali ke hotel untuk istirahat'],
+                            ['time' => '14:00', 'description' => 'Kembali ke Surabaya']
+                        ]
+                    ]
+                ]),
+                'includes' => json_encode([
+                    'Tour Guide Profesional',
+                    'Transportasi Pribadi',
+                    'Makan Pagi',
+                    'Tiket Masuk Objek Wisata'
+                ]),
+                'excludes' => json_encode([
+                    'Penerbangan',
+                    'Hotel',
+                    'Asuransi Perjalanan'
+                ]),
                 'featured' => true,
+                'status' => 'active',
             ],
             [
-                'name' => 'Raja Ampat Diving Adventure',
-                'slug' => 'raja-ampat-diving',
-                'description' => 'Explore world-class diving sites with expert guides and comfortable liveaboard.',
-                'price' => 1299.00,
-                'duration' => 7,
-                'destination_id' => $raja->id,
-                'image' => 'images/tour-raja.svg',
-                'itinerary' => 'Day 1: Arrival\nDay 2-6: Diving\nDay 7: Departure',
-                'includes' => 'Liveaboard, Meals, Diving equipment',
-                'excludes' => 'Flights, Dive insurance',
+                'name' => 'Adventure Bromo',
+                'slug' => 'adventure-bromo',
+                'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
+                'price' => 95,  // ✅ Perubahan dari 950.000 menjadi 95
+                'duration' => 2,    
+                'destination_id' => $eastJava->id,
+                'image' => 'images/tour-bali.svg',
+                'itinerary' => json_encode([]),
+                'includes' => json_encode([]),
+                'excludes' => json_encode([]),
                 'featured' => true,
+                'status' => 'active',
             ],
             [
-                'name' => 'Yogyakarta Culture & Temples',
-                'slug' => 'yogyakarta-culture',
-                'description' => 'Visit Borobudur and Prambanan and experience Javanese culture.',
-                'price' => 299.00,
-                'duration' => 3,
-                'destination_id' => $jogja->id,
-                'image' => 'images/tour-jogja.svg',
-                'itinerary' => 'Day 1: Borobudur\nDay 2: Prambanan\nDay 3: City tour',
-                'includes' => 'Accommodation, Guide, Entrance fees',
-                'excludes' => 'Flights, Meals not specified',
+                'name' => 'Tumpak Sewu',
+                'slug' => 'tumpak-sewu',
+                'description' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering dijuluki "Niagara Falls-nya Indonesia"',
+                'price' => 75,  // ✅ Harga yang reasonable
+                'duration' => 2,    
+                'destination_id' => $eastJava->id,
+                'image' => 'images/tour-tumpak-sewu.svg',
+                'itinerary' => json_encode([
+                    [
+                        'day' => 'DAY 1',
+                        'activities' => [
+                            ['time' => '07:00 - 09:00', 'description' => 'Waktu terbaik untuk kunjungan dan fotografi'],
+                            ['time' => '12:00', 'description' => 'Turun ke dasar air terjun untuk pengalaman lebih dekat']
+                        ]
+                    ]
+                ]),
+                'includes' => json_encode([
+                    'Tour Guide Berpengalaman',
+                    'Transportasi',
+                    'Peralatan Keselamatan'
+                ]),
+                'excludes' => json_encode([
+                    'Makanan dan Minuman',
+                    'Asuransi'
+                ]),
                 'featured' => true,
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Bromo Tour',
+                'slug' => 'bromo-tour',
+                'description' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau dengan sunrise ikonik dari Penanjakan',
+                'price' => 85,
+                'duration' => 1,    
+                'destination_id' => $eastJava->id,
+                'image' => 'images/tour-bromo.svg',
+                'itinerary' => json_encode([
+                    [
+                        'day' => 'DAY 1',
+                        'activities' => [
+                            ['time' => '03:00', 'description' => 'Jemput di hotel'],
+                            ['time' => '04:00 - 06:00', 'description' => 'Perjalanan ke Penanjakan'],
+                            ['time' => '06:00 - 07:00', 'description' => 'Melihat sunrise dari Penanjakan'],
+                            ['time' => '08:00 - 12:00', 'description' => 'Trekking di kawah dan padang savana']
+                        ]
+                    ]
+                ]),
+                'includes' => json_encode([
+                    'Jemput Antar',
+                    'Tour Guide',
+                    'Sarapan Pagi',
+                    'Tiket Masuk'
+                ]),
+                'excludes' => json_encode([
+                    'Makan Siang dan Malam',
+                    'Asuransi Perjalanan'
+                ]),
+                'featured' => true,
+                'status' => 'active',
             ],
         ];
 
-        foreach ($tours as $t) {
-            Tour::updateOrCreate(['slug' => $t['slug']], $t);
+        foreach ($tours as $tour) {
+            Tour::firstOrCreate(['slug' => $tour['slug']], $tour);
         }
     }
 }

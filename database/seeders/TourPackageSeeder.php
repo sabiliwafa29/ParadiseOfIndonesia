@@ -9,32 +9,46 @@ use App\Models\Tour;
 
 class TourPackageSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $tours = Tour::all();
 
         if ($tours->count() < 2) {
-            $this->command->info('Not enough tours to create packages, skipping TourPackageSeeder.');
+            $this->command->info('❌ Tidak ada cukup tours untuk membuat packages.');
             return;
         }
 
+        // Create Package
         $package1 = TourPackage::create([
-            'name' => 'Java Overland Adventure',
+            'name' => 'MIX EAST JAVA BALI PARADISE PACKAGE',
             'description' => 'Jelajahi keindahan pulau Jawa dari barat ke timur, termasuk Borobudur dan Kawah Ijen.',
-            'price' => 5000000,
+            'price' => 840,
             'image' => 'images/packages/java_adventure.jpg',
+            'includes_guide' => true,
+            'includes_transport' => true,
         ]);
-        $package1->tours()->attach($tours->random(2)->pluck('id'));
 
-        $package2 = TourPackage::create([
-            'name' => 'Bali & Lombok Escape',
-            'description' => 'Nikmati pantai-pantai eksotis dan budaya unik di Bali dan Lombok.',
-            'price' => 4500000,
-            'image' => 'images/packages/bali_lombok.jpg',
-        ]);
-        $package2->tours()->attach($tours->random(2)->pluck('id'));
+        // Get Tours
+        $tourNames = [
+            'Tumpak Sewu',
+            'Bromo Tour',
+            'Kawah Ijen Blue Fire Carter',
+            'Snorkeling Pulau Tabuhan',
+            'Dolpin Dance Lovina Beach',
+            'Tegalalang, the natural beauty of Ubud',
+            'Kelingking Beach',
+        ];
+
+        $selectedTours = Tour::whereIn('name', $tourNames)->pluck('id');
+
+        if ($selectedTours->isEmpty()) {
+            $this->command->warn('⚠️ Tidak ada tour yang cocok ditemukan!');
+            return;
+        }
+
+        // Attach Tours to Package
+        $package1->tours()->attach($selectedTours);
+        
+        $this->command->info("✅ Paket '{$package1->name}' berhasil dibuat dengan {$selectedTours->count()} tour.");
     }
 }

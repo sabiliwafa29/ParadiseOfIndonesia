@@ -20,10 +20,11 @@ return new class extends Migration
             $table->integer('duration');
             $table->foreignId('destination_id')->constrained()->onDelete('cascade');
             $table->string('image');
-            $table->text('itinerary');
-            $table->text('includes');
-            $table->text('excludes');
+            $table->longText('itinerary')->nullable();
+            $table->json('includes')->nullable();
+            $table->json('excludes')->nullable();
             $table->boolean('featured')->default(false);
+            
             $table->timestamps();
         });
     }

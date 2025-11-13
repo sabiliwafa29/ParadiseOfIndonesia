@@ -11,11 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tour_package_tour', function (Blueprint $table) {
+        Schema::create('tour_tour_package', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tour_package_id')->constrained()->onDelete('cascade');
-            $table->foreignId('tour_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('tour_package_id');
+            $table->unsignedBigInteger('tour_id');
             $table->timestamps();
+
+            $table->foreign('tour_package_id')
+                ->references('id')
+                ->on('tour_packages')
+                ->onDelete('cascade');
+
+            $table->foreign('tour_id')
+                ->references('id')
+                ->on('tours')
+                ->onDelete('cascade');
+
+            $table->unique(['tour_package_id', 'tour_id']);
         });
     }
 

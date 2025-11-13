@@ -32,3 +32,12 @@ Route::post('/midtrans/notification', [PaymentController::class, 'handleNotifica
 // ✅ 4. LOCATION SEARCH (public, untuk autocomplete)
 Route::get('/locations/search/{type}', [App\Http\Controllers\Api\LocationController::class, 'search']);
 Route::post('/locations/create-or-get', [App\Http\Controllers\Api\LocationController::class, 'createOrGet']);
+
+// ✅ 5. DISTANCE CALCULATION (public, untuk OSRM)
+Route::get('/distance/calculate', [App\Http\Controllers\Api\DistanceController::class, 'calculate'])
+    ->middleware('osrm.rate.limit');
+
+// ✅ 6. HEALTH CHECK ENDPOINTS (public, untuk monitoring)
+Route::get('/health', [App\Http\Controllers\Api\HealthController::class, 'check']);
+Route::get('/health/detailed', [App\Http\Controllers\Api\HealthController::class, 'detailed']);
+Route::get('/health/osrm', [App\Http\Controllers\Api\HealthController::class, 'osrm']);

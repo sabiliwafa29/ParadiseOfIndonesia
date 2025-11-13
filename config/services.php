@@ -44,4 +44,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'osrm' => [
+        'base_url' => env('OSRM_BASE_URL', 'https://router.project-osrm.org'),
+        'timeout' => env('OSRM_TIMEOUT', 10),
+        'profile' => env('OSRM_PROFILE', 'driving'),
+    ],
+
 ];

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Edit Tour Package')
+@section('page-title', 'Edit Tour')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-8">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {{-- Breadcrumb --}}
         <nav class="flex mb-6" aria-label="Breadcrumb">
@@ -22,7 +22,7 @@
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <a href="{{ route('admin.tours.index') }}" class="ml-1 text-sm font-medium text-gray-600 hover:text-emerald-600 md:ml-2">Tour Packages</a>
+                        <a href="{{ route('admin.tours.index') }}" class="ml-1 text-sm font-medium text-gray-600 hover:text-emerald-600 md:ml-2">Tours</a>
                     </div>
                 </li>
                 <li aria-current="page">
@@ -30,7 +30,7 @@
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
                         </svg>
-                        <span class="ml-1 text-sm font-medium text-emerald-600 md:ml-2">Edit Package</span>
+                        <span class="ml-1 text-sm font-medium text-emerald-600 md:ml-2">Edit Tour</span>
                     </div>
                 </li>
             </ol>
@@ -38,15 +38,15 @@
 
         {{-- Header --}}
         <div class="mb-8">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Tour Package</h1>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Tour</h1>
                     <p class="text-gray-600">Update the details of <span class="font-semibold text-emerald-600">{{ $tour->name }}</span></p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('tours.show', $tour) }}" 
+                <div class="flex items-center space-x-3 flex-wrap gap-2">
+                    <a href="{{ route('tours.show', $tour) }}?from=admin" 
                        target="_blank"
-                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -54,11 +54,11 @@
                         Preview
                     </a>
                     <a href="{{ route('admin.tours.index') }}" 
-                       class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                       class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition whitespace-nowrap">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
-                        Back to List
+                        Back
                     </a>
                 </div>
             </div>
@@ -76,23 +76,430 @@
         </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {{-- Main Form --}}
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
-                        <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            <div class="lg:col-span-3">
+                <form action="{{ route('admin.tours.update', $tour) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Basic Information Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Basic Information
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            {{-- Name --}}
+                            <div>
+                                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Tour Name *</label>
+                                <input type="text" name="name" id="name" value="{{ old('name', $tour->name) }}" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                                    placeholder="e.g., Explore Bromo Midnight">
+                                @error('name')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+
+                            {{-- Slug --}}
+                            <div>
+                                <label for="slug" class="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
+                                <input type="text" name="slug" id="slug" value="{{ old('slug', $tour->slug) }}" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('slug') border-red-500 @enderror"
+                                    placeholder="e.g., explore-bromo-midnight">
+                                @error('slug')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                <p class="text-xs text-gray-500 mt-1">URL-friendly version of the tour name</p>
+                            </div>
+
+                            {{-- Description --}}
+                            <div>
+                                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                                <textarea name="description" id="description" rows="4"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description') border-red-500 @enderror"
+                                    placeholder="Tour description...">{{ old('description', $tour->description) }}</textarea>
+                                @error('description')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+
+                            {{-- Destination --}}
+                            <div>
+                                <label for="destination_id" class="block text-sm font-semibold text-gray-700 mb-2">Destination *</label>
+                                <select name="destination_id" id="destination_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('destination_id') border-red-500 @enderror">
+                                    <option value="">Select a destination...</option>
+                                    @foreach($destinations as $destination)
+                                        <option value="{{ $destination->id }}" {{ old('destination_id', $tour->destination_id) == $destination->id ? 'selected' : '' }}>
+                                            {{ $destination->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('destination_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Pricing & Duration Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Pricing & Duration
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6 grid grid-cols-2 gap-4">
+                            {{-- Price --}}
+                            <div>
+                                <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Price ($) *</label>
+                                <input type="number" name="price" id="price" value="{{ old('price', $tour->price) }}" required min="0" step="0.01"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror"
+                                    placeholder="0.00">
+                                @error('price')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+
+                            {{-- Duration --}}
+                            <div>
+                                <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days) *</label>
+                                <input type="number" name="duration" id="duration" value="{{ old('duration', $tour->duration) }}" required min="1"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('duration') border-red-500 @enderror"
+                                    placeholder="1">
+                                @error('duration')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Multi-Currency Pricing Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Multi-Currency Pricing
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p class="text-sm text-blue-900">
+                                    <strong>Tip:</strong> Set prices in all currencies, or enter USD and click "Auto-Convert" to convert automatically.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {{-- USD Price --}}
+                                <div>
+                                    <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        💵 Price (USD) *
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                        <input type="number" name="price_usd" id="price_usd" value="{{ old('price_usd', $tour->price_usd) }}" required min="0" step="0.01"
+                                            class="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_usd') border-red-500 @enderror"
+                                            placeholder="0.00">
+                                    </div>
+                                    @error('price_usd')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                </div>
+
+                                {{-- IDR Price --}}
+                                <div>
+                                    <label for="price_idr" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        🇮🇩 Price (IDR)
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-3 text-gray-500">Rp</span>
+                                        <input type="number" name="price_idr" id="price_idr" value="{{ old('price_idr', $tour->price_idr) }}" min="0" step="0.01"
+                                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_idr') border-red-500 @enderror"
+                                            placeholder="0.00">
+                                    </div>
+                                    @error('price_idr')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                </div>
+
+                                {{-- CNY Price --}}
+                                <div>
+                                    <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        🇨🇳 Price (CNY) 
+                                    </label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-3 text-gray-500">¥</span>
+                                        <input type="number" name="price_cny" id="price_cny" value="{{ old('price_cny', $tour->price_cny) }}" min="0" step="0.01"
+                                            class="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_cny') border-red-500 @enderror"
+                                            placeholder="0.00">
+                                    </div>
+                                    @error('price_cny')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                </div>
+                            </div>
+
+                            {{-- Exchange Rates --}}
+                            <div class="mt-6 pt-6 border-t border-gray-200">
+                                <h4 class="font-semibold text-gray-700 mb-4 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12M8 11h12m-12 4h12M3 7l1.293 1.293a1 1 0 000 1.414L3 11m0 4l1.293 1.293a1 1 0 000 1.414L3 19"/>
+                                    </svg>
+                                    Exchange Rates
+                                </h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {{-- IDR Exchange Rate --}}
+                                    <div>
+                                        <label for="exchange_rate_idr" class="block text-sm font-semibold text-gray-700 mb-2">
+                                            1 USD = ? IDR
+                                        </label>
+                                        <input type="number" name="exchange_rate_idr" id="exchange_rate_idr" value="{{ old('exchange_rate_idr', $tour->exchange_rate_idr) }}" min="0" step="0.01"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                            placeholder="15000">
+                                    </div>
+
+                                    {{-- CNY Exchange Rate --}}
+                                    <div>
+                                        <label for="exchange_rate_cny" class="block text-sm font-semibold text-gray-700 mb-2">
+                                            1 USD = ? CNY
+                                        </label>
+                                        <input type="number" name="exchange_rate_cny" id="exchange_rate_cny" value="{{ old('exchange_rate_cny', $tour->exchange_rate_cny) }}" min="0" step="0.01"
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                            placeholder="6.5">
+                                    </div>
+                                </div>
+
+                                {{-- Auto Convert Button --}}
+                                <button type="button" onclick="autoConvertPrices()" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-semibold inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Auto-Convert from USD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Media Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Media
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6">
+                            {{-- Image --}}
+                            <div>
+                                <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">Tour Image</label>
+                                <input type="text" name="image" id="image" value="{{ old('image', $tour->image) }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('image') border-red-500 @enderror"
+                                    placeholder="e.g., images/tours/bromo.jpg">
+                                @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                @if($tour->image)
+                                    <div class="mt-3">
+                                        <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="h-32 object-cover rounded-lg">
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Itinerary Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Itinerary (JSON Format)
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6">
+                            @php
+                                // Handle both string and array formats
+                                if (is_string($tour->itinerary)) {
+                                    $itineraryValue = $tour->itinerary;
+                                } elseif (is_array($tour->itinerary) || is_object($tour->itinerary)) {
+                                    $itineraryValue = json_encode($tour->itinerary, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                                } else {
+                                    $itineraryValue = '[]';
+                                }
+                            @endphp
+                            <textarea name="itinerary" id="itinerary" rows="8"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm @error('itinerary') border-red-500 @enderror"
+                                placeholder='[{"day":"DAY 1","activities":[{"time":"18:00","description":"Penjemputan di bandara"}]}]'>{{ old('itinerary', $itineraryValue) }}</textarea>
+                            @error('itinerary')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            <p class="text-xs text-gray-500 mt-2">Format: [{"day":"DAY 1","activities":[{"time":"HH:MM","description":"Activity description"}]}]</p>
+                            <button type="button" onclick="formatJSON('itinerary')" class="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition">
+                                Format JSON
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Includes Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                What's Included (JSON Array)
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6">
+                            @php
+                                // Handle both string and array formats
+                                if (is_string($tour->includes)) {
+                                    $includesValue = $tour->includes;
+                                } elseif (is_array($tour->includes) || is_object($tour->includes)) {
+                                    $includesValue = json_encode($tour->includes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                                } else {
+                                    $includesValue = '[]';
+                                }
+                            @endphp
+                            <textarea name="includes" id="includes" rows="6"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm @error('includes') border-red-500 @enderror"
+                                placeholder='["Tour Guide","Transportation","Meals"]'>{{ old('includes', $includesValue) }}</textarea>
+                            @error('includes')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            <p class="text-xs text-gray-500 mt-2">Format: ["Item 1","Item 2","Item 3"]</p>
+                            <button type="button" onclick="formatJSON('includes')" class="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition">
+                                Format JSON
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Excludes Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2M9 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                What's Not Included (JSON Array)
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6">
+                            @php
+                                // Handle both string and array formats
+                                if (is_string($tour->excludes)) {
+                                    $excludesValue = $tour->excludes;
+                                } elseif (is_array($tour->excludes) || is_object($tour->excludes)) {
+                                    $excludesValue = json_encode($tour->excludes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                                } else {
+                                    $excludesValue = '[]';
+                                }
+                            @endphp
+                            <textarea name="excludes" id="excludes" rows="6"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm @error('excludes') border-red-500 @enderror"
+                                placeholder='["Airfare","Hotel"]'>{{ old('excludes', $excludesValue) }}</textarea>
+                            @error('excludes')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            <p class="text-xs text-gray-500 mt-2">Format: ["Item 1","Item 2"]</p>
+                            <button type="button" onclick="formatJSON('excludes')" class="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition">
+                                Format JSON
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Status & Featured Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M6.34 5.34l1.41 1.41m2.83-2.83l1.41 1.41m2.83-2.83l1.41 1.41"/>
+                                </svg>
+                                Settings
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            {{-- Status --}}
+                            <div>
+                                <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                                <select name="status" id="status"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                                    <option value="active" {{ old('status', $tour->status) === 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ old('status', $tour->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                            </div>
+
+                            {{-- Featured --}}
+                            <div class="flex items-center">
+                                <input type="checkbox" name="featured" id="featured" value="1" {{ old('featured', $tour->featured) ? 'checked' : '' }}
+                                    class="w-4 h-4 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500">
+                                <label for="featured" class="ml-2 text-sm font-semibold text-gray-700">Mark as Featured</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Target Market Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20H7m6 0v-1a6 6 0 00-6-6H9a6 6 0 00-6 6v1"/>
+                                </svg>
+                                Target Market
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            <p class="text-sm text-gray-600">Select which market this tour is intended for:</p>
+                            
+                            <div class="space-y-3">
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer" 
+                                    :class="{'border-emerald-500 bg-emerald-50': '{{ old('target_market', $tour->target_market) }}' === 'domestic'}">
+                                    <input type="radio" name="target_market" value="domestic" 
+                                        {{ old('target_market', $tour->target_market) === 'domestic' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-emerald-600">
+                                    <div class="ml-3">
+                                        <p class="font-semibold text-gray-900">🇮🇩 Domestic (Indonesia Only)</p>
+                                        <p class="text-sm text-gray-600">Tour khusus untuk wisatawan lokal Indonesia</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer"
+                                    :class="{'border-emerald-500 bg-emerald-50': '{{ old('target_market', $tour->target_market) }}' === 'international'}">
+                                    <input type="radio" name="target_market" value="international" 
+                                        {{ old('target_market', $tour->target_market) === 'international' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-emerald-600">
+                                    <div class="ml-3">
+                                        <p class="font-semibold text-gray-900">🌍 International Only</p>
+                                        <p class="text-sm text-gray-600">Tour khusus untuk wisatawan mancanegara</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer"
+                                    :class="{'border-emerald-500 bg-emerald-50': '{{ old('target_market', $tour->target_market) }}' === 'both'}">
+                                    <input type="radio" name="target_market" value="both" 
+                                        {{ old('target_market', $tour->target_market) === 'both' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-emerald-600">
+                                    <div class="ml-3">
+                                        <p class="font-semibold text-gray-900">🌐 Both Markets</p>
+                                        <p class="text-sm text-gray-600">Tour tersedia untuk semua wisatawan</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Submit Button --}}
+                    <div class="flex gap-3">
+                        <button type="submit" 
+                            class="flex-1 px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-semibold flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
-                            Tour Package Information
-                        </h3>
+                            Save Changes
+                        </button>
+                        <a href="{{ route('admin.tours.index') }}" 
+                            class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold">
+                            Cancel
+                        </a>
                     </div>
-                    
-                    <div class="p-6">
-                        @include('admin.tours._form', ['tour' => $tour, 'destinations' => $destinations])
-                    </div>
-                </div>
+                </form>
             </div>
 
             {{-- Sidebar --}}
@@ -110,21 +517,23 @@
                     <div class="p-6 space-y-4">
                         <div class="flex items-center justify-between pb-3 border-b border-gray-200">
                             <span class="text-sm text-gray-600">Status</span>
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $tour->status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold {{ ($tour->status ?? 'active') === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
                                 {{ ucfirst($tour->status ?? 'active') }}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                            <span class="text-sm text-gray-600">Featured</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $tour->featured ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700' }}">
+                                {{ $tour->featured ? 'Yes' : 'No' }}
                             </span>
                         </div>
                         <div class="flex items-center justify-between pb-3 border-b border-gray-200">
                             <span class="text-sm text-gray-600">Created</span>
                             <span class="text-sm font-medium text-gray-800">{{ $tour->created_at->format('M d, Y') }}</span>
                         </div>
-                        <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
                             <span class="text-sm text-gray-600">Last Updated</span>
                             <span class="text-sm font-medium text-gray-800">{{ $tour->updated_at->format('M d, Y') }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">Total Bookings</span>
-                            <span class="text-lg font-bold text-emerald-600">{{ $tour->bookings_count ?? 0 }}</span>
                         </div>
                     </div>
                 </div>
@@ -132,10 +541,10 @@
                 {{-- Actions Card --}}
                 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Actions</h3>
                     </div>
                     <div class="p-6 space-y-3">
-                        <a href="{{ route('tours.show', $tour) }}" 
+                        <a href="{{ route('tours.show', $tour) }}?from=admin" 
                            target="_blank"
                            class="flex items-center justify-center w-full px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-medium">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,21 +552,10 @@
                             </svg>
                             View on Website
                         </a>
-                        <button type="button" 
-                                onclick="if(confirm('Are you sure you want to duplicate this tour?')) alert('Duplicate feature coming soon!')"
-                                class="flex items-center justify-center w-full px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition font-medium">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                            </svg>
-                            Duplicate Tour
-                        </button>
-                        <form action="{{ route('admin.tours.destroy', $tour) }}" 
-                              method="POST" 
-                              onsubmit="return confirm('Are you sure you want to delete this tour? This action cannot be undone.');">
+                        <form action="{{ route('admin.tours.destroy', $tour) }}" method="POST" onsubmit="return confirm('Are you sure? This action cannot be undone.');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" 
-                                    class="flex items-center justify-center w-full px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-medium">
+                            <button type="submit" class="flex items-center justify-center w-full px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-medium">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                 </svg>
@@ -174,12 +572,12 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <div>
-                            <h4 class="text-sm font-semibold text-blue-900 mb-2">Quick Tips</h4>
-                            <ul class="text-sm text-blue-800 space-y-1">
-                                <li>• Changes are saved automatically</li>
-                                <li>• Preview changes before publishing</li>
-                                <li>• High-quality images improve bookings</li>
-                                <li>• Keep descriptions clear and concise</li>
+                            <h4 class="text-sm font-semibold text-blue-900 mb-2">JSON Format Tips</h4>
+                            <ul class="text-sm text-blue-800 space-y-2">
+                                <li><strong>Itinerary:</strong> Use day-activities format</li>
+                                <li><strong>Includes/Excludes:</strong> Simple array of strings</li>
+                                <li><strong>Validate:</strong> Use online JSON validators</li>
+                                <li><strong>Pretty Print:</strong> Use proper indentation</li>
                             </ul>
                         </div>
                     </div>
@@ -188,4 +586,213 @@
         </div>
     </div>
 </div>
+
+<script>
+// Auto-generate slug from name
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
+        
+        if (nameInput && slugInput) {
+            nameInput.addEventListener('change', function() {
+                const slug = this.value
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/[\s_]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                slugInput.value = slug;
+            });
+
+            // Optional: Real-time slug generation on input
+            nameInput.addEventListener('input', function() {
+                const slug = this.value
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/[\s_]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                slugInput.value = slug;
+            });
+        }
+    });
+
+    // Format JSON with pretty print and validation
+    function formatJSON(textareaId) {
+        const textarea = document.getElementById(textareaId);
+        
+        if (!textarea) {
+            console.error(`Textarea with id "${textareaId}" not found`);
+            return;
+        }
+
+        try {
+            const value = textarea.value.trim();
+            
+            // Skip empty values
+            if (!value || value === '[]' || value === '{}') {
+                return;
+            }
+
+            const obj = JSON.parse(value);
+            textarea.value = JSON.stringify(obj, null, 2);
+            
+            // Visual feedback
+            textarea.classList.remove('border-red-500');
+            textarea.classList.add('border-green-500');
+            
+            setTimeout(() => {
+                textarea.classList.remove('border-green-500');
+            }, 3000);
+            
+        } catch (e) {
+            console.error('JSON Parse Error:', e);
+            alert('❌ Invalid JSON format!\n\nError: ' + e.message);
+            
+            // Visual feedback for error
+            textarea.classList.add('border-red-500');
+        }
+    }
+
+    // Validate JSON before form submission
+    function validateJSONBeforeSubmit() {
+        const jsonFields = ['itinerary', 'includes', 'excludes'];
+        let isValid = true;
+
+        jsonFields.forEach(fieldId => {
+            const textarea = document.getElementById(fieldId);
+            if (textarea && textarea.value.trim()) {
+                try {
+                    JSON.parse(textarea.value);
+                    textarea.classList.remove('border-red-500');
+                } catch (e) {
+                    console.error(`Invalid JSON in ${fieldId}:`, e);
+                    textarea.classList.add('border-red-500');
+                    isValid = false;
+                }
+            }
+        });
+
+        if (!isValid) {
+            alert('❌ Please fix invalid JSON fields before submitting!');
+            return false;
+        }
+        
+        return true;
+    }
+
+    // Initialize format buttons and validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const jsonFields = ['itinerary', 'includes', 'excludes'];
+        
+        jsonFields.forEach(fieldId => {
+            const textarea = document.getElementById(fieldId);
+            
+            if (textarea) {
+                const container = textarea.parentElement;
+                
+                // Create format button
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = '✨ Format JSON';
+                btn.className = 'mt-2 px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition font-medium inline-block';
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    formatJSON(fieldId);
+                };
+                
+                container.appendChild(btn);
+                
+                // Add real-time validation on blur
+                textarea.addEventListener('blur', function() {
+                    if (this.value.trim() && this.value.trim() !== '[]' && this.value.trim() !== '{}') {
+                        try {
+                            JSON.parse(this.value);
+                            this.classList.remove('border-red-500');
+                        } catch (e) {
+                            this.classList.add('border-red-500');
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Attach validation to form submit
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (!validateJSONBeforeSubmit()) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+
+    // Helper function to copy text to clipboard
+    function copyToClipboard(text, fieldId) {
+        navigator.clipboard.writeText(text).then(() => {
+            const textarea = document.getElementById(fieldId);
+            if (textarea) {
+                textarea.classList.add('border-blue-500');
+                setTimeout(() => textarea.classList.remove('border-blue-500'), 2000);
+            }
+        });
+    }
+
+    // Auto-convert USD to other currencies
+    function autoConvertPrices() {
+        const usdPrice = parseFloat(document.getElementById('price_usd').value);
+        const idrRate = parseFloat(document.getElementById('exchange_rate_idr').value) || 15000;
+        const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
+
+        if (isNaN(usdPrice) || usdPrice <= 0) {
+            alert('❌ Please enter a valid USD price first!');
+            return;
+        }
+
+        const idrPrice = (usdPrice * idrRate).toFixed(2);
+        const cnyPrice = (usdPrice * cnyRate).toFixed(2);
+
+        document.getElementById('price_idr').value = idrPrice;
+        document.getElementById('price_cny').value = cnyPrice;
+
+        // Visual feedback
+        const idrInput = document.getElementById('price_idr');
+        const cnyInput = document.getElementById('price_cny');
+        
+        idrInput.classList.add('border-green-500', 'bg-green-50');
+        cnyInput.classList.add('border-green-500', 'bg-green-50');
+        
+        setTimeout(() => {
+            idrInput.classList.remove('border-green-500', 'bg-green-50');
+            cnyInput.classList.remove('border-green-500', 'bg-green-50');
+        }, 3000);
+
+        alert(`✅ Converted!\n\n💵 USD: $${usdPrice}\n🇮🇩 IDR: Rp ${Number(idrPrice).toLocaleString()}\n🇨🇳 CNY: ¥${cnyPrice}`);
+    }
+
+    // Real-time exchange rate update
+    document.getElementById('price_usd').addEventListener('input', function() {
+        // Update hints saat USD berubah
+        const usdPrice = parseFloat(this.value);
+        if (usdPrice > 0) {
+            const idrRate = parseFloat(document.getElementById('exchange_rate_idr').value) || 15000;
+            const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
+            
+            // Show preview (optional)
+            console.log('USD: $' + usdPrice + ' ≈ Rp ' + (usdPrice * idrRate).toLocaleString() + ' ≈ ¥' + (usdPrice * cnyRate).toFixed(2));
+        }
+    });
+
+    // Export function for debugging (optional)
+    window.debugTourForm = {
+        validateAll: validateJSONBeforeSubmit,
+        formatField: formatJSON,
+        copyTemplate: (fieldId, template) => copyToClipboard(template, fieldId)
+    };
+
+    console.log('✅ Tour form script loaded successfully');
+</script>
 @endsection

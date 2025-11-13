@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\Tour;
+use App\Models\TourPackage;
+
+class TourObserver
+{
+    /**
+     * Handle the Tour "created" event.
+     */
+    public function created(Tour $tour): void
+    {
+        // Saat tour baru dibuat, cari package dengan kategori yang sama
+        // Misalnya: jika tour di East Java, tambahkan ke package East Java
+        
+        $packages = TourPackage::where('name', 'LIKE', '%' . $tour->destination->name . '%')
+            ->get();
+
+        foreach ($packages as $package) {
+            // Cek apakah tour sudah ada di package
+            if (!$package->tours()->where('tour_id', $tour->id)->exists()) {
+                $package->tours()->attach($tour->id);
+            }
+        }
+    }
+
+    /**
+     * Handle the Tour "updated" event.
+     */
+    public function updated(Tour $tour): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Tour "deleted" event.
+     */
+    public function deleted(Tour $tour): void
+    {
+        // Saat tour dihapus, hapus juga dari semua package
+        $tour->tourPackages()->detach();
+    }
+}

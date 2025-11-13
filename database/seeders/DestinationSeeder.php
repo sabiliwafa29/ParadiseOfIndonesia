@@ -27,7 +27,7 @@ class DestinationSeeder extends Seeder
                 'slug' => 'papua',
                 'description' => 'Papua: Keindahan pulau papua dari pov yang tidak pernah terekspos social media.',
                 'location' => 'Papua, Indonesia',
-                'image' => 'images/dest-raja.svg',
+                'image' => 'images/dest-papua.svg',
                 'featured' => true,
             ],
             [
@@ -43,7 +43,7 @@ class DestinationSeeder extends Seeder
                 'slug' => 'jawabarat-jakarta',
                 'description' => 'Jawa Barat: wisata jawa barat dan jakarta.',
                 'location' => 'Java, Indonesia',
-                'image' => 'images/dest-jogja.svg',
+                'image' => 'images/dest-west_java.svg',
                 'featured' => true,
             ],
             [
@@ -51,7 +51,15 @@ class DestinationSeeder extends Seeder
                 'slug' => 'lombok-komodo',
                 'description' => 'Lombok: Keindahan di lombok yang tiada tanding.',
                 'location' => 'Java, Indonesia',
-                'image' => 'images/dest-jogja.svg',
+                'image' => 'images/dest-lombok.svg',
+                'featured' => true,
+            ],
+            [
+                'name' => 'Paradise of East Java',
+                'slug' => 'east-java',
+                'description' => 'Lombok: Keindahan alam di sepanjang pulau Jawa Timur.',
+                'location' => 'Java, Indonesia',
+                'image' => 'images/dest-east_java.svg',
                 'featured' => true,
             ],
         ];
