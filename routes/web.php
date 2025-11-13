@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
 
 // Public view routes (bisa diakses tanpa login)
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
