@@ -134,7 +134,7 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.login');
-Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'google.callback']);
 
 /*
 |--------------------------------------------------------------------------
