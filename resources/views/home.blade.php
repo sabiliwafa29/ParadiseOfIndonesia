@@ -173,7 +173,7 @@
              x-transition:leave="transition ease-in duration-1000"
              x-transition:leave-start="opacity-100 scale-100"
              x-transition:leave-end="opacity-0 scale-95">
-            <img src="{{ asset('images/slider/blufire-ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
+            <img src="{{ asset('images/slider/bluefire-ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
