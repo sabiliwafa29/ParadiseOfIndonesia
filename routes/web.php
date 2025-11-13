@@ -67,7 +67,9 @@ Route::middleware('auth')->group(function () {
         
         // Dashboard User
         Route::get('/dashboard', function () {
-            return view('dashboard');
+            return redirect()->route('home')
+                ->with('login_success', true)
+                ->with('user_name', auth()->user()->name);
         })->name('dashboard');
         
         // Profile Management

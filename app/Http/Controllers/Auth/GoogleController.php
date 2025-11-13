@@ -82,7 +82,7 @@ class GoogleController extends Controller
             }
 
             \Log::info('Redirecting user to dashboard');
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('home'));
             
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
             \Log::error('Invalid State Exception (session issue): ' . $e->getMessage());
