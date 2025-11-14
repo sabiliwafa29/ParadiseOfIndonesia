@@ -12,20 +12,9 @@ class TourPackageController extends Controller
     /**
      * Display a listing of the tour packages.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->input('search');
-        $locale = app()->getLocale(); // 'id', 'en', atau 'zh'
-        $nameColumn = 'name_' . $locale;
-
-        $query = TourPackage::query();
-
-        if ($search) {
-            $query->where($nameColumn, 'ILIKE', '%' . $search . '%'); 
-        }
-
-        $packages = $query->paginate(9);
-
+        $packages = TourPackage::paginate(9);
         return view('tour-packages.index', compact('packages'));
     }
 
