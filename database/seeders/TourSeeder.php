@@ -17,9 +17,13 @@ class TourSeeder extends Seeder
 
         $tours = [
             [
-                'name' => 'Explore Bromo',
+                'name_id' => 'Jelajah Bromo',
+                'name_en' => 'Explore Bromo',
+                'name_zh' => '探索布罗莫',
                 'slug' => 'explore-bromo',
-                'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
+                'description_id' => 'Mulai dari Stasiun Gubeng Surabaya & Bandara Juanda pukul 23:00.',
+                'description_en' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM.',
+                'description_zh' => '晚上11点从泗水古本火车站和朱安达机场出发。',
                 'price_usd' => 95,
                 'price_idr' => 950000, 
                 'price_cny' => 715, 
@@ -67,9 +71,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Adventure Bromo',
+                'name_id' => 'Petualangan Bromo',
+                'name_en' => 'Adventure Bromo',
+                'name_zh' => '布罗莫探险',
                 'slug' => 'adventure-bromo',
-                'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
+                'description_id' => 'Mulai dari Stasiun Gubeng Surabaya & Bandara Juanda pukul 23:00.',
+                'description_en' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM.',
+                'description_zh' => '晚上11点从泗水古本火车站和朱安达机场出发。',
                 'price_usd' => 95,
                 'price_idr' => 950, // 95 * 16700
                 'price_cny' => 715, // 95 * 6.5
@@ -117,9 +125,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Tumpak Sewu',
+                'name_id' => 'Tumpak Sewu',
+                'name_en' => 'Tumpak Sewu',
+                'name_zh' => '图姆帕克·塞武',
                 'slug' => 'tumpak-sewu',
-                'description' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering dijuluki "Niagara Falls-nya Indonesia"',
+                'description_id' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering menjadi tujuan favorit para petualang.',
+                'description_en' => 'Tumpak Sewu Waterfall is a spectacular natural tourist destination in East Java, often a favorite for adventurers.',
+                'description_zh' => 'Tumpak Sewu瀑布是东爪哇壮观的自然旅游胜地，经常成为探险者的最爱。',
                 'price_usd' => 75,
                 'price_idr' => 1125000, // 75 * 16700
                 'price_cny' => 487.5, // 75 * 6.5
@@ -151,9 +163,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Bromo Tour',
+                'name_id' => 'Tur Bromo',
+                'name_en' => 'Bromo Tour',
+                'name_zh' => '布罗莫之旅',
                 'slug' => 'bromo-tour',
-                'description' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau dengan sunrise ikonik dari Penanjakan',
+                'description_id' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau dengan sunrise ikonik dari Penanjakan.',
+                'description_en' => 'Mount Bromo offers a stunning natural tourism experience with its iconic sunrise from Penanjakan.',
+                'description_zh' => '布罗莫火山以其标志性的日出为特色，带来令人惊叹的自然旅游体验。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
@@ -188,9 +204,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Kawah Ijen Blue Fire Carter',
+                'name_id' => 'Kawah Ijen Blue Fire Carter',
+                'name_en' => 'Kawah Ijen Blue Fire Carter',
+                'name_zh' => '伊真火山蓝火之旅',
                 'slug' => 'kawah-ijen-blue-fire-carter',
-                'description' => 'Kawah Ijen terkenal dengan fenomena api biru yang langka dan pemandangan kawah yang menakjubkan di Jawa Timur',
+                'description_id' => 'Kawah Ijen terkenal dengan fenomena api biru yang langka dan pemandangan kawah yang menakjubkan.',
+                'description_en' => 'Kawah Ijen is famous for its rare blue fire phenomenon and stunning crater views.',
+                'description_zh' => '伊真火山以其罕见的蓝色火焰现象和壮观的火山口景色而闻名。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
@@ -225,9 +245,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Snorkeling Pulau Tabuhan',
+                'name_id' => 'Snorkeling Pulau Tabuhan',
+                'name_en' => 'Snorkeling Pulau Tabuhan',
+                'name_zh' => '塔布汉岛浮潜',
                 'slug' => 'snorkeling-pulau-tabuhan',
-                'description' => 'Pulau Tabuhan adalah destinasi snorkeling eksotis di Jawa Timur yang menawarkan keindahan terumbu karang dan kehidupan laut yang beragam',
+                'description_id' => 'Pulau Tabuhan adalah destinasi snorkeling eksotis di Jawa Timur yang menawarkan keindahan bawah laut yang luar biasa.',
+                'description_en' => 'Tabuhan Island is an exotic snorkeling destination in East Java offering extraordinary underwater beauty.',
+                'description_zh' => '塔布汉岛是东爪哇一个充满异国情调的浮潜胜地，拥有非凡的水下美景。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
@@ -262,9 +286,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Dolpin Dance Lovina Beach',
+                'name_id' => 'Tarian Lumba-lumba Pantai Lovina',
+                'name_en' => 'Dolpin Dance Lovina Beach',
+                'name_zh' => '洛维纳海滩海豚舞',
                 'slug' => 'dolpin-dance-lovina-beach',
-                'description' => 'Lovina Beach di Bali terkenal dengan atraksi lumba-lumba yang menakjubkan dan suasana pantai yang tenang',
+                'description_id' => 'Pantai Lovina di Bali terkenal dengan atraksi lumba-lumba yang menakjubkan dan suasana pantai yang tenang.',
+                'description_en' => 'Lovina Beach in Bali is famous for its amazing dolphin attractions and tranquil beach atmosphere.',
+                'description_zh' => '巴厘岛洛维纳海滩以其令人惊叹的海豚表演和宁静的海滩氛围而闻名。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
@@ -299,9 +327,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Tegallalang, the natural beauty of Ubud',
+                'name_id' => 'Tegallalang, Keindahan Alam Ubud',
+                'name_en' => 'Tegallalang, the natural beauty of Ubud',
+                'name_zh' => '德格拉朗，乌布的自然美景',
                 'slug' => 'tegalalang-the-natural-beauty-of-ubud',
-                'description' => 'Tegalalang adalah destinasi wisata ikonik di Ubud, Bali, yang terkenal dengan sawah teraseringnya yang hijau dan pemandangan alam yang menakjubkan',
+                'description_id' => 'Tegalalang adalah destinasi wisata ikonik di Ubud, Bali, yang terkenal dengan sawah teraseringnya yang indah.',
+                'description_en' => 'Tegallalang is an iconic tourist destination in Ubud, Bali, famous for its beautiful terraced rice fields.',
+                'description_zh' => '德格拉朗是巴厘岛乌布的标志性旅游胜地，以其美丽的梯田而闻名。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
@@ -336,9 +368,13 @@ class TourSeeder extends Seeder
                 'exchange_rate_cny' => 6.5,
             ],
             [
-                'name' => 'Kelingking Beach',
+                'name_id' => 'Pantai Kelingking',
+                'name_en' => 'Kelingking Beach',
+                'name_zh' => '克林金海滩',
                 'slug' => 'kelingking-beach',
-                'description' => 'Kelingking Beach di Nusa Penida, Bali, adalah destinasi wisata yang terkenal dengan pemandangan tebing ikonik berbentuk T-Rex dan pantai pasir putih yang menakjubkan',
+                'description_id' => 'Pantai Kelingking di Nusa Penida, Bali, adalah destinasi wisata yang terkenal dengan pemandangan tebing yang unik dan pasir putihnya.',
+                'description_en' => 'Kelingking Beach in Nusa Penida, Bali, is a tourist destination famous for its unique cliff views and white sand.',
+                'description_zh' => '巴厘岛努沙佩尼达的克林金海滩以其独特的悬崖景观和白色沙滩而闻名。',
                 'price_usd' => 85,
                 'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
