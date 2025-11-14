@@ -45,15 +45,16 @@ class TourController extends Controller
      */
     public function show(Tour $tour)
     {
-        // Check if tour is available for this user
-        if (!$tour->isAvailableForUser()) {
-        return redirect()->route('tours.index')
+    // Check if tour is available for this user
+    if (!$tour->isAvailableForUser()) {
+        return redirect()->intended(route('tours.index')) 
             ->with('error', 'This tour is not available in your region.');
     }
 
         $tour->load('destination');
         return view('tours.show', compact('tour'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
