@@ -11,7 +11,18 @@ class TourPackageController extends Controller
 {
     public function index()
     {
-        $packages = TourPackage::paginate(10);
+        $search = $request->input('search');
+        $locale = app()->getLocale(); // 'id', 'en', atau 'zh'
+        $nameColumn = 'name_' . $locale;
+
+        $query = TourPackage::query();
+
+        if ($search) {
+            $query->where($nameColumn, 'ILIKE', '%' . $search . '%'); // ILIKE untuk PostgreSQL, LIKE untuk MySQL
+        }
+
+        $packages = $query->paginate(10);
+
         return view('admin.tour-packages.index', compact('packages'));
     }
 
