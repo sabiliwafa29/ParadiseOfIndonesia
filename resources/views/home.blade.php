@@ -16,25 +16,38 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const audio = document.getElementById('bg-music');
-        const btn = document.getElementById('music-toggle');
-        const icon = document.getElementById('music-icon');
-        const pulse = document.getElementById('music-pulse');
-        let isPlaying = false;
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-toggle');
+    const icon = document.getElementById('music-icon');
+    const pulse = document.getElementById('music-pulse');
+    let isPlaying = false;
 
-        btn.onclick = () => {
-            if (isPlaying) {
-                audio.pause();
-                pulse.classList.add('hidden');
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
-            } else {
-                audio.play();
-                pulse.classList.remove('hidden');
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
-            }
-            isPlaying = !isPlaying;
-        };
+    // Try to play audio on load
+    audio.play().then(() => {
+        isPlaying = true;
+        pulse.classList.remove('hidden');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
+    }).catch(() => {
+        // Autoplay prevented, keep isPlaying false and pulse hidden
+        isPlaying = false;
+        pulse.classList.add('hidden');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
     });
+
+    btn.onclick = () => {
+        if (isPlaying) {
+            audio.pause();
+            pulse.classList.add('hidden');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
+        } else {
+            audio.play();
+            pulse.classList.remove('hidden');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
+        }
+        isPlaying = !isPlaying;
+    };
+});
+
 </script>
 
 <!-- Hero Slider with Modern Design - 8 Slides -->
