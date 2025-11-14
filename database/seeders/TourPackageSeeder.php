@@ -23,7 +23,7 @@ class TourPackageSeeder extends Seeder
             'name' => 'MIX EAST JAVA BALI PARADISE PACKAGE',
             'description' => 'Jelajahi keindahan pulau Jawa dari barat ke timur, termasuk Borobudur dan Kawah Ijen.',
             'price' => 840,
-            'image' => 'images/packages/java_adventure.jpg',
+            'image' => 'images/packages/nusaPenida.jpg',
             'includes_guide' => true,
             'includes_transport' => true,
         ]);
