@@ -15,16 +15,10 @@ class TourController extends Controller
      */
     public function index()
     {
-        try {
-            $userMarket = LocationService::getUserMarket();
-            $userCountry = LocationService::detectCountry();
-            $userCurrency = LocationService::getUserCurrency();
-        } catch (\Exception $e) {
-            \Log::warning("LocationService failed: " . $e->getMessage());
-            $userMarket = 'both';
-            $userCountry = 'US';
-            $userCurrency = 'USD';
-        }
+        $userMarket = LocationService::determineUserMarket();
+        $userCountry = LocationService::determineUserCountry();
+        $userCurrency = LocationService::determineUserCurrency();
+        
         $tours = Tour::forMarket($userMarket)
             ->active()
             ->latest()
