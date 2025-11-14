@@ -281,4 +281,17 @@ return [
     'verification_sent' => 'A new verification link has been sent to your email address.',
 
     'youre_logged_in' => "You're logged in!",
+
+    'book_this_package' => 'Book This Package',
+    'select_date' => 'Select Date',
+    'additional_services' => 'Additional Services',
+    'price_per_person' => 'per person',
+    'price_summary' => 'Price Summary',
+    'package_price' => 'Package Price',
+    'guide_service' => 'Guide Service',
+    'transport_service' => 'Transport Service',
+    'complete_your_package_booking' => 'Complete Your Package Booking',
+    'package_booking' => 'Package Booking',
+    'login_to_book' => 'Login to Book',
+
 ];
