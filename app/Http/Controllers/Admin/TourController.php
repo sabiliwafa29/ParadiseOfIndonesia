@@ -30,7 +30,7 @@ class TourController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('tours.index', compact('tours', 'userMarket', 'userCountry', 'userCurrency'));
+        return view('admin.tours.index', compact('tours', 'userMarket', 'userCountry', 'userCurrency'));
     }
 
     /**
