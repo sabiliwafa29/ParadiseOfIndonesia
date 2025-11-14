@@ -15,11 +15,10 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(Request $request) // <-- Tambahkan Request $request
+    public function create(Request $request): View
     {
         // Cek jika ada parameter 'return_to' di URL
         if ($request->has('return_to')) {
-            // Simpan URL itu sebagai "tujuan" di session
             session(['url.intended' => $request->return_to]);
         }
 
@@ -35,11 +34,23 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Redirect admin to admin panel
-        if (auth()->user()->role === 'admin') {
-            return redirect()->intended(route('admin.tours.index'));
+        $user = auth()->user();
+
+        // Method 1: Jika menggunakan kolom 'role' di tabel users
+        if ($user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard'))
+                ->with('login_success', true)
+                ->with('user_name', $user->name);
         }
 
+        // Method 2: Jika menggunakan Spatie Permission (uncomment jika pakai)
+        // if ($user->hasRole('admin')) {
+        //     return redirect()->intended(route('admin.dashboard'))
+        //         ->with('login_success', true)
+        //         ->with('user_name', $user->name);
+        // }
+
+        // User biasa redirect ke home
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
@@ -54,6 +65,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->back();
+        // Redirect ke home setelah logout
+        return redirect('/');
     }
 }
