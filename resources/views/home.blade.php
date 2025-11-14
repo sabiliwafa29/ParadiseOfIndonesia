@@ -54,7 +54,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-emerald-500/20 backdrop-blur-sm rounded-full border border-emerald-500/30 mb-4">
-                        <span class="text-emerald-300 font-medium text-sm md:text-base">🌴 Island Paradise</span>
+                        <span class="text-emerald-300 font-medium text-sm md:text-base">🌴 {{ __('messages.island_paradise') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title1') }}
@@ -85,7 +85,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-blue-500/20 backdrop-blur-sm rounded-full border border-blue-500/30 mb-4">
-                        <span class="text-blue-300 font-medium text-sm md:text-base">🌊 Underwater Wonder</span>
+                        <span class="text-blue-300 font-medium text-sm md:text-base">🌊 {{ __('messages.underwater_wonder') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title2') }}
@@ -116,7 +116,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-amber-500/20 backdrop-blur-sm rounded-full border border-amber-500/30 mb-4">
-                        <span class="text-amber-300 font-medium text-sm md:text-base">🏛️ Ancient Heritage</span>
+                        <span class="text-amber-300 font-medium text-sm md:text-base">🏛️ {{ __('messages.ancient_heritage') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title3') }}
@@ -147,7 +147,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-red-500/20 backdrop-blur-sm rounded-full border border-red-500/30 mb-4">
-                        <span class="text-red-300 font-medium text-sm md:text-base">🦎 Wildlife Adventure</span>
+                        <span class="text-red-300 font-medium text-sm md:text-base">🦎 {{ __('messages.wildlife_adventure') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title4') }}
@@ -178,7 +178,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-cyan-500/20 backdrop-blur-sm rounded-full border border-cyan-500/30 mb-4">
-                        <span class="text-cyan-300 font-medium text-sm md:text-base">🔥 Blue Fire Phenomenon</span>
+                        <span class="text-cyan-300 font-medium text-sm md:text-base">🔥 {{ __('messages.blue_fire_phenomenon') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title5') }}
@@ -209,7 +209,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-purple-500/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-4">
-                        <span class="text-purple-300 font-medium text-sm md:text-base">⛰️ Volcanic Landscape</span>
+                        <span class="text-purple-300 font-medium text-sm md:text-base">⛰️ {{ __('messages.volcanic_landscape') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title6') }}
@@ -240,7 +240,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-orange-500/20 backdrop-blur-sm rounded-full border border-orange-500/30 mb-4">
-                        <span class="text-orange-300 font-medium text-sm md:text-base">🏡 Cultural Experience</span>
+                        <span class="text-orange-300 font-medium text-sm md:text-base">🏡 {{ __('messages.cultural_experience') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title7') }}
@@ -271,7 +271,7 @@
             <div class="absolute inset-0 flex items-center justify-center px-4">
                 <div class="text-center text-white max-w-4xl space-y-6 animate-fade-in-up">
                     <div class="inline-block px-4 py-2 bg-pink-500/20 backdrop-blur-sm rounded-full border border-pink-500/30 mb-4">
-                        <span class="text-pink-300 font-medium text-sm md:text-base">💃 Living Heritage</span>
+                        <span class="text-pink-300 font-medium text-sm md:text-base">💃 {{ __('messages.living_heritage') }}</span>
                     </div>
                     <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                         {{ __('messages.slide_title8') }}
@@ -424,9 +424,9 @@
 <div class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
-            <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">BEST PACKAGES</span>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Paket Tour Terbaik</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">Jelajahi destinasi terbaik Indonesia bersama kami</p>
+            <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">{{ __('messages.best_packages_label') }}</span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.best_packages') }}</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.best_packages_desc') }}</p>
         </div>
 
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -436,7 +436,7 @@
                     <img src="{{ asset($package->image) }}" alt="{{ $package->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     <div class="absolute top-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                        Best Seller
+                        {{ __('messages.best_seller') }}
                     </div>
                 </div>
                 <div class="p-6 md:p-8">
@@ -444,7 +444,7 @@
                     <p class="text-gray-600 mb-6 line-clamp-2 leading-relaxed">{{ $package->description }}</p>
                     <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div>
-                            <span class="text-sm text-gray-500 block">Starting from</span>
+                            <span class="text-sm text-gray-500 block">{{ __('messages.starting_from') }}</span>
                             <span class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                                 Rp {{ number_format($package->price, 0, ',', '.') }}
                             </span>
@@ -457,7 +457,7 @@
                                 </svg>
                             </a>
                         @else
-                            <span class="px-6 py-3 bg-gray-300 text-gray-600 rounded-full font-semibold cursor-not-allowed">Sold Out</span>
+                            <span class="px-6 py-3 bg-gray-300 text-gray-600 rounded-full font-semibold cursor-not-allowed">{{ __('messages.sold_out') }}</span>
                         @endif
                     </div>
                 </div>
@@ -471,9 +471,9 @@
 <div class="py-16 md:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
-            <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">DESTINATIONS</span>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Popular Destinations</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">Explore Indonesia's most beloved destinations</p>
+            <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">{{ __('messages.destinations_label') }}</span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.popular_destinations') }}</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.popular_destinations_desc') }}</p>
         </div>
 
         <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -493,7 +493,7 @@
                     </div>
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">{{ $destination->name }}</h3>
                     <div class="flex items-center text-white/90">
-                        <span class="text-sm font-medium">Explore Destination</span>
+                        <span class="text-sm font-medium">{{ __('messages.explore_destination') }}</span>
                         <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
@@ -505,7 +505,7 @@
 
         <div class="mt-12 md:mt-16 text-center">
             <a href="{{ route('destinations.index') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
-                View All Destinations
+                {{ __('messages.view_all_destinations') }}
                 <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
@@ -518,9 +518,9 @@
 <div class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
-            <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">FEATURED TOURS</span>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">Featured Tours</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">Curated experiences for unforgettable journeys</p>
+            <span class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">{{ __('messages.featured_tours_label') }}</span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.featured_tours') }}</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.featured_tours_desc') }}</p>
         </div>
 
         <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -547,10 +547,10 @@
                             <svg class="w-5 h-5 mr-2 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span class="font-medium">{{ $tour->duration }} days</span>
+                            <span class="font-medium">{{ $tour->duration }} {{ __('messages.days') }}</span>
                         </div>
                         <div class="text-right">
-                            <div class="text-sm text-gray-500">From</div>
+                            <div class="text-sm text-gray-500">{{ __('messages.from') }}</div>
                             <div class="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                                 ${{ number_format($tour->price, 0) }}
                             </div>
@@ -558,7 +558,7 @@
                     </div>
                     
                     <a href="{{ route('tours.show', $tour) }}" class="mt-4 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300">
-                        View Details
+                        {{ __('messages.view_details') }}
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -570,7 +570,7 @@
 
         <div class="mt-12 md:mt-16 text-center">
             <a href="{{ route('tours.index') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
-                View All Tours
+                {{ __('messages.view_all_tours') }}
                 <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>
@@ -590,8 +590,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
             </div>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4">Stay Updated!</h2>
-            <p class="text-lg md:text-xl text-white/90 mb-8">Subscribe to our newsletter and get exclusive deals and travel tips</p>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4">{{ __('messages.stay_updated') }}</h2>
+            <p class="text-lg md:text-xl text-white/90 mb-8">{{ __('messages.subscribe_newsletter') }}</p>
             
             <form class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
                 <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/50 shadow-xl">
@@ -600,7 +600,7 @@
                 </button>
             </form>
             
-            <p class="mt-6 text-white/70 text-sm">We respect your privacy. Unsubscribe at any time.</p>
+            <p class="mt-6 text-white/70 text-sm">{{ __('messages.privacy_notice') }}</p>
         </div>
     </div>
 </div>

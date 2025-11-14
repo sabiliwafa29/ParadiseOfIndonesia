@@ -21,7 +21,7 @@ class TourPackageSeeder extends Seeder
         // Create Package
         $package1 = TourPackage::create([
             'name' => 'MIX EAST JAVA BALI PARADISE PACKAGE',
-            'description' => 'Jelajahi keindahan pulau Jawa dari barat ke timur, termasuk Borobudur dan Kawah Ijen.',
+            'description' => 'Tumpak Sewu - Bromo Tour - Kawah Ijen Blue Fire Carter - Snorkeling Pulau Tabuhan - Dolpin Dance Lovina Beach - Tegalalang, the natural beauty of Ubud - Kelingking Beach',
             'price' => 840,
             'image' => 'images/packages/nusaPenida.jpg',
             'includes_guide' => true,

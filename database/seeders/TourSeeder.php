@@ -17,12 +17,12 @@ class TourSeeder extends Seeder
 
         $tours = [
             [
-                'name' => 'Explore Bromo Midnigt',
-                'slug' => 'explore-bromo-midnigt',
+                'name' => 'Explore Bromo',
+                'slug' => 'explore-bromo',
                 'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
-                'price_usd' => 90,
-                'price_idr' => 950000, // 90 * 15000
-                'price_cny' => 402, // 90 * 6.5
+                'price_usd' => 95,
+                'price_idr' => 950000, 
+                'price_cny' => 715, 
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/bromo-midnight.jpg',
@@ -63,7 +63,7 @@ class TourSeeder extends Seeder
                 'featured' => true,
                 'status' => 'active',
                 'target_market' => 'international',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -71,8 +71,8 @@ class TourSeeder extends Seeder
                 'slug' => 'adventure-bromo',
                 'description' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM',
                 'price_usd' => 95,
-                'price_idr' => 1425000, // 95 * 15000
-                'price_cny' => 617.5, // 95 * 6.5
+                'price_idr' => 950, // 95 * 16700
+                'price_cny' => 715, // 95 * 6.5
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/bromo-adventure.jpg',
@@ -113,7 +113,7 @@ class TourSeeder extends Seeder
                 'featured' => true,
                 'status' => 'active',
                 'target_market' => 'domestic',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -121,7 +121,7 @@ class TourSeeder extends Seeder
                 'slug' => 'tumpak-sewu',
                 'description' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering dijuluki "Niagara Falls-nya Indonesia"',
                 'price_usd' => 75,
-                'price_idr' => 1125000, // 75 * 15000
+                'price_idr' => 1125000, // 75 * 16700
                 'price_cny' => 487.5, // 75 * 6.5
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
@@ -147,7 +147,7 @@ class TourSeeder extends Seeder
                 'featured' => true,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -155,7 +155,7 @@ class TourSeeder extends Seeder
                 'slug' => 'bromo-tour',
                 'description' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau dengan sunrise ikonik dari Penanjakan',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $eastJava->id,
@@ -184,7 +184,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -192,7 +192,7 @@ class TourSeeder extends Seeder
                 'slug' => 'kawah-ijen-blue-fire-carter',
                 'description' => 'Kawah Ijen terkenal dengan fenomena api biru yang langka dan pemandangan kawah yang menakjubkan di Jawa Timur',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $eastJava->id,
@@ -221,7 +221,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -229,7 +229,7 @@ class TourSeeder extends Seeder
                 'slug' => 'snorkeling-pulau-tabuhan',
                 'description' => 'Pulau Tabuhan adalah destinasi snorkeling eksotis di Jawa Timur yang menawarkan keindahan terumbu karang dan kehidupan laut yang beragam',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $eastJava->id,
@@ -258,7 +258,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -266,7 +266,7 @@ class TourSeeder extends Seeder
                 'slug' => 'dolpin-dance-lovina-beach',
                 'description' => 'Lovina Beach di Bali terkenal dengan atraksi lumba-lumba yang menakjubkan dan suasana pantai yang tenang',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $bali->id,
@@ -295,7 +295,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -303,7 +303,7 @@ class TourSeeder extends Seeder
                 'slug' => 'tegalalang-the-natural-beauty-of-ubud',
                 'description' => 'Tegalalang adalah destinasi wisata ikonik di Ubud, Bali, yang terkenal dengan sawah teraseringnya yang hijau dan pemandangan alam yang menakjubkan',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $bali->id,
@@ -332,7 +332,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
             [
@@ -340,7 +340,7 @@ class TourSeeder extends Seeder
                 'slug' => 'kelingking-beach',
                 'description' => 'Kelingking Beach di Nusa Penida, Bali, adalah destinasi wisata yang terkenal dengan pemandangan tebing ikonik berbentuk T-Rex dan pantai pasir putih yang menakjubkan',
                 'price_usd' => 85,
-                'price_idr' => 1275000, // 85 * 15000
+                'price_idr' => 1275000, // 85 * 16700
                 'price_cny' => 552.5, // 85 * 6.5
                 'duration' => 1,    
                 'destination_id' => $bali->id,
@@ -369,7 +369,7 @@ class TourSeeder extends Seeder
                 'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
+                'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
         ];
