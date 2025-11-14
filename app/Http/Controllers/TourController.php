@@ -47,8 +47,9 @@ class TourController extends Controller
     {
         // Check if tour is available for this user
         if (!$tour->isAvailableForUser()) {
-            abort(403, 'This tour is not available in your region.');
-        }
+        return redirect()->route('tours.index')
+            ->with('error', 'This tour is not available in your region.');
+    }
 
         $tour->load('destination');
         return view('tours.show', compact('tour'));
