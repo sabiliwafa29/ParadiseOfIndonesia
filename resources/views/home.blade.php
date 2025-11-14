@@ -21,31 +21,69 @@
     const icon = document.getElementById('music-icon');
     const pulse = document.getElementById('music-pulse');
     let isPlaying = false;
+    let autoplayAttempted = false;
 
-    // Try to play audio on load
-    audio.play().then(() => {
-        isPlaying = true;
-        pulse.classList.remove('hidden');
-        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
-    }).catch(() => {
-        // Autoplay prevented, keep isPlaying false and pulse hidden
-        isPlaying = false;
-        pulse.classList.add('hidden');
-        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
-    });
+    // Function to update button state
+    function updateButtonState(playing) {
+        isPlaying = playing;
+        if (playing) {
+            pulse.classList.remove('hidden');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
+        } else {
+            pulse.classList.add('hidden');
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
+        }
+    }
 
+    // Function to attempt autoplay (only for logged-in users)
+    function attemptAutoplay() {
+        // Check if user is logged in (you can pass this from Laravel)
+        const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+
+        if (isLoggedIn && !autoplayAttempted) {
+            autoplayAttempted = true;
+            audio.play().then(() => {
+                updateButtonState(true);
+            }).catch(() => {
+                // Autoplay failed, keep button in stopped state
+                updateButtonState(false);
+            });
+        } else {
+            // For guests or if autoplay already attempted, just show stopped state
+            updateButtonState(false);
+        }
+    }
+
+    // Try autoplay on page load (only for logged-in users)
+    attemptAutoplay();
+
+    // Handle manual play/pause
     btn.onclick = () => {
         if (isPlaying) {
             audio.pause();
-            pulse.classList.add('hidden');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>';
+            updateButtonState(false);
         } else {
-            audio.play();
-            pulse.classList.remove('hidden');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>';
+            audio.play().then(() => {
+                updateButtonState(true);
+            }).catch(() => {
+                // If play fails, keep in stopped state
+                updateButtonState(false);
+            });
         }
-        isPlaying = !isPlaying;
     };
+
+    // Handle audio end
+    audio.addEventListener('ended', () => {
+        updateButtonState(false);
+    });
+
+    // Handle page visibility change (pause when tab is hidden)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isPlaying) {
+            audio.pause();
+            updateButtonState(false);
+        }
+    });
 });
 
 </script>

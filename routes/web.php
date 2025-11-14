@@ -105,10 +105,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         
         // Tour Management
-        Route::resource('/tours', [App\Http\Controllers\Admin\TourController::class, 'index'])->name('tours.index');
+        Route::resource('/tours', App\Http\Controllers\Admin\TourController::class);
         
         // Destination Management (jika ada controller admin)
-        Route::resource('/destinations', [App\Http\Controllers\Admin\DestinationController::class, 'index'])->name('destinations.index');
+        Route::resource('/destinations', App\Http\Controllers\Admin\DestinationController::class);
         
         // Travel Service Management (jika ada controller admin)
         // Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
