@@ -22,4 +22,14 @@ class Destination extends Model
     {
         return $this->hasMany(Tour::class);
     }
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"name_{$locale}"} ?? $this->name_en;
+    }
+    public function getDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"description_{$locale}"} ?? $this->description_en;
+    }
 }

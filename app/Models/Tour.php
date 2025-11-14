@@ -198,4 +198,15 @@ class Tour extends Model
             $this->price_cny = $this->price_usd * $this->exchange_rate_cny;
         }
     }
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"name_{$locale}"} ?? $this->name_en;
+    }
+    public function getDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"description_{$locale}"} ?? $this->description_en;
+    }
+
 }
