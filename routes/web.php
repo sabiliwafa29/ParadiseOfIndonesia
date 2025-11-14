@@ -108,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('tours', App\Http\Controllers\Admin\TourController::class);
         
         // Destination Management (jika ada controller admin)
-        // Route::resource('destinations', App\Http\Controllers\Admin\DestinationController::class);
+        Route::resource('destinations', App\Http\Controllers\Admin\DestinationController::class);
         
         // Travel Service Management (jika ada controller admin)
         // Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
@@ -126,7 +126,7 @@ Route::middleware('auth')->group(function () {
         // Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
         
         // Tour Package Management (jika ada controller admin)
-        // Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+        Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
         
         // Tour Session Management (jika ada controller admin)
         // Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);

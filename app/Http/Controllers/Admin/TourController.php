@@ -48,9 +48,13 @@ class TourController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name_id' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'name_zh' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:tours,slug',
-            'description' => 'nullable|string',
+            'description_id' => 'required|string',
+            'description_en' => 'required|string',
+            'description_zh' => 'required|string',
             'price_usd' => 'required|numeric|min:0',
             'price_idr' => 'nullable|numeric|min:0',
             'price_cny' => 'nullable|numeric|min:0',
@@ -105,9 +109,13 @@ class TourController extends Controller
     public function update(Request $request, Tour $tour)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name_id' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'name_zh' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:tours,slug,' . $tour->id,
-            'description' => 'nullable|string',
+            'description_id' => 'required|string',
+            'description_en' => 'required|string',
+            'description_zh' => 'required|string',
             'price_usd' => 'required|numeric|min:0',
             'price_idr' => 'nullable|numeric|min:0',
             'price_cny' => 'nullable|numeric|min:0',
