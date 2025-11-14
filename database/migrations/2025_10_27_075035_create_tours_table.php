@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('tours', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name_id');
+            $table->string('name_en');
+            $table->string('name_zh');
             $table->string('slug')->unique();
-            $table->text('description');
+            $table->text('description_id');
+            $table->text('description_en');
+            $table->text('description_zh');
             $table->decimal('price', 10, 2);
             $table->integer('duration');
             $table->foreignId('destination_id')->constrained()->onDelete('cascade');
