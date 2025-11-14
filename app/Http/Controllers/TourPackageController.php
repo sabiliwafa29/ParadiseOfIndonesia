@@ -67,7 +67,7 @@ class TourPackageController extends Controller
     public function show(TourPackage $package)
     {
         $package->load('tours.destination');
-        return view('tour-packages.show', compact('tourPackage'));
+        return view('tour-packages.show', compact('package'));
     }
 
     /**
@@ -76,7 +76,7 @@ class TourPackageController extends Controller
     public function edit(TourPackage $package)
     {
         $tours = Tour::all();
-        return view('tour-packages.edit', compact('tourPackage', 'tours'));
+        return view('tour-packages.edit', compact('package', 'tours'));
     }
 
     /**
