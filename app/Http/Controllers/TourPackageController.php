@@ -64,16 +64,16 @@ class TourPackageController extends Controller
     /**
      * Display the specified tour package.
      */
-    public function show(TourPackage $tourPackage)
+    public function show(TourPackage $package)
     {
-        $tourPackage->load('tours.destination');
+        $package->load('tours.destination');
         return view('tour-packages.show', compact('tourPackage'));
     }
 
     /**
      * Show the form for editing the specified tour package.
      */
-    public function edit(TourPackage $tourPackage)
+    public function edit(TourPackage $package)
     {
         $tours = Tour::all();
         return view('tour-packages.edit', compact('tourPackage', 'tours'));
@@ -82,7 +82,7 @@ class TourPackageController extends Controller
     /**
      * Update the specified tour package in storage.
      */
-    public function update(Request $request, TourPackage $tourPackage)
+    public function update(Request $request, TourPackage $package)
     {
         $validated = $request->validate([
             'name_id' => 'required|string|max:255',
@@ -100,31 +100,31 @@ class TourPackageController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($tourPackage->image && Storage::disk('public')->exists($tourPackage->image)) {
-                Storage::disk('public')->delete($tourPackage->image);
+            if ($package->image && Storage::disk('public')->exists($package->image)) {
+                Storage::disk('public')->delete($package->image);
             }
             $validated['image'] = $request->file('image')->store('tour-packages', 'public');
         }
 
-        $tourPackage->update($validated);
+        $package->update($validated);
 
-        $tourPackage->tours()->sync($validated['tours'] ?? []);
+        $package->tours()->sync($validated['tours'] ?? []);
 
-        return redirect()->route('tour-packages.show', $tourPackage)
+        return redirect()->route('tour-packages.show', $package)
             ->with('success', 'Tour package updated successfully');
     }
 
     /**
      * Remove the specified tour package from storage.
      */
-    public function destroy(TourPackage $tourPackage)
+    public function destroy(TourPackage $package)
     {
-        if ($tourPackage->image && Storage::disk('public')->exists($tourPackage->image)) {
-            Storage::disk('public')->delete($tourPackage->image);
+        if ($package->image && Storage::disk('public')->exists($package->image)) {
+            Storage::disk('public')->delete($package->image);
         }
 
-        $tourPackage->tours()->detach();
-        $tourPackage->delete();
+        $package->tours()->detach();
+        $package->delete();
 
         return redirect()->route('tour-packages.index')
             ->with('success', 'Tour package deleted successfully');

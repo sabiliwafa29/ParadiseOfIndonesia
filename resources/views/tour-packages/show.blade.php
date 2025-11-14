@@ -17,10 +17,10 @@
         <div class="bg-white overflow-hidden shadow-lg rounded-lg">
             <!-- Package Header with Image -->
             <div class="relative h-96">
-                <img src="{{ asset($tourPackage->image) }}" alt="{{ $tourPackage->name }}" class="w-full h-full object-cover">
+                <img src="{{ asset($package->image) }}" alt="{{ $package->name }}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-                    <h1 class="text-4xl md:text-5xl font-bold">{{ $tourPackage->name }}</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold">{{ $package->name }}</h1>
                 </div>
             </div>
 
