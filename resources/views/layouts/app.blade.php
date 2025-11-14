@@ -17,18 +17,15 @@
         
         <!-- SweetAlert2 CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-        <!-- SweetAlert2 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     </head>
+    
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
             <!-- Hero (optional) -->
             @hasSection('hero')
-                <section class="pt-20>
+                <section class="pt-20">
                     @yield('hero')
                 </section>
             @endif
@@ -65,8 +62,42 @@
 
             @stack('scripts')
         </div>
+        
         <!-- Login Success Popup -->
         <x-login-success-popup />
+
+        <!-- SweetAlert2 JS - PINDAHKAN KE SINI -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- Notifikasi Script - PINDAHKAN KE SINI -->
+        @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+        @endif
+
+        @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#10b981',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            });
+        </script>
+        @endif
 
     </body>
 </html>
