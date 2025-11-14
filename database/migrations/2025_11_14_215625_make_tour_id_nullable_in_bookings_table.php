@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::table('bookings', function (Blueprint $table) {
             $table->foreignId('package_id')->nullable()->constrained('tour_packages')->onDelete('cascade')->after('tour_id');
             $table->dropForeign(['tour_id']);
-            $table->foreignId('tour_id')->nullable()->change();
-            $table->foreignId('tour_id')->constrained()->onDelete('cascade')->change();
+            $table->foreignId('tour_id')->nullable()->constrained()->onDelete('cascade')->change();
         });
     }
 
