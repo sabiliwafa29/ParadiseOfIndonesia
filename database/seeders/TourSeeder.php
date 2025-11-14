@@ -181,7 +181,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
@@ -218,7 +218,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
@@ -255,7 +255,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
@@ -292,7 +292,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
@@ -329,7 +329,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
@@ -366,7 +366,7 @@ class TourSeeder extends Seeder
                     'Makan Siang dan Malam',
                     'Asuransi Perjalanan'
                 ]),
-                'featured' => true,
+                'featured' => false,
                 'status' => 'active',
                 'target_market' => 'both',
                 'exchange_rate_idr' => 15000,
