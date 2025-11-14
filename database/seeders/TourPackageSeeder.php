@@ -25,7 +25,7 @@ class TourPackageSeeder extends Seeder
             'description_id' => 'Tumpak Sewu - Bromo Tour - Kawah Ijen Blue Fire Carter - Snorkeling Pulau Tabuhan - Dolpin Dance Lovina Beach - Tegalalang, keindahan alam Ubud - Kelingking Beach',
             'description_en' => 'Tumpak Sewu - Bromo Tour - Kawah Ijen Blue Fire Carter - Snorkeling Pulau Tabuhan - Dolpin Dance Lovina Beach - Tegalalang, the natural beauty of Ubud - Kelingking Beach',
             'description_zh' => 'Tumpak Sewu - 布罗莫之旅 - Ijen火山蓝火 - Tabuhan岛浮潜 - 洛维纳海豚舞 - 乌布Tegalalang的自然美景 - Kelingking海滩',
-            'price' => 840,
+            'price' => 15000000,
             'image' => 'images/packages/nusaPenida.jpg',
             'includes_guide' => true,
             'includes_transport' => true,
