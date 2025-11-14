@@ -6,7 +6,7 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
                 
-                <h2 class="text-2xl font-bold mb-6">Gallery</h2>
+                <h2 class="text-2xl font-bold mb-6">{{ __('messages.gallery') }}</h2>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @forelse ($galleries as $gallery)
@@ -14,7 +14,7 @@
                             <img src="{{ asset($gallery->path) }}" alt="{{ $gallery->name }}" class="w-full h-full object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
                         </div>
                     @empty
-                        <p>No images found in the gallery.</p>
+                        <p>{{ __('messages.no_images_found') }}</p>
                     @endforelse
                 </div>
 

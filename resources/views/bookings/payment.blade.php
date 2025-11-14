@@ -5,14 +5,14 @@
     <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                <h3 class="text-2xl font-bold mb-4">Complete Your Booking</h3>
-                <p class="mb-2">Tour: <span class="font-semibold">{{ $booking->tour->name }}</span></p>
-                <p class="mb-2">Date: <span class="font-semibold">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</span></p>
-                <p class="mb-2">Guests: <span class="font-semibold">{{ $booking->guests }}</span></p>
-                <p class="mb-4">Total Price: <span class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span></p>
+                <h3 class="text-2xl font-bold mb-4">{{ __('messages.complete_your_booking') }}</h3>
+                <p class="mb-2">{{ __('messages.tour') }}: <span class="font-semibold">{{ $booking->tour->name }}</span></p>
+                <p class="mb-2">{{ __('messages.date') }}: <span class="font-semibold">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</span></p>
+                <p class="mb-2">{{ __('messages.guests') }}: <span class="font-semibold">{{ $booking->guests }}</span></p>
+                <p class="mb-4">{{ __('messages.total_price') }}: <span class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span></p>
 
                 <button id="pay-button" class="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition">
-                    Pay Now with Midtrans
+                    {{ __('messages.pay_now_with_midtrans') }}
                 </button>
             </div>
         </div>

@@ -21,7 +21,8 @@ class LocaleMiddleware
         } 
         // Default
         else {
-            $locale = config('app.locale');
+            // Auto detect dari browser
+            $locale = $request->getPreferredLanguage(['id', 'en', 'zh']) ?? config('app.locale');
         }
 
         // Set locale

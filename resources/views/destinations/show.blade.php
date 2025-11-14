@@ -10,7 +10,7 @@
                 <p class="text-gray-600 mt-2">{{ $destination->location }}</p>
                 <div class="mt-4 text-gray-700">{!! nl2br(e($destination->description)) !!}</div>
 
-                <h2 class="mt-8 text-2xl font-semibold">Tours in {{ $destination->name }}</h2>
+                <h2 class="mt-8 text-2xl font-semibold">{{ __('messages.tours_in') }} {{ $destination->name }}</h2>
                 <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
                     @foreach($tours as $tour)
                         <div class="border rounded p-4">

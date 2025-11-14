@@ -2,7 +2,7 @@
 @section('content')
 
 <!-- Background Music -->
-<audio id="bg-music" loop>
+<audio id="bg-music" autoplay loop>
     <source src="{{ asset('audio/bgm.mp3') }}" type="audio/mpeg">
 </audio>
 
@@ -20,7 +20,7 @@
         const btn = document.getElementById('music-toggle');
         const icon = document.getElementById('music-icon');
         const pulse = document.getElementById('music-pulse');
-        let isPlaying = false;
+        let isPlaying = true;
 
         btn.onclick = () => {
             if (isPlaying) {

@@ -9,7 +9,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                Back to Packages
+                {{ __('messages.back_to_packages') }}
             </a>
         </div>
 
@@ -29,14 +29,14 @@
                 <!-- Price and Basic Info -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 pb-8 border-b">
                     <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">Package Details</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.package_details') }}</h2>
                         <div class="space-y-4">
                             <div>
-                                <p class="text-gray-600 text-sm">Price</p>
+                                <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
                                 <p class="text-3xl font-bold text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</p>
                             </div>
                             <div>
-                                <p class="text-gray-600 text-sm">Description</p>
+                                <p class="text-gray-600 text-sm">{{ __('messages.description') }}</p>
                                 <p class="text-gray-900 text-lg mt-2">{{ $package->description }}</p>
                             </div>
                         </div>
@@ -44,14 +44,14 @@
 
                     <!-- Includes -->
                     <div>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">What's Included</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.whats_included') }}</h2>
                         <div class="space-y-3">
                             @if($package->includes_guide)
                                 <div class="flex items-center p-3 bg-blue-50 rounded-lg">
                                     <svg class="w-6 h-6 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    <span class="text-blue-900 font-semibold">Professional Tour Guide</span>
+                                    <span class="text-blue-900 font-semibold">{{ __('messages.professional_tour_guide') }}</span>
                                 </div>
                             @endif
 
@@ -60,12 +60,12 @@
                                     <svg class="w-6 h-6 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    <span class="text-green-900 font-semibold">Private Transport</span>
+                                    <span class="text-green-900 font-semibold">{{ __('messages.private_transport') }}</span>
                                 </div>
                             @endif
 
                             @if(!$package->includes_guide && !$package->includes_transport)
-                                <p class="text-gray-600">No special inclusions for this package.</p>
+                                <p class="text-gray-600">{{ __('messages.no_special_inclusions') }}</p>
                             @endif
                         </div>
                     </div>
@@ -73,7 +73,7 @@
 
                 <!-- Tours in Package -->
                 <div class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Tours Included in This Package</h2>
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.tours_included') }}</h2>
                     
                     @if($package->tours->isNotEmpty())
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -102,7 +102,7 @@
                                         </div>
 
                                         <a href="{{ route('tours.show', $tour) }}?from=package&package_id={{ $package->id }}" class="w-full py-2 bg-emerald-600 text-white rounded-md font-semibold text-center block hover:bg-emerald-700 transition">
-                                            View Tour Details
+                                            {{ __('messages.view_tour_details') }}
                                         </a>
                                     </div>
                                 </div>
@@ -113,22 +113,22 @@
                             <svg class="w-12 h-12 text-yellow-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M9 3h6a2 2 0 012 2v18a2 2 0 01-2 2H9a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
                             </svg>
-                            <p class="text-yellow-900 text-lg font-semibold">No tours available for this package yet</p>
-                            <p class="text-yellow-800 mt-2">Please check back later or contact us for more information.</p>
+                            <p class="text-yellow-900 text-lg font-semibold">{{ __('messages.no_tours_in_package') }}</p>
+                            <p class="text-yellow-800 mt-2">{{ __('messages.check_back_later') }}</p>
                         </div>
                     @endif
                 </div>
 
                 <!-- CTA Section -->
                 <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg p-8 text-white text-center">
-                    <h3 class="text-2xl font-bold mb-4">Ready to book this package?</h3>
-                    <p class="text-emerald-50 mb-6">Contact us today and start your unforgettable journey through Indonesia</p>
+                    <h3 class="text-2xl font-bold mb-4">{{ __('messages.ready_to_book') }}</h3>
+                    <p class="text-emerald-50 mb-6">{{ __('messages.contact_us_today') }}</p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/" class="py-3 px-8 bg-white text-emerald-600 rounded-lg font-semibold hover:bg-gray-100 transition">
-                            Contact Us
+                            {{ __('messages.contact_us') }}
                         </a>
                         <a href="{{ route('tour-packages.index') }}" class="py-3 px-8 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800 transition">
-                            View More Packages
+                            {{ __('messages.view_more_packages') }}
                         </a>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
         
         @if($relatedPackages->isNotEmpty())
             <div class="mt-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Other Package Options</h2>
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">{{ __('messages.other_package_options') }}</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($relatedPackages as $relatedPackage)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">

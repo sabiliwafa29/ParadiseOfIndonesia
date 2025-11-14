@@ -12,7 +12,7 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    Back to Package
+                    {{ __('messages.back_to_package') }}
                 </a>
             @else
                 <!-- Kembali ke Tours Index jika langsung dari Tours -->
@@ -20,7 +20,7 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    Back to Tours
+                    {{ __('messages.back_to_tours') }}
                 </a>
             @endif
         </div>
@@ -54,35 +54,39 @@
                         $userCurrency = LocationService::isIndonesia() ? 'IDR' : 'CNY';
                     @endphp
 
-                    <div class="mt-4 flex items-center justify-between">
+                    <!-- <div class="mt-4 flex items-center justify-between">
                         <div class="flex items-center">
                             <i class="fas fa-clock text-gray-400"></i>
-                            <span class="ml-2 text-sm md:text-base text-gray-500">{{ $tour->duration }} days</span>
+                            <span class="ml-2 text-sm md:text-base text-gray-500">{{ $tour->duration }} {{ __('messages.days') }}</span>
                         </div>
                         <div class="text-lg md:text-xl font-bold text-emerald-600">
                             {{ $tour->getFormattedPrice($userCurrency) }}
                         </div>
+                    </div> -->
+                    <div>
+                        <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $tour->getFormattedPrice($userCurrency) }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-600 text-sm">Duration</p>
-                        <p class="text-3xl font-bold text-gray-900">{{ $tour->duration }} Days</p>
+                        <p class="text-gray-600 text-sm">{{ __('messages.duration') }}</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $tour->duration }} {{ __('messages.days') }}</p>
                     </div>
                     <div>
-                        <p class="text-gray-600 text-sm">Location</p>
+                        <p class="text-gray-600 text-sm">{{ __('messages.location') }}</p>
                         <p class="text-lg font-semibold text-gray-900">{{ $tour->destination->location }}</p>
                     </div>
                 </div>
 
                 <!-- Description -->
                 <div class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">About This Tour</h2>
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-4">{{ __('messages.about_this_tour') }}</h2>
                     <p class="text-gray-700 leading-relaxed text-lg">{{ $tour->description }}</p>
                 </div>
 
                 <!-- Itinerary -->
                 @if($tour->itinerary)
                     <div class="mb-12">
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Itinerary</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.itinerary') }}</h2>
                         <div class="space-y-6">
                             @php
                                 $itinerary = $tour->itinerary;
@@ -173,7 +177,7 @@
                 <!-- Facilities Included -->
                 @if($tour->includes)
                     <div class="mb-12">
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">What's Included</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.whats_included') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @php
                                 $includes = is_array($tour->includes) ? $tour->includes : json_decode($tour->includes, true) ?? [];
@@ -192,7 +196,7 @@
                                     </span>
                                 </div>
                             @empty
-                                <p class="text-gray-600 col-span-2">No facilities included information available.</p>
+                                <p class="text-gray-600 col-span-2">{{ __('messages.no_facilities_info') }}</p>
                             @endforelse
                         </div>
                     </div>
@@ -201,7 +205,7 @@
                 <!-- Excludes -->
                 @if($tour->excludes)
                     <div class="mb-12">
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">What's Not Included</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.whats_not_included') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @php
                                 $excludes = is_array($tour->excludes) ? $tour->excludes : json_decode($tour->excludes, true) ?? [];
@@ -220,7 +224,7 @@
                                     </span>
                                 </div>
                             @empty
-                                <p class="text-gray-600 col-span-2">No exclusions listed.</p>
+                                <p class="text-gray-600 col-span-2">{{ __('messages.no_exclusions') }}</p>
                             @endforelse
                         </div>
                     </div>
@@ -229,11 +233,9 @@
                 <!-- CTA Section - Hanya tampil jika TIDAK dari Package -->
                 @if(request('from') !== 'package')
                     <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg p-8 text-white text-center">
-                        <h3 class="text-2xl font-bold mb-4">Ready for this adventure?</h3>
-                        <p class="text-emerald-50 mb-6">Book now and create unforgettable memories in Indonesia</p>
-                        <button class="py-3 px-8 bg-white text-emerald-600 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
-                            Book Now
-                        </button>
+                        <h3 class="text-2xl font-bold mb-4">{{ __('messages.ready_for_adventure') }}</h3>
+                        <p class="text-emerald-50 mb-6">{{ __('messages.book_now_create_memories') }}</p>
+                        <button class="...">{{ __('messages.book_now') }}</button>
                     </div>
                 @else
                     <!-- Info message jika dari Package -->
@@ -241,8 +243,8 @@
                         <svg class="w-12 h-12 text-blue-600 mx-auto mb-3" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2z" clip-rule="evenodd"></path>
                         </svg>
-                        <p class="text-blue-900 font-semibold">This tour is part of a package</p>
-                        <p class="text-blue-800 text-sm mt-2">Book the entire package for the complete experience</p>
+                        <p class="text-blue-900 font-semibold">{{ __('messages.tour_part_of_package') }}</p>
+                        <p class="text-blue-800 text-sm mt-2">{{ __('messages.book_entire_package') }}</p>
                     </div>
                 @endif
             </div>
@@ -258,7 +260,7 @@
 
         @if($relatedTours->isNotEmpty())
             <div class="mt-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Other Tours in {{ $tour->destination->name }}</h2>
+                <h2 class="mt-8 text-2xl font-semibold">{{ __('messages.other_tours_in') }} {{ $tour->destination->name }}</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($relatedTours as $relatedTour)
                         <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
@@ -267,10 +269,8 @@
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $relatedTour->name }}</h3>
                                 <p class="text-gray-600 mb-4">{{ Str::limit($relatedTour->description, 80) }}</p>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xl font-bold text-emerald-600">${{ number_format($relatedTour->price, 0) }}</span>
-                                    <a href="{{ route('tours.show', $relatedTour) }}" class="text-emerald-600 hover:text-emerald-700 font-semibold">
-                                        View →
-                                    </a>
+                                    <span class="text-xl font-bold text-emerald-600">{{ __('messages.from') }} ${{ number_format($relatedTour->price, 0) }}</span>
+<a href="{{ route('tours.show', $relatedTour) }}" class="...">{{ __('messages.view') }} →</a>
                                 </div>
                             </div>
                         </div>
