@@ -14,8 +14,10 @@ class TourObserver
     {
         // Saat tour baru dibuat, cari package dengan kategori yang sama
         // Misalnya: jika tour di East Java, tambahkan ke package East Java
-        
-        $packages = TourPackage::where('name', 'LIKE', '%' . $tour->destination->name . '%')
+
+        $packages = TourPackage::where('name_en', 'ILIKE', '%' . $tour->destination->name_en . '%')
+            ->orWhere('name_id', 'ILIKE', '%' . $tour->destination->name_id . '%')
+            ->orWhere('name_zh', 'ILIKE', '%' . $tour->destination->name_zh . '%')
             ->get();
 
         foreach ($packages as $package) {

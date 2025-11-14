@@ -32,13 +32,13 @@ class LocationController extends Controller
 
         // 1. Search in database first
         if ($type === 'pickup') {
-            $dbResults = Pickup::where('name', 'LIKE', "%{$query}%")
-                ->orWhere('description', 'LIKE', "%{$query}%")
+            $dbResults = Pickup::where('name', 'ILIKE', "%{$query}%")
+                ->orWhere('description', 'ILIKE', "%{$query}%")
                 ->limit(10)
                 ->get();
         } else {
-            $dbResults = PickoffDestination::where('name', 'LIKE', "%{$query}%")
-                ->orWhere('description', 'LIKE', "%{$query}%")
+            $dbResults = PickoffDestination::where('name', 'ILIKE', "%{$query}%")
+                ->orWhere('description', 'ILIKE', "%{$query}%")
                 ->limit(10)
                 ->get();
         }
