@@ -20,7 +20,7 @@
         const btn = document.getElementById('music-toggle');
         const icon = document.getElementById('music-icon');
         const pulse = document.getElementById('music-pulse');
-        let isPlaying = true;
+        let isPlaying = false;
 
         btn.onclick = () => {
             if (isPlaying) {
