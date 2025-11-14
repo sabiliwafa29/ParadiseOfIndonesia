@@ -208,5 +208,11 @@ class Tour extends Model
         $locale = app()->getLocale();
         return $this->{"description_{$locale}"} ?? $this->description_en;
     }
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+        // atau bisa juga
+        // return $query->where('status', 'active');
+    }
 
 }
