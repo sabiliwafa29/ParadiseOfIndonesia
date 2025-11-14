@@ -9,6 +9,12 @@
         </a>
     </div>
 
+    {{-- Form Pencarian --}}
+    <form method="GET" class="mb-6 flex gap-2 max-w-md">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama paket..." class="flex-grow border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition">Cari</button>
+    </form>
+    
     @if(session('success'))
         <div class="mb-4 p-4 bg-green-100 text-green-800 rounded shadow">
             {{ session('success') }}

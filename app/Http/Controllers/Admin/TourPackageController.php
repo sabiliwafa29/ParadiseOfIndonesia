@@ -18,7 +18,7 @@ class TourPackageController extends Controller
         $query = TourPackage::query();
 
         if ($search) {
-            $query->where($nameColumn, 'ILIKE', '%' . $search . '%'); // ILIKE untuk PostgreSQL, LIKE untuk MySQL
+            $query->where($nameColumn, 'ILIKE', '%' . $search . '%'); 
         }
 
         $packages = $query->paginate(10);
