@@ -21,8 +21,13 @@
                             <div class="bg-gray-50 p-6 rounded-lg">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h3 class="text-lg font-semibold">{{ $booking->tour->name }}</h3>
-                                        <p class="text-gray-600">{{ $booking->tour->destination->name }}</p>
+                                        @if($booking->package)
+                                            <h3 class="text-lg font-semibold">{{ $booking->package->name }}</h3>
+                                            <p class="text-gray-600">{{ __('messages.package_booking') }}</p>
+                                        @else
+                                            <h3 class="text-lg font-semibold">{{ $booking->tour->name }}</h3>
+                                            <p class="text-gray-600">{{ $booking->tour->destination->name }}</p>
+                                        @endif
                                     </div>
                                     <div class="text-right">
                                         <span class="px-3 py-1 rounded-full text-sm 

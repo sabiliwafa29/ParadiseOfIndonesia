@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use App\Models\TourPackage;
 use App\Models\Booking;
 use App\Http\Requests\StoreBookingRequest;
+use App\Http\Requests\StorePackageBookingRequest;
 use App\Services\MidtransService;
 use App\Services\OrderIdService;
 
@@ -19,7 +21,7 @@ class BookingController extends Controller
 
     public function index()
     {
-        $bookings = auth()->user()->bookings()->with('tour.destination')->latest()->get();
+        $bookings = auth()->user()->bookings()->with(['tour.destination', 'package'])->latest()->get();
         return view('bookings.index', compact('bookings'));
     }
 
@@ -63,6 +65,54 @@ class BookingController extends Controller
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat memproses pemesanan: ' . $e->getMessage());
+        }
+    }
+
+    public function package(TourPackage $package)
+    {
+        return view('bookings.package', compact('package'));
+    }
+
+    public function storePackage(StorePackageBookingRequest $request, TourPackage $package)
+    {
+        try {
+            $validated = $request->validated();
+
+            // Get prices from config
+            $guidePricePerGuest = config('booking.addon_prices.guide', 50);
+            $transportPricePerGuest = config('booking.addon_prices.transport', 30);
+
+            // Calculate addon costs
+            $guidePrice = $validated['guide'] ? $guidePricePerGuest * $validated['guests'] : 0;
+            $transportPrice = $validated['transport'] ? $transportPricePerGuest * $validated['guests'] : 0;
+            $addonCost = $guidePrice + $transportPrice;
+            $basePrice = $package->price * $validated['guests'];
+            $totalPrice = $basePrice + $addonCost;
+
+            // Generate order ID
+            $orderId = OrderIdService::generate('BOOK');
+
+            $booking = Booking::create([
+                'user_id' => auth()->id(),
+                'package_id' => $package->id,
+                'date' => $validated['date'],
+                'guests' => $validated['guests'],
+                'guide_service' => $validated['guide'],
+                'transport_service' => $validated['transport'],
+                'addon_cost' => $addonCost,
+                'total_price' => $totalPrice,
+                'status' => 'pending',
+                'order_id' => $orderId,
+            ]);
+
+            // Get Midtrans payment token
+            $snapToken = $this->midtransService->createTransaction($booking);
+
+            return view('bookings.package-payment', compact('booking', 'snapToken'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memproses pemesanan paket: ' . $e->getMessage());
         }
     }
 

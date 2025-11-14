@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -87,7 +87,9 @@ Route::middleware('auth')->group(function () {
         
         // My Bookings
         Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
+        Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
         Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
+        Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     });
     
