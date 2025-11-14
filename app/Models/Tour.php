@@ -210,7 +210,7 @@ class Tour extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('status', true);
         // atau bisa juga
         // return $query->where('status', 'active');
     }
