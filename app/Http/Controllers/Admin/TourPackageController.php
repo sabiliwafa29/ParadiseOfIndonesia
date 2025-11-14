@@ -9,7 +9,7 @@ use App\Models\Tour;
 
 class TourPackageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $search = $request->input('search');
         $locale = app()->getLocale(); // 'id', 'en', atau 'zh'
