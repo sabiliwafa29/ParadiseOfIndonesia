@@ -1,7 +1,5 @@
-<nav x-data="{ open: false, megaMenu: null, languageOpen: false, scrolled: false }"
-     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
-     :class="scrolled ? 'bg-white backdrop-blur-md h-20' : 'bg-white shadow-sm h-18'"
-     class="fixed top-0 left-0 w-full border-b border-gray-100 transition-all duration-300 z-50"
+<nav x-data="{ open: false, megaMenu: null, languageOpen: false }"
+    class="fixed top-0 left-0 w-full bg-white border-b border-gray-100 shadow-sm h-20 transition-all duration-300 z-50"
      role="navigation"
      aria-label="Main navigation">
 
