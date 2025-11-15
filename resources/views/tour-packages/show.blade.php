@@ -131,7 +131,7 @@
                                                     $description = '';
 
                                                     if (is_array($activity)) {
-                                                        // format { time, description_en, description_id, ... }
+                                                        // format { time, description_en, description_id, description_zh, ... }
                                                         $time = $activity['time'] ?? '';
 
                                                         $locale = app()->getLocale();
@@ -167,6 +167,36 @@
                                                 @endif
                                             @endforeach
                                         </div>
+
+                                        {{-- NOTE per hari (opsional, multilanguage) --}}
+                                        @php
+                                            $noteText = null;
+
+                                            if (is_array($dayData) && isset($dayData['note'])) {
+                                                $note = $dayData['note'];
+
+                                                if (is_array($note)) {
+                                                    $locale = app()->getLocale();
+                                                    $noteText = $note['description_'.$locale]
+                                                        ?? $note['description_en']
+                                                        ?? $note['description']
+                                                        ?? reset($note);
+                                                } else {
+                                                    $noteText = trim((string) $note);
+                                                }
+                                            }
+                                        @endphp
+
+                                        @if(!empty($noteText))
+                                            <div class="mt-4 border-t border-gray-100 pt-3">
+                                                <p class="text-xs uppercase tracking-wide text-gray-400 mb-1">
+                                                    {{ __('messages.note') ?? 'Note' }}
+                                                </p>
+                                                <p class="text-gray-600 text-sm leading-relaxed">
+                                                    {{ $noteText }}
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endif
                             @endforeach
