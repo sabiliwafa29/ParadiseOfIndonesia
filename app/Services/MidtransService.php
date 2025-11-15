@@ -22,13 +22,33 @@ class MidtransService
     {
         // Load relationships based on booking type
         if (method_exists($booking, 'tour')) {
-            $booking->load('user', 'tour');
+            $booking->load('user', 'tour', 'package');
         } else {
             $booking->load('user', 'travelService');
         }
 
         // Gunakan order_id dari booking jika sudah ada, atau generate baru
         $orderId = $booking->order_id ?? ('BOOK-' . $booking->id);
+
+        // Tentukan item name dan id berdasarkan jenis booking
+        $itemId = $booking->id;
+        $itemName = 'Booking';
+        
+        if (isset($booking->tour)) {
+            $itemId = $booking->tour->id;
+            $itemName = 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)';
+        } elseif (isset($booking->package)) {
+            $itemId = $booking->package->id;
+            $itemName = 'Package: ' . $booking->package->name . ' (' . $booking->guests . ' guests)';
+        } elseif (isset($booking->travelService)) {
+            $itemId = $booking->travelService->id;
+            $itemName = 'Travel Service: ' . $booking->travelService->name;
+        }
+
+        // Tentukan customer details - untuk package booking bisa pakai data dari form
+        $customerName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+        $customerEmail = $booking->user->email ?? $booking->email ?? 'noemail@example.com';
+        $customerPhone = $booking->user->phone ?? $booking->contact_handle ?? '08123456789';
 
         $params = [
             'transaction_details' => [
@@ -37,18 +57,16 @@ class MidtransService
             ],
             'item_details' => [
                 [
-                    'id'       => $booking->tour->id ?? $booking->travelService->id ?? $booking->id,
+                    'id'       => $itemId,
                     'price'    => (int) $booking->total_price,
                     'quantity' => 1,
-                    'name'     => isset($booking->tour) 
-                        ? 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)'
-                        : 'Travel Service: ' . ($booking->travelService->name ?? 'Service'),
+                    'name'     => $itemName,
                 ],
             ],
             'customer_details' => [
-                'first_name' => $booking->user->name ?? 'Guest',
-                'email'      => $booking->user->email ?? 'noemail@example.com',
-                'phone'      => $booking->user->phone ?? '08123456789',
+                'first_name' => $customerName,
+                'email'      => $customerEmail,
+                'phone'      => $customerPhone,
             ],
             'enabled_payments' => [
                 'qris', 'bca_va', 'bni_va', 'bri_va', 'mandiri_va', 'gopay', 'shopeepay',
