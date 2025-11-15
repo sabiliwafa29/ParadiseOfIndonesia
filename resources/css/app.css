@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 /* Alpine.js x-cloak - Hide elements until Alpine.js is loaded */
+/* Use !important to override any conflicting styles */
 [x-cloak] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }

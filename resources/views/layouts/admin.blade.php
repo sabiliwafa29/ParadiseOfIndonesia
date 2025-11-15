@@ -14,7 +14,11 @@
 
     <!-- Alpine.js x-cloak fix -->
     <style>
-        [x-cloak] { display: none !important; }
+        [x-cloak] { 
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
     </style>
 
     <!-- Scripts -->
