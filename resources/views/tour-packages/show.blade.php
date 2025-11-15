@@ -113,7 +113,19 @@
                                 @php
                                     // Struktur array dengan key 'day' dan 'activities'
                                     if (is_array($dayData) && isset($dayData['day'])) {
-                                        $dayTitle = $dayData['day'];
+                                        $locale = app()->getLocale();
+                                        $dayField = $dayData['day'];
+
+                                        // dayField bisa string atau array multilanguage
+                                        if (is_array($dayField)) {
+                                            $dayTitle = $dayField[$locale]
+                                                ?? $dayField['en']
+                                                ?? reset($dayField)       // ambil elemen pertama kalau tidak ada key
+                                                ?? ('Day ' . ($dayIndex + 1));
+                                        } else {
+                                            $dayTitle = (string) $dayField;
+                                        }
+
                                         $activities = is_array($dayData['activities'] ?? null)
                                             ? $dayData['activities']
                                             : (isset($dayData['activities']) ? [$dayData['activities']] : []);
