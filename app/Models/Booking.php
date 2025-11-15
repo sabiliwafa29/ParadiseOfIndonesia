@@ -17,6 +17,7 @@ class Booking extends Model
         'full_name',
         'contact_handle',
         'email',
+        'route_option',
 
         'date',
         'guests',

@@ -130,6 +130,54 @@
                     @enderror
                 </div>
 
+                <!-- Route choice (two itinerary options) -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Pilih Jalur Wisata
+                    </h3>
+                    <p class="text-sm text-gray-500">
+                        Silakan pilih salah satu jalur itinerary paket ini.
+                    </p>
+
+                    <div class="space-y-3">
+                        <label class="flex items-start p-4 border rounded-lg cursor-pointer hover:border-emerald-500">
+                            <input type="radio"
+                                   name="route_option"
+                                   value="ijen"
+                                   class="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300"
+                                   {{ old('route_option', 'ijen') === 'ijen' ? 'checked' : '' }}>
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">
+                                    Jalur Kawah Ijen Blue Fire Carter
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Fokus pada pengalaman pendakian malam menuju Kawah Ijen untuk menyaksikan Blue Fire dan sunrise.
+                                </p>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start p-4 border rounded-lg cursor-pointer hover:border-emerald-500">
+                            <input type="radio"
+                                   name="route_option"
+                                   value="tabuhan"
+                                   class="mt-1 h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300"
+                                   {{ old('route_option') === 'tabuhan' ? 'checked' : '' }}>
+                            <div class="ml-3">
+                                <p class="font-semibold text-gray-900">
+                                    Jalur Snorkeling Tabuhan Island
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Fokus pada aktivitas snorkeling dan eksplorasi bahari di sekitar Pulau Tabuhan.
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+
+                    @error('route_option')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Add-ons -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-900">{{ __('messages.additional_services') }}</h3>

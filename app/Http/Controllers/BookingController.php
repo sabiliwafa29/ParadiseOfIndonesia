@@ -94,21 +94,22 @@ class BookingController extends Controller
             $orderId = OrderIdService::generate('BOOK');
 
             $booking = Booking::create([
-                'user_id'   => auth()->id(), // bisa null untuk guest
-                'package_id'=> $package->id,
+                'user_id'    => auth()->id(), // boleh null untuk guest
+                'package_id' => $package->id,
 
                 'full_name'      => $validated['full_name'],
                 'contact_handle' => $validated['contact_handle'],
                 'email'          => $validated['email'],
+                'route_option'   => $validated['route_option'],
 
-                'date'            => $validated['date'],
-                'guests'          => $validated['guests'],
-                'guide_service'   => $validated['guide'],
+                'date'             => $validated['date'],
+                'guests'           => $validated['guests'],
+                'guide_service'    => $validated['guide'],
                 'transport_service'=> $validated['transport'],
-                'addon_cost'      => $addonCost,
-                'total_price'     => $totalPrice,
-                'status'          => 'pending',
-                'order_id'        => $orderId,
+                'addon_cost'       => $addonCost,
+                'total_price'      => $totalPrice,
+                'status'           => 'pending',
+                'order_id'         => $orderId,
             ]);
 
             // Get Midtrans payment token
