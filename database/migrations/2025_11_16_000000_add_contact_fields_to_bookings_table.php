@@ -11,11 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tour_packages', function (Blueprint $table) {
-            // Mirror detail fields from tours table
-            $table->longText('itinerary')->nullable()->after('image');
-            $table->text('includes')->nullable()->after('itinerary');
-            $table->text('excludes')->nullable()->after('includes');
+
+        Schema::table('bookings', function (Blueprint $table) {
+            // Tambah kolom contact info untuk booking paket / tour
+            if (!Schema::hasColumn('bookings', 'full_name')) {
+                $table->string('full_name')->nullable()->after('package_id');
+            }
+
+            if (!Schema::hasColumn('bookings', 'contact_handle')) {
+                $table->string('contact_handle')->nullable()->after('full_name');
+            }
+
+            if (!Schema::hasColumn('bookings', 'email')) {
+                $table->string('email')->nullable()->after('contact_handle');
+            }
         });
     }
 
@@ -24,8 +33,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tour_packages', function (Blueprint $table) {
-            $table->dropColumn(['itinerary', 'includes', 'excludes']);
+        Schema::table('bookings', function (Blueprint $table) {
+            if (Schema::hasColumn('bookings', 'full_name')) {
+                $table->dropColumn('full_name');
+            }
+            if (Schema::hasColumn('bookings', 'contact_handle')) {
+                $table->dropColumn('contact_handle');
+            }
+            if (Schema::hasColumn('bookings', 'email')) {
+                $table->dropColumn('email');
+            }
         });
     }
 };
