@@ -35,7 +35,8 @@
 @push('scripts')
 <script type="text/javascript"
         src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+        data-client-key="{{ config('services.midtrans.client_key') }}"
+        onload="initializeMidtrans()"></script>
 <script type="text/javascript">
     console.log('💳 [DEBUG] Payment Page Loaded');
     console.log('🎫 Snap Token:', '{{ $snapToken }}');
@@ -44,47 +45,76 @@
     console.log('💰 Total Price:', {{ $booking->total_price }});
     console.log('🔑 Midtrans Client Key:', '{{ config("services.midtrans.client_key") }}');
     
-    const payButton = document.getElementById('pay-button');
-    
-    if (!payButton) {
-        console.error('❌ [DEBUG] Pay button not found!');
-    }
-    
-    if (typeof snap === 'undefined') {
-        console.error('❌ [DEBUG] Midtrans Snap library not loaded!');
-    } else {
+    function initializeMidtrans() {
         console.log('✅ [DEBUG] Midtrans Snap library loaded successfully');
+        
+        const payButton = document.getElementById('pay-button');
+        
+        if (!payButton) {
+            console.error('❌ [DEBUG] Pay button not found!');
+            return;
+        }
+        
+        if (typeof snap === 'undefined') {
+            console.error('❌ [DEBUG] Snap is still undefined after load!');
+            return;
+        }
+        
+        payButton.onclick = function(){
+            console.log('🖱️ [DEBUG] Pay button clicked');
+            console.log('⏳ [DEBUG] Initiating Midtrans payment...');
+            
+            try {
+                snap.pay('{{ $snapToken }}', {
+                    onSuccess: function(result){
+                        console.log('✅ [DEBUG] Payment SUCCESS!', result);
+                        alert("Payment success!"); 
+                        window.location.href = "{{ route('my-bookings') }}";
+                    },
+                    onPending: function(result){
+                        console.log('⏳ [DEBUG] Payment PENDING', result);
+                        alert("Waiting for your payment!");
+                        window.location.href = "{{ route('my-bookings') }}";
+                    },
+                    onError: function(result){
+                        console.error('❌ [DEBUG] Payment ERROR', result);
+                        alert("Payment failed! Please try again.");
+                    },
+                    onClose: function(){
+                        console.log('🚪 [DEBUG] Payment popup CLOSED by user');
+                        alert('You closed the payment window without completing the payment');
+                    }
+                });
+                console.log('✅ [DEBUG] Midtrans snap.pay() called successfully');
+            } catch (error) {
+                console.error('❌ [DEBUG] Error calling snap.pay():', error);
+                alert('Error: ' + error.message);
+            }
+        };
+        
+        console.log('✅ [DEBUG] Payment button handler initialized');
     }
     
-    payButton.onclick = function(){
-        console.log('🖱️ [DEBUG] Pay button clicked');
-        console.log('⏳ [DEBUG] Initiating Midtrans payment...');
-        
-        try {
-            snap.pay('{{ $snapToken }}', {
-                onSuccess: function(result){
-                    console.log('✅ [DEBUG] Payment SUCCESS!', result);
-                    alert("payment success!"); 
-                    window.location.href = "{{ route('my-bookings') }}";
-                },
-                onPending: function(result){
-                    console.log('⏳ [DEBUG] Payment PENDING', result);
-                    alert("waiting your payment!");
-                },
-                onError: function(result){
-                    console.error('❌ [DEBUG] Payment ERROR', result);
-                    alert("payment failed!");
-                },
-                onClose: function(){
-                    console.log('🚪 [DEBUG] Payment popup CLOSED by user');
-                    alert('you closed the popup without finishing the payment');
+    // Fallback: Initialize after DOM loaded jika onload tidak trigger
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 [DEBUG] DOM Content Loaded');
+            setTimeout(function() {
+                if (typeof snap !== 'undefined' && !document.getElementById('pay-button').onclick) {
+                    console.log('⚠️ [DEBUG] Fallback initialization');
+                    initializeMidtrans();
                 }
-            });
-            console.log('✅ [DEBUG] Midtrans snap.pay() called successfully');
-        } catch (error) {
-            console.error('❌ [DEBUG] Error calling snap.pay():', error);
-        }
-    };
+            }, 1000);
+        });
+    } else {
+        console.log('📄 [DEBUG] DOM already loaded');
+        setTimeout(function() {
+            if (typeof snap !== 'undefined' && !document.getElementById('pay-button').onclick) {
+                console.log('⚠️ [DEBUG] Fallback initialization');
+                initializeMidtrans();
+            }
+        }, 1000);
+    }
 </script>
 @endpush
 @endif
