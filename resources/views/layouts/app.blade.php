@@ -8,9 +8,9 @@
 
         <title>{{ config('app.name', 'Paradise Of Indonesia') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts (gunakan font sistem untuk menghindari CSP external styles) -->
+    {{-- <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
 
         <!-- Alpine.js x-cloak fix -->
         <style>
@@ -24,8 +24,8 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        <!-- SweetAlert2 CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 CSS (self-hosted to comply with CSP) -->
+    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2.min.css') }}">
     </head>
     
     <body class="font-sans antialiased">
@@ -78,8 +78,8 @@
         <!-- Login Success Popup -->
         <x-login-success-popup />
 
-        <!-- SweetAlert2 JS - PINDAHKAN KE SINI -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 JS (self-hosted to comply with CSP) -->
+    <script src="{{ asset('vendor/sweetalert2.all.min.js') }}"></script>
 
         <!-- Notifikasi Script - PINDAHKAN KE SINI -->
         @if(session('error'))
