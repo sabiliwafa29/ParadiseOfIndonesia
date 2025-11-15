@@ -250,9 +250,9 @@
         const transportPricePerPerson = {{ config('booking.addon_prices.transport', 30) }};
 
         function updatePrice() {
-            const guests = parseInt(guestsSelect.value) || 1;
-            const guideChecked = guideCheckbox.checked;
-            const transportChecked = transportCheckbox.checked;
+            const guests = parseInt(guestsSelect?.value) || 1;
+            const guideChecked = guideCheckbox ? guideCheckbox.checked : false;
+            const transportChecked = transportCheckbox ? transportCheckbox.checked : false;
 
             const guideCost = guideChecked ? guidePricePerPerson * guests : 0;
             const transportCost = transportChecked ? transportPricePerPerson * guests : 0;
@@ -267,11 +267,16 @@
             document.getElementById('transport-cost').style.display = transportChecked ? 'flex' : 'none';
         }
 
-        guestsSelect.addEventListener('change', updatePrice);
-        guideCheckbox.addEventListener('change', updatePrice);
-        transportCheckbox.addEventListener('change', updatePrice);
+        if (guestsSelect) {
+            guestsSelect.addEventListener('change', updatePrice);
+        }
+        if (guideCheckbox) {
+            guideCheckbox.addEventListener('change', updatePrice);
+        }
+        if (transportCheckbox) {
+            transportCheckbox.addEventListener('change', updatePrice);
+        }
 
-        // Initial calculation
         updatePrice();
     });
 </script>
