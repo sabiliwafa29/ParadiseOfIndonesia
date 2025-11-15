@@ -25,7 +25,7 @@ class TourPackageSeeder extends Seeder
             'description_id' => '6 HARI 5 MALAM | Tumpak Sewu Waterfall- Bromo Tour - Kawah Ijen Blue Fire Carter/Snorkeling Pulau Tabuhan - Dolpin Dance Lovina Beach - Tegalalang, keindahan alam Ubud - Kelingking Beach',
             'description_en' => '6 DAYS 5 NIGHTS | Tumpak Sewu Waterfall - Bromo Tour - Kawah Ijen Blue Fire Carter/Snorkeling Tabuhan Island - Dolpin Dance Lovina Beach - Tegalalang, the natural beauty of Ubud - Kelingking Beach',
             'description_zh' => '6 天 5 晚 | Tumpak Sewu Waterfall - Bromo Tour - Kawah Ijen Blue Fire Carter/Snorkeling Tabuhan Island - Dolpin Dance Lovina Beach - Tegalalang, the natural beauty of Ubud - Kelingking Beach',
-            'price' => 15000000,
+            'price' => 6500,
             'image' => 'images/packages/nusaPenida.jpg',
             'includes_guide' => true,
             'includes_transport' => true,
