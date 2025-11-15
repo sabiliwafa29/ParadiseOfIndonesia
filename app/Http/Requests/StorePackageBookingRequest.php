@@ -22,7 +22,7 @@ class StorePackageBookingRequest extends FormRequest
             'route_option'   => 'required|in:ijen,tabuhan',
 
             'date'    => 'required|date|after_or_equal:today',
-            'guests'  => 'required|integer|min:1|max:50',
+            'guests'  => 'required|integer|min:2|max:50',
             'guide'   => 'sometimes|boolean',
             'transport' => 'sometimes|boolean',
         ];
