@@ -1,7 +1,7 @@
 {{-- Full Page Loading Overlay --}}
 <div x-data="{ loading: false }" 
-     @start-loading.window="loading = true" 
-     @stop-loading.window="loading = false"
+     x-on:start-loading.window="loading = true" 
+     x-on:stop-loading.window="loading = false"
      x-show="loading"
      x-cloak
      x-transition:enter="transition ease-out duration-300"
