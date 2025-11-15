@@ -11,15 +11,26 @@
                 <p class="mb-2">{{ __('messages.guests') }}: <span class="font-semibold">{{ $booking->guests }}</span></p>
                 <p class="mb-4">{{ __('messages.total_price') }}: <span class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span></p>
 
-                <button id="pay-button" class="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition">
-                    {{ __('messages.pay_now_with_midtrans') }}
-                </button>
+                @if($snapToken)
+                    <button id="pay-button" class="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition">
+                        {{ __('messages.pay_now_with_midtrans') }}
+                    </button>
+                @else
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        <p class="font-bold">Error</p>
+                        <p>Gagal membuat transaksi pembayaran. Silakan hubungi admin.</p>
+                    </div>
+                    <a href="{{ route('tour-packages.show', $booking->package) }}" class="inline-block w-full py-3 bg-gray-600 text-white text-center rounded-md font-semibold hover:bg-gray-700 transition">
+                        Kembali ke Package
+                    </a>
+                @endif
             </div>
         </div>
     </div>
 </div>
 @endsection
 
+@if($snapToken)
 @push('scripts')
 <script type="text/javascript"
         src="https://app.sandbox.midtrans.com/snap/snap.js"
@@ -49,3 +60,4 @@
     };
 </script>
 @endpush
+@endif

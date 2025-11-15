@@ -114,9 +114,22 @@ class BookingController extends Controller
             // Ambil Snap token Midtrans
             $snapToken = $this->midtransService->createTransaction($booking);
 
+            if (!$snapToken) {
+                // Hapus booking jika gagal generate snap token
+                $booking->delete();
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Gagal membuat transaksi pembayaran. Silakan coba lagi atau hubungi admin.');
+            }
+
             // Arahkan ke halaman payment khusus paket
             return view('bookings.package-payment', compact('booking', 'snapToken'));
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error creating package booking: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'package_id' => $package->id ?? null,
+            ]);
+            
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat memproses pemesanan paket: ' . $e->getMessage());
