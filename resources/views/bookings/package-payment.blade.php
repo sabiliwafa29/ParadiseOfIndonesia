@@ -27,7 +27,7 @@
 <script type="text/javascript">
     document.getElementById('pay-button').onclick = function(){
         // SnapToken acquired from previous step
-        snap.pay('{{ $snapToken }}', {
+        snap.pay(@json($snapToken), {
             onSuccess: function(result){
                 /* You may add your own implementation here */
                 alert("payment success!"); console.log(result);

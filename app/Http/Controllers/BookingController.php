@@ -78,11 +78,10 @@ class BookingController extends Controller
         try {
             $validated = $request->validated();
 
-            // Get prices from config
+            // Untuk paket ini kita tidak pakai lagi add-on guide/transport, set 0 saja
             $guidePricePerGuest     = config('booking.addon_prices.guide', 50);
             $transportPricePerGuest = config('booking.addon_prices.transport', 30);
 
-            // Calculate addon costs
             $guidePrice     = !empty($validated['guide']) ? $guidePricePerGuest * $validated['guests'] : 0;
             $transportPrice = !empty($validated['transport']) ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost      = $guidePrice + $transportPrice;
@@ -100,21 +99,22 @@ class BookingController extends Controller
                 'full_name'      => $validated['full_name'],
                 'contact_handle' => $validated['contact_handle'],
                 'email'          => $validated['email'],
-                'route_option'   => $validated['route_option'],
+                'route_option'   => $validated['route_option'] ?? null,
 
                 'date'             => $validated['date'],
                 'guests'           => $validated['guests'],
-                'guide_service'    => $validated['guide'],
-                'transport_service'=> $validated['transport'],
+                'guide_service'    => $validated['guide'] ?? false,
+                'transport_service'=> $validated['transport'] ?? false,
                 'addon_cost'       => $addonCost,
                 'total_price'      => $totalPrice,
                 'status'           => 'pending',
                 'order_id'         => $orderId,
             ]);
 
-            // Get Midtrans payment token
+            // Ambil Snap token Midtrans
             $snapToken = $this->midtransService->createTransaction($booking);
 
+            // Arahkan ke halaman payment khusus paket
             return view('bookings.package-payment', compact('booking', 'snapToken'));
         } catch (\Exception $e) {
             return redirect()->back()
