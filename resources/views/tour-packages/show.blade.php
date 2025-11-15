@@ -91,67 +91,19 @@
                     </div>
                 </div>
 
-                <!-- Tours in Package -->
-                <div class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.tours_included') }}</h2>
-                    
-                    @if($package->tours->isNotEmpty())
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach($package->tours as $tour)
-                                <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
-                                    <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="w-full h-48 object-cover">
-                                    <div class="p-6">
-                                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $tour->name }}</h3>
-                                        
-                                        <p class="text-gray-600 mb-4">
-                                            <a href="{{ route('destinations.show', $tour->destination) }}" class="text-emerald-600 hover:text-emerald-700 font-semibold">
-                                                {{ $tour->destination->name }}
-                                            </a>
-                                        </p>
-
-                                        <p class="text-gray-600 mb-4">{{ Str::limit($tour->description, 120) }}</p>
-
-                                        <div class="flex items-center justify-between mb-4">
-                                            <div class="flex items-center text-gray-500">
-                                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                <span>{{ $tour->duration }} days</span>
-                                            </div>
-                                            <span class="text-lg font-bold text-emerald-600">${{ number_format($tour->price, 0) }}</span>
-                                        </div>
-
-                                        <a href="{{ route('tours.show', $tour) }}?from=package&package_id={{ $package->id }}" class="w-full py-2 bg-emerald-600 text-white rounded-md font-semibold text-center block hover:bg-emerald-700 transition">
-                                            {{ __('messages.view_tour_details') }}
-                                        </a>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-                            <svg class="w-12 h-12 text-yellow-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M9 3h6a2 2 0 012 2v18a2 2 0 01-2 2H9a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
-                            </svg>
-                            <p class="text-yellow-900 text-lg font-semibold">{{ __('messages.no_tours_in_package') }}</p>
-                            <p class="text-yellow-800 mt-2">{{ __('messages.check_back_later') }}</p>
-                        </div>
-                    @endif
-                </div>
-
                 <!-- CTA Section -->
-                <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg p-8 text-white text-center">
+                <!-- <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-lg p-8 text-white text-center">
                     <h3 class="text-2xl font-bold mb-4">{{ __('messages.ready_to_book') }}</h3>
                     <p class="text-emerald-50 mb-6">{{ __('messages.contact_us_today') }}</p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="/" class="py-3 px-8 bg-white text-emerald-600 rounded-lg font-semibold hover:bg-gray-100 transition">
-                            {{ __('messages.contact_us') }}
+                            {{ __('messages.book_now') }}
                         </a>
                         <a href="{{ route('tour-packages.index') }}" class="py-3 px-8 bg-emerald-700 text-white rounded-lg font-semibold hover:bg-emerald-800 transition">
                             {{ __('messages.view_more_packages') }}
                         </a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
