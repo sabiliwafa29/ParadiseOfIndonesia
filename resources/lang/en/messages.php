@@ -135,6 +135,7 @@ return [
     'guests' => 'Guests',
     'associated_package' => 'Associated Package',
     'no_package_available' => 'No Package Available',
+    'note' => 'Note',
 
     'tours_in' => 'Tours in',
 

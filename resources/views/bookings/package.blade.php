@@ -61,6 +61,45 @@
             <form action="{{ route('bookings.store-package', $package) }}" method="POST" class="space-y-6">
                 @csrf
 
+                <!-- Full Name -->
+                <div>
+                    <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Lengkap
+                    </label>
+                    <input type="text" id="full_name" name="full_name" value="{{ old('full_name') }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                           required>
+                    @error('full_name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Contact (WhatsApp / WeChat / Telegram) -->
+                <div>
+                    <label for="contact_handle" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nomor WhatsApp / WeChat / Telegram
+                    </label>
+                    <input type="text" id="contact_handle" name="contact_handle" value="{{ old('contact_handle') }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                           required>
+                    @error('contact_handle')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                           required>
+                    @error('email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Date -->
                 <div>
                     <label for="date" class="block text-sm font-medium text-gray-700 mb-2">

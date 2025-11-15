@@ -128,6 +128,7 @@ return [
     'contact_us' => '联系我们',
     'view_more_packages' => '查看更多套餐',
     'other_package_options' => '其他套餐选项',
+    'note' => '备注',
 
     'tour_sessions' => '旅游时段',
     'no_tour_sessions' => '未找到旅游时段。',

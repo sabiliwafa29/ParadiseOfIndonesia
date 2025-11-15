@@ -6,37 +6,30 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePackageBookingRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true; // User harus sudah login (dilindungi oleh middleware auth)
+        // Sudah dilindungi oleh route (sekarang public), jadi biarkan true
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'date' => 'required|date|after:today',
-            'guests' => 'required|integer|min:1|max:50',
-            'guide' => 'sometimes|boolean',
+            'full_name'      => 'required|string|max:255',
+            'contact_handle' => 'required|string|max:255',
+            'email'          => 'required|email|max:255',
+
+            'date'    => 'required|date|after_or_equal:today',
+            'guests'  => 'required|integer|min:1|max:50',
+            'guide'   => 'sometimes|boolean',
             'transport' => 'sometimes|boolean',
         ];
     }
 
-    /**
-     * Prepare the data for validation.
-     */
     protected function prepareForValidation(): void
     {
-        // Ensure boolean fields are present
         $this->merge([
-            'guide' => $this->has('guide') ? (bool) $this->guide : false,
+            'guide'     => $this->has('guide') ? (bool) $this->guide : false,
             'transport' => $this->has('transport') ? (bool) $this->transport : false,
         ]);
     }

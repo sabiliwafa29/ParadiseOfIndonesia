@@ -79,30 +79,36 @@ class BookingController extends Controller
             $validated = $request->validated();
 
             // Get prices from config
-            $guidePricePerGuest = config('booking.addon_prices.guide', 50);
+            $guidePricePerGuest     = config('booking.addon_prices.guide', 50);
             $transportPricePerGuest = config('booking.addon_prices.transport', 30);
 
             // Calculate addon costs
-            $guidePrice = $validated['guide'] ? $guidePricePerGuest * $validated['guests'] : 0;
-            $transportPrice = $validated['transport'] ? $transportPricePerGuest * $validated['guests'] : 0;
-            $addonCost = $guidePrice + $transportPrice;
-            $basePrice = $package->price * $validated['guests'];
+            $guidePrice     = !empty($validated['guide']) ? $guidePricePerGuest * $validated['guests'] : 0;
+            $transportPrice = !empty($validated['transport']) ? $transportPricePerGuest * $validated['guests'] : 0;
+            $addonCost      = $guidePrice + $transportPrice;
+
+            $basePrice  = $package->price * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID
             $orderId = OrderIdService::generate('BOOK');
 
             $booking = Booking::create([
-                'user_id' => auth()->id(),
-                'package_id' => $package->id,
-                'date' => $validated['date'],
-                'guests' => $validated['guests'],
-                'guide_service' => $validated['guide'],
-                'transport_service' => $validated['transport'],
-                'addon_cost' => $addonCost,
-                'total_price' => $totalPrice,
-                'status' => 'pending',
-                'order_id' => $orderId,
+                'user_id'   => auth()->id(), // bisa null untuk guest
+                'package_id'=> $package->id,
+
+                'full_name'      => $validated['full_name'],
+                'contact_handle' => $validated['contact_handle'],
+                'email'          => $validated['email'],
+
+                'date'            => $validated['date'],
+                'guests'          => $validated['guests'],
+                'guide_service'   => $validated['guide'],
+                'transport_service'=> $validated['transport'],
+                'addon_cost'      => $addonCost,
+                'total_price'     => $totalPrice,
+                'status'          => 'pending',
+                'order_id'        => $orderId,
             ]);
 
             // Get Midtrans payment token

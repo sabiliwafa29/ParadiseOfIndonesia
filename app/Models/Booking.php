@@ -13,6 +13,11 @@ class Booking extends Model
         'user_id',
         'tour_id',
         'package_id',
+
+        'full_name',
+        'contact_handle',
+        'email',
+
         'date',
         'guests',
         'guide_service',

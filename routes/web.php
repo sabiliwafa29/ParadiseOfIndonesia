@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -36,6 +36,10 @@ Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index
 
 Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
 Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->name('tour-packages.show');
+
+// Booking package (bisa tanpa login)
+Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
+Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
 
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
 Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');

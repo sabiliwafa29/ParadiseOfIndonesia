@@ -288,23 +288,15 @@
                     </div>
                 @endif
 
-                <!-- Book Now Button -->
+                <!-- Book Now Button (no login required) -->
                 <div class="flex items-center justify-center md:justify-end">
-                    @auth
-                        <a href="{{ route('bookings.package', $package) }}" class="inline-flex items-center px-8 py-4 bg-emerald-600 text-white text-lg font-semibold rounded-lg hover:bg-emerald-700 transition duration-300 shadow-lg hover:shadow-xl">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10a2 2 0 002 2h4a2 2 0 002-2V11M9 11h6"></path>
-                            </svg>
-                            {{ __('messages.book_now') }}
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="inline-flex items-center px-8 py-4 bg-gray-600 text-white text-lg font-semibold rounded-lg hover:bg-gray-700 transition duration-300 shadow-lg hover:shadow-xl">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                            </svg>
-                            {{ __('messages.login_to_book') }}
-                        </a>
-                    @endauth
+                    <a href="{{ route('bookings.package', $package) }}"
+                       class="inline-flex items-center px-8 py-4 bg-emerald-600 text-white text-lg font-semibold rounded-lg hover:bg-emerald-700 transition duration-300 shadow-lg hover:shadow-xl">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10a2 2 0 002 2h4a2 2 0 002-2V11M9 11h6"></path>
+                        </svg>
+                        {{ __('messages.book_now') }}
+                    </a>
                 </div>
 
                 <!-- CTA Section -->

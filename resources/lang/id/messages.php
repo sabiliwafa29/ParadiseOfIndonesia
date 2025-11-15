@@ -135,6 +135,7 @@ return [
     'contact_us' => 'Hubungi Kami',
     'view_more_packages' => 'Lihat Paket Lainnya',
     'other_package_options' => 'Opsi Paket Lainnya',
+    'note' => 'Catatan',
 
     // Tour Sessions
     'tour_sessions' => 'Sesi Tur',
