@@ -305,8 +305,9 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div class="hidden sm:hidden" id="mobile-menu" data-nav-mobile>
-        <div class="pt-2 pb-3 space-y-1" role="menu">
+    <div class="hidden sm:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-md overflow-y-auto" id="mobile-menu" data-nav-mobile>
+        <div class="pt-20 pb-6 border-b border-gray-200 bg-white/95">
+            <div class="px-4 pb-3 space-y-1" role="menu">
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" role="menuitem">
                 {{ __('messages.home') }}
             </x-responsive-nav-link>
@@ -339,10 +340,11 @@
             <x-responsive-nav-link :href="route('travel-services.index')" :active="request()->routeIs('travel-services.*')">
                 {{ __('messages.travel_services') }}
             </x-responsive-nav-link>
+            </div>
         </div>
         
         <!-- Mobile Search Bar -->
-        <div class="pt-4 pb-3 border-t border-gray-200">
+        <div class="pt-4 pb-3 border-b border-gray-200 bg-white/95">
             <form action="{{ route('search') }}" method="GET" class="px-4">
                 <div class="flex items-center">
                     <input type="text" 
@@ -358,8 +360,8 @@
             </form>
         </div>
 
-        <!-- Mobile Language Switcher -->
-        <div class="pt-4 pb-3 border-t border-gray-200">
+    <!-- Mobile Language Switcher -->
+    <div class="pt-4 pb-3 border-b border-gray-200 bg-white/95">
             <div class="px-4">
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{{ __('Language') }}</p>
                 <form action="{{ route('language.switch') }}" method="POST" class="space-y-2">
@@ -388,8 +390,8 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        @auth
-        <div class="pt-4 pb-1 border-t border-gray-200">
+    @auth
+    <div class="pt-4 pb-1 border-b border-gray-200 bg-white/95">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
@@ -414,8 +416,8 @@
         </div>
         @endauth
         
-        @guest
-        <div class="pt-4 pb-1 border-t border-gray-200">
+    @guest
+    <div class="pt-4 pb-1 bg-white/95">
             <div class="px-4 py-2 space-y-3">
                 <a href="{{ route('login') }}" class="block w-full text-center px-4 py-2 border-2 border-emerald-500 text-sm font-medium rounded-md text-emerald-500 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition duration-150 ease-in-out">
                     {{ __('messages.login') }}

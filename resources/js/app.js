@@ -89,16 +89,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        const lockBodyScroll = (lock) => {
+            if (lock) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
+            }
+        };
+
         navToggle.addEventListener('click', () => {
             const isHidden = navMobile.classList.contains('hidden');
             if (isHidden) {
                 navMobile.classList.remove('hidden');
                 navMobile.classList.add('block');
                 navToggle.setAttribute('aria-expanded', 'true');
+                lockBodyScroll(true);
             } else {
                 navMobile.classList.add('hidden');
                 navMobile.classList.remove('block');
                 navToggle.setAttribute('aria-expanded', 'false');
+                lockBodyScroll(false);
             }
             updateIcons(isHidden);
         });
