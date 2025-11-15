@@ -121,7 +121,7 @@
                     <select id="guests" name="guests"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             required>
-                        @for($i = 1; $i <= 50; $i++)
+                        @for($i = 2; $i <= 50; $i++)
                             <option value="{{ $i }}" {{ old('guests') == $i ? 'selected' : '' }}>{{ $i }}</option>
                         @endfor
                     </select>
