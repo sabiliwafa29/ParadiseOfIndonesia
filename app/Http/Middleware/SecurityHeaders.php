@@ -99,6 +99,8 @@ class SecurityHeaders
         $scriptSrcs[] = 'https://app.sandbox.midtrans.com';
         $connectSrcs[] = 'https://api.midtrans.com';
         $connectSrcs[] = 'https://api.sandbox.midtrans.com';
+        $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
+        $connectSrcs[] = 'https://app.sandbox.midtrans.com'; // For source maps
         
         // Add OSRM for routing
         $connectSrcs[] = 'https://router.project-osrm.org';

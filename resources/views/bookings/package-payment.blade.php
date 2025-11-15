@@ -33,10 +33,6 @@
 
 @if($snapToken)
 @push('scripts')
-<script type="text/javascript"
-        src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('services.midtrans.client_key') }}"
-        onload="initializeMidtrans()"></script>
 <script type="text/javascript">
     console.log('💳 [DEBUG] Payment Page Loaded');
     console.log('🎫 Snap Token:', '{{ $snapToken }}');
@@ -45,6 +41,7 @@
     console.log('💰 Total Price:', {{ $booking->total_price }});
     console.log('🔑 Midtrans Client Key:', '{{ config("services.midtrans.client_key") }}');
     
+    // Define function BEFORE loading Midtrans script
     function initializeMidtrans() {
         console.log('✅ [DEBUG] Midtrans Snap library loaded successfully');
         
@@ -96,25 +93,21 @@
     }
     
     // Fallback: Initialize after DOM loaded jika onload tidak trigger
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 [DEBUG] DOM Content Loaded');
-            setTimeout(function() {
-                if (typeof snap !== 'undefined' && !document.getElementById('pay-button').onclick) {
-                    console.log('⚠️ [DEBUG] Fallback initialization');
-                    initializeMidtrans();
-                }
-            }, 1000);
-        });
-    } else {
-        console.log('📄 [DEBUG] DOM already loaded');
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📄 [DEBUG] DOM Content Loaded');
         setTimeout(function() {
-            if (typeof snap !== 'undefined' && !document.getElementById('pay-button').onclick) {
+            if (typeof snap !== 'undefined') {
                 console.log('⚠️ [DEBUG] Fallback initialization');
                 initializeMidtrans();
+            } else {
+                console.log('⏳ [DEBUG] Waiting for Snap library...');
             }
         }, 1000);
-    }
+    });
 </script>
+<script type="text/javascript"
+        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('services.midtrans.client_key') }}"
+        onload="initializeMidtrans()"></script>
 @endpush
 @endif
