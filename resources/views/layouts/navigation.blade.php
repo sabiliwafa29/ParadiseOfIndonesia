@@ -1,4 +1,4 @@
-<nav x-data="{ open: false, megaMenu: null, languageOpen: false }"
+<nav x-data="navState()"
     class="fixed top-0 left-0 w-full bg-white border-b border-gray-100 shadow-sm h-20 transition-all duration-300 z-50"
      role="navigation"
      aria-label="Main navigation">
