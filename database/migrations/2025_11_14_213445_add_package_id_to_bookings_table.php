@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->foreignId('package_id')->nullable()->constrained('tour_packages')->onDelete('cascade')->after('tour_id');
+            // Tambah package_id hanya jika belum ada
+            if (!Schema::hasColumn('bookings', 'package_id')) {
+                $table->foreignId('package_id')
+                    ->nullable()
+                    ->constrained('tour_packages')
+                    ->onDelete('cascade')
+                    ->after('tour_id');
+            }
         });
     }
 
@@ -22,8 +29,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropForeign(['package_id']);
-            $table->dropColumn('package_id');
+            if (Schema::hasColumn('bookings', 'package_id')) {
+                try {
+                    $table->dropForeign(['package_id']);
+                } catch (\Throwable $e) {
+                    // abaikan jika constraint belum ada
+                }
+                $table->dropColumn('package_id');
+            }
         });
     }
 };
