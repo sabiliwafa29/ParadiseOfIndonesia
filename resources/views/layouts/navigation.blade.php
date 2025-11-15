@@ -27,12 +27,15 @@
 
                     <!-- Explore Mega Menu -->
                     <div class="relative" 
-                         @mouseenter="megaMenu = 'explore'" 
-                         @mouseleave="megaMenu = null">
+                         x-on:mouseenter="megaMenu = 'explore'" 
+                         x-on:mouseleave="megaMenu = null">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 hover:text-emerald-600 focus:outline-none transition ease-in-out duration-150"
-                                :class="{'text-emerald-600': megaMenu === 'explore'}">
+                                :class="{'text-emerald-600': megaMenu === 'explore'}"
+                                :aria-expanded="megaMenu === 'explore'"
+                                aria-haspopup="true"
+                                aria-label="Explore menu">
                             {{ __('messages.explore') }}
-                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
@@ -46,10 +49,13 @@
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-2 w-screen max-w-md bg-white rounded-lg shadow-xl z-50">
+                             class="absolute left-0 mt-2 w-screen max-w-md bg-white rounded-lg shadow-xl z-50"
+                             role="menu"
+                             aria-label="Explore destinations and activities">
                             <div class="p-4 grid grid-cols-1 gap-2">
                                 <a href="{{ route('destinations.index') }}" 
-                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group">
+                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group"
+                                   role="menuitem">
                                     <div class="flex-shrink-0">
                                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -63,7 +69,8 @@
                                 </a>
 
                                 <a href="{{ route('tour-activities.index') }}" 
-                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group">
+                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group"
+                                   role="menuitem">
                                     <div class="flex-shrink-0">
                                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/>
@@ -76,7 +83,8 @@
                                 </a>
 
                                 <a href="{{ route('gallery.index') }}" 
-                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group">
+                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group"
+                                   role="menuitem">
                                     <div class="flex-shrink-0">
                                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -93,12 +101,15 @@
 
                     <!-- Tours Mega Menu -->
                     <div class="relative" 
-                         @mouseenter="megaMenu = 'tours'" 
-                         @mouseleave="megaMenu = null">
+                         x-on:mouseenter="megaMenu = 'tours'" 
+                         x-on:mouseleave="megaMenu = null">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 hover:text-emerald-600 focus:outline-none transition ease-in-out duration-150"
-                                :class="{'text-emerald-600': megaMenu === 'tours'}">
+                                :class="{'text-emerald-600': megaMenu === 'tours'}"
+                                :aria-expanded="megaMenu === 'tours'"
+                                aria-haspopup="true"
+                                aria-label="Tours menu">
                             {{ __('messages.tours') }}
-                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
@@ -112,10 +123,13 @@
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 translate-y-1"
-                             class="absolute left-0 mt-2 w-screen max-w-md bg-white rounded-lg shadow-xl z-50">
+                             class="absolute left-0 mt-2 w-screen max-w-md bg-white rounded-lg shadow-xl z-50"
+                             role="menu"
+                             aria-label="Tour packages and sessions">
                             <div class="p-4 grid grid-cols-1 gap-2">
                                 <a href="{{ route('tour-packages.index') }}" 
-                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group">
+                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group"
+                                   role="menuitem">
                                     <div class="flex-shrink-0">
                                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
@@ -128,7 +142,8 @@
                                 </a>
 
                                 <a href="{{ route('tour-sessions.index') }}" 
-                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group">
+                                   class="flex items-center p-3 rounded-lg hover:bg-emerald-50 transition group"
+                                   role="menuitem">
                                     <div class="flex-shrink-0">
                                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -168,11 +183,11 @@
                 </form>
 
                 <!-- Language Switcher -->
-                <div class="relative" @click.away="languageOpen = false">
-                    <button @click="languageOpen = !languageOpen" 
+                <div class="relative" x-on:click.away="languageOpen = false">
+                    <button x-on:click="languageOpen = !languageOpen" 
                             class="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:text-emerald-600 rounded-md hover:bg-gray-50 transition"
                             aria-label="Change language"
-                            aria-expanded="languageOpen"
+                            :aria-expanded="languageOpen"
                             aria-haspopup="true">
                         @php
                             $currentLang = app()->getLocale();
@@ -301,10 +316,10 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" 
+                <button x-on:click="open = ! open" 
                         class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                         aria-label="Toggle navigation menu"
-                        aria-expanded="open"
+                        :aria-expanded="open"
                         aria-controls="mobile-menu">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
