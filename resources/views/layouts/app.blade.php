@@ -63,6 +63,9 @@
             @stack('scripts')
         </div>
         
+        <!-- Loading Overlay -->
+        <x-loading-overlay />
+        
         <!-- Login Success Popup -->
         <x-login-success-popup />
 

@@ -10,8 +10,48 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $bookings = Booking::with(['user', 'tour'])->latest()->paginate(20);
-        return view('admin.bookings.index', compact('bookings'));
+        $query = Booking::with(['user', 'tour', 'tour.destination']);
+        
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        // Search by user name or tour name
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('user', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('tour', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+        
+        // Filter by date range
+        if ($request->filled('date_from')) {
+            $query->whereDate('date', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('date', '<=', $request->date_to);
+        }
+        
+        $bookings = $query->latest()->paginate(12);
+        
+        // Stats for dashboard cards
+        $stats = [
+            'total' => Booking::count(),
+            'pending' => Booking::where('status', 'pending')->count(),
+            'confirmed' => Booking::where('status', 'confirmed')->count(),
+            'completed' => Booking::where('status', 'completed')->count(),
+            'cancelled' => Booking::where('status', 'cancelled')->count(),
+            'total_revenue' => Booking::whereIn('status', ['confirmed', 'completed'])->sum('total_price'),
+            'today_bookings' => Booking::whereDate('created_at', today())->count(),
+        ];
+        
+        return view('admin.bookings.index', compact('bookings', 'stats'));
     }
 
     public function show(Booking $booking)

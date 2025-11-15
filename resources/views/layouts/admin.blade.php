@@ -200,6 +200,9 @@
         </div>
     </div>
 
+    <!-- Loading Overlay -->
+    <x-loading-overlay />
+
     @stack('scripts')
 </body>
 </html>

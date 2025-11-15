@@ -7,15 +7,17 @@
      * - $class (string)
      * - $sizes (string) optional
      * - $derivatives (array) optional: {md: path, thumb: path} from model->image_derivatives
+     * - $lazy (boolean) optional: enable lazy loading (default: true)
      */
     $path = $path ?? '';
     $alt = $alt ?? '';
     $class = $class ?? '';
     $sizes = $sizes ?? '100vw';
     $derivatives = $derivatives ?? null;
+    $lazy = $lazy ?? true;
 
     if (!$path) {
-        echo '<img src="' . e(asset('images/placeholder.png')) . '" alt="' . e($alt) . '" class="' . e($class) . '">';
+        echo '<img src="' . e(asset('images/placeholder.png')) . '" alt="' . e($alt) . '" class="' . e($class) . '" loading="lazy">';
         return;
     }
 
@@ -59,6 +61,12 @@
     }
 
     $srcsetAttr = count($srcset) ? implode(', ', $srcset) : '';
+    $loadingAttr = $lazy ? 'lazy' : 'eager';
 @endphp
 
-<img src="{{ $src }}" @if($srcsetAttr) srcset="{{ $srcsetAttr }}" sizes="{{ $sizes }}" @endif alt="{{ $alt }}" class="{{ $class }}">
+<img src="{{ $src }}" 
+     @if($srcsetAttr) srcset="{{ $srcsetAttr }}" sizes="{{ $sizes }}" @endif 
+     alt="{{ $alt }}" 
+     class="{{ $class }}"
+     loading="{{ $loadingAttr }}"
+     decoding="async">

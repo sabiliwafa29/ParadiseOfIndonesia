@@ -1,7 +1,9 @@
 <nav x-data="{ open: false, megaMenu: null, languageOpen: false, scrolled: false }"
      x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
      :class="scrolled ? 'bg-white backdrop-blur-md h-20' : 'bg-white shadow-sm h-18'"
-     class="fixed top-0 left-0 w-full border-b border-gray-100 transition-all duration-300 z-50">
+     class="fixed top-0 left-0 w-full border-b border-gray-100 transition-all duration-300 z-50"
+     role="navigation"
+     aria-label="Main navigation">
 
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -9,8 +11,11 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('images/logo-paradise.jpg') }}" alt="Paradise Of Indonesia" class="h-10 w-auto">
+                    <a href="{{ route('home') }}" aria-label="Paradise Of Indonesia - Home">
+                        <img src="{{ asset('images/logo-paradise.jpg') }}" 
+                             alt="Paradise Of Indonesia Logo" 
+                             class="h-10 w-auto"
+                             loading="eager">
                     </a>
                 </div>
 
@@ -147,13 +152,16 @@
             <!-- Search Bar, Language Switcher & User Menu -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
                 <!-- Search Bar -->
-                <form action="{{ route('search') }}" method="GET" class="relative">
+                <form action="{{ route('search') }}" method="GET" class="relative" role="search" aria-label="Search tours and destinations">
                     <input type="text" 
                            name="query" 
                            placeholder="{{ __('messages.search_placeholder') }}" 
-                           class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm">
-                    <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+                           aria-label="Search query">
+                    <button type="submit" 
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-emerald-600"
+                            aria-label="Submit search">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </button>
@@ -162,15 +170,18 @@
                 <!-- Language Switcher -->
                 <div class="relative" @click.away="languageOpen = false">
                     <button @click="languageOpen = !languageOpen" 
-                            class="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:text-emerald-600 rounded-md hover:bg-gray-50 transition">
+                            class="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:text-emerald-600 rounded-md hover:bg-gray-50 transition"
+                            aria-label="Change language"
+                            aria-expanded="languageOpen"
+                            aria-haspopup="true">
                         @php
                             $currentLang = app()->getLocale();
                             $flags = ['en' => '🇬🇧', 'id' => '🇮🇩', 'zh' => '🇨🇳'];
                             $names = ['en' => 'EN', 'id' => 'ID', 'zh' => '中文'];
                         @endphp
-                        <span class="text-xl">{{ $flags[$currentLang] ?? '🇬🇧' }}</span>
+                        <span class="text-xl" aria-hidden="true">{{ $flags[$currentLang] ?? '🇬🇧' }}</span>
                         <span class="font-medium">{{ $names[$currentLang] ?? 'EN' }}</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
@@ -184,18 +195,23 @@
                          x-transition:leave="transition ease-in duration-150"
                          x-transition:leave-start="opacity-100 scale-100"
                          x-transition:leave-end="opacity-0 scale-95"
-                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50"
+                         role="menu"
+                         aria-orientation="vertical"
+                         aria-label="Language selection">
                         <form action="{{ route('language.switch') }}" method="POST">
                             @csrf
                             <button type="submit" name="locale" value="en" 
-                                    class="w-full flex items-center space-x-3 px-4 py-3 hover:bg-emerald-50 transition {{ app()->getLocale() === 'en' ? 'bg-emerald-50' : '' }}">
-                                <span class="text-2xl">🇬🇧</span>
+                                    class="w-full flex items-center space-x-3 px-4 py-3 hover:bg-emerald-50 transition {{ app()->getLocale() === 'en' ? 'bg-emerald-50' : '' }}"
+                                    role="menuitem"
+                                    aria-current="{{ app()->getLocale() === 'en' ? 'true' : 'false' }}">
+                                <span class="text-2xl" aria-hidden="true">🇬🇧</span>
                                 <div class="text-left">
                                     <p class="text-sm font-medium text-gray-900">English</p>
                                     <p class="text-xs text-gray-500">English</p>
                                 </div>
                                 @if(app()->getLocale() === 'en')
-                                <svg class="w-5 h-5 ml-auto text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 ml-auto text-emerald-600" fill="currentColor" viewBox="0 0 20 20" aria-label="Selected">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                 </svg>
                                 @endif
@@ -285,8 +301,12 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <button @click="open = ! open" 
+                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                        aria-label="Toggle navigation menu"
+                        aria-expanded="open"
+                        aria-controls="mobile-menu">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -296,9 +316,9 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1" role="menu">
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" role="menuitem">
                 {{ __('messages.home') }}
             </x-responsive-nav-link>
             
