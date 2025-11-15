@@ -103,4 +103,123 @@ document.addEventListener('DOMContentLoaded', () => {
             updateIcons(isHidden);
         });
     }
+
+    // User profile dropdown (desktop, top-right)
+    const userDropdown = document.querySelector('[data-user-dropdown]');
+    if (userDropdown) {
+        const toggle = userDropdown.querySelector('[data-user-toggle]');
+        const menu = userDropdown.querySelector('[data-user-menu]');
+
+        if (toggle && menu) {
+            const closeMenu = () => {
+                menu.classList.add('hidden');
+                menu.classList.remove('block');
+                toggle.setAttribute('aria-expanded', 'false');
+            };
+
+            const openMenu = () => {
+                menu.classList.remove('hidden');
+                menu.classList.add('block');
+                toggle.setAttribute('aria-expanded', 'true');
+            };
+
+            const toggleMenu = (e) => {
+                e.stopPropagation();
+                const isOpen = !menu.classList.contains('hidden');
+                if (isOpen) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            };
+
+            toggle.addEventListener('click', toggleMenu);
+
+            document.addEventListener('click', (e) => {
+                if (!userDropdown.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+        }
+    }
+
+    // Hero slider (auto-rotate + dots) - vanilla JS, CSP-safe
+    const heroSlider = document.querySelector('[data-hero-slider]');
+    if (heroSlider) {
+        const total = parseInt(heroSlider.getAttribute('data-hero-slider-count') || '0', 10);
+        const slides = heroSlider.querySelectorAll('[data-hero-slide]');
+        const dotsContainer = heroSlider.querySelector('[data-hero-dots]');
+        const dots = dotsContainer ? dotsContainer.querySelectorAll('[data-hero-dot]') : [];
+
+        if (total > 0 && slides.length === total) {
+            let current = 0;
+            let intervalId = null;
+
+            const updateSlides = () => {
+                slides.forEach((slide, index) => {
+                    if (index === current) {
+                        slide.classList.remove('hidden', 'opacity-0');
+                        slide.classList.add('block', 'opacity-100');
+                        slide.style.zIndex = '10';
+                    } else {
+                        slide.classList.add('hidden');
+                        slide.classList.remove('block');
+                        slide.style.zIndex = '0';
+                    }
+                });
+
+                dots.forEach((dot, index) => {
+                    if (index === current) {
+                        dot.classList.remove('bg-white/40', 'w-12');
+                        dot.classList.add('bg-white', 'w-16');
+                    } else {
+                        dot.classList.add('bg-white/40', 'w-12');
+                        dot.classList.remove('bg-white', 'w-16');
+                    }
+                });
+            };
+
+            const goTo = (index) => {
+                current = (index + total) % total;
+                updateSlides();
+            };
+
+            const next = () => {
+                goTo(current + 1);
+            };
+
+            const startAuto = () => {
+                if (intervalId) return;
+                intervalId = window.setInterval(next, 5000);
+            };
+
+            const stopAuto = () => {
+                if (!intervalId) return;
+                window.clearInterval(intervalId);
+                intervalId = null;
+            };
+
+            // Initialize
+            slides.forEach((slide, index) => {
+                if (index !== 0) {
+                    slide.classList.add('hidden');
+                }
+            });
+            updateSlides();
+            startAuto();
+
+            // Dot navigation
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    stopAuto();
+                    goTo(index);
+                    startAuto();
+                });
+            });
+
+            // Pause on hover
+            heroSlider.addEventListener('mouseenter', stopAuto);
+            heroSlider.addEventListener('mouseleave', startAuto);
+        }
+    }
 });

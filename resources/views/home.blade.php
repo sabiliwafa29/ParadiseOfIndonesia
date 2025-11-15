@@ -88,18 +88,12 @@
 
 </script>
 
-<!-- Hero Slider with Modern Design - 8 Slides -->
-<div class="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800" x-data="{ currentSlide: 0 }" x-init="setInterval(() => { currentSlide = currentSlide === 7 ? 0 : currentSlide + 1 }, 5000)">
+<!-- Hero Slider with Modern Design - 8 Slides (no Alpine, vanilla JS via data attributes) -->
+<div class="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800" data-hero-slider data-hero-slider-count="8">
     <div class="relative h-[500px] md:h-[600px] lg:h-[700px]">
         
         <!-- Slide 1 - Bali -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 0"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="0">
             <img src="{{ asset('images/slider/bali.jpg') }}" alt="{{ __('messages.slide_title1') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -124,13 +118,7 @@
         </div>
         
         <!-- Slide 2 - Raja Ampat -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 1"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="1">
             <img src="{{ asset('images/slider/raja-ampat.jpg') }}" alt="{{ __('messages.slide_title2') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -155,13 +143,7 @@
         </div>
         
         <!-- Slide 3 - Borobudur -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 2"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="2">
             <img src="{{ asset('images/slider/borobudur.jpg') }}" alt="{{ __('messages.slide_title3') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -186,13 +168,7 @@
         </div>
         
         <!-- Slide 4 - Komodo -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 3"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="3">
             <img src="{{ asset('images/slider/komodo.jpg') }}" alt="{{ __('messages.slide_title4') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -217,13 +193,7 @@
         </div>
 
         <!-- Slide 5 - Kawah Ijen -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 4"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="4">
             <img src="{{ asset('images/slider/bluefire-ijen.jpg') }}" alt="{{ __('messages.slide_title5') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -248,13 +218,7 @@
         </div>
 
         <!-- Slide 6 - Dieng -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 5"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="5">
             <img src="{{ asset('images/slider/dieng-sunrise.jpg') }}" alt="{{ __('messages.slide_title6') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -279,13 +243,7 @@
         </div>
 
         <!-- Slide 7 - Dieng-Culture -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 6"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="6">
             <img src="{{ asset('images/slider/dieng-culture.jpg') }}" alt="{{ __('messages.slide_title7') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -310,13 +268,7 @@
         </div>
 
         <!-- Slide 8 - Traditional Dance -->
-        <div x-cloak class="absolute inset-0" x-show="currentSlide === 7"
-             x-transition:enter="transition ease-out duration-1000"
-             x-transition:enter-start="opacity-0 scale-105"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="transition ease-in duration-1000"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
+    <div class="absolute inset-0 hero-slide" data-hero-slide="7">
             <img src="{{ asset('images/slider/traditional-dance.jpg') }}" alt="{{ __('messages.slide_title8') }}" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
             <div class="absolute inset-0 flex items-center justify-center px-4">
@@ -341,32 +293,16 @@
         </div>
     </div>
     
-    <!-- Modern Slider Navigation - 8 Dots -->
-    <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-3">
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 0 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 0"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 1 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 1"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 2 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 2"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 3 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 3"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 4 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 4"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 5 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 5"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 6 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 6"></button>
-        <button class="w-12 h-1.5 rounded-full transition-all duration-300" 
-                :class="currentSlide === 7 ? 'bg-white w-16' : 'bg-white/40 hover:bg-white/60'" 
-                @click="currentSlide = 7"></button>
+    <!-- Modern Slider Navigation - 8 Dots (controlled via JS) -->
+    <div class="absolute bottom-8 left-0 right-0 flex justify-center items-center space-x-3" data-hero-dots>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="0"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="1"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="2"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="3"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="4"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="5"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="6"></button>
+    <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="7"></button>
     </div>
 </div>
 
