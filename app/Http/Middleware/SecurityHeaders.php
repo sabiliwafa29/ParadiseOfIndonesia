@@ -94,9 +94,17 @@ class SecurityHeaders
             $connectSrcs[] = "https://{$cdnUrl}";
         }
 
-        // Add external APIs
+        // Add Midtrans domains for payment integration
+        $scriptSrcs[] = 'https://app.midtrans.com';
+        $scriptSrcs[] = 'https://app.sandbox.midtrans.com';
         $connectSrcs[] = 'https://api.midtrans.com';
+        $connectSrcs[] = 'https://api.sandbox.midtrans.com';
+        
+        // Add OSRM for routing
         $connectSrcs[] = 'https://router.project-osrm.org';
+        
+        // Add unpkg CDN for Alpine.js and other libraries
+        $scriptSrcs[] = 'https://unpkg.com';
 
         return implode('; ', [
             'default-src ' . implode(' ', ["'self'"]),
@@ -107,9 +115,9 @@ class SecurityHeaders
             'connect-src ' . implode(' ', $connectSrcs),
             'media-src ' . implode(' ', ["'self'", 'https:']),
             'object-src ' . implode(' ', ["'none'"]),
-            'frame-src ' . implode(' ', ["'self'", 'https://app.midtrans.com']),
+            'frame-src ' . implode(' ', ["'self'", 'https://app.midtrans.com', 'https://app.sandbox.midtrans.com']),
             'base-uri ' . implode(' ', ["'self'"]),
-            'form-action ' . implode(' ', ["'self'", 'https://app.midtrans.com']),
+            'form-action ' . implode(' ', ["'self'", 'https://app.midtrans.com', 'https://api.midtrans.com']),
             "upgrade-insecure-requests",
         ]);
     }
