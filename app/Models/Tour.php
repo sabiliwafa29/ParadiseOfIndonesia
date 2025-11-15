@@ -37,6 +37,7 @@ class Tour extends Model
         'price_usd' => 'decimal:2',
         'price_idr' => 'decimal:2',
         'price_cny' => 'decimal:2',
+        'image_derivatives' => 'json',
     ];
 
     public function destination(): BelongsTo

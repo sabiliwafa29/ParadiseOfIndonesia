@@ -18,6 +18,10 @@ class Destination extends Model
         'featured'
     ];
 
+    protected $casts = [
+        'image_derivatives' => 'json',
+    ];
+
     public function tours()
     {
         return $this->hasMany(Tour::class);

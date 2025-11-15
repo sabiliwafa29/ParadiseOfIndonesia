@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessImageDerivatives;
 use Illuminate\Http\Request;
 use App\Models\TourPackage;
 use App\Models\Tour;
@@ -59,6 +60,15 @@ class TourPackageController extends Controller
             $package->tours()->sync($validated['tours']);
         }
 
+        // Dispatch derivative processing job if image was uploaded
+        if ($request->hasFile('image') && isset($validated['image'])) {
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $package);
+            } else {
+                ProcessImageDerivatives::dispatch($validated['image'], 'public', $package);
+            }
+        }
+
         return redirect()->route('admin.tour-packages.index')
             ->with('success', 'Tour package created successfully');
     }
@@ -96,6 +106,15 @@ class TourPackageController extends Controller
         $tourPackage->update($validated);
 
         $tourPackage->tours()->sync($validated['tours'] ?? []);
+
+        // Dispatch derivative processing job if image was uploaded
+        if ($request->hasFile('image') && isset($validated['image'])) {
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $tourPackage);
+            } else {
+                ProcessImageDerivatives::dispatch($validated['image'], 'public', $tourPackage);
+            }
+        }
 
         return redirect()->route('admin.tour-packages.index')
             ->with('success', 'Tour package updated successfully');

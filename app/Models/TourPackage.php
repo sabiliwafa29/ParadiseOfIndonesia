@@ -12,6 +12,10 @@ class TourPackage extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'image_derivatives' => 'json',
+    ];
+
     /**
      * The tours that belong to the TourPackage
      *

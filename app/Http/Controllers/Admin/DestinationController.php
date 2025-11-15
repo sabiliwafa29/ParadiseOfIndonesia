@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessImageDerivatives;
 use Illuminate\Http\Request;
 use App\Models\Destination;
 
@@ -38,7 +39,16 @@ class DestinationController extends Controller
             $validated['image'] = $request->file('image')->store('destinations', 'public');
         }
 
-        Destination::create($validated);
+        $destination = Destination::create($validated);
+
+        // Dispatch derivative processing job if image was uploaded
+        if ($request->hasFile('image') && isset($validated['image'])) {
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $destination);
+            } else {
+                ProcessImageDerivatives::dispatch($validated['image'], 'public', $destination);
+            }
+        }
 
         return redirect()->route('admin.destinations.index')
             ->with('success', 'Destination created successfully');
@@ -72,6 +82,15 @@ class DestinationController extends Controller
         }
 
         $destination->update($validated);
+
+        // Dispatch derivative processing job if image was uploaded
+        if ($request->hasFile('image') && isset($validated['image'])) {
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $destination);
+            } else {
+                ProcessImageDerivatives::dispatch($validated['image'], 'public', $destination);
+            }
+        }
 
         return redirect()->route('admin.destinations.index')
             ->with('success', 'Destination updated successfully');

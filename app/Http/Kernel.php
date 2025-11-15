@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\SecurityHeaders::class,
     ];
 
     /**
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'is_admin' => \App\Http\Middleware\IsAdmin::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'osrm.rate.limit' => \App\Http\Middleware\OsrmRateLimit::class,
+        'api.rate.limit' => \App\Http\Middleware\ApiRateLimiting::class,
     ];
 }

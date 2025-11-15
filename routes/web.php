@@ -112,26 +112,26 @@ Route::middleware('auth')->group(function () {
         // Destination Management (jika ada controller admin)
         Route::resource('/destinations', App\Http\Controllers\Admin\DestinationController::class);
         
-        // Travel Service Management (jika ada controller admin)
-        // Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
+    // Travel Service Management
+    Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
         
-        // Booking Management (jika ada controller admin)
-        // Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    // Booking Management
+    Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
         
-        // User Management (jika ada controller admin)
-        // Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    // User Management
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
         
-        // Gallery Management (jika ada controller admin)
-        // Route::resource('gallery', App\Http\Controllers\Admin\GalleryController::class);
+    // Gallery Management
+    Route::resource('gallery', App\Http\Controllers\Admin\GalleryController::class);
         
-        // Tour Activity Management (jika ada controller admin)
-        // Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
+    // Tour Activity Management
+    Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
         
-        // Tour Package Management (jika ada controller admin)
-        Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+    // Tour Package Management
+    Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
         
-        // Tour Session Management (jika ada controller admin)
-        // Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
+    // Tour Session Management
+    Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
     });
 });
 

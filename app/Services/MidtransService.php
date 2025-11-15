@@ -55,6 +55,28 @@ class MidtransService
             ],
         ];
 
+        // Add Sentry breadcrumbs/context if available
+        if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
+            try {
+                \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($booking, $orderId): void {
+                    $scope->setContext('midtrans_transaction', [
+                        'order_id' => $orderId,
+                        'booking_id' => $booking->id ?? null,
+                        'amount' => (int) $booking->total_price,
+                    ]);
+
+                    $scope->addBreadcrumb(new \Sentry\Breadcrumb([
+                        'message' => 'Midtrans createTransaction invoked',
+                        'category' => 'payment',
+                        'data' => ['order_id' => $orderId],
+                        'level' => \Sentry\Severity::info(),
+                    ]));
+                });
+            } catch (\Throwable $e) {
+                // ignore Sentry configuration errors
+            }
+        }
+
         try {
             $snapToken = \Midtrans\Snap::getSnapToken($params);
             Log::info('Midtrans token generated', [
@@ -65,6 +87,13 @@ class MidtransService
             return $snapToken;
         } catch (\Exception $e) {
             Log::error('Midtrans error: ' . $e->getMessage());
+            if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
+                try {
+                    \Sentry\captureException($e);
+                } catch (\Throwable $sentryEx) {
+                    Log::error('Failed to send Midtrans exception to Sentry: ' . $sentryEx->getMessage());
+                }
+            }
             return null;
         }
     }
@@ -82,6 +111,29 @@ class MidtransService
             $orderId = $notif->order_id;
             $fraud = $notif->fraud_status;
 
+            // Breadcrumb + context for Sentry
+            if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
+                try {
+                    \Sentry\configureScope(function (\Sentry\State\Scope $scope) use ($orderId, $transaction, $type, $fraud): void {
+                        $scope->setContext('midtrans_notification', [
+                            'order_id' => $orderId,
+                            'transaction_status' => $transaction,
+                            'payment_type' => $type,
+                            'fraud_status' => $fraud,
+                        ]);
+
+                        $scope->addBreadcrumb(new \Sentry\Breadcrumb([
+                            'message' => 'Midtrans notification received',
+                            'category' => 'payment',
+                            'data' => ['order_id' => $orderId, 'status' => $transaction],
+                            'level' => \Sentry\Severity::info(),
+                        ]));
+                    });
+                } catch (\Throwable $e) {
+                    // ignore Sentry scope errors
+                }
+            }
+
             Log::info('Midtrans notification parsed', [
                 'order_id' => $orderId,
                 'transaction_status' => $transaction,
@@ -97,6 +149,13 @@ class MidtransService
             ];
         } catch (\Exception $e) {
             Log::error('Failed to parse Midtrans notification: ' . $e->getMessage());
+            if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
+                try {
+                    \Sentry\captureException($e);
+                } catch (\Throwable $sentryEx) {
+                    Log::error('Failed to send Midtrans notification exception to Sentry: ' . $sentryEx->getMessage());
+                }
+            }
             throw $e;
         }
     }

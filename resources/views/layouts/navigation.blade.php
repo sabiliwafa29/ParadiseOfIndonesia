@@ -261,6 +261,15 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('messages.profile') }}
                         </x-dropdown-link>
+                        @if(Auth::check() && Auth::user()->role === 'admin')
+                            <div class="border-t border-gray-100"></div>
+                            <x-dropdown-link :href="route('admin.dashboard')">
+                                {{ __('Admin Dashboard') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('admin.tours.index')">
+                                {{ __('Admin: Tours') }}
+                            </x-dropdown-link>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"

@@ -10,4 +10,8 @@ class Gallery extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    protected $casts = [
+        'image_derivatives' => 'json',
+    ];
 }

@@ -134,9 +134,9 @@
                             {{-- Image Section --}}
                             <div class="w-48 h-48 bg-gradient-to-br from-emerald-400 to-teal-500 flex-shrink-0 relative overflow-hidden">
                                 @if($tour->image)
-                                    <img src="{{ asset('storage/' . $tour->image) }}" 
-                                         alt="{{ $tour->name }}" 
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                    @if($tour->image)
+                                        @include('components.responsive-image', ['path' => $tour->image, 'alt' => $tour->name ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
+                                    @endif
                                 @else
                                     <div class="w-full h-full flex items-center justify-center">
                                         <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">

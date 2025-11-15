@@ -239,7 +239,9 @@
                             <div class="flex items-center space-x-3">
                                 <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 overflow-hidden">
                                     @if($tour->image)
-                                        <img src="{{ asset('storage/' . $tour->image) }}" alt="{{ $tour->name }}" class="w-full h-full object-cover">
+                                        @if($tour->image)
+                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => $tour->name ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
+                                        @endif
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <svg class="w-8 h-8 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,3 +1,107 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-semibold mb-4">Create Tour</h1>
+
+    @if($errors->any())
+        <div class="mb-4 bg-red-50 border border-red-200 p-3 rounded">
+            <ul class="text-sm text-red-700">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.tours.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block mb-1">Name (ID)</label>
+                <input type="text" name="name_id" value="{{ old('name_id') }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Name (EN)</label>
+                <input type="text" name="name_en" value="{{ old('name_en') }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Name (ZH)</label>
+                <input type="text" name="name_zh" value="{{ old('name_zh') }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Slug</label>
+                <input type="text" name="slug" value="{{ old('slug') }}" class="w-full border p-2" required>
+            </div>
+
+            <div>
+                <label class="block mb-1">Price (USD)</label>
+                <input type="number" step="0.01" name="price_usd" value="{{ old('price_usd') }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Duration (days)</label>
+                <input type="number" name="duration" value="{{ old('duration', 1) }}" class="w-full border p-2" required>
+            </div>
+
+            <div>
+                <label class="block mb-1">Destination</label>
+                <select name="destination_id" class="w-full border p-2">
+                    @foreach($destinations as $d)
+                        <option value="{{ $d->id }}">{{ $d->name_id ?? $d->name_en }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-1">Target Market</label>
+                <select name="target_market" class="w-full border p-2">
+                    <option value="domestic">Domestic</option>
+                    <option value="international">International</option>
+                    <option value="both" selected>Both</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Itinerary (JSON)</label>
+                <textarea name="itinerary" class="w-full border p-2" rows="4">{{ old('itinerary') }}</textarea>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Includes (JSON)</label>
+                <textarea name="includes" class="w-full border p-2" rows="3">{{ old('includes') }}</textarea>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Excludes (JSON)</label>
+                <textarea name="excludes" class="w-full border p-2" rows="3">{{ old('excludes') }}</textarea>
+            </div>
+
+            <div>
+                <label class="block mb-1">Featured</label>
+                <input type="checkbox" name="featured" value="1" {{ old('featured') ? 'checked' : '' }}>
+            </div>
+
+            <div>
+                <label class="block mb-1">Status</label>
+                <select name="status" class="w-full border p-2">
+                    <option value="active" selected>Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Image (URL or upload)</label>
+                <input type="file" name="image" class="w-full">
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button class="px-4 py-2 bg-emerald-500 text-white rounded">Create Tour</button>
+            <a href="{{ route('admin.tours.index') }}" class="ml-2 text-gray-600">Cancel</a>
+        </div>
+    </form>
+</div>
+@endsection
 @extends('layouts.admin')
 
 @section('page-title', 'Create New Tour Package')

@@ -32,7 +32,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700">Gambar</label>
             @if($isEdit && $destination->image)
-                <img src="{{ asset('storage/' . $destination->image) }}" alt="Gambar" class="mb-2 max-h-32 rounded">
+                @include('components.responsive-image', ['path' => $destination->image, 'alt' => 'Gambar', 'class' => 'mb-2 max-h-32 rounded', 'derivatives' => $destination->image_derivatives])
             @endif
             <input type="file" name="image" class="mt-1 block w-full rounded-md border-gray-300">
         </div>

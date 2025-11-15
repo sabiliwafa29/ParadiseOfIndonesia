@@ -1,0 +1,220 @@
+name: Test & Lint
+
+on:
+  push:
+    branches: [ main, dbparadise ]
+  pull_request:
+    branches: [ main, dbparadise ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: paradise_db_test
+          POSTGRES_USER: paradise_test
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql, redis, gd
+          coverage: xdebug
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: paradise_db_test
+          DB_USERNAME: paradise_test
+          DB_PASSWORD: test_password
+          CACHE_DRIVER: redis
+          SESSION_DRIVER: redis
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
+        run: php artisan migrate --force
+
+      - name: Run Feature & Unit Tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: paradise_db_test
+          DB_USERNAME: paradise_test
+          DB_PASSWORD: test_password
+          CACHE_DRIVER: redis
+          SESSION_DRIVER: redis
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
+        run: php artisan test --no-coverage
+
+      - name: Run Tests with Coverage
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: paradise_db_test
+          DB_USERNAME: paradise_test
+          DB_PASSWORD: test_password
+          CACHE_DRIVER: redis
+          SESSION_DRIVER: redis
+          REDIS_HOST: 127.0.0.1
+          REDIS_PORT: 6379
+        run: php artisan test --coverage-text --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: false
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Pint (PHP Code Style)
+        run: vendor/bin/pint --test
+
+      - name: PHP Syntax Check
+        run: find app routes -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Check composer.json conflicts
+        run: composer validate
+
+  migrations:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: paradise_db_migration
+          POSTGRES_USER: paradise_test
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: paradise_db_migration
+          DB_USERNAME: paradise_test
+          DB_PASSWORD: test_password
+        run: php artisan migrate --force
+
+      - name: Verify migrations completed
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: paradise_db_migration
+          DB_USERNAME: paradise_test
+          DB_PASSWORD: test_password
+        run: php artisan migrate:status

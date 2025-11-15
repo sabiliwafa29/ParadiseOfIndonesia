@@ -22,15 +22,19 @@
   "outputDirectory": "public",
 
   "env": {
-    "APP_CONFIG_CACHE": "/tmp/config.php",
-    "APP_EVENTS_CACHE": "/tmp/events.php",
-    "APP_PACKAGES_CACHE": "/tmp/packages.php",
-    "APP_ROUTES_CACHE": "/tmp/routes.php",
-    "APP_SERVICES_CACHE": "/tmp/services.php",
-    "VIEW_COMPILED_PATH": "/tmp",
-    "CACHE_DRIVER": "file",
+    "APP_CONFIG_CACHE": "/tmp/bootstrap/cache/config.php",
+    "APP_EVENTS_CACHE": "/tmp/bootstrap/cache/events.php",
+    "APP_PACKAGES_CACHE": "/tmp/bootstrap/cache/packages.php",
+    "APP_ROUTES_CACHE": "/tmp/bootstrap/cache/routes.php",
+    "APP_SERVICES_CACHE": "/tmp/bootstrap/cache/services.php",
+    "VIEW_COMPILED_PATH": "/tmp/bootstrap/cache/views",
+    "CACHE_DRIVER": "redis",
     "LOG_CHANNEL": "stderr",
-    "SESSION_DRIVER": "file",
-    "SESSION_SAVE_PATH": "/tmp/sessions"
+    "SESSION_DRIVER": "redis",
+    "SESSION_LIFETIME": "120",
+    "SESSION_DOMAIN": ".paradiseofindonesia.com",
+    "SESSION_SECURE_COOKIE": "true",
+    "SESSION_HTTP_ONLY": "true",
+    "SESSION_SAME_SITE": "lax"
   }
 }

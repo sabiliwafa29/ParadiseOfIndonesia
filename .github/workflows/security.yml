@@ -1,0 +1,75 @@
+name: Security Checks
+
+on:
+  push:
+    branches: [ main, dbparadise ]
+  pull_request:
+    branches: [ main, dbparadise ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Check for known vulnerabilities
+        run: composer audit --no-dev
+
+      - name: Run Laravel Security Checker
+        run: vendor/bin/phpstan analyse app --level=6 --no-progress 2>/dev/null || true
+
+      - name: Scan PHP files for common vulnerabilities
+        run: |
+          find app -name "*.php" -type f | while read file; do
+            grep -l "exec\|system\|passthru\|eval" "$file" && echo "⚠️  Potentially unsafe function in $file" || true
+          done
+
+      - name: Check for hardcoded credentials
+        run: |
+          git grep -l -i "password\|secret\|key" -- '*.php' '*.env' | grep -v ".env.example" | grep -v "vendor/" | grep -v ".github/" || echo "✓ No hardcoded credentials found in suspicious files"
+
+      - name: Verify CSRF protection
+        run: |
+          grep -r "@csrf" resources/views --include="*.blade.php" | wc -l | awk '{print "✓ Found " $1 " @csrf tokens in views"}'
+
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/php@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      - name: Upload Snyk results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+        if: always()

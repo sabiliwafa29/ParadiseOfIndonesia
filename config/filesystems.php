@@ -39,7 +39,10 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            // If you use a CDN in front of your storage (e.g., CloudFront, Cloudflare),
+            // set CDN_URL in your environment. Storage::url() will prefer CDN_URL when
+            // present; otherwise it falls back to APP_URL.'/storage'.
+            'url' => env('CDN_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',
             'throw' => false,
         ],

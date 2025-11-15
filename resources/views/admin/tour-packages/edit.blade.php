@@ -1,3 +1,89 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-semibold mb-4">Edit Tour Package</h1>
+
+    @if($errors->any())
+        <div class="mb-4 bg-red-50 border border-red-200 p-3 rounded">
+            <ul class="text-sm text-red-700">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block mb-1">Name (ID)</label>
+                <input type="text" name="name_id" value="{{ old('name_id', $tourPackage->name_id) }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Name (EN)</label>
+                <input type="text" name="name_en" value="{{ old('name_en', $tourPackage->name_en) }}" class="w-full border p-2" required>
+            </div>
+            <div>
+                <label class="block mb-1">Name (ZH)</label>
+                <input type="text" name="name_zh" value="{{ old('name_zh', $tourPackage->name_zh) }}" class="w-full border p-2" required>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Description (ID)</label>
+                <textarea name="description_id" class="w-full border p-2" rows="3">{{ old('description_id', $tourPackage->description_id) }}</textarea>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block mb-1">Description (EN)</label>
+                <textarea name="description_en" class="w-full border p-2" rows="3">{{ old('description_en', $tourPackage->description_en) }}</textarea>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block mb-1">Description (ZH)</label>
+                <textarea name="description_zh" class="w-full border p-2" rows="3">{{ old('description_zh', $tourPackage->description_zh) }}</textarea>
+            </div>
+
+            <div>
+                <label class="block mb-1">Price</label>
+                <input type="number" step="0.01" name="price" value="{{ old('price', $tourPackage->price) }}" class="w-full border p-2" required>
+            </div>
+
+            <div>
+                <label class="block mb-1">Includes Guide</label>
+                <input type="checkbox" name="includes_guide" value="1" {{ old('includes_guide', $tourPackage->includes_guide) ? 'checked' : '' }}>
+            </div>
+
+            <div>
+                <label class="block mb-1">Includes Transport</label>
+                <input type="checkbox" name="includes_transport" value="1" {{ old('includes_transport', $tourPackage->includes_transport) ? 'checked' : '' }}>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Tours (select multiple)</label>
+                <select name="tours[]" multiple class="w-full border p-2">
+                    @foreach(App\Models\Tour::all() as $t)
+                        <option value="{{ $t->id }}" {{ in_array($t->id, old('tours', $tourPackage->tours->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}>{{ $t->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-1">Image</label>
+                <input type="file" name="image" class="w-full">
+                @if($tourPackage->image)
+                    <p class="mt-2">Current image: <img src="{{ Storage::url($tourPackage->image) }}" alt="" class="h-24"></p>
+                @endif
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button class="px-4 py-2 bg-emerald-500 text-white rounded">Save Changes</button>
+            <a href="{{ route('admin.tour-packages.index') }}" class="ml-2 text-gray-600">Cancel</a>
+        </div>
+    </form>
+</div>
+@endsection
 @extends('admin.layout')
 
 @section('content')
@@ -56,8 +142,8 @@
         <div class="mb-4">
             <label for="image" class="block font-semibold mb-1">Gambar</label>
             @if($tourPackage->image)
-                <img src="{{ asset('storage/' . $tourPackage->image) }}" alt="Gambar Tour Package" class="mb-2 max-h-48 rounded" />
-            @endif
+                    <img src="{{ Storage::url($tourPackage->image) }}" alt="Gambar Tour Package" class="mb-2 max-h-48 rounded" />
+                @endif
             <input type="file" name="image" id="image" class="w-full" />
         </div>
 
