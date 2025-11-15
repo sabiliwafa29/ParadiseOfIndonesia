@@ -12,16 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            // Tambah package_id hanya jika belum ada.
-            // Kita tidak menyentuh kolom tour_id di migration ini
-            // untuk menghindari konflik duplicate column di PostgreSQL.
-            if (!Schema::hasColumn('bookings', 'package_id')) {
-                $table->foreignId('package_id')
-                    ->nullable()
-                    ->constrained('tour_packages')
-                    ->onDelete('cascade')
-                    ->after('tour_id');
-            }
+            // Make tour_id nullable untuk support package booking
+            $table->foreignId('tour_id')->nullable()->change();
         });
     }
 
@@ -31,14 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            if (Schema::hasColumn('bookings', 'package_id')) {
-                try {
-                    $table->dropForeign(['package_id']);
-                } catch (\Throwable $e) {
-                    // constraint mungkin belum ada, abaikan
-                }
-                $table->dropColumn('package_id');
-            }
+            // Revert tour_id to not nullable
+            $table->foreignId('tour_id')->nullable(false)->change();
         });
     }
 };
