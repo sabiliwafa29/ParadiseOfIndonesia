@@ -179,29 +179,29 @@
                 </div>
 
                 <!-- Add-ons -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-gray-900">{{ __('messages.additional_services') }}</h3>
+                <!-- <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('messages.additional_services') }}</h3> -->
 
                     <!-- Guide Service -->
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <input type="checkbox" id="guide" name="guide" value="1" {{ old('guide') ? 'checked' : '' }}
                                class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
                         <label for="guide" class="ml-2 block text-sm text-gray-900">
                             <span class="font-medium">{{ __('messages.professional_tour_guide') }}</span>
                             <span class="text-gray-500">({{ __('messages.price_per_person') }}: Rp {{ number_format(config('booking.addon_prices.guide', 50), 0, ',', '.') }})</span>
                         </label>
-                    </div>
+                    </div> -->
 
                     <!-- Transport Service -->
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <input type="checkbox" id="transport" name="transport" value="1" {{ old('transport') ? 'checked' : '' }}
                                class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
                         <label for="transport" class="ml-2 block text-sm text-gray-900">
                             <span class="font-medium">{{ __('messages.private_transport') }}</span>
                             <span class="text-gray-500">({{ __('messages.price_per_person') }}: Rp {{ number_format(config('booking.addon_prices.transport', 30), 0, ',', '.') }})</span>
                         </label>
-                    </div>
-                </div>
+                    </div> -->
+                <!-- </div> -->
 
                 <!-- Price Summary -->
                 <div class="bg-gray-50 rounded-lg p-6">
