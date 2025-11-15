@@ -20,11 +20,18 @@ class MidtransService
      */
     public function createTransaction($booking)
     {
+        Log::info('🎫 [DEBUG] MidtransService::createTransaction called', [
+            'booking_id' => $booking->id ?? null,
+            'booking_class' => get_class($booking),
+        ]);
+        
         // Load relationships based on booking type
         if (method_exists($booking, 'tour')) {
             $booking->load('user', 'tour', 'package');
+            Log::info('📦 [DEBUG] Loaded relationships: user, tour, package');
         } else {
             $booking->load('user', 'travelService');
+            Log::info('🚗 [DEBUG] Loaded relationships: user, travelService');
         }
 
         // Gunakan order_id dari booking jika sudah ada, atau generate baru
@@ -37,18 +44,34 @@ class MidtransService
         if (isset($booking->tour)) {
             $itemId = $booking->tour->id;
             $itemName = 'Tour: ' . $booking->tour->name . ' (' . $booking->guests . ' guests)';
+            Log::info('🎯 [DEBUG] Booking type: TOUR', ['item_name' => $itemName]);
         } elseif (isset($booking->package)) {
             $itemId = $booking->package->id;
             $itemName = 'Package: ' . $booking->package->name . ' (' . $booking->guests . ' guests)';
+            Log::info('📦 [DEBUG] Booking type: PACKAGE', ['item_name' => $itemName]);
         } elseif (isset($booking->travelService)) {
             $itemId = $booking->travelService->id;
             $itemName = 'Travel Service: ' . $booking->travelService->name;
+            Log::info('🚗 [DEBUG] Booking type: TRAVEL SERVICE', ['item_name' => $itemName]);
+        } else {
+            Log::warning('⚠️ [DEBUG] Unknown booking type', [
+                'booking_id' => $booking->id,
+                'has_tour' => isset($booking->tour),
+                'has_package' => isset($booking->package),
+                'has_travelService' => isset($booking->travelService),
+            ]);
         }
 
         // Tentukan customer details - untuk package booking bisa pakai data dari form
         $customerName = $booking->user->name ?? $booking->full_name ?? 'Guest';
         $customerEmail = $booking->user->email ?? $booking->email ?? 'noemail@example.com';
         $customerPhone = $booking->user->phone ?? $booking->contact_handle ?? '08123456789';
+
+        Log::info('👤 [DEBUG] Customer details', [
+            'name' => $customerName,
+            'email' => $customerEmail,
+            'phone' => $customerPhone,
+        ]);
 
         $params = [
             'transaction_details' => [
@@ -72,6 +95,12 @@ class MidtransService
                 'qris', 'bca_va', 'bni_va', 'bri_va', 'mandiri_va', 'gopay', 'shopeepay',
             ],
         ];
+        
+        Log::info('📋 [DEBUG] Midtrans params', [
+            'order_id' => $orderId,
+            'amount' => (int) $booking->total_price,
+            'item_id' => $itemId,
+        ]);
 
         // Add Sentry breadcrumbs/context if available
         if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
@@ -96,15 +125,28 @@ class MidtransService
         }
 
         try {
+            Log::info('🔄 [DEBUG] Calling Midtrans\Snap::getSnapToken...');
+            
             $snapToken = \Midtrans\Snap::getSnapToken($params);
-            Log::info('Midtrans token generated', [
-                'token' => $snapToken,
+            
+            Log::info('✅ [DEBUG] Midtrans token generated successfully', [
+                'token' => substr($snapToken, 0, 20) . '...',
+                'token_length' => strlen($snapToken),
                 'order_id' => $orderId,
                 'booking_id' => $booking->id,
             ]);
+            
             return $snapToken;
         } catch (\Exception $e) {
-            Log::error('Midtrans error: ' . $e->getMessage());
+            Log::error('❌ [DEBUG] Midtrans error: ' . $e->getMessage(), [
+                'exception_class' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'order_id' => $orderId,
+                'booking_id' => $booking->id ?? null,
+            ]);
+            
             if (class_exists(\Sentry\SentrySdk::class) && env('SENTRY_LARAVEL_DSN')) {
                 try {
                     \Sentry\captureException($e);

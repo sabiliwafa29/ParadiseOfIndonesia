@@ -9,6 +9,7 @@
                 <p class="mb-2">{{ __('messages.package') }}: <span class="font-semibold">{{ $booking->package->name }}</span></p>
                 <p class="mb-2">{{ __('messages.date') }}: <span class="font-semibold">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</span></p>
                 <p class="mb-2">{{ __('messages.guests') }}: <span class="font-semibold">{{ $booking->guests }}</span></p>
+                <p class="mb-2"><strong>Order ID:</strong> <span class="font-mono text-sm">{{ $booking->order_id }}</span></p>
                 <p class="mb-4">{{ __('messages.total_price') }}: <span class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span></p>
 
                 @if($snapToken)
@@ -36,27 +37,53 @@
         src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
-    document.getElementById('pay-button').onclick = function(){
-        // SnapToken acquired from previous step
-        snap.pay(@json($snapToken), {
-            onSuccess: function(result){
-                /* You may add your own implementation here */
-                alert("payment success!"); console.log(result);
-                window.location.href = "{{ route('my-bookings') }}"; // Redirect to my bookings
-            },
-            onPending: function(result){
-                /* You may add your own implementation here */
-                alert("wating your payment!"); console.log(result);
-            },
-            onError: function(result){
-                /* You may add your own implementation here */
-                alert("payment failed!"); console.log(result);
-            },
-            onClose: function(){
-                /* You may add your own implementation here */
-                alert('you closed the popup without finishing the payment');
-            }
-        });
+    console.log('💳 [DEBUG] Payment Page Loaded');
+    console.log('🎫 Snap Token:', '{{ $snapToken }}');
+    console.log('📦 Booking ID:', {{ $booking->id }});
+    console.log('🔢 Order ID:', '{{ $booking->order_id }}');
+    console.log('💰 Total Price:', {{ $booking->total_price }});
+    console.log('🔑 Midtrans Client Key:', '{{ config("services.midtrans.client_key") }}');
+    
+    const payButton = document.getElementById('pay-button');
+    
+    if (!payButton) {
+        console.error('❌ [DEBUG] Pay button not found!');
+    }
+    
+    if (typeof snap === 'undefined') {
+        console.error('❌ [DEBUG] Midtrans Snap library not loaded!');
+    } else {
+        console.log('✅ [DEBUG] Midtrans Snap library loaded successfully');
+    }
+    
+    payButton.onclick = function(){
+        console.log('🖱️ [DEBUG] Pay button clicked');
+        console.log('⏳ [DEBUG] Initiating Midtrans payment...');
+        
+        try {
+            snap.pay('{{ $snapToken }}', {
+                onSuccess: function(result){
+                    console.log('✅ [DEBUG] Payment SUCCESS!', result);
+                    alert("payment success!"); 
+                    window.location.href = "{{ route('my-bookings') }}";
+                },
+                onPending: function(result){
+                    console.log('⏳ [DEBUG] Payment PENDING', result);
+                    alert("waiting your payment!");
+                },
+                onError: function(result){
+                    console.error('❌ [DEBUG] Payment ERROR', result);
+                    alert("payment failed!");
+                },
+                onClose: function(){
+                    console.log('🚪 [DEBUG] Payment popup CLOSED by user');
+                    alert('you closed the popup without finishing the payment');
+                }
+            });
+            console.log('✅ [DEBUG] Midtrans snap.pay() called successfully');
+        } catch (error) {
+            console.error('❌ [DEBUG] Error calling snap.pay():', error);
+        }
     };
 </script>
 @endpush

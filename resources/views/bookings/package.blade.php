@@ -58,7 +58,20 @@
         <div class="bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ __('messages.book_this_package') }}</h2>
 
-            <form action="{{ route('bookings.store-package', $package) }}" method="POST" class="space-y-6">
+            @if(session('error'))
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    <p class="font-bold">Error:</p>
+                    <p>{{ session('error') }}</p>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+            <form action="{{ route('bookings.store-package', $package) }}" method="POST" class="space-y-6" id="booking-form">
                 @csrf
 
                 <!-- Full Name -->
@@ -229,8 +242,9 @@
 
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" class="px-8 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition">
-                        {{ __('messages.book_now') }}
+                    <button type="submit" id="submit-booking" class="px-8 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition">
+                        <span id="button-text">{{ __('messages.book_now') }}</span>
+                        <span id="button-loading" class="hidden">Processing...</span>
                     </button>
                 </div>
             </form>
@@ -242,9 +256,18 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('🔍 [DEBUG] Package Booking Page Loaded');
+        console.log('📦 Package ID:', {{ $package->id }});
+        console.log('💰 Package Price:', {{ $package->price }});
+        
         const guestsSelect = document.getElementById('guests');
         const guideCheckbox = document.getElementById('guide');
         const transportCheckbox = document.getElementById('transport');
+        const bookingForm = document.getElementById('booking-form');
+        const submitButton = document.getElementById('submit-booking');
+        const buttonText = document.getElementById('button-text');
+        const buttonLoading = document.getElementById('button-loading');
+        
         const basePrice = {{ $package->price }};
         const guidePricePerPerson = {{ config('booking.addon_prices.guide', 50) }};
         const transportPricePerPerson = {{ config('booking.addon_prices.transport', 30) }};
@@ -278,6 +301,48 @@
         }
 
         updatePrice();
+
+        // Debug form submission
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', function(e) {
+                console.log('📝 [DEBUG] Form Submitted');
+                console.log('Form Action:', bookingForm.action);
+                console.log('Form Method:', bookingForm.method);
+                
+                const formData = new FormData(bookingForm);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+                
+                console.log('📋 [DEBUG] Form Data:', formObject);
+                
+                // Show loading state
+                if (submitButton && buttonText && buttonLoading) {
+                    submitButton.disabled = true;
+                    buttonText.classList.add('hidden');
+                    buttonLoading.classList.remove('hidden');
+                }
+                
+                console.log('⏳ [DEBUG] Sending request to server...');
+                
+                // Don't prevent default - let form submit normally
+            });
+        }
+        
+        // Log any validation errors
+        @if($errors->any())
+            console.error('❌ [DEBUG] Validation Errors:', @json($errors->all()));
+        @endif
+        
+        // Log session messages
+        @if(session('error'))
+            console.error('❌ [DEBUG] Session Error:', @json(session('error')));
+        @endif
+        
+        @if(session('success'))
+            console.log('✅ [DEBUG] Session Success:', @json(session('success')));
+        @endif
     });
 </script>
 @endpush

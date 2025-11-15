@@ -77,6 +77,13 @@ class BookingController extends Controller
     {
         try {
             $validated = $request->validated();
+            
+            \Illuminate\Support\Facades\Log::info('📝 [DEBUG] Package booking started', [
+                'package_id' => $package->id,
+                'package_name' => $package->name,
+                'validated_data' => $validated,
+                'user_id' => auth()->id(),
+            ]);
 
             // Untuk paket ini kita tidak pakai lagi add-on guide/transport, set 0 saja
             $guidePricePerGuest     = config('booking.addon_prices.guide', 50);
@@ -91,6 +98,13 @@ class BookingController extends Controller
 
             // Generate order ID
             $orderId = OrderIdService::generate('BOOK');
+            
+            \Illuminate\Support\Facades\Log::info('💰 [DEBUG] Price calculated', [
+                'base_price' => $basePrice,
+                'addon_cost' => $addonCost,
+                'total_price' => $totalPrice,
+                'order_id' => $orderId,
+            ]);
 
             $booking = Booking::create([
                 'user_id'    => auth()->id(), // boleh null untuk guest
@@ -110,11 +124,27 @@ class BookingController extends Controller
                 'status'           => 'pending',
                 'order_id'         => $orderId,
             ]);
+            
+            \Illuminate\Support\Facades\Log::info('✅ [DEBUG] Booking created', [
+                'booking_id' => $booking->id,
+                'order_id' => $booking->order_id,
+            ]);
 
             // Ambil Snap token Midtrans
+            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Generating Midtrans snap token...');
+            
             $snapToken = $this->midtransService->createTransaction($booking);
+            
+            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Snap token generated', [
+                'snap_token' => $snapToken ? 'SUCCESS' : 'FAILED',
+                'token_length' => $snapToken ? strlen($snapToken) : 0,
+            ]);
 
             if (!$snapToken) {
+                \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Failed to generate snap token, deleting booking', [
+                    'booking_id' => $booking->id,
+                ]);
+                
                 // Hapus booking jika gagal generate snap token
                 $booking->delete();
                 return redirect()->back()
@@ -122,12 +152,19 @@ class BookingController extends Controller
                     ->with('error', 'Gagal membuat transaksi pembayaran. Silakan coba lagi atau hubungi admin.');
             }
 
+            \Illuminate\Support\Facades\Log::info('🚀 [DEBUG] Redirecting to payment page', [
+                'booking_id' => $booking->id,
+                'has_snap_token' => !empty($snapToken),
+            ]);
+
             // Arahkan ke halaman payment khusus paket
             return view('bookings.package-payment', compact('booking', 'snapToken'));
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error creating package booking: ' . $e->getMessage(), [
+            \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Error creating package booking: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
                 'package_id' => $package->id ?? null,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
             ]);
             
             return redirect()->back()
