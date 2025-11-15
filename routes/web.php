@@ -22,6 +22,17 @@ use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// TEMPORARY: Migration route for production (HAPUS SETELAH MIGRATION SELESAI!)
+Route::get('/run-migrations-secret-key-12345', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return response("<pre>Migration Output:\n\n{$output}</pre>");
+    } catch (\Exception $e) {
+        return response("<pre>Error: {$e->getMessage()}</pre>", 500);
+    }
+});
+
 // Public view routes (bisa diakses tanpa login)
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations.index');
 Route::get('/destinations/{destination}', [DestinationController::class, 'show'])->name('destinations.show');
