@@ -31,15 +31,15 @@
                                     </div>
                                     <div class="text-right">
                                         <span class="px-3 py-1 rounded-full text-sm 
-                                            @if($booking->status === {{ __('messages.confirmed') }} )
+                                            @if($booking->status === 'confirmed')
                                                 bg-green-100 text-green-800
-                                            @elseif($booking->status === {{ __('messages.pending') }})
+                                            @elseif($booking->status === 'pending')
                                                 bg-yellow-100 text-yellow-800
                                             @else
                                                 bg-red-100 text-red-800
                                             @endif
                                         ">
-                                            {{ ucfirst($booking->status) }}
+                                            {{ __('messages.' . $booking->status) }}
                                         </span>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                     </div>
                                     <div>
                                         <span class="text-gray-500 text-sm">{{ __('messages.payment_method') }}</span>
-                                        <p class="font-medium">{{ $booking->payment_method ?? {{ __('messages.not_paid') }} }}</p>
+                                        <p class="font-medium">{{ $booking->payment_method ?? __('messages.not_paid') }}</p>
                                     </div>
                                 </div>
 
