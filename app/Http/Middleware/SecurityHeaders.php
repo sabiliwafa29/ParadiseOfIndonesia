@@ -85,6 +85,10 @@ class SecurityHeaders
         $imgSrcs = ["'self'", 'data:', 'https:'];
         $fontSrcs = ["'self'", 'https:'];
         $connectSrcs = ["'self'"];
+        
+        // Add Bunny Fonts
+        $styleSrcs[] = 'https://fonts.bunny.net';
+        $fontSrcs[] = 'https://fonts.bunny.net';
 
         // Add CDN if configured
         if ($cdnUrl) {
