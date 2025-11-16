@@ -83,6 +83,47 @@ return [
     'days' => 'hari',
     'no_tours_available' => 'Tidak Ada Tur Tersedia',
 
+    // Tour Activities
+    'featured_activities' => 'Aktivitas & atraksi unggulan',
+    'learn_more' => 'Pelajari Lebih Lanjut',
+    'no_activities_found' => 'Tidak ada aktivitas tur ditemukan.',
+    'back_to_activities' => 'Kembali ke Aktivitas',
+    'featured_activity' => 'Aktivitas Unggulan',
+    'about_this_activity' => 'Tentang Aktivitas Ini',
+    'activity_highlights' => 'Highlight Aktivitas',
+    'what_to_bring' => 'Apa yang Harus Dibawa',
+    'important_notes' => 'Catatan Penting',
+    'ready_to_experience' => 'Siap Mencoba Ini?',
+    'book_package_cta' => 'Pesan salah satu paket tur kami untuk menyertakan aktivitas menakjubkan ini dalam petualangan Anda',
+    'view_tour_packages' => 'Lihat Paket Tur',
+    'other_activities' => 'Aktivitas Lainnya',
+    'view_all_destinations_highlight' => 'Lihat Semua Highlight Destinasi',
+
+    // Travel Services
+    'choose_travel_companion' => 'Pilih teman perjalanan yang sempurna untuk perjalanan Anda',
+    'seats' => 'kursi',
+    'select' => 'Pilih',
+    'no_services_found' => 'Layanan Travel Tidak Ditemukan',
+    'check_back_soon' => 'Periksa kembali segera untuk layanan travel yang tersedia',
+
+    // Tour Sessions
+    'back_to_sessions' => 'Kembali ke Sesi',
+    'active_session' => 'Sesi Aktif',
+    'session_description' => 'Deskripsi Sesi',
+    'tour_package_details' => 'Detail Paket Tur',
+    'per_person' => 'per orang',
+    'view_full_package' => 'Lihat Paket Lengkap',
+    'start_date' => 'Tanggal Mulai',
+    'end_date' => 'Tanggal Selesai',
+    'book_this_session' => 'Pesan Sesi Ini',
+    'other_available_sessions' => 'Sesi Lain yang Tersedia',
+    'explore_upcoming_sessions' => 'Jelajahi sesi tur mendatang kami dan temukan petualangan sempurna Anda',
+    'tour_package' => 'Paket Tur',
+
+    // Discover Tours
+    'discover_amazing_tours' => 'Temukan tur menakjubkan di seluruh Indonesia',
+    'contact_us' => 'Hubungi Kami',
+
     // Newsletter
     'stay_updated' => 'Tetap Update!',
     'subscribe_newsletter' => 'Berlangganan newsletter kami dan dapatkan penawaran eksklusif serta tips perjalanan',

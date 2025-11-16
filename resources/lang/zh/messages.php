@@ -80,6 +80,47 @@ return [
     'days' => '天',
     'no_tours_available' => '暂无旅游',
 
+    // Tour Activities
+    'featured_activities' => '精选活动和景点',
+    'learn_more' => '了解更多',
+    'no_activities_found' => '未找到旅游活动。',
+    'back_to_activities' => '返回活动',
+    'featured_activity' => '精选活动',
+    'about_this_activity' => '关于此活动',
+    'activity_highlights' => '活动亮点',
+    'what_to_bring' => '需要携带的物品',
+    'important_notes' => '重要提示',
+    'ready_to_experience' => '准备好体验了吗？',
+    'book_package_cta' => '预订我们的旅游套餐之一，将这个惊人的活动包含在您的冒险中',
+    'view_tour_packages' => '查看旅游套餐',
+    'other_activities' => '其他活动',
+    'view_all_destinations_highlight' => '查看所有目的地亮点',
+
+    // Travel Services
+    'choose_travel_companion' => '选择您完美的旅行伴侣',
+    'seats' => '座位',
+    'select' => '选择',
+    'no_services_found' => '未找到旅行服务',
+    'check_back_soon' => '稍后查看可用的旅行服务',
+
+    // Tour Sessions
+    'back_to_sessions' => '返回时段',
+    'active_session' => '活跃时段',
+    'session_description' => '时段描述',
+    'tour_package_details' => '旅游套餐详情',
+    'per_person' => '每人',
+    'view_full_package' => '查看完整套餐',
+    'start_date' => '开始日期',
+    'end_date' => '结束日期',
+    'book_this_session' => '预订此时段',
+    'other_available_sessions' => '其他可用时段',
+    'explore_upcoming_sessions' => '探索我们即将到来的旅游时段，找到您完美的冒险',
+    'tour_package' => '旅游套餐',
+
+    // Discover Tours
+    'discover_amazing_tours' => '探索印度尼西亚各地的精彩旅游',
+    'contact_us' => '联系我们',
+
     'stay_updated' => '保持更新！',
     'subscribe_newsletter' => '订阅我们的新闻通讯，获取独家优惠和旅行技巧',
     'enter_email' => '输入您的邮箱',

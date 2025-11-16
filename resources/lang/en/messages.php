@@ -80,6 +80,47 @@ return [
     'days' => 'days',
     'no_tours_available' => 'No Tours Available',
 
+    // Tour Activities
+    'featured_activities' => 'Featured activities & attractions',
+    'learn_more' => 'Learn More',
+    'no_activities_found' => 'No tour activities found.',
+    'back_to_activities' => 'Back to Activities',
+    'featured_activity' => 'Featured Activity',
+    'about_this_activity' => 'About This Activity',
+    'activity_highlights' => 'Activity Highlights',
+    'what_to_bring' => 'What to Bring',
+    'important_notes' => 'Important Notes',
+    'ready_to_experience' => 'Ready to Experience This?',
+    'book_package_cta' => 'Book one of our tour packages to include this amazing activity in your adventure',
+    'view_tour_packages' => 'View Tour Packages',
+    'other_activities' => 'Other Activities',
+    'view_all_destinations_highlight' => 'View All Destination Highlights',
+
+    // Travel Services
+    'choose_travel_companion' => 'Choose your perfect travel companion for your journey',
+    'seats' => 'seats',
+    'select' => 'Select',
+    'no_services_found' => 'No Travel Services Found',
+    'check_back_soon' => 'Check back soon for available travel services',
+
+    // Tour Sessions
+    'back_to_sessions' => 'Back to Sessions',
+    'active_session' => 'Active Session',
+    'session_description' => 'Session Description',
+    'tour_package_details' => 'Tour Package Details',
+    'per_person' => 'per person',
+    'view_full_package' => 'View Full Package',
+    'start_date' => 'Start Date',
+    'end_date' => 'End Date',
+    'book_this_session' => 'Book This Session',
+    'other_available_sessions' => 'Other Available Sessions',
+    'explore_upcoming_sessions' => 'Explore our upcoming tour sessions and find your perfect adventure',
+    'tour_package' => 'Tour Package',
+
+    // Discover Tours
+    'discover_amazing_tours' => 'Discover amazing tours across Indonesia',
+    'contact_us' => 'Contact Us',
+
     'stay_updated' => 'Stay Updated!',
     'subscribe_newsletter' => 'Subscribe to our newsletter and get exclusive deals and travel tips',
     'enter_email' => 'Enter your email',
