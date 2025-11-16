@@ -162,6 +162,57 @@
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result){
                         console.log('✅ [DEBUG] Payment SUCCESS!', result);
+                        console.log('📤 [DEBUG] Sending payment status to server...');
+                        console.log('🔗 [DEBUG] URL:', '/api/bookings/{{ $booking->id }}/payment-status');
+                        console.log('📦 [DEBUG] Payload:', JSON.stringify(result, null, 2));
+                        
+                        // Update status via API
+                        fetch('/api/bookings/{{ $booking->id }}/payment-status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify(result)
+                        })
+                        .then(response => {
+                            console.log('📥 [DEBUG] Response status:', response.status);
+                            console.log('📥 [DEBUG] Response headers:', response.headers);
+                            return response.json().then(data => ({
+                                status: response.status,
+                                ok: response.ok,
+                                data: data
+                            }));
+                        })
+                        .then(({status, ok, data}) => {
+                            console.log('✅ [DEBUG] Response received:', {status, ok, data});
+                            
+                            if (ok) {
+                                console.log('✅ [DEBUG] Status updated successfully!');
+                                alert("Payment success! Your booking has been confirmed.");
+                            } else {
+                                console.error('❌ [DEBUG] Server returned error:', data);
+                                alert("Payment success, but status update failed. Please contact support. Error: " + (data.message || 'Unknown error'));
+                            }
+                            
+                            console.log('🔄 [DEBUG] Reloading page...');
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error('❌ [DEBUG] Error updating status:', error);
+                            console.error('❌ [DEBUG] Error details:', {
+                                name: error.name,
+                                message: error.message,
+                                stack: error.stack
+                            });
+                            alert("Payment success! Please refresh the page. (Error: " + error.message + ")");
+                            window.location.reload();
+                        });
+                    },
+                    onPending: function(result){
+                        console.log('⏳ [DEBUG] Payment PENDING', result);
+                        console.log('📤 [DEBUG] Sending pending status to server...');
                         
                         // Update status via API
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
@@ -175,34 +226,12 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            console.log('✅ Status updated:', data);
-                            alert("Payment success! Your booking has been confirmed.");
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            console.error('❌ Error updating status:', error);
-                            alert("Payment success! Please refresh the page.");
-                            window.location.reload();
-                        });
-                    },
-                    onPending: function(result){
-                        console.log('⏳ [DEBUG] Payment PENDING', result);
-                        
-                        // Update status via API
-                        fetch('/api/bookings/{{ $booking->id }}/payment-status', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                            },
-                            body: JSON.stringify(result)
-                        })
-                        .then(() => {
+                            console.log('✅ [DEBUG] Pending status updated:', data);
                             alert("Payment is being processed. Please check your booking status.");
                             window.location.reload();
                         })
-                        .catch(() => {
+                        .catch(error => {
+                            console.error('❌ [DEBUG] Error updating pending status:', error);
                             alert("Payment is being processed. Please refresh the page.");
                             window.location.reload();
                         });

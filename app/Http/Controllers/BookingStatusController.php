@@ -14,17 +14,26 @@ class BookingStatusController extends Controller
     public function updatePaymentStatus(Request $request, Booking $booking)
     {
         try {
-            Log::info('📥 Frontend callback received', [
+            Log::info('📥 [PAYMENT CALLBACK] Frontend callback received', [
                 'booking_id' => $booking->id,
                 'order_id' => $booking->order_id,
-                'result' => $request->all(),
+                'current_payment_status' => $booking->payment_status,
+                'current_status' => $booking->status,
+                'request_data' => $request->all(),
             ]);
 
             // Validasi order_id cocok
-            if ($request->order_id !== $booking->order_id) {
-                Log::warning('⚠️ Order ID mismatch', [
+            $requestOrderId = $request->order_id ?? $request->input('order_id');
+            
+            Log::info('🔍 [PAYMENT CALLBACK] Validating order_id', [
+                'booking_order_id' => $booking->order_id,
+                'request_order_id' => $requestOrderId,
+            ]);
+            
+            if ($requestOrderId && $requestOrderId !== $booking->order_id) {
+                Log::warning('⚠️ [PAYMENT CALLBACK] Order ID mismatch', [
                     'expected' => $booking->order_id,
-                    'received' => $request->order_id,
+                    'received' => $requestOrderId,
                 ]);
                 return response()->json([
                     'success' => false,
@@ -33,45 +42,69 @@ class BookingStatusController extends Controller
             }
 
             // Update status berdasarkan transaction_status dari Midtrans
-            $transactionStatus = $request->transaction_status;
+            $transactionStatus = $request->transaction_status ?? $request->input('transaction_status');
+            $paymentType = $request->payment_type ?? $request->input('payment_type');
+            $transactionId = $request->transaction_id ?? $request->input('transaction_id');
+            
+            Log::info('💳 [PAYMENT CALLBACK] Processing transaction', [
+                'transaction_status' => $transactionStatus,
+                'payment_type' => $paymentType,
+                'transaction_id' => $transactionId,
+            ]);
             
             switch ($transactionStatus) {
                 case 'capture':
                 case 'settlement':
+                    Log::info('✅ [PAYMENT CALLBACK] Payment successful, updating to confirmed');
                     $booking->update([
                         'payment_status' => 'paid',
                         'status' => 'confirmed',
-                        'payment_method' => $request->payment_type ?? 'Midtrans',
-                        'payment_id' => $request->transaction_id ?? $booking->order_id,
+                        'payment_method' => $paymentType ?? 'Midtrans',
+                        'payment_id' => $transactionId ?? $booking->order_id,
                     ]);
-                    Log::info('✅ Booking confirmed', ['booking_id' => $booking->id]);
+                    Log::info('✅ [PAYMENT CALLBACK] Booking confirmed', [
+                        'booking_id' => $booking->id,
+                        'new_payment_status' => $booking->fresh()->payment_status,
+                        'new_status' => $booking->fresh()->status,
+                    ]);
                     break;
 
                 case 'pending':
+                    Log::info('⏳ [PAYMENT CALLBACK] Payment pending');
                     $booking->update([
                         'payment_status' => 'pending',
-                        'payment_id' => $request->transaction_id ?? $booking->order_id,
+                        'payment_id' => $transactionId ?? $booking->order_id,
                     ]);
-                    Log::info('⏳ Payment pending', ['booking_id' => $booking->id]);
+                    Log::info('⏳ [PAYMENT CALLBACK] Payment pending recorded', ['booking_id' => $booking->id]);
                     break;
 
                 case 'deny':
                 case 'expire':
                 case 'cancel':
+                    Log::info('❌ [PAYMENT CALLBACK] Payment failed/cancelled');
                     $booking->update([
                         'payment_status' => 'failed',
                         'status' => 'cancelled',
-                        'payment_id' => $request->transaction_id ?? $booking->order_id,
+                        'payment_id' => $transactionId ?? $booking->order_id,
                     ]);
-                    Log::info('❌ Payment failed/cancelled', ['booking_id' => $booking->id]);
+                    Log::info('❌ [PAYMENT CALLBACK] Payment failed/cancelled recorded', ['booking_id' => $booking->id]);
                     break;
 
                 default:
-                    Log::warning('Unknown transaction status', [
+                    Log::warning('⚠️ [PAYMENT CALLBACK] Unknown transaction status', [
                         'status' => $transactionStatus,
                         'booking_id' => $booking->id,
                     ]);
             }
+
+            // Refresh booking untuk ambil data terbaru
+            $booking = $booking->fresh();
+            
+            Log::info('📤 [PAYMENT CALLBACK] Sending response', [
+                'booking_id' => $booking->id,
+                'payment_status' => $booking->payment_status,
+                'status' => $booking->status,
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -84,15 +117,21 @@ class BookingStatusController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('❌ Error updating payment status', [
+            Log::error('❌ [PAYMENT CALLBACK] Error updating payment status', [
                 'booking_id' => $booking->id,
-                'error' => $e->getMessage(),
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal update status: ' . $e->getMessage()
+                'message' => 'Gagal update status: ' . $e->getMessage(),
+                'error_details' => [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]
             ], 500);
         }
     }
