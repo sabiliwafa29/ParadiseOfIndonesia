@@ -21,7 +21,7 @@
                         <div class="p-4">
                             <h3 class="text-lg font-semibold"><a href="{{ route('tours.show', $tour) }}">{{ $tour->name }}</a></h3>
                             <p class="text-gray-500">{{ Str::limit($tour->description, 120) }}</p>
-                            <div class="mt-2 font-bold text-emerald-600">${{ number_format($tour->price, 0) }}</div>
+                            <div class="mt-2 font-bold text-emerald-600">{{ format_price(get_price($tour)) }}</div>
                         </div>
                     </div>
                 @endforeach

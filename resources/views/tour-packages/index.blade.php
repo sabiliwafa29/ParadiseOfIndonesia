@@ -19,7 +19,7 @@
             
             <!-- Price -->
             <div class="mt-4">
-                <span class="font-bold text-xl text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                <span class="font-bold text-xl text-emerald-600">{{ format_price(get_price($package)) }}</span>
             </div>
             
             <!-- Includes -->

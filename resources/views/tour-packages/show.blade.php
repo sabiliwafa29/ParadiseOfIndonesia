@@ -33,7 +33,7 @@
                         <div class="space-y-4">
                             <div>
                                 <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
-                                <p class="text-3xl font-bold text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</p>
+                                <p class="text-3xl font-bold text-emerald-600">{{ format_price(get_price($package)) }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-600 text-sm">{{ __('messages.description') }}</p>
@@ -331,7 +331,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $relatedPackage->name }}</h3>
                                 <p class="text-gray-600 mb-4">{{ Str::limit($relatedPackage->description, 80) }}</p>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xl font-bold text-emerald-600">Rp {{ number_format($relatedPackage->price, 0, ',', '.') }}</span>
+                                    <span class="text-xl font-bold text-emerald-600">{{ format_price(get_price($relatedPackage)) }}</span>
                                     <a href="{{ route('tour-packages.show', $relatedPackage->id) }}" class="text-emerald-600 hover:text-emerald-700 font-semibold">
                                         →
                                     </a>

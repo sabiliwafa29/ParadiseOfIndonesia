@@ -69,7 +69,7 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-600">Total Price</p>
-                        <p class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
+                        <p class="font-bold text-emerald-600 text-xl">{{ format_price($booking->total_price) }}</p>
                     </div>
                 </div>
             </div>

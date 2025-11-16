@@ -27,7 +27,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <p class="text-gray-600">{{ __('messages.package_price') }}</p>
-                        <p class="text-3xl font-bold text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</p>
+                        <p class="text-3xl font-bold text-emerald-600">{{ format_price(get_price($package)) }}</p>
                     </div>
                     <div class="text-right">
                         <p class="text-gray-600">{{ __('messages.includes') }}</p>
@@ -222,20 +222,20 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span>{{ __('messages.package_price') }}</span>
-                            <span id="base-price">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                            <span id="base-price">{{ format_price(get_price($package)) }}</span>
                         </div>
                         <div class="flex justify-between" id="guide-cost" style="display: none;">
                             <span>{{ __('messages.guide_service') }}</span>
-                            <span id="guide-price">Rp 0</span>
+                            <span id="guide-price">{{ format_price(0) }}</span>
                         </div>
                         <div class="flex justify-between" id="transport-cost" style="display: none;">
                             <span>{{ __('messages.transport_service') }}</span>
-                            <span id="transport-price">Rp 0</span>
+                            <span id="transport-price">{{ format_price(0) }}</span>
                         </div>
                         <hr class="my-2">
                         <div class="flex justify-between font-semibold text-lg">
                             <span>{{ __('messages.total') }}</span>
-                            <span id="total-price" class="text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                            <span id="total-price" class="text-emerald-600">{{ format_price(get_price($package)) }}</span>
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 [DEBUG] Package Booking Page Loaded');
         console.log('📦 Package ID:', {{ $package->id }});
-        console.log('💰 Package Price:', {{ $package->price }});
         
         const guestsSelect = document.getElementById('guests');
         const guideCheckbox = document.getElementById('guide');
@@ -268,9 +267,23 @@
         const buttonText = document.getElementById('button-text');
         const buttonLoading = document.getElementById('button-loading');
         
-        const basePrice = {{ $package->price }};
+        // Get price based on current locale/currency
+        const basePrice = {{ get_price($package) }};
         const guidePricePerPerson = {{ config('booking.addon_prices.guide', 50) }};
         const transportPricePerPerson = {{ config('booking.addon_prices.transport', 30) }};
+        const currencySymbol = '{{ currency_symbol() }}';
+        const locale = '{{ app()->getLocale() }}';
+
+        // Format number based on locale
+        function formatPrice(amount) {
+            if (locale === 'id') {
+                return currencySymbol + ' ' + Math.round(amount).toLocaleString('id-ID');
+            } else if (locale === 'zh') {
+                return currencySymbol + amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else {
+                return currencySymbol + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
 
         function updatePrice() {
             const guests = parseInt(guestsSelect?.value) || 1;
@@ -281,10 +294,10 @@
             const transportCost = transportChecked ? transportPricePerPerson * guests : 0;
             const total = (basePrice * guests) + guideCost + transportCost;
 
-            document.getElementById('base-price').textContent = 'Rp ' + (basePrice * guests).toLocaleString('id-ID');
-            document.getElementById('guide-price').textContent = 'Rp ' + guideCost.toLocaleString('id-ID');
-            document.getElementById('transport-price').textContent = 'Rp ' + transportCost.toLocaleString('id-ID');
-            document.getElementById('total-price').textContent = 'Rp ' + total.toLocaleString('id-ID');
+            document.getElementById('base-price').textContent = formatPrice(basePrice * guests);
+            document.getElementById('guide-price').textContent = formatPrice(guideCost);
+            document.getElementById('transport-price').textContent = formatPrice(transportCost);
+            document.getElementById('total-price').textContent = formatPrice(total);
 
             document.getElementById('guide-cost').style.display = guideChecked ? 'flex' : 'none';
             document.getElementById('transport-cost').style.display = transportChecked ? 'flex' : 'none';

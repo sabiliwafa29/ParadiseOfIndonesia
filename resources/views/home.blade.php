@@ -433,7 +433,7 @@
                         <div>
                             <span class="text-sm text-gray-500 block">{{ __('messages.starting_from') }}</span>
                             <span class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                Rp {{ number_format($package->price, 0, ',', '.') }}
+                                {{ format_price(get_price($package)) }}
                             </span>
                         </div>
                         @if($package->tours->isNotEmpty())
@@ -492,7 +492,7 @@
                         <div class="text-right">
                             <div class="text-sm text-gray-500">{{ __('messages.from') }}</div>
                             <div class="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                ${{ number_format($tour->price_usd, 0) }}
+                                {{ format_price(get_price($tour)) }}
                             </div>
                         </div>
                     </div>

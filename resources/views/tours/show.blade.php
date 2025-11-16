@@ -269,7 +269,7 @@
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $relatedTour->name }}</h3>
                                 <p class="text-gray-600 mb-4">{{ Str::limit($relatedTour->description, 80) }}</p>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xl font-bold text-emerald-600">{{ __('messages.from') }} ${{ number_format($relatedTour->price, 0) }}</span>
+                                    <span class="text-xl font-bold text-emerald-600">{{ __('messages.from') }} {{ format_price(get_price($relatedTour)) }}</span>
 <a href="{{ route('tours.show', $relatedTour) }}" class="...">{{ __('messages.view') }} →</a>
                                 </div>
                             </div>

@@ -55,7 +55,7 @@
                                     </div>
                                     <div>
                                         <span class="text-gray-500 text-sm">{{ __('messages.total_price') }}</span>
-                                        <p class="font-medium">${{ number_format($booking->total_price, 2) }}</p>
+                                        <p class="font-medium">{{ format_price($booking->total_price) }}</p>
                                     </div>
                                     <div>
                                         <span class="text-gray-500 text-sm">{{ __('messages.payment_method') }}</span>
