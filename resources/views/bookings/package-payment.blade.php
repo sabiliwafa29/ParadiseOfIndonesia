@@ -78,10 +78,30 @@
                     </a>
                 @endif
             @else
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                    <p class="text-green-800 font-semibold">Thank you for your payment!</p>
-                    <p class="text-green-600 text-sm mt-1">A confirmation email has been sent to {{ $booking->email }}</p>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <p class="text-green-800 font-semibold text-center">Thank you for your payment!</p>
+                    <p class="text-green-600 text-sm mt-1 text-center">A confirmation email has been sent to {{ $booking->email }}</p>
                 </div>
+                
+                @auth
+                    <div class="flex gap-3">
+                        <a href="{{ route('my-bookings') }}" class="flex-1 py-3 bg-emerald-600 text-white text-center rounded-lg font-semibold hover:bg-emerald-700 transition">
+                            View My Bookings
+                        </a>
+                        <a href="{{ route('bookings.show', $booking) }}" class="flex-1 py-3 bg-blue-600 text-white text-center rounded-lg font-semibold hover:bg-blue-700 transition">
+                            View Details
+                        </a>
+                    </div>
+                @else
+                    <div class="flex gap-3">
+                        <a href="{{ route('register') }}" class="flex-1 py-3 bg-emerald-600 text-white text-center rounded-lg font-semibold hover:bg-emerald-700 transition">
+                            Register to Manage
+                        </a>
+                        <a href="{{ route('tour-packages.index') }}" class="flex-1 py-3 bg-blue-600 text-white text-center rounded-lg font-semibold hover:bg-blue-700 transition">
+                            Browse More Packages
+                        </a>
+                    </div>
+                @endauth
             @endif
         </div>
 
@@ -142,13 +162,14 @@
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result){
                         console.log('✅ [DEBUG] Payment SUCCESS!', result);
-                        alert("Payment success!"); 
-                        window.location.href = "{{ route('my-bookings') }}";
+                        alert("Payment success! Your booking has been confirmed."); 
+                        // Reload page to show updated status
+                        window.location.reload();
                     },
                     onPending: function(result){
                         console.log('⏳ [DEBUG] Payment PENDING', result);
-                        alert("Waiting for your payment!");
-                        window.location.href = "{{ route('my-bookings') }}";
+                        alert("Payment is being processed. Please check your booking status.");
+                        window.location.reload();
                     },
                     onError: function(result){
                         console.error('❌ [DEBUG] Payment ERROR', result);
