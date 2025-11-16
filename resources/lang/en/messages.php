@@ -70,10 +70,13 @@ return [
     'popular_destinations_desc' => 'Explore Indonesia\'s most beloved destinations',
     'featured_tours' => 'Featured Tours',
     'featured_tours_desc' => 'Curated experiences for unforgettable journeys',
+    'tour_activities' => 'Tour Activities',
+    'tour_activities_desc' => 'Exciting activities and experiences at popular destinations',
 
     'view_details' => 'View Details',
     'view_all_destinations' => 'View All Destinations',
     'view_all_tours' => 'View All Tours',
+    'view_all_activities' => 'View All Activities',
     'days' => 'days',
     'no_tours_available' => 'No Tours Available',
 

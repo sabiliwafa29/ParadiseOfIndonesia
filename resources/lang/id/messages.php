@@ -73,10 +73,13 @@ return [
     'popular_destinations_desc' => 'Jelajahi destinasi paling dicintai di Indonesia',
     'featured_tours' => 'Tur Unggulan',
     'featured_tours_desc' => 'Pengalaman kurasi untuk perjalanan tak terlupakan',
+    'tour_activities' => 'Aktivitas Wisata',
+    'tour_activities_desc' => 'Aktivitas dan pengalaman menarik di destinasi populer',
 
     'view_details' => 'Lihat Detail',
     'view_all_destinations' => 'Lihat Semua Destinasi',
     'view_all_tours' => 'Lihat Semua Tur',
+    'view_all_activities' => 'Lihat Semua Aktivitas',
     'days' => 'hari',
     'no_tours_available' => 'Tidak Ada Tur Tersedia',
 

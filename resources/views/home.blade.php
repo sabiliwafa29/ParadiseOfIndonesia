@@ -523,9 +523,9 @@
 <div class="py-16 md:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
-            <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">{{ __('messages.destination_highlights') }}</span>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.tour_activities') }}</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.tour_activities_desc') }}</p>
+            <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">{{ __('messages.popular_destinations') }}</span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.popular_destinations') }}</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.popular_destinations_desc') }}</p>
         </div>
 
         <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -569,7 +569,7 @@
 
         <div class="mt-12 md:mt-16 text-center">
             <a href="{{ route('tour-activities.index') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
-                {{ __('messages.view_all_activities') }}
+                {{ __('messages.view_all_destinations_highlight') }}
                 <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                 </svg>

@@ -70,10 +70,13 @@ return [
     'popular_destinations_desc' => '探索印尼最受欢迎的目的地',
     'featured_tours' => '精选旅游',
     'featured_tours_desc' => '精心策划的难忘旅程体验',
+    'tour_activities' => '旅游活动',
+    'tour_activities_desc' => '热门目的地的精彩活动和体验',
 
     'view_details' => '查看详情',
     'view_all_destinations' => '查看所有目的地',
     'view_all_tours' => '查看所有旅游',
+    'view_all_activities' => '查看所有活动',
     'days' => '天',
     'no_tours_available' => '暂无旅游',
 
