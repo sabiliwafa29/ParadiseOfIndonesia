@@ -68,6 +68,16 @@
                                         {{ __('messages.view_details') }}
                                         <i class="fas fa-chevron-right ml-1 text-sm"></i>
                                     </a>
+                                    
+                                    @if($booking->status === 'pending' && $booking->payment_status !== 'paid')
+                                        <form action="{{ route('bookings.cancel', $booking) }}" method="POST" class="inline-block ml-4" onsubmit="return confirm('Are you sure you want to cancel this pending booking?')">
+                                            @csrf
+                                            <button type="submit" class="text-red-600 hover:text-red-700 font-medium">
+                                                <i class="fas fa-times-circle mr-1"></i>
+                                                {{ __('messages.cancel') ?? 'Cancel' }}
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

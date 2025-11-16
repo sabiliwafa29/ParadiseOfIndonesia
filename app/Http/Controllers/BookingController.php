@@ -86,6 +86,38 @@ class BookingController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
+            // ✅ PREVENT DUPLICATE: Cek apakah ada booking pending yang sama dalam 10 menit terakhir
+            $recentBookingQuery = Booking::where('package_id', $package->id)
+                ->where('date', $validated['date'])
+                ->where('guests', $validated['guests'])
+                ->where('status', 'pending')
+                ->where('payment_status', '!=', 'paid')
+                ->where('created_at', '>=', now()->subMinutes(10));
+            
+            // Jika user login, cek by user_id, jika guest cek by email
+            if (auth()->check()) {
+                $recentBookingQuery->where('user_id', auth()->id());
+            } else {
+                $recentBookingQuery->where('email', $validated['email']);
+            }
+            
+            $existingBooking = $recentBookingQuery->first();
+            
+            if ($existingBooking) {
+                \Illuminate\Support\Facades\Log::info('⚠️ [DEBUG] Duplicate booking detected, redirecting to existing', [
+                    'existing_booking_id' => $existingBooking->id,
+                    'order_id' => $existingBooking->order_id,
+                ]);
+                
+                // Generate snap token untuk booking yang sudah ada
+                $snapToken = $this->midtransService->createTransaction($existingBooking);
+                
+                return view('bookings.package-payment', [
+                    'booking' => $existingBooking,
+                    'snapToken' => $snapToken
+                ])->with('info', 'You already have a pending booking for this package. Please complete the payment.');
+            }
+
             // Untuk paket ini kita tidak pakai lagi add-on guide/transport, set 0 saja
             $guidePricePerGuest     = config('booking.addon_prices.guide', 50);
             $transportPricePerGuest = config('booking.addon_prices.transport', 30);
