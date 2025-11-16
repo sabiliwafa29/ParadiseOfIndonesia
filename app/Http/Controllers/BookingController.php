@@ -185,4 +185,33 @@ class BookingController extends Controller
 
         return view('bookings.show', compact('booking', 'snapToken'));
     }
+
+    public function reschedule(Request $request, Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+        ]);
+
+        $booking->update([
+            'date' => $request->date,
+            'status' => 'rescheduled',
+        ]);
+
+        return redirect()->route('my-bookings')
+            ->with('success', 'Booking rescheduled successfully to ' . \Carbon\Carbon::parse($request->date)->format('d M Y'));
+    }
+
+    public function cancel(Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        $booking->update([
+            'status' => 'cancelled',
+        ]);
+
+        return redirect()->route('my-bookings')
+            ->with('success', 'Booking cancelled successfully');
+    }
 }
