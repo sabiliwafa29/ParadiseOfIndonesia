@@ -20,8 +20,8 @@
         <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4
-                    {{ $booking->payment_status === 'confirmed' ? 'bg-green-100' : 'bg-yellow-100' }}">
-                    @if($booking->payment_status === 'confirmed')
+                    {{ $booking->payment_status === 'paid' ? 'bg-green-100' : 'bg-yellow-100' }}">
+                    @if($booking->payment_status === 'paid')
                         <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -33,13 +33,13 @@
                 </div>
                 
                 <h2 class="text-3xl font-bold mb-2
-                    {{ $booking->payment_status === 'confirmed' ? 'text-green-600' : 'text-yellow-600' }}">
-                    {{ $booking->payment_status === 'confirmed' ? 'Payment Complete' : 'Payment Pending' }}
+                    {{ $booking->payment_status === 'paid' ? 'text-green-600' : 'text-yellow-600' }}">
+                    {{ $booking->payment_status === 'paid' ? 'Payment Complete' : 'Payment Pending' }}
                 </h2>
                 
                 <p class="text-gray-600 text-lg">
-                    {{ $booking->payment_status === 'confirmed' 
-                        ? 'Your booking has been confirmed!' 
+                    {{ $booking->payment_status === 'paid' 
+                        ? 'Your booking has been paid!' 
                         : 'Please complete your payment to confirm booking' }}
                 </p>
             </div>
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Payment Button or Success Message -->
-            @if($booking->payment_status !== 'confirmed')
+            @if($booking->payment_status !== 'paid')
                 @if($snapToken)
                     <button id="pay-button" class="w-full py-4 bg-emerald-600 text-white rounded-lg font-semibold text-lg hover:bg-emerald-700 transition shadow-lg">
                         {{ __('messages.pay_now_with_midtrans') }}
@@ -201,7 +201,7 @@
                             
                             if (ok) {
                                 
-                                alert("Payment success! Your booking has been confirmed.");
+                                alert("Payment success! Your booking has been paid.");
                             } else {
                                 console.error('❌ [DEBUG] Server returned error:', data);
                                 alert("Payment success, but status update failed. Please contact support. Error: " + (data.message || 'Unknown error'));
