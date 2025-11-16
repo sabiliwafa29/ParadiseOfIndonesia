@@ -393,8 +393,6 @@
     </div>
 </div>
 @endsection
-
-                                // Jika string JSON, decode
                                 if (is_string($itinerary)) {
                                     $decoded = json_decode($itinerary, true);
                                     $itinerary = is_array($decoded) ? $decoded : explode("\n", $itinerary);
