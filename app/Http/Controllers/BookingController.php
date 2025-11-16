@@ -21,7 +21,8 @@ class BookingController extends Controller
 
     public function index()
     {
-        $bookings = auth()->user()->bookings()->with(['tour.destination', 'package'])->latest()->get();
+        // Get all bookings including those made before registration (by email)
+        $bookings = auth()->user()->allBookings();
         return view('bookings.index', compact('bookings'));
     }
 

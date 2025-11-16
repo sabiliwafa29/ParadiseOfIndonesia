@@ -1,19 +1,71 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-                <h3 class="text-2xl font-bold mb-4">{{ __('messages.complete_your_package_booking') }}</h3>
-                <p class="mb-2">{{ __('messages.package') }}: <span class="font-semibold">{{ $booking->package->name }}</span></p>
-                <p class="mb-2">{{ __('messages.date') }}: <span class="font-semibold">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</span></p>
-                <p class="mb-2">{{ __('messages.guests') }}: <span class="font-semibold">{{ $booking->guests }}</span></p>
-                <p class="mb-2"><strong>Order ID:</strong> <span class="font-mono text-sm">{{ $booking->order_id }}</span></p>
-                <p class="mb-4">{{ __('messages.total_price') }}: <span class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span></p>
+<div class="py-12 bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        
+        <!-- Payment Status Card (Large, Center) -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4
+                    {{ $booking->payment_status === 'paid' ? 'bg-green-100' : 'bg-yellow-100' }}">
+                    @if($booking->payment_status === 'paid')
+                        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    @else
+                        <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    @endif
+                </div>
+                
+                <h2 class="text-3xl font-bold mb-2
+                    {{ $booking->payment_status === 'paid' ? 'text-green-600' : 'text-yellow-600' }}">
+                    {{ $booking->payment_status === 'paid' ? 'Payment Complete' : 'Payment Pending' }}
+                </h2>
+                
+                <p class="text-gray-600 text-lg">
+                    {{ $booking->payment_status === 'paid' 
+                        ? 'Your booking has been confirmed!' 
+                        : 'Please complete your payment to confirm booking' }}
+                </p>
+            </div>
 
+            <!-- Booking Details -->
+            <div class="border-t border-b border-gray-200 py-6 mb-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Package</p>
+                        <p class="font-semibold">{{ $booking->package->name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Order ID</p>
+                        <p class="font-mono text-sm">{{ $booking->order_id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Date</p>
+                        <p class="font-semibold">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Guests</p>
+                        <p class="font-semibold">{{ $booking->guests }} {{ $booking->guests > 1 ? 'people' : 'person' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Contact</p>
+                        <p class="font-semibold">{{ $booking->email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Total Price</p>
+                        <p class="font-bold text-emerald-600 text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Button or Success Message -->
+            @if($booking->payment_status !== 'paid')
                 @if($snapToken)
-                    <button id="pay-button" class="w-full py-3 bg-emerald-600 text-white rounded-md font-semibold hover:bg-emerald-700 transition">
+                    <button id="pay-button" class="w-full py-4 bg-emerald-600 text-white rounded-lg font-semibold text-lg hover:bg-emerald-700 transition shadow-lg">
                         {{ __('messages.pay_now_with_midtrans') }}
                     </button>
                 @else
@@ -25,6 +77,31 @@
                         Kembali ke Package
                     </a>
                 @endif
+            @else
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                    <p class="text-green-800 font-semibold">Thank you for your payment!</p>
+                    <p class="text-green-600 text-sm mt-1">A confirmation email has been sent to {{ $booking->email }}</p>
+                </div>
+            @endif
+        </div>
+
+        <!-- Info Box -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <p class="text-blue-800 font-semibold mb-1">Important Information</p>
+                    <p class="text-blue-700 text-sm">
+                        @auth
+                            This booking is linked to your account. You can view and manage it from <a href="{{ route('my-bookings') }}" class="underline font-semibold">My Bookings</a>.
+                        @else
+                            This booking is linked to your email <strong>{{ $booking->email }}</strong>. 
+                            <a href="{{ route('register') }}" class="underline font-semibold">Register</a> with this email to manage your bookings.
+                        @endauth
+                    </p>
+                </div>
             </div>
         </div>
     </div>
