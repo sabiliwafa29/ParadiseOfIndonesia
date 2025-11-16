@@ -40,11 +40,10 @@ Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->
 // Booking package (bisa tanpa login)
 Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
 Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
-Route::get('/bookings/{booking}/payment', [BookingController::class, 'showPayment'])->name('bookings.payment');
 
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
-Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
-Route::get('/bookings/session/{tourSession}', [BookingController::class, 'createFromSession'])->name('bookings.session');
+Route::get('/tour-sessions/{session}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
+Route::get('/bookings/session/{session}', [BookingController::class, 'createFromSession'])->name('bookings.session');
 
 Route::get('/travel-services', [TravelServiceController::class, 'index'])->name('travel-services.index');
 Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
@@ -95,8 +94,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
         Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-        Route::post('/bookings/{booking}/reschedule', [BookingController::class, 'reschedule'])->name('bookings.reschedule');
-        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
     
     /*
