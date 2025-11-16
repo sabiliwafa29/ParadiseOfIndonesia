@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\BookingStatusController;
 
 // ✅ 1. AUTHENTICATION (with rate limiting and security headers)
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
@@ -29,6 +30,9 @@ Route::middleware(['auth:sanctum', 'throttle:100,60'])->group(function () {
 
 // ✅ 3. MIDTRANS CALLBACK (tanpa middleware, karena ini dari server Midtrans)
 Route::post('/midtrans/notification', [PaymentController::class, 'handleNotification']);
+
+// ✅ 3B. FRONTEND PAYMENT CALLBACK (untuk update status dari browser setelah payment)
+Route::post('/bookings/{booking}/payment-status', [BookingStatusController::class, 'updatePaymentStatus']);
 
 // ✅ 4. LOCATION SEARCH (public, for autocomplete - 30 per minute)
 Route::get('/locations/search/{type}', [App\Http\Controllers\Api\LocationController::class, 'search'])->middleware('throttle:30,60');

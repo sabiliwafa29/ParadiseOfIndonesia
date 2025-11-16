@@ -68,24 +68,29 @@ class PaymentController extends Controller
             $orderId = $notif['order_id'];
             $transactionStatus = $notif['transaction_status'];
             $fraudStatus = $notif['fraud_status'] ?? 'accept';
+            $paymentType = $notif['payment_type'] ?? null;
+            $transactionId = $notif['transaction_id'] ?? null;
 
-            Log::info("Processing notification - Order ID: {$orderId}, Status: {$transactionStatus}");
+            Log::info("Processing notification - Order ID: {$orderId}, Status: {$transactionStatus}, Payment Type: {$paymentType}");
 
             // Cari booking berdasarkan order_id (support untuk Booking dan TravelServiceBooking)
             $booking = null;
             
-            // Coba cari di Booking table (format: BOOK-{id})
-            if (str_starts_with($orderId, 'BOOK-')) {
+            // Prioritas 1: Cari berdasarkan order_id langsung (untuk package bookings yang pakai OrderIdService)
+            $booking = Booking::where('order_id', $orderId)->first();
+            
+            if (!$booking) {
+                // Prioritas 2: Cari di TravelServiceBooking
+                $booking = TravelServiceBooking::where('order_id', $orderId)->first();
+            }
+            
+            // Prioritas 3: Fallback untuk format lama BOOK-{id}
+            if (!$booking && str_starts_with($orderId, 'BOOK-')) {
                 $bookingId = (int) str_replace('BOOK-', '', $orderId);
                 $booking = Booking::find($bookingId);
             }
             
-            // Coba cari di TravelServiceBooking table (format: TSB-{timestamp}-{random})
-            if (!$booking && str_starts_with($orderId, 'TSB-')) {
-                $booking = TravelServiceBooking::where('order_id', $orderId)->first();
-            }
-            
-            // Fallback: cari berdasarkan order_id di kedua table
+            // Prioritas 4: Cari berdasarkan payment_id
             if (!$booking) {
                 $booking = Booking::where('payment_id', $orderId)->first();
                 if (!$booking) {
@@ -110,13 +115,15 @@ class PaymentController extends Controller
                         $booking->update([
                             'payment_status' => 'paid',
                             'status' => 'confirmed',
-                            'payment_id' => $orderId,
+                            'payment_id' => $transactionId ?? $orderId,
+                            'payment_method' => $paymentType,
                         ]);
                         Log::info("{$bookingType} {$bookingId} confirmed (capture + accept)");
                     } else {
                         $booking->update([
                             'payment_status' => 'pending',
-                            'payment_id' => $orderId,
+                            'payment_id' => $transactionId ?? $orderId,
+                            'payment_method' => $paymentType,
                         ]);
                         Log::info("{$bookingType} {$bookingId} pending (capture + challenge)");
                     }
@@ -126,7 +133,8 @@ class PaymentController extends Controller
                     $booking->update([
                         'payment_status' => 'paid',
                         'status' => 'confirmed',
-                        'payment_id' => $orderId,
+                        'payment_id' => $transactionId ?? $orderId,
+                        'payment_method' => $paymentType,
                     ]);
                     Log::info("{$bookingType} {$bookingId} confirmed (settlement)");
                     break;
@@ -134,7 +142,8 @@ class PaymentController extends Controller
                 case 'pending':
                     $booking->update([
                         'payment_status' => 'pending',
-                        'payment_id' => $orderId,
+                        'payment_id' => $transactionId ?? $orderId,
+                        'payment_method' => $paymentType,
                     ]);
                     Log::info("{$bookingType} {$bookingId} pending");
                     break;
@@ -145,7 +154,8 @@ class PaymentController extends Controller
                     $booking->update([
                         'payment_status' => 'failed',
                         'status' => 'cancelled',
-                        'payment_id' => $orderId,
+                        'payment_id' => $transactionId ?? $orderId,
+                        'payment_method' => $paymentType,
                     ]);
                     Log::info("{$bookingType} {$bookingId} cancelled ({$transactionStatus})");
                     break;

@@ -162,14 +162,50 @@
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result){
                         console.log('✅ [DEBUG] Payment SUCCESS!', result);
-                        alert("Payment success! Your booking has been confirmed."); 
-                        // Reload page to show updated status
-                        window.location.reload();
+                        
+                        // Update status via API
+                        fetch('/api/bookings/{{ $booking->id }}/payment-status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify(result)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('✅ Status updated:', data);
+                            alert("Payment success! Your booking has been confirmed.");
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error('❌ Error updating status:', error);
+                            alert("Payment success! Please refresh the page.");
+                            window.location.reload();
+                        });
                     },
                     onPending: function(result){
                         console.log('⏳ [DEBUG] Payment PENDING', result);
-                        alert("Payment is being processed. Please check your booking status.");
-                        window.location.reload();
+                        
+                        // Update status via API
+                        fetch('/api/bookings/{{ $booking->id }}/payment-status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify(result)
+                        })
+                        .then(() => {
+                            alert("Payment is being processed. Please check your booking status.");
+                            window.location.reload();
+                        })
+                        .catch(() => {
+                            alert("Payment is being processed. Please refresh the page.");
+                            window.location.reload();
+                        });
                     },
                     onError: function(result){
                         console.error('❌ [DEBUG] Payment ERROR', result);
