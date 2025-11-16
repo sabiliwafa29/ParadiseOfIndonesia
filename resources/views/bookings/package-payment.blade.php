@@ -20,8 +20,8 @@
         <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
             <div class="text-center mb-8">
                 <div class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4
-                    {{ $booking->payment_status === 'paid' ? 'bg-green-100' : 'bg-yellow-100' }}">
-                    @if($booking->payment_status === 'paid')
+                    {{ $booking->payment_status === 'confirmed' ? 'bg-green-100' : 'bg-yellow-100' }}">
+                    @if($booking->payment_status === 'confirmed')
                         <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -33,12 +33,12 @@
                 </div>
                 
                 <h2 class="text-3xl font-bold mb-2
-                    {{ $booking->payment_status === 'paid' ? 'text-green-600' : 'text-yellow-600' }}">
-                    {{ $booking->payment_status === 'paid' ? 'Payment Complete' : 'Payment Pending' }}
+                    {{ $booking->payment_status === 'confirmed' ? 'text-green-600' : 'text-yellow-600' }}">
+                    {{ $booking->payment_status === 'confirmed' ? 'Payment Complete' : 'Payment Pending' }}
                 </h2>
                 
                 <p class="text-gray-600 text-lg">
-                    {{ $booking->payment_status === 'paid' 
+                    {{ $booking->payment_status === 'confirmed' 
                         ? 'Your booking has been confirmed!' 
                         : 'Please complete your payment to confirm booking' }}
                 </p>
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Payment Button or Success Message -->
-            @if($booking->payment_status !== 'paid')
+            @if($booking->payment_status !== 'confirmed')
                 @if($snapToken)
                     <button id="pay-button" class="w-full py-4 bg-emerald-600 text-white rounded-lg font-semibold text-lg hover:bg-emerald-700 transition shadow-lg">
                         {{ __('messages.pay_now_with_midtrans') }}
@@ -143,15 +143,8 @@
 @if($snapToken)
 @push('scripts')
 <script type="text/javascript">
-    console.log('💳 [DEBUG] Payment Page Loaded');
-    console.log('🎫 Snap Token:', '{{ $snapToken }}');
-    console.log('📦 Booking ID:', {{ $booking->id }});
-    console.log('🔢 Order ID:', '{{ $booking->order_id }}');
-    console.log('💰 Total Price:', {{ $booking->total_price }});
-    console.log('🔑 Midtrans Client Key:', '{{ config("services.midtrans.client_key") }}');
-    
     // Test API endpoint availability
-    console.log('🧪 [DEBUG] Testing API endpoint...');
+    
     fetch('/api/bookings/{{ $booking->id }}/payment-status', {
         method: 'OPTIONS',
         headers: {
@@ -159,7 +152,7 @@
         }
     })
     .then(response => {
-        console.log('✅ [DEBUG] API endpoint accessible:', response.status);
+        
     })
     .catch(error => {
         console.error('❌ [DEBUG] API endpoint NOT accessible:', error);
@@ -167,7 +160,7 @@
     
     // Define function BEFORE loading Midtrans script
     function initializeMidtrans() {
-        console.log('✅ [DEBUG] Midtrans Snap library loaded successfully');
+        
         
         const payButton = document.getElementById('pay-button');
         
@@ -182,17 +175,11 @@
         }
         
         payButton.onclick = function(){
-            console.log('🖱️ [DEBUG] Pay button clicked');
-            console.log('⏳ [DEBUG] Initiating Midtrans payment...');
             
             try {
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result){
-                        console.log('✅ [DEBUG] Payment SUCCESS!', result);
-                        console.log('📤 [DEBUG] Sending payment status to server...');
-                        console.log('🔗 [DEBUG] URL:', '/api/bookings/{{ $booking->id }}/payment-status');
-                        console.log('📦 [DEBUG] Payload:', JSON.stringify(result, null, 2));
-                        
+                       
                         // Update status via API (no CSRF token needed for API routes)
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
                             method: 'POST',
@@ -203,8 +190,7 @@
                             body: JSON.stringify(result)
                         })
                         .then(response => {
-                            console.log('📥 [DEBUG] Response status:', response.status);
-                            console.log('📥 [DEBUG] Response ok:', response.ok);
+                            
                             return response.json().then(data => ({
                                 status: response.status,
                                 ok: response.ok,
@@ -212,17 +198,15 @@
                             }));
                         })
                         .then(({status, ok, data}) => {
-                            console.log('✅ [DEBUG] Response received:', {status, ok, data});
                             
                             if (ok) {
-                                console.log('✅ [DEBUG] Status updated successfully!');
+                                
                                 alert("Payment success! Your booking has been confirmed.");
                             } else {
                                 console.error('❌ [DEBUG] Server returned error:', data);
                                 alert("Payment success, but status update failed. Please contact support. Error: " + (data.message || 'Unknown error'));
                             }
                             
-                            console.log('🔄 [DEBUG] Reloading page...');
                             window.location.reload();
                         })
                         .catch(error => {
@@ -237,8 +221,6 @@
                         });
                     },
                     onPending: function(result){
-                        console.log('⏳ [DEBUG] Payment PENDING', result);
-                        console.log('📤 [DEBUG] Sending pending status to server...');
                         
                         // Update status via API (no CSRF token needed for API routes)
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
@@ -251,7 +233,7 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            console.log('✅ [DEBUG] Pending status updated:', data);
+                            
                             alert("Payment is being processed. Please check your booking status.");
                             window.location.reload();
                         })
@@ -266,29 +248,28 @@
                         alert("Payment failed! Please try again.");
                     },
                     onClose: function(){
-                        console.log('🚪 [DEBUG] Payment popup CLOSED by user');
+                        
                         alert('You closed the payment window without completing the payment');
                     }
                 });
-                console.log('✅ [DEBUG] Midtrans snap.pay() called successfully');
+                
             } catch (error) {
                 console.error('❌ [DEBUG] Error calling snap.pay():', error);
                 alert('Error: ' + error.message);
             }
         };
         
-        console.log('✅ [DEBUG] Payment button handler initialized');
     }
     
     // Fallback: Initialize after DOM loaded jika onload tidak trigger
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('📄 [DEBUG] DOM Content Loaded');
+        
         setTimeout(function() {
             if (typeof snap !== 'undefined') {
-                console.log('⚠️ [DEBUG] Fallback initialization');
+                
                 initializeMidtrans();
             } else {
-                console.log('⏳ [DEBUG] Waiting for Snap library...');
+                
             }
         }, 1000);
     });
