@@ -190,8 +190,14 @@ class BookingController extends Controller
                 'has_snap_token' => !empty($snapToken),
             ]);
 
-            // Arahkan ke halaman payment khusus paket
-            return view('bookings.package-payment', compact('booking', 'snapToken'));
+            // Simpan snap token di session untuk prevent regenerate
+            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
+            
+            // Simpan booking ID di session untuk guest access
+            session(['last_booking_id' => $booking->id]);
+
+            // REDIRECT to GET route untuk prevent duplicate on refresh
+            return redirect()->route('bookings.payment', $booking);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Error creating package booking: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -216,6 +222,33 @@ class BookingController extends Controller
         }
 
         return view('bookings.show', compact('booking', 'snapToken'));
+    }
+
+    /**
+     * Show payment page for package booking
+     */
+    public function showPayment(Booking $booking)
+    {
+        // Authorization: allow if user_id matches OR email matches OR no auth (guest with session)
+        if (auth()->check()) {
+            $this->authorize('view', $booking);
+        } else {
+            // Guest: verify via session or email
+            $sessionBookingId = session('last_booking_id');
+            if ($sessionBookingId !== $booking->id) {
+                abort(403, 'Unauthorized access to this booking.');
+            }
+        }
+
+        // Ambil snap token dari session atau generate baru
+        $snapToken = session('booking_' . $booking->id . '_snap_token');
+        
+        if (!$snapToken && $booking->payment_status !== 'paid') {
+            $snapToken = $this->midtransService->createTransaction($booking);
+            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
+        }
+
+        return view('bookings.package-payment', compact('booking', 'snapToken'));
     }
 
     public function reschedule(Request $request, Booking $booking)
