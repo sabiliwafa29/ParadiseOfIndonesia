@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('scripts')
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@endpush
+
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +80,7 @@
                             </svg>
                             {{ __('messages.itinerary') ?? 'Itinerary' }}
                         </h2>
-                        <div class="space-y-4 sm:space-y-6" x-data="{ openDay: 0 }">
+                        <div class="space-y-4 sm:space-y-6" id="itinerary-container">
                             @php
                                 $itinerary = $package->itinerary;
 
@@ -121,10 +125,11 @@
                                 @endphp
 
                                 @if(!empty(array_filter($activities)))
-                                    <div class="bg-white border-l-4 border-emerald-500 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                                    <div class="bg-white border-l-4 border-emerald-500 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden itinerary-item">
                                         <!-- Day Header - Clickable -->
                                         <button 
-                                            @click="openDay = openDay === {{ $dayIndex }} ? null : {{ $dayIndex }}"
+                                            onclick="toggleDay(this)"
+                                            data-day-index="{{ $dayIndex }}"
                                             class="w-full text-left p-4 sm:p-6 flex justify-between items-center focus:outline-none hover:bg-gray-50 transition-colors">
                                             <span class="text-base sm:text-lg md:text-xl font-bold text-emerald-600 flex items-center gap-2">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,8 +138,7 @@
                                                 {{ $dayTitle }}
                                             </span>
                                             <svg 
-                                                class="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 transform transition-transform duration-200"
-                                                :class="{ 'rotate-180': openDay === {{ $dayIndex }} }"
+                                                class="chevron w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 transform transition-transform duration-200 rotate-0"
                                                 fill="none" 
                                                 stroke="currentColor" 
                                                 viewBox="0 0 24 24">
@@ -144,14 +148,7 @@
 
                                         <!-- Activities - Collapsible -->
                                         <div 
-                                            x-show="openDay === {{ $dayIndex }}"
-                                            x-transition:enter="transition ease-out duration-200"
-                                            x-transition:enter-start="opacity-0 transform -translate-y-2"
-                                            x-transition:enter-end="opacity-100 transform translate-y-0"
-                                            x-transition:leave="transition ease-in duration-150"
-                                            x-transition:leave-start="opacity-100"
-                                            x-transition:leave-end="opacity-0"
-                                            class="px-4 pb-4 sm:px-6 sm:pb-6 space-y-3 sm:space-y-4 bg-gray-50">
+                                            class="activities-content hidden px-4 pb-4 sm:px-6 sm:pb-6 space-y-3 sm:space-y-4 bg-gray-50">
                                             @foreach($activities as $activity)
                                                 @php
                                                     $time = '';
@@ -391,4 +388,35 @@
         @endif
     </div>
 </div>
+
+<script>
+function toggleDay(button) {
+    const itineraryItem = button.closest('.itinerary-item');
+    const content = itineraryItem.querySelector('.activities-content');
+    const chevron = button.querySelector('.chevron');
+    
+    // Toggle hidden class
+    content.classList.toggle('hidden');
+    
+    // Rotate chevron
+    if (content.classList.contains('hidden')) {
+        chevron.classList.remove('rotate-180');
+        chevron.classList.add('rotate-0');
+    } else {
+        chevron.classList.remove('rotate-0');
+        chevron.classList.add('rotate-180');
+    }
+}
+
+// Open first day by default
+document.addEventListener('DOMContentLoaded', function() {
+    const firstItem = document.querySelector('.itinerary-item');
+    if (firstItem) {
+        const firstButton = firstItem.querySelector('button');
+        if (firstButton) {
+            toggleDay(firstButton);
+        }
+    }
+});
+</script>
 @endsection
