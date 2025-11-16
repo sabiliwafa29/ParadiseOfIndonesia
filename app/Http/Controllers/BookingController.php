@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\StorePackageBookingRequest;
 use App\Services\MidtransService;
 use App\Services\OrderIdService;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
