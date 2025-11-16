@@ -18,10 +18,10 @@
         </div>
 
         <div class="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div class="p-6 md:p-8">
+            <div class="p-4 md:p-6 lg:p-8">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-3xl font-bold">Booking Details</h2>
-                    <span class="px-4 py-2 rounded-full text-sm font-semibold
+                    <h2 class="text-xl md:text-2xl lg:text-3xl font-bold">Booking Details</h2>
+                    <span class="px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold
                         {{ $booking->status === 'confirmed' || $booking->payment_status === 'paid' ? 'bg-green-100 text-green-800' : '' }}
                         {{ $booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
                         {{ $booking->status === 'rescheduled' ? 'bg-blue-100 text-blue-800' : '' }}
@@ -35,19 +35,19 @@
                     <div>
                         @if($booking->tour)
                             <div class="bg-gray-50 rounded-lg overflow-hidden">
-                                <img src="{{ asset($booking->tour->image) }}" alt="{{ $booking->tour->name }}" class="w-full h-64 object-cover">
-                                <div class="p-6">
-                                    <h3 class="text-2xl font-semibold mb-2">{{ $booking->tour->name }}</h3>
-                                    <p class="text-gray-600 mb-4">{{ $booking->tour->destination->name }}</p>
+                                <img src="{{ asset($booking->tour->image) }}" alt="{{ $booking->tour->name }}" class="w-full h-48 md:h-56 lg:h-64 object-cover">
+                                <div class="p-4 md:p-6">
+                                    <h3 class="text-lg md:text-xl lg:text-2xl font-semibold mb-2">{{ $booking->tour->name }}</h3>
+                                    <p class="text-sm md:text-base text-gray-600 mb-4">{{ $booking->tour->destination->name }}</p>
                                     <div class="space-y-2">
-                                        <div class="flex items-center text-gray-600">
-                                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="flex items-center text-sm md:text-base text-gray-600">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
                                             <span>{{ $booking->tour->duration }} days</span>
                                         </div>
-                                        <div class="flex items-center text-gray-600">
-                                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="flex items-center text-sm md:text-base text-gray-600">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             </svg>
@@ -74,60 +74,60 @@
 
                     <!-- Right: Booking Details -->
                     <div>
-                        <div class="bg-gray-50 rounded-lg p-6 space-y-6">
+                        <div class="bg-gray-50 rounded-lg p-4 md:p-6 space-y-4 md:space-y-6">
                             <div>
-                                <h3 class="text-xl font-semibold mb-4">Booking Information</h3>
-                                <div class="space-y-4">
+                                <h3 class="text-lg md:text-xl font-semibold mb-3 md:mb-4">Booking Information</h3>
+                                <div class="space-y-3 md:space-y-4">
                                     <div>
-                                        <p class="text-sm text-gray-600">Order ID</p>
-                                        <p class="font-mono text-sm">{{ $booking->order_id }}</p>
+                                        <p class="text-xs md:text-sm text-gray-600">Order ID</p>
+                                        <p class="font-mono text-xs md:text-sm">{{ $booking->order_id }}</p>
                                     </div>
                                     
                                     <div>
-                                        <p class="text-sm text-gray-600">Travel Date</p>
-                                        <p class="font-semibold text-lg">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</p>
+                                        <p class="text-xs md:text-sm text-gray-600">Travel Date</p>
+                                        <p class="font-semibold text-base md:text-lg">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</p>
                                     </div>
                                     
                                     <div>
-                                        <p class="text-sm text-gray-600">Number of Guests</p>
-                                        <p class="font-semibold">{{ $booking->guests }} {{ $booking->guests > 1 ? 'people' : 'person' }}</p>
+                                        <p class="text-xs md:text-sm text-gray-600">Number of Guests</p>
+                                        <p class="font-semibold text-sm md:text-base">{{ $booking->guests }} {{ $booking->guests > 1 ? 'people' : 'person' }}</p>
                                     </div>
 
                                     @if($booking->full_name)
                                         <div>
-                                            <p class="text-sm text-gray-600">Contact Name</p>
-                                            <p class="font-semibold">{{ $booking->full_name }}</p>
+                                            <p class="text-xs md:text-sm text-gray-600">Contact Name</p>
+                                            <p class="font-semibold text-sm md:text-base">{{ $booking->full_name }}</p>
                                         </div>
                                     @endif
 
                                     @if($booking->email)
                                         <div>
-                                            <p class="text-sm text-gray-600">Email</p>
-                                            <p class="font-semibold">{{ $booking->email }}</p>
+                                            <p class="text-xs md:text-sm text-gray-600">Email</p>
+                                            <p class="font-semibold text-sm md:text-base">{{ $booking->email }}</p>
                                         </div>
                                     @endif
 
                                     @if($booking->contact_handle)
                                         <div>
-                                            <p class="text-sm text-gray-600">Contact</p>
-                                            <p class="font-semibold">{{ $booking->contact_handle }}</p>
+                                            <p class="text-xs md:text-sm text-gray-600">Contact</p>
+                                            <p class="font-semibold text-sm md:text-base">{{ $booking->contact_handle }}</p>
                                         </div>
                                     @endif
                                     
-                                    <div class="border-t pt-4">
-                                        <p class="text-sm text-gray-600">Total Price</p>
-                                        <p class="font-bold text-emerald-600 text-2xl">{{ format_price($booking->total_price) }}</p>
+                                    <div class="border-t pt-3 md:pt-4">
+                                        <p class="text-xs md:text-sm text-gray-600">Total Price</p>
+                                        <p class="font-bold text-emerald-600 text-xl md:text-2xl">{{ format_price($booking->total_price) }}</p>
                                     </div>
 
                                     @if($booking->payment_status === 'paid')
-                                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 md:p-4">
                                             <div class="flex items-center">
-                                                <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-5 h-5 md:w-6 md:h-6 text-green-600 mr-2 md:mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                 </svg>
                                                 <div>
-                                                    <p class="font-semibold text-green-800">Payment Complete</p>
-                                                    <p class="text-sm text-green-600">{{ $booking->payment_method ?? 'Midtrans' }}</p>
+                                                    <p class="font-semibold text-sm md:text-base text-green-800">Payment Complete</p>
+                                                    <p class="text-xs md:text-sm text-green-600">{{ $booking->payment_method ?? 'Midtrans' }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -136,13 +136,13 @@
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="border-t pt-6">
+                            <div class="border-t pt-4 md:pt-6">
                                 @if($booking->payment_status === 'paid' && $booking->status !== 'cancelled')
                                     <!-- Reschedule & Cancel Buttons -->
-                                    <div class="space-y-3">
+                                    <div class="space-y-2 md:space-y-3">
                                         <button @click="showRescheduleModal = true" 
-                                                class="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-                                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                class="w-full py-2 md:py-3 text-sm md:text-base bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                                            <svg class="w-4 h-4 md:w-5 md:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                             </svg>
                                             Reschedule Booking

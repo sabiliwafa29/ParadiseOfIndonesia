@@ -85,9 +85,9 @@
 
                 <!-- Itinerary -->
                 @if($tour->itinerary)
-                    <div class="mb-12">
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.itinerary') }}</h2>
-                        <div class="space-y-6">
+                    <div class="mb-8 md:mb-12">
+                        <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6">{{ __('messages.itinerary') }}</h2>
+                        <div class="space-y-3 md:space-y-6" x-data="{ openDay: null }">
                             @php
                                 $itinerary = $tour->itinerary;
                                 
@@ -117,14 +117,32 @@
                                     }
                                 @endphp
                                 
-                                <div class="bg-white border-l-4 border-emerald-500 rounded-lg p-6 shadow-sm hover:shadow-md transition">
-                                    <!-- Day Header -->
-                                    <div class="mb-4">
-                                        <h3 class="text-lg font-bold text-emerald-600">{{ $dayTitle }}</h3>
-                                    </div>
+                                <div class="bg-white border-l-4 border-emerald-500 rounded-lg shadow-sm hover:shadow-md transition">
+                                    <!-- Day Header - Clickable -->
+                                    <button 
+                                        @click="openDay = openDay === {{ $dayIndex }} ? null : {{ $dayIndex }}"
+                                        class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none">
+                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $dayTitle }}</h3>
+                                        <svg 
+                                            class="w-5 h-5 md:w-6 md:h-6 text-emerald-600 transform transition-transform duration-200"
+                                            :class="{ 'rotate-180': openDay === {{ $dayIndex }} }"
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
                                     
-                                    <!-- Activities -->
-                                    <div class="space-y-3 ml-4">
+                                    <!-- Activities - Collapsible -->
+                                    <div 
+                                        x-show="openDay === {{ $dayIndex }}"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
                                         @foreach($activities as $activity)
                                             @php
                                                 // Parse activity jika ada format "HH:MM - HH:MM: Deskripsi"
@@ -147,23 +165,23 @@
                                                 }
                                             @endphp
                                             
-                                            <div class="flex gap-3">
+                                            <div class="flex gap-2 md:gap-3">
                                                 @if($time)
                                                     <div class="flex-shrink-0">
-                                                        <span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold">
+                                                        <span class="inline-block px-2 py-1 md:px-3 md:py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs md:text-sm font-semibold">
                                                             {{ $time }}
                                                         </span>
                                                     </div>
                                                 @else
                                                     <div class="flex-shrink-0 mt-1">
-                                                        <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <svg class="w-3 h-3 md:w-4 md:h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                                         </svg>
                                                     </div>
                                                 @endif
                                                 
                                                 <div class="flex-1">
-                                                    <p class="text-gray-700 leading-relaxed">{{ $description }}</p>
+                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $description }}</p>
                                                 </div>
                                             </div>
                                         @endforeach
