@@ -43,8 +43,8 @@ Route::post('/bookings/package/{package}', [BookingController::class, 'storePack
 Route::get('/bookings/{booking}/payment', [BookingController::class, 'showPayment'])->name('bookings.payment');
 
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
-Route::get('/tour-sessions/{session}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
-Route::get('/bookings/session/{session}', [BookingController::class, 'createFromSession'])->name('bookings.session');
+Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
+Route::get('/bookings/session/{tourSession}', [BookingController::class, 'createFromSession'])->name('bookings.session');
 
 Route::get('/travel-services', [TravelServiceController::class, 'index'])->name('travel-services.index');
 Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
