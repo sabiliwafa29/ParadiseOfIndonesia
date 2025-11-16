@@ -61,7 +61,7 @@
                         
                         <!-- Learn More Link -->
                         <div class="mt-4 pt-4 border-t border-gray-100">
-                            <a href="{{ route('activities.show', $activity) }}" 
+                            <a href="{{ route('tour-activities.show', $activity) }}" 
                                class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold text-sm md:text-base transition-colors group">
                                 {{ __('messages.learn_more') ?? 'Learn More' }}
                                 <svg class="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

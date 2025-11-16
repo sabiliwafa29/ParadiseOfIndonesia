@@ -30,7 +30,7 @@ Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
 Route::get('/tours/{tour}', [TourController::class, 'show'])->name('tours.show');
 
 Route::get('/tour-activities', [TourActivityController::class, 'index'])->name('tour-activities.index');
-Route::get('/tour-activities/{tourActivity}', [TourActivityController::class, 'show'])->name('tour-activities.show');
+Route::get('/tour-activities/{activity}', [TourActivityController::class, 'show'])->name('tour-activities.show');
 
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
 

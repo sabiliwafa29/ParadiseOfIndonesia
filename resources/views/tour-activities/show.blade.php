@@ -5,7 +5,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Back Button -->
         <div class="mb-6">
-            <a href="{{ route('activities.index') }}" 
+            <a href="{{ route('tour-activities.index') }}" 
                class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold transition-colors group">
                 <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
