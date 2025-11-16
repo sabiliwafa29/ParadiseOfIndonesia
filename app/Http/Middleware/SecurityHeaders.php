@@ -80,7 +80,7 @@ class SecurityHeaders
         $cdnUrl = config('app.cdn_url') ? parse_url(config('app.cdn_url'), PHP_URL_HOST) : '';
         $appUrl = parse_url(config('app.url'), PHP_URL_HOST);
 
-        $scriptSrcs = ["'self'", "'unsafe-inline'"];
+        $scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"]; // unsafe-eval needed for Alpine.js
         $styleSrcs = ["'self'", "'unsafe-inline'"];
         $imgSrcs = ["'self'", 'data:', 'https:'];
         $fontSrcs = ["'self'", 'https:'];
