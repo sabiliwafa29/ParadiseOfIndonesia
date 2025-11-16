@@ -393,8 +393,6 @@
     </div>
 </div>
 @endsection
-                            @php
-                                $itinerary = $package->itinerary;
 
                                 // Jika string JSON, decode
                                 if (is_string($itinerary)) {
