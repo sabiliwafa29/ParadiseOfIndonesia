@@ -138,6 +138,21 @@
     console.log('💰 Total Price:', {{ $booking->total_price }});
     console.log('🔑 Midtrans Client Key:', '{{ config("services.midtrans.client_key") }}');
     
+    // Test API endpoint availability
+    console.log('🧪 [DEBUG] Testing API endpoint...');
+    fetch('/api/bookings/{{ $booking->id }}/payment-status', {
+        method: 'OPTIONS',
+        headers: {
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => {
+        console.log('✅ [DEBUG] API endpoint accessible:', response.status);
+    })
+    .catch(error => {
+        console.error('❌ [DEBUG] API endpoint NOT accessible:', error);
+    });
+    
     // Define function BEFORE loading Midtrans script
     function initializeMidtrans() {
         console.log('✅ [DEBUG] Midtrans Snap library loaded successfully');
@@ -166,19 +181,18 @@
                         console.log('🔗 [DEBUG] URL:', '/api/bookings/{{ $booking->id }}/payment-status');
                         console.log('📦 [DEBUG] Payload:', JSON.stringify(result, null, 2));
                         
-                        // Update status via API
+                        // Update status via API (no CSRF token needed for API routes)
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Accept': 'application/json',
                             },
                             body: JSON.stringify(result)
                         })
                         .then(response => {
                             console.log('📥 [DEBUG] Response status:', response.status);
-                            console.log('📥 [DEBUG] Response headers:', response.headers);
+                            console.log('📥 [DEBUG] Response ok:', response.ok);
                             return response.json().then(data => ({
                                 status: response.status,
                                 ok: response.ok,
@@ -214,12 +228,11 @@
                         console.log('⏳ [DEBUG] Payment PENDING', result);
                         console.log('📤 [DEBUG] Sending pending status to server...');
                         
-                        // Update status via API
+                        // Update status via API (no CSRF token needed for API routes)
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Accept': 'application/json',
                             },
                             body: JSON.stringify(result)

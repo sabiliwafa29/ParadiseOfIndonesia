@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class BookingStatusController extends Controller
 {
@@ -56,12 +57,20 @@ class BookingStatusController extends Controller
                 case 'capture':
                 case 'settlement':
                     Log::info('✅ [PAYMENT CALLBACK] Payment successful, updating to confirmed');
-                    $booking->update([
+                    
+                    $updateData = [
                         'payment_status' => 'paid',
                         'status' => 'confirmed',
-                        'payment_method' => $paymentType ?? 'Midtrans',
                         'payment_id' => $transactionId ?? $booking->order_id,
-                    ]);
+                    ];
+                    
+                    // Only add payment_method if column exists
+                    if (Schema::hasColumn('bookings', 'payment_method')) {
+                        $updateData['payment_method'] = $paymentType ?? 'Midtrans';
+                    }
+                    
+                    $booking->update($updateData);
+                    
                     Log::info('✅ [PAYMENT CALLBACK] Booking confirmed', [
                         'booking_id' => $booking->id,
                         'new_payment_status' => $booking->fresh()->payment_status,
