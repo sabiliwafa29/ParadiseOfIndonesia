@@ -21,7 +21,10 @@ class BookingPolicy
      */
     public function view(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id;
+        // User dapat view booking jika:
+        // 1. Booking milik user (user_id match)
+        // 2. Booking dibuat dengan email yang sama (guest booking)
+        return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
     /**
@@ -37,7 +40,10 @@ class BookingPolicy
      */
     public function update(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id;
+        // User dapat update booking jika:
+        // 1. Booking milik user (user_id match)
+        // 2. Booking dibuat dengan email yang sama (guest booking)
+        return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
     /**
@@ -45,7 +51,10 @@ class BookingPolicy
      */
     public function delete(User $user, Booking $booking): bool
     {
-        return $user->id === $booking->user_id;
+        // User dapat delete booking jika:
+        // 1. Booking milik user (user_id match)
+        // 2. Booking dibuat dengan email yang sama (guest booking)
+        return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
     /**
