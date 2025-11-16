@@ -6,7 +6,7 @@
         <!-- Header Section -->
         <div class="text-center mb-8 sm:mb-12">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
-                {{ __('messages.tour_sessions') }}
+                {{ __('messages.tour_sessions') ?? 'Tour Sessions' }}
             </h1>
             <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 {{ __('messages.explore_upcoming_sessions') ?? 'Explore our upcoming tour sessions and find your perfect adventure' }}
@@ -53,27 +53,28 @@
                             </p>
                         </div>
 
-                        <!-- Package Info & Action -->
+                        <!-- Session Info & Action -->
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-6 border-t border-gray-200">
                             @if($session->tourPackage)
-                                <!-- Package Badge -->
+                                <!-- Package Info Badge -->
                                 <div class="flex items-center bg-blue-50 rounded-lg px-4 py-3 flex-1">
                                     <svg class="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                     </svg>
                                     <div>
-                                        <p class="text-xs text-gray-600 mb-1">{{ __('messages.associated_package') }}</p>
+                                        <p class="text-xs text-gray-600 mb-1">{{ __('messages.tour_package') ?? 'Tour Package' }}</p>
                                         <p class="font-semibold text-gray-900 text-sm sm:text-base">{{ $session->tourPackage->name }}</p>
                                     </div>
                                 </div>
 
-                                <!-- Book Now Button -->
-                                <a href="{{ route('tour-packages.show', $session->tourPackage) }}" 
+                                <!-- View Details Button -->
+                                <a href="{{ route('tour-sessions.show', $session) }}" 
                                    class="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 text-sm sm:text-base">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
-                                    {{ __('messages.book_now') }}
+                                    {{ __('messages.view_details') ?? 'View Details' }}
                                 </a>
                             @else
                                 <!-- No Package Available -->
@@ -81,7 +82,7 @@
                                     <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span class="font-semibold text-gray-500 text-sm sm:text-base">{{ __('messages.no_package_available') }}</span>
+                                    <span class="font-semibold text-gray-500 text-sm sm:text-base">{{ __('messages.no_package_available') ?? 'No Package Available' }}</span>
                                 </div>
                             @endif
                         </div>
@@ -95,7 +96,7 @@
                     <svg class="w-20 h-20 sm:w-24 sm:h-24 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
-                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{{ __('messages.no_tour_sessions') }}</h3>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{{ __('messages.no_tour_sessions') ?? 'No Tour Sessions Available' }}</h3>
                     <p class="text-gray-600 text-sm sm:text-base">{{ __('messages.check_back_later') ?? 'Check back later for upcoming sessions' }}</p>
                 </div>
             </div>
