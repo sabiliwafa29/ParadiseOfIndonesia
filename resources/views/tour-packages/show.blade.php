@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@push('scripts')
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-@endpush
-
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
