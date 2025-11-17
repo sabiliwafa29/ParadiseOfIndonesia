@@ -276,7 +276,7 @@
                                     {{ $otherActivity->time }}
                                 </p>
                                 <div class="flex justify-end items-center pt-4 border-t border-gray-100">
-                                    <a href="{{ route('activities.show', $otherActivity) }}" 
+                                    <a href="{{ route('tour-activities.show', $otherActivity) }}" 
                                        class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold group-hover:gap-2 transition-all">
                                         <span class="text-sm">{{ __('messages.view') ?? 'View' }}</span>
                                         <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

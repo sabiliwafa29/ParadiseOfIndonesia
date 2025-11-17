@@ -9,5 +9,20 @@ class TourActivity extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'tour_id',
+        'name',
+        'time',
+        'location',
+        'photo',
+        'description',
+        'highlights',
+        'what_to_bring',
+        'notes',
+    ];
+
+    protected $casts = [
+        'highlights' => 'array',
+        'what_to_bring' => 'array',
+    ];
 }

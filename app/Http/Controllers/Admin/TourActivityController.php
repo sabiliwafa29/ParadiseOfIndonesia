@@ -23,12 +23,36 @@ class TourActivityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'time' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'description' => 'nullable|string',
+            'highlights' => 'nullable|array',
+            'highlights.*' => 'nullable|string|max:255',
+            'what_to_bring' => 'nullable|array',
+            'what_to_bring.*' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
         ]);
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $filename = time() . '_' . $photo->getClientOriginalName();
+            $photo->move(public_path('images/activities'), $filename);
+            $validated['photo'] = 'images/activities/' . $filename;
+        }
+
+        // Convert arrays to JSON
+        if (isset($validated['highlights'])) {
+            $validated['highlights'] = json_encode(array_filter($validated['highlights']));
+        }
+        if (isset($validated['what_to_bring'])) {
+            $validated['what_to_bring'] = json_encode(array_filter($validated['what_to_bring']));
+        }
 
         TourActivity::create($validated);
 
-        return redirect()->route('admin.tour-activities.index')->with('success', 'Activity created');
+        return redirect()->route('admin.tour-activities.index')->with('success', 'Activity created successfully');
     }
 
     public function edit(TourActivity $tourActivity)
@@ -40,12 +64,41 @@ class TourActivityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'time' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'description' => 'nullable|string',
+            'highlights' => 'nullable|array',
+            'highlights.*' => 'nullable|string|max:255',
+            'what_to_bring' => 'nullable|array',
+            'what_to_bring.*' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
         ]);
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            // Delete old photo
+            if ($tourActivity->photo && file_exists(public_path($tourActivity->photo))) {
+                unlink(public_path($tourActivity->photo));
+            }
+            
+            $photo = $request->file('photo');
+            $filename = time() . '_' . $photo->getClientOriginalName();
+            $photo->move(public_path('images/activities'), $filename);
+            $validated['photo'] = 'images/activities/' . $filename;
+        }
+
+        // Convert arrays to JSON
+        if (isset($validated['highlights'])) {
+            $validated['highlights'] = json_encode(array_filter($validated['highlights']));
+        }
+        if (isset($validated['what_to_bring'])) {
+            $validated['what_to_bring'] = json_encode(array_filter($validated['what_to_bring']));
+        }
 
         $tourActivity->update($validated);
 
-        return redirect()->route('admin.tour-activities.index')->with('success', 'Activity updated');
+        return redirect()->route('admin.tour-activities.index')->with('success', 'Activity updated successfully');
     }
 
     public function destroy(TourActivity $tourActivity)

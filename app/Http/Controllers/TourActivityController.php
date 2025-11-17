@@ -34,9 +34,9 @@ class TourActivityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(\App\Models\TourActivity $activity)
     {
-        //
+        return view('tour-activities.show', compact('activity'));
     }
 
     /**
