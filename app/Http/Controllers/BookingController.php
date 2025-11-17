@@ -322,5 +322,5 @@ public function cancel(Booking $booking)
     
     return redirect()->route('my-bookings')
         ->with('success', 'Booking cancelled successfully');
-}z
+}
 }
