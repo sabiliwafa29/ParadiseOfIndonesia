@@ -345,11 +345,15 @@ return [
 
     // Booking Package
     'book_this_package' => 'Pesan Paket Ini',
+    'fill_booking_details' => 'Isi detail Anda untuk menyelesaikan pemesanan',
+    'personal_information' => 'Informasi Pribadi',
+    'full_name' => 'Nama Lengkap',
     'select_date' => 'Pilih Tanggal',
     'additional_services' => 'Layanan Tambahan',
     'price_per_person' => 'per orang',
     'price_summary' => 'Ringkasan Harga',
     'package_price' => 'Harga Paket',
+    'base_price' => 'Harga Dasar',
     'guide_service' => 'Layanan Pemandu',
     'transport_service' => 'Layanan Transportasi',
     'complete_your_package_booking' => 'Selesaikan Pemesanan Paket Anda',
@@ -358,6 +362,16 @@ return [
     'includes' => 'Termasuk',
     'guide' => 'Pemandu',
     'total' => 'Total',
+    'guest' => 'tamu',
+    'confirm_booking' => 'Konfirmasi Pemesanan',
+    'processing' => 'Memproses...',
+    'error' => 'Kesalahan',
+    'select_route' => 'Pilih Rute Tur',
+    'route_description' => 'Pilih itinerary yang Anda inginkan untuk paket ini',
+    'ijen_route' => 'Rute Api Biru Ijen',
+    'ijen_description' => 'Trekking malam untuk menyaksikan fenomena Api Biru dan sunrise yang menakjubkan di Kawah Ijen',
+    'tabuhan_route' => 'Rute Snorkeling Pulau Tabuhan',
+    'tabuhan_description' => 'Jelajahi surga bawah laut dengan snorkeling dan aktivitas laut di sekitar Pulau Tabuhan',
 
     // Booking Show & Reschedule
     'reschedule_booking' => 'Jadwal Ulang Booking',

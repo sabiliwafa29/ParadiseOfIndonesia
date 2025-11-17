@@ -40,6 +40,7 @@ Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->
 // Booking package (bisa tanpa login)
 Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
 Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
+Route::get('/bookings/{booking}/payment', [BookingController::class, 'showPayment'])->name('bookings.payment');
 
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
 Route::get('/tour-sessions/{session}', [TourSessionController::class, 'show'])->name('tour-sessions.show');

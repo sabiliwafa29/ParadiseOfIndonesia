@@ -329,11 +329,15 @@ return [
 
     // Booking Package
     'book_this_package' => '预订此套餐',
+    'fill_booking_details' => '填写您的详细信息以完成预订',
+    'personal_information' => '个人信息',
+    'full_name' => '姓名',
     'select_date' => '选择日期',
     'additional_services' => '额外服务',
     'price_per_person' => '每人',
     'price_summary' => '价格摘要',
     'package_price' => '套餐价格',
+    'base_price' => '基础价格',
     'guide_service' => '导游服务',
     'transport_service' => '交通服务',
     'complete_your_package_booking' => '完成您的套餐预订',
@@ -342,6 +346,16 @@ return [
     'includes' => '包含',
     'guide' => '导游',
     'total' => '总计',
+    'guest' => '位客人',
+    'confirm_booking' => '确认预订',
+    'processing' => '处理中...',
+    'error' => '错误',
+    'select_route' => '选择旅游路线',
+    'route_description' => '选择您喜欢的套餐行程',
+    'ijen_route' => '伊真蓝火路线',
+    'ijen_description' => '夜间徒步见证著名的蓝火现象和伊真火山口壮观的日出',
+    'tabuhan_route' => '塔布汉岛浮潜路线',
+    'tabuhan_description' => '在塔布汉岛周围探索水下天堂，享受浮潜和海洋活动',
 
     // Booking Show & Reschedule
     'reschedule_booking' => '重新安排预订',
