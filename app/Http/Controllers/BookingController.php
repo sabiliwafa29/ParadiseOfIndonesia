@@ -226,58 +226,76 @@ class BookingController extends Controller
     }
 
     /**
-     * Show payment page for package booking
-     */
-    public function showPayment(Booking $booking)
-    {
-        // Authorization: allow if user_id matches OR email matches OR no auth (guest with session)
-        if (auth()->check()) {
-            $this->authorize('view', $booking);
-        } else {
-            // Guest: verify via session or email
-            $sessionBookingId = session('last_booking_id');
-            if ($sessionBookingId !== $booking->id) {
-                abort(403, 'Unauthorized access to this booking.');
-            }
-        }
-
-        // Ambil snap token dari session atau generate baru
-        $snapToken = session('booking_' . $booking->id . '_snap_token');
-        
-        if (!$snapToken && $booking->payment_status !== 'paid') {
-            $snapToken = $this->midtransService->createTransaction($booking);
-            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
-        }
-
-        return view('bookings.package-payment', compact('booking', 'snapToken'));
-    }
-
-    public function reschedule(Request $request, Booking $booking)
-    {
-        $this->authorize('view', $booking);
-
-        $request->validate([
-            'date' => 'required|date|after_or_equal:today',
-        ]);
-
-        $booking->update([
-            'date' => $request->date,
-            'status' => 'rescheduled',
-        ]);
-
+ * Show reschedule form
+ */
+public function reschedule(Booking $booking)
+{
+    // Authorization check
+    $this->authorize('view', $booking);
+    
+    // Hanya bisa reschedule booking yang confirmed atau pending
+    if (!in_array($booking->status, ['confirmed', 'pending', 'rescheduled'])) {
         return redirect()->route('my-bookings')
-            ->with('success', 'Booking rescheduled successfully to ' . \Carbon\Carbon::parse($request->date)->format('d M Y'));
+            ->with('error', __('Cannot reschedule this booking.'));
     }
+    
+    // Ambil data tour atau package
+    if ($booking->package) {
+        $item = $booking->package;
+        $type = 'package';
+    } else {
+        $item = $booking->tour;
+        $type = 'tour';
+    }
+    
+    return view('bookings.reschedule', compact('booking', 'item', 'type'));
+}
 
-    public function cancel(Booking $booking)
-    {
-        $this->authorize('view', $booking);
+/**
+ * Update rescheduled booking
+ */
+public function updateReschedule(Request $request, Booking $booking)
+{
+    // Authorization check
+    $this->authorize('view', $booking);
+    
+    // Validasi
+    $validated = $request->validate([
+        'date' => 'required|date|after_or_equal:today',
+        'reason' => 'nullable|string|max:500',
+    ]);
+    
+    // Update booking
+    $booking->update([
+        'date' => $validated['date'],
+        'status' => 'rescheduled',
+        'reschedule_reason' => $validated['reason'] ?? null,
+    ]);
+    
+    return redirect()->route('my-bookings')
+        ->with('success', 'Booking rescheduled successfully to ' . \Carbon\Carbon::parse($validated['date'])->format('d M Y'));
+}
 
-        $booking->update([
-            'status' => 'cancelled',
-        ]);
-
+/**
+ * Cancel a pending booking
+ */
+public function cancel(Booking $booking)
+{
+    // Authorization check
+    $this->authorize('view', $booking);
+    
+    // Hanya bisa cancel booking yang pending dan belum dibayar
+    if ($booking->status !== 'pending' || $booking->payment_status === 'paid') {
         return redirect()->route('my-bookings')
-            ->with('success', 'Booking cancelled successfully');
+            ->with('error', __('Cannot cancel this booking. Only pending unpaid bookings can be cancelled.'));
     }
+    
+    // Update status booking menjadi cancelled
+    $booking->update([
+        'status' => 'cancelled',
+    ]);
+    
+    return redirect()->route('my-bookings')
+        ->with('success', 'Booking cancelled successfully');
+}
 }
