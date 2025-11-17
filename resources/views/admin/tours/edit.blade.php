@@ -732,7 +732,7 @@
         const textarea = document.getElementById(textareaId);
         
         if (!textarea) {
-            console.error(`Textarea with id "${textareaId}" not found`);
+            // console.error(`Textarea with id "${textareaId}" not found`);
             return;
         }
 
@@ -756,8 +756,8 @@
             }, 3000);
             
         } catch (e) {
-            console.error('JSON Parse Error:', e);
-            alert('❌ Invalid JSON format!\n\nError: ' + e.message);
+            // console.error('JSON Parse Error:', e);
+            // alert('❌ Invalid JSON format!\n\nError: ' + e.message);
             
             // Visual feedback for error
             textarea.classList.add('border-red-500');
@@ -776,7 +776,7 @@
                     JSON.parse(textarea.value);
                     textarea.classList.remove('border-red-500');
                 } catch (e) {
-                    console.error(`Invalid JSON in ${fieldId}:`, e);
+                    // console.error(`Invalid JSON in ${fieldId}:`, e);
                     textarea.classList.add('border-red-500');
                     isValid = false;
                 }
@@ -784,7 +784,7 @@
         });
 
         if (!isValid) {
-            alert('❌ Please fix invalid JSON fields before submitting!');
+            // alert('❌ Please fix invalid JSON fields before submitting!');
             return false;
         }
         
@@ -856,7 +856,7 @@
         const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
 
         if (isNaN(usdPrice) || usdPrice <= 0) {
-            alert('❌ Please enter a valid USD price first!');
+            // alert('❌ Please enter a valid USD price first!');
             return;
         }
 
@@ -878,7 +878,7 @@
             cnyInput.classList.remove('border-green-500', 'bg-green-50');
         }, 3000);
 
-        alert(`✅ Converted!\n\n💵 USD: $${usdPrice}\n🇮🇩 IDR: Rp ${Number(idrPrice).toLocaleString()}\n🇨🇳 CNY: ¥${cnyPrice}`);
+        // alert(`✅ Converted!\n\n💵 USD: $${usdPrice}\n🇮🇩 IDR: Rp ${Number(idrPrice).toLocaleString()}\n🇨🇳 CNY: ¥${cnyPrice}`);
     }
 
     // Real-time exchange rate update
@@ -890,7 +890,7 @@
             const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
             
             // Show preview (optional)
-            console.log('USD: $' + usdPrice + ' ≈ Rp ' + (usdPrice * idrRate).toLocaleString() + ' ≈ ¥' + (usdPrice * cnyRate).toFixed(2));
+            // console.log('USD: $' + usdPrice + ' ≈ Rp ' + (usdPrice * idrRate).toLocaleString() + ' ≈ ¥' + (usdPrice * cnyRate).toFixed(2));
         }
     });
 
@@ -901,6 +901,6 @@
         copyTemplate: (fieldId, template) => copyToClipboard(template, fieldId)
     };
 
-    console.log('✅ Tour form script loaded successfully');
+    // console.log('✅ Tour form script loaded successfully');
 </script>
 @endsection

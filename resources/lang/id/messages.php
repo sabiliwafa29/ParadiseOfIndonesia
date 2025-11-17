@@ -355,6 +355,9 @@ return [
     'complete_your_package_booking' => 'Selesaikan Pemesanan Paket Anda',
     'package_booking' => 'Pemesanan Paket',
     'login_to_book' => 'Masuk untuk Memesan',
+    'includes' => 'Termasuk',
+    'guide' => 'Pemandu',
+    'total' => 'Total',
 
     // Booking Show & Reschedule
     'reschedule_booking' => 'Jadwal Ulang Booking',

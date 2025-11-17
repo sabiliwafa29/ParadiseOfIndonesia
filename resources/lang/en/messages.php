@@ -338,6 +338,9 @@ return [
     'complete_your_package_booking' => 'Complete Your Package Booking',
     'package_booking' => 'Package Booking',
     'login_to_book' => 'Login to Book',
+    'includes' => 'Includes',
+    'guide' => 'Guide',
+    'total' => 'Total',
 
     // Booking Show & Reschedule
     'reschedule_booking' => 'Reschedule Booking',

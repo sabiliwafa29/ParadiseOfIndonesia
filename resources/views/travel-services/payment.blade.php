@@ -29,21 +29,21 @@
     document.getElementById('pay-button').addEventListener('click', function () {
         window.snap.pay('{{ $snapToken }}', {
             onSuccess: function (result) {
-                console.log(result);
-                alert('Payment successful!');
+                // console.log(result);
+                // alert('Payment successful!');
                 window.location.href = "{{ route('travel-services.payment.success') }}";
             },
             onPending: function (result) {
-                console.log(result);
-                alert('Payment pending.');
+                // console.log(result);
+                // alert('Payment pending.');
                 window.location.href = "{{ route('travel-services.payment.success') }}";
             },
             onError: function (result) {
-                console.error(result);
-                alert('Payment failed. Please try again.');
+                // console.error(result);
+                // alert('Payment failed. Please try again.');
             },
             onClose: function () {
-                alert('You closed the payment window without completing the payment.');
+                // alert('You closed the payment window without completing the payment.');
             }
         });
     });

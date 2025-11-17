@@ -339,6 +339,9 @@ return [
     'complete_your_package_booking' => '完成您的套餐预订',
     'package_booking' => '套餐预订',
     'login_to_book' => '登录预订',
+    'includes' => '包含',
+    'guide' => '导游',
+    'total' => '总计',
 
     // Booking Show & Reschedule
     'reschedule_booking' => '重新安排预订',

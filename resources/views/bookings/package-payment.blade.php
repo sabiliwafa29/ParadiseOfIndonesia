@@ -155,7 +155,7 @@
         
     })
     .catch(error => {
-        console.error('❌ [DEBUG] API endpoint NOT accessible:', error);
+        // console.error('❌ [DEBUG] API endpoint NOT accessible:', error);
     });
     
     // Define function BEFORE loading Midtrans script
@@ -165,12 +165,12 @@
         const payButton = document.getElementById('pay-button');
         
         if (!payButton) {
-            console.error('❌ [DEBUG] Pay button not found!');
+            // console.error('❌ [DEBUG] Pay button not found!');
             return;
         }
         
         if (typeof snap === 'undefined') {
-            console.error('❌ [DEBUG] Snap is still undefined after load!');
+            // console.error('❌ [DEBUG] Snap is still undefined after load!');
             return;
         }
         
@@ -201,22 +201,22 @@
                             
                             if (ok) {
                                 
-                                alert("Payment success! Your booking has been paid.");
+                                // alert("Payment success! Your booking has been paid.");
                             } else {
-                                console.error('❌ [DEBUG] Server returned error:', data);
-                                alert("Payment success, but status update failed. Please contact support. Error: " + (data.message || 'Unknown error'));
+                                // console.error('❌ [DEBUG] Server returned error:', data);
+                                // alert("Payment success, but status update failed. Please contact support. Error: " + (data.message || 'Unknown error'));
                             }
                             
                             window.location.reload();
                         })
                         .catch(error => {
-                            console.error('❌ [DEBUG] Error updating status:', error);
-                            console.error('❌ [DEBUG] Error details:', {
+                            // console.error('❌ [DEBUG] Error updating status:', error);
+                            // console.error('❌ [DEBUG] Error details:', {
                                 name: error.name,
                                 message: error.message,
                                 stack: error.stack
                             });
-                            alert("Payment success! Please refresh the page. (Error: " + error.message + ")");
+                            // alert("Payment success! Please refresh the page. (Error: " + error.message + ")");
                             window.location.reload();
                         });
                     },
@@ -234,28 +234,28 @@
                         .then(response => response.json())
                         .then(data => {
                             
-                            alert("Payment is being processed. Please check your booking status.");
+                            // alert("Payment is being processed. Please check your booking status.");
                             window.location.reload();
                         })
                         .catch(error => {
-                            console.error('❌ [DEBUG] Error updating pending status:', error);
-                            alert("Payment is being processed. Please refresh the page.");
+                            // console.error('❌ [DEBUG] Error updating pending status:', error);
+                            // alert("Payment is being processed. Please refresh the page.");
                             window.location.reload();
                         });
                     },
                     onError: function(result){
-                        console.error('❌ [DEBUG] Payment ERROR', result);
-                        alert("Payment failed! Please try again.");
+                        // console.error('❌ [DEBUG] Payment ERROR', result);
+                        // alert("Payment failed! Please try again.");
                     },
                     onClose: function(){
                         
-                        alert('You closed the payment window without completing the payment');
+                        // alert('You closed the payment window without completing the payment');
                     }
                 });
                 
             } catch (error) {
-                console.error('❌ [DEBUG] Error calling snap.pay():', error);
-                alert('Error: ' + error.message);
+                // console.error('❌ [DEBUG] Error calling snap.pay():', error);
+                // alert('Error: ' + error.message);
             }
         };
         

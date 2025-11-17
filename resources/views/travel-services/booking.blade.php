@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             return data.results || [];
         } catch (error) {
-            console.error('Search error:', error);
+            // console.error('Search error:', error);
             return [];
         }
     }
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             return data.id;
         } catch (error) {
-            console.error('Create location error:', error);
+            // console.error('Create location error:', error);
             return null;
         }
     }
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
             } catch (error) {
-                console.error('Distance calculation error:', error);
+                // console.error('Distance calculation error:', error);
                 distanceDisplay.textContent = 'Error calculating distance';
                 totalPriceDisplay.textContent = 'Rp 0';
 
@@ -383,7 +383,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     suggestionsBox.classList.remove('hidden');
                     loadingIndicator.classList.add('hidden');
                 } catch (error) {
-                    console.error('Autocomplete error:', error);
+                    // console.error('Autocomplete error:', error);
                     suggestionsBox.innerHTML = '<div class="p-3 text-sm text-red-500 text-center">Error loading locations. Please try again.</div>';
                     suggestionsBox.classList.remove('hidden');
                     loadingIndicator.classList.add('hidden');
