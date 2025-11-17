@@ -225,6 +225,31 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking', 'snapToken'));
     }
 
+
+public function showPayment(Booking $booking)
+    {
+        // Authorization: allow if user_id matches OR email matches OR no auth (guest with session)
+        if (auth()->check()) {
+            $this->authorize('view', $booking);
+        } else {
+            // Guest: verify via session or email
+            $sessionBookingId = session('last_booking_id');
+            if ($sessionBookingId !== $booking->id) {
+                abort(403, 'Unauthorized access to this booking.');
+            }
+        }
+
+        // Ambil snap token dari session atau generate baru
+        $snapToken = session('booking_' . $booking->id . '_snap_token');
+        
+        if (!$snapToken && $booking->payment_status !== 'paid') {
+            $snapToken = $this->midtransService->createTransaction($booking);
+            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
+        }
+
+        return view('bookings.package-payment', compact('booking', 'snapToken'));
+    }
+
     /**
  * Show reschedule form
  */
@@ -297,5 +322,5 @@ public function cancel(Booking $booking)
     
     return redirect()->route('my-bookings')
         ->with('success', 'Booking cancelled successfully');
-}
+}z
 }
