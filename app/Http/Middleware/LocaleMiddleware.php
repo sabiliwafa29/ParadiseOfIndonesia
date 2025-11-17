@@ -11,18 +11,15 @@ class LocaleMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        // List locale yang tersedia
+        $availableLocales = ['en', 'id', 'zh'];
+        
         // Cek dari session
-        if (Session::has('locale')) {
+        if (Session::has('locale') && in_array(Session::get('locale'), $availableLocales)) {
             $locale = Session::get('locale');
-        } 
-        // Atau dari user preference (jika sudah login)
-        elseif (auth()->check() && auth()->user()->locale) {
-            $locale = auth()->user()->locale;
-        } 
-        // Default
-        else {
-            // Auto detect dari browser
-            $locale = $request->getPreferredLanguage(['id', 'en', 'zh']) ?? config('app.locale');
+        } else {
+            // Default locale
+            $locale = config('app.locale', 'en');
         }
 
         // Set locale
