@@ -35,10 +35,14 @@ class DashboardController extends Controller
 
         // Recent Bookings (Last 5)
         if ($hasBookingModel) {
-            $recentBookings = Booking::with(['user', 'tour'])
+            $recentBookings = Booking::with(['user', 'tour', 'package'])
                 ->latest()
                 ->take(5)
-                ->get();
+                ->get()
+                ->filter(function($booking) {
+                    // Only show bookings that have user and (tour or package)
+                    return $booking->user && ($booking->tour || $booking->package);
+                });
         } else {
             $recentBookings = collect([]);
         }
@@ -133,14 +137,33 @@ class DashboardController extends Controller
 
         // Get recent bookings
         if ($hasBookingModel) {
-            $recentBookingActivities = Booking::with('user', 'tour')
+            $recentBookingActivities = Booking::with(['user', 'tour', 'package'])
                 ->latest()
                 ->take(7)
                 ->get()
+                ->filter(function($booking) {
+                    // Filter out bookings without user or without tour/package
+                    return $booking->user && ($booking->tour || $booking->package);
+                })
                 ->map(function($booking) {
+                    // Get user name (from user or booking data)
+                    $userName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+                    
+                    // Get tour/package name
+                    if ($booking->tour) {
+                        $itemName = $booking->tour->name;
+                        $itemType = 'tour';
+                    } elseif ($booking->package) {
+                        $itemName = $booking->package->name;
+                        $itemType = 'package';
+                    } else {
+                        $itemName = 'Unknown';
+                        $itemType = 'booking';
+                    }
+                    
                     return [
                         'type' => 'booking',
-                        'message' => "{$booking->user->name} booked '{$booking->tour->name}'",
+                        'message' => "{$userName} booked {$itemType} '{$itemName}'",
                         'created_at' => $booking->created_at,
                         'icon' => 'booking'
                     ];

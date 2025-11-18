@@ -183,12 +183,22 @@
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2">
+                                        @php
+                                            $userName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+                                            $userInitial = substr($userName, 0, 1);
+                                        @endphp
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold">
-                                            {{ substr($booking->user->name, 0, 1) }}
+                                            {{ $userInitial }}
                                         </div>
                                         <div>
-                                            <h3 class="font-semibold text-gray-800">{{ $booking->user->name }}</h3>
-                                            <p class="text-sm text-gray-600">{{ $booking->tour->name }}</p>
+                                            <h3 class="font-semibold text-gray-800">{{ $userName }}</h3>
+                                            @if($booking->tour)
+                                                <p class="text-sm text-gray-600">{{ $booking->tour->name }}</p>
+                                            @elseif($booking->package)
+                                                <p class="text-sm text-gray-600">{{ $booking->package->name }}</p>
+                                            @else
+                                                <p class="text-sm text-gray-600">-</p>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
@@ -257,9 +267,9 @@
                                             <svg class="w-4 h-4 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                                             </svg>
-                                            {{ $tour->bookings_count }} bookings
+                                            {{ $tour->bookings_count ?? 0 }} bookings
                                         </span>
-                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price) }}</span>
+                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price ?? 0) }}</span>
                                     </div>
                                 </div>
                             </div>
