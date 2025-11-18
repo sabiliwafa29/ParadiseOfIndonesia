@@ -1,166 +1,333 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-semibold mb-4">Edit Tour Package</h1>
-
-    @if($errors->any())
-        <div class="mb-4 bg-red-50 border border-red-200 p-3 rounded">
-            <ul class="text-sm text-red-700">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block mb-1">Name (ID)</label>
-                <input type="text" name="name_id" value="{{ old('name_id', $tourPackage->name_id) }}" class="w-full border p-2" required>
-            </div>
-            <div>
-                <label class="block mb-1">Name (EN)</label>
-                <input type="text" name="name_en" value="{{ old('name_en', $tourPackage->name_en) }}" class="w-full border p-2" required>
-            </div>
-            <div>
-                <label class="block mb-1">Name (ZH)</label>
-                <input type="text" name="name_zh" value="{{ old('name_zh', $tourPackage->name_zh) }}" class="w-full border p-2" required>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="block mb-1">Description (ID)</label>
-                <textarea name="description_id" class="w-full border p-2" rows="3">{{ old('description_id', $tourPackage->description_id) }}</textarea>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block mb-1">Description (EN)</label>
-                <textarea name="description_en" class="w-full border p-2" rows="3">{{ old('description_en', $tourPackage->description_en) }}</textarea>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block mb-1">Description (ZH)</label>
-                <textarea name="description_zh" class="w-full border p-2" rows="3">{{ old('description_zh', $tourPackage->description_zh) }}</textarea>
-            </div>
-
-            <div>
-                <label class="block mb-1">Price</label>
-                <input type="number" step="0.01" name="price" value="{{ old('price', $tourPackage->price) }}" class="w-full border p-2" required>
-            </div>
-
-            <div>
-                <label class="block mb-1">Includes Guide</label>
-                <input type="checkbox" name="includes_guide" value="1" {{ old('includes_guide', $tourPackage->includes_guide) ? 'checked' : '' }}>
-            </div>
-
-            <div>
-                <label class="block mb-1">Includes Transport</label>
-                <input type="checkbox" name="includes_transport" value="1" {{ old('includes_transport', $tourPackage->includes_transport) ? 'checked' : '' }}>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="block mb-1">Tours (select multiple)</label>
-                <select name="tours[]" multiple class="w-full border p-2">
-                    @foreach(App\Models\Tour::all() as $t)
-                        <option value="{{ $t->id }}" {{ in_array($t->id, old('tours', $tourPackage->tours->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}>{{ $t->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="block mb-1">Image</label>
-                <input type="file" name="image" class="w-full">
-                @if($tourPackage->image)
-                    <p class="mt-2">Current image: <img src="{{ Storage::url($tourPackage->image) }}" alt="" class="h-24"></p>
-                @endif
-            </div>
-        </div>
-
-        <div class="mt-4">
-            <button class="px-4 py-2 bg-emerald-500 text-white rounded">Save Changes</button>
-            <a href="{{ route('admin.tour-packages.index') }}" class="ml-2 text-gray-600">Cancel</a>
-        </div>
-    </form>
-</div>
-@endsection
 @extends('layouts.admin')
 
 @section('content')
-<div class="min-h-screen bg-emerald-50 p-8">
-    <h1 class="text-3xl font-bold mb-6">Edit Tour Package</h1>
-
-    @if ($errors->any())
-        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded shadow">
-            <ul class="list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" method="POST" enctype="multipart/form-data" class="max-w-3xl">
-        @csrf
-        @method('PUT')
-
-        <div class="mb-4">
-            <label for="name_id" class="block font-semibold mb-1">Nama (ID)</label>
-            <input type="text" name="name_id" id="name_id" value="{{ old('name_id', $tourPackage->name_id) }}" required class="w-full border border-gray-300 rounded px-3 py-2" />
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <a href="{{ route('admin.tour-packages.index') }}" 
+                   class="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-semibold transition-colors group">
+                    <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Kembali
+                </a>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Edit Tour Package</h1>
+            <p class="text-gray-600">Update informasi paket wisata</p>
         </div>
 
-        <div class="mb-4">
-            <label for="name_en" class="block font-semibold mb-1">Nama (EN)</label>
-            <input type="text" name="name_en" id="name_en" value="{{ old('name_en', $tourPackage->name_en) }}" required class="w-full border border-gray-300 rounded px-3 py-2" />
-        </div>
+        <!-- Error Messages -->
+        @if ($errors->any())
+            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md">
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="font-bold text-red-800 mb-2">Terdapat beberapa kesalahan:</p>
+                        <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
 
-        <div class="mb-4">
-            <label for="name_zh" class="block font-semibold mb-1">Nama (ZH)</label>
-            <input type="text" name="name_zh" id="name_zh" value="{{ old('name_zh', $tourPackage->name_zh) }}" required class="w-full border border-gray-300 rounded px-3 py-2" />
-        </div>
+        <!-- Form -->
+        <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" 
+              method="POST" 
+              enctype="multipart/form-data" 
+              class="space-y-6">
+            @csrf
+            @method('PUT')
 
-        <div class="mb-4">
-            <label for="description_id" class="block font-semibold mb-1">Deskripsi (ID)</label>
-            <textarea name="description_id" id="description_id" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2">{{ old('description_id', $tourPackage->description_id) }}</textarea>
-        </div>
+            <!-- Package Names Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    Nama Package
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Indonesian -->
+                    <div>
+                        <label for="name_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Package (ID) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">ID</span>
+                            <input type="text" 
+                                   name="name_id" 
+                                   id="name_id" 
+                                   value="{{ old('name_id', $tourPackage->name_id) }}" 
+                                   required 
+                                   class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_id') border-red-500 @enderror" 
+                                   placeholder="Nama dalam Bahasa Indonesia">
+                        </div>
+                        @error('name_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-        <div class="mb-4">
-            <label for="description_en" class="block font-semibold mb-1">Deskripsi (EN)</label>
-            <textarea name="description_en" id="description_en" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2">{{ old('description_en', $tourPackage->description_en) }}</textarea>
-        </div>
+                    <!-- English -->
+                    <div>
+                        <label for="name_en" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Package Name (EN) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">EN</span>
+                            <input type="text" 
+                                   name="name_en" 
+                                   id="name_en" 
+                                   value="{{ old('name_en', $tourPackage->name_en) }}" 
+                                   required 
+                                   class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_en') border-red-500 @enderror" 
+                                   placeholder="Name in English">
+                        </div>
+                        @error('name_en')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-        <div class="mb-4">
-            <label for="description_zh" class="block font-semibold mb-1">Deskripsi (ZH)</label>
-            <textarea name="description_zh" id="description_zh" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2">{{ old('description_zh', $tourPackage->description_zh) }}</textarea>
-        </div>
+                    <!-- Chinese -->
+                    <div>
+                        <label for="name_zh" class="block text-sm font-semibold text-gray-700 mb-2">
+                            套餐名称 (ZH) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-medium rounded">ZH</span>
+                            <input type="text" 
+                                   name="name_zh" 
+                                   id="name_zh" 
+                                   value="{{ old('name_zh', $tourPackage->name_zh) }}" 
+                                   required 
+                                   class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_zh') border-red-500 @enderror" 
+                                   placeholder="中文名称">
+                        </div>
+                        @error('name_zh')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
 
-        <div class="mb-4">
-            <label for="price" class="block font-semibold mb-1">Harga</label>
-            <input type="number" name="price" id="price" value="{{ old('price', $tourPackage->price) }}" required min="0" step="0.01" class="w-full border border-gray-300 rounded px-3 py-2" />
-        </div>
+            <!-- Descriptions Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                    </svg>
+                    Deskripsi Package
+                </h2>
 
-        <div class="mb-4">
-            <label for="image" class="block font-semibold mb-1">Gambar</label>
-            @if($tourPackage->image)
-                    <img src="{{ Storage::url($tourPackage->image) }}" alt="Gambar Tour Package" class="mb-2 max-h-48 rounded" />
-                @endif
-            <input type="file" name="image" id="image" class="w-full" />
-        </div>
+                <div class="space-y-4">
+                    <!-- Indonesian Description -->
+                    <div>
+                        <label for="description_id" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Deskripsi (ID) <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="description_id" 
+                                  id="description_id" 
+                                  rows="4" 
+                                  required 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_id') border-red-500 @enderror" 
+                                  placeholder="Deskripsi lengkap dalam Bahasa Indonesia">{{ old('description_id', $tourPackage->description_id) }}</textarea>
+                        @error('description_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-        <div class="mb-4 flex items-center space-x-4">
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="includes_guide" value="1" {{ old('includes_guide', $tourPackage->includes_guide) ? 'checked' : '' }} class="form-checkbox" />
-                <span class="ml-2">Includes Guide</span>
-            </label>
+                    <!-- English Description -->
+                    <div>
+                        <label for="description_en" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Description (EN) <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="description_en" 
+                                  id="description_en" 
+                                  rows="4" 
+                                  required 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_en') border-red-500 @enderror" 
+                                  placeholder="Full description in English">{{ old('description_en', $tourPackage->description_en) }}</textarea>
+                        @error('description_en')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-            <label class="inline-flex items-center">
-                <input type="checkbox" name="includes_transport" value="1" {{ old('includes_transport', $tourPackage->includes_transport) ? 'checked' : '' }} class="form-checkbox" />
-                <span class="ml-2">Includes Transport</span>
-            </label>
-        </div>
+                    <!-- Chinese Description -->
+                    <div>
+                        <label for="description_zh" class="block text-sm font-semibold text-gray-700 mb-2">
+                            描述 (ZH) <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="description_zh" 
+                                  id="description_zh" 
+                                  rows="4" 
+                                  required 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_zh') border-red-500 @enderror" 
+                                  placeholder="完整的中文描述">{{ old('description_zh', $tourPackage->description_zh) }}</textarea>
+                        @error('description_zh')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
 
-        <button type="submit" class="bg-emerald-600 text-white px-6 py-2 rounded hover:bg-emerald-700 transition">Update</button>
-        <a href="{{ route('admin.tour-packages.index') }}" class="ml-4 text-gray-600 hover:underline">Batal</a>
-    </form>
+            <!-- Price & Features Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Harga & Fasilitas
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Price -->
+                    <div>
+                        <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Harga (IDR) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500 font-semibold">Rp</span>
+                            <input type="number" 
+                                   name="price" 
+                                   id="price" 
+                                   value="{{ old('price', $tourPackage->price) }}" 
+                                   required 
+                                   min="0" 
+                                   step="0.01" 
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror" 
+                                   placeholder="0">
+                        </div>
+                        @error('price')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Features -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Fasilitas Termasuk</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
+                                <input type="checkbox" 
+                                       name="includes_guide" 
+                                       value="1" 
+                                       {{ old('includes_guide', $tourPackage->includes_guide) ? 'checked' : '' }} 
+                                       class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                                <span class="ml-3 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="font-medium text-gray-700">Includes Guide</span>
+                                </span>
+                            </label>
+
+                            <label class="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-emerald-500 transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
+                                <input type="checkbox" 
+                                       name="includes_transport" 
+                                       value="1" 
+                                       {{ old('includes_transport', $tourPackage->includes_transport) ? 'checked' : '' }} 
+                                       class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
+                                <span class="ml-3 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                    </svg>
+                                    <span class="font-medium text-gray-700">Includes Transport</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Gambar Package
+                </h2>
+
+                <div class="space-y-4">
+                    @if($tourPackage->image)
+                        <div class="relative inline-block">
+                            <img src="{{ Storage::url($tourPackage->image) }}" 
+                                 alt="Current Package Image" 
+                                 class="max-h-64 rounded-lg shadow-md border-2 border-gray-200">
+                            <span class="absolute top-2 left-2 px-3 py-1 bg-emerald-500 text-white text-xs font-semibold rounded-full">Current Image</span>
+                        </div>
+                    @endif
+
+                    <div>
+                        <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Upload Gambar Baru (Opsional)
+                        </label>
+                        <input type="file" 
+                               name="image" 
+                               id="image" 
+                               accept="image/*"
+                               class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 hover:border-emerald-400 transition-colors cursor-pointer">
+                        <p class="mt-2 text-sm text-gray-500">Format: JPG, PNG, GIF (Max: 2MB)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tours Selection (if applicable) -->
+            @if(\App\Models\Tour::count() > 0)
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Tours Terkait
+                </h2>
+
+                <div>
+                    <label for="tours" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Pilih Tours (Multiple Select)
+                    </label>
+                    <select name="tours[]" 
+                            id="tours" 
+                            multiple 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                            size="5">
+                        @foreach(\App\Models\Tour::all() as $tour)
+                            <option value="{{ $tour->id }}" 
+                                    {{ in_array($tour->id, old('tours', $tourPackage->tours->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}
+                                    class="py-2">
+                                {{ $tour->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <p class="mt-2 text-sm text-gray-500">Tekan Ctrl (Cmd di Mac) untuk memilih beberapa tours</p>
+                </div>
+            </div>
+            @endif
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                <button type="submit" 
+                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Update Package
+                </button>
+                <a href="{{ route('admin.tour-packages.index') }}" 
+                   class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
