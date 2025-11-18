@@ -43,188 +43,6 @@
                     <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Tour</h1>
                     <p class="text-gray-600">Update the details of <span class="font-semibold text-emerald-600">{{ $tour->name }}</span></p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('tours.show', $tour) }}" 
-                       target="_blank"
-                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                        Preview
-                    </a>
-                    <a href="{{ route('admin.tours.index') }}" 
-                       class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Back
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Success Message --}}
-        @if(session('success'))
-        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-lg p-4 shadow-sm">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-emerald-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                <p class="text-emerald-800 font-medium">{{ session('success') }}</p>
-            </div>
-        </div>
-        @endif
-
-        {{-- Error Messages --}}
-        @if($errors->any())
-        <div class="mb-6 bg-red-50 border-l-4 border-red-500 rounded-r-lg p-4 shadow-sm">
-            <div class="flex items-start">
-                <svg class="w-5 h-5 text-red-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                <div>
-                    <p class="text-red-800 font-medium mb-2">Please fix the following errors:</p>
-                    <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-        @endif
-
-        {{-- Form Card --}}
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
-                <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Tour Information
-                </h3>
-            </div>
-            
-            <div class="p-6">
-                @include('admin.tours._form', ['tour' => $tour, 'destinations' => $destinations])
-            </div>
-        </div>
-
-        {{-- Quick Actions Card --}}
-        <div class="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
-                <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
-            </div>
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <a href="{{ route('tours.show', $tour) }}" 
-                       target="_blank"
-                       class="flex items-center justify-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-medium">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                        </svg>
-                        View on Website
-                    </a>
-                    
-                    <a href="{{ route('admin.tours.create') }}" 
-                       class="flex items-center justify-center px-4 py-3 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 transition font-medium">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Create New Tour
-                    </a>
-                    
-                    <form action="{{ route('admin.tours.destroy', $tour) }}" method="POST" 
-                          onsubmit="return confirm('Are you sure you want to delete this tour? This action cannot be undone.');"
-                          class="w-full">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" 
-                                class="w-full flex items-center justify-center px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition font-medium">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                            Delete Tour
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        {{-- Tour Info Card --}}
-        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <div class="flex items-start">
-                <svg class="w-6 h-6 text-blue-600 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div>
-                    <h4 class="text-sm font-semibold text-blue-900 mb-2">Tour Details</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-blue-800">
-                        <div>
-                            <span class="font-semibold">Status:</span> 
-                            <span class="px-2 py-1 rounded-full text-xs {{ $tour->status === 'active' ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800' }}">
-                                {{ ucfirst($tour->status ?? 'active') }}
-                            </span>
-                        </div>
-                        <div>
-                            <span class="font-semibold">Featured:</span> {{ $tour->featured ? 'Yes' : 'No' }}
-                        </div>
-                        <div>
-                            <span class="font-semibold">Created:</span> {{ $tour->created_at->format('M d, Y') }}
-                        </div>
-                        <div>
-                            <span class="font-semibold">Updated:</span> {{ $tour->updated_at->format('M d, Y') }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('content')
-<div class="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-8">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {{-- Breadcrumb --}}
-        <nav class="flex mb-6" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-emerald-600">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                        </svg>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <a href="{{ route('admin.tours.index') }}" class="ml-1 text-sm font-medium text-gray-600 hover:text-emerald-600 md:ml-2">Tours</a>
-                    </div>
-                </li>
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="ml-1 text-sm font-medium text-emerald-600 md:ml-2">Edit Tour</span>
-                    </div>
-                </li>
-            </ol>
-        </nav>
-
-        {{-- Header --}}
-        <div class="mb-8">
-            <div class="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Edit Tour</h1>
-                    <p class="text-gray-600">Update the details of <span class="font-semibold text-emerald-600">{{ $tour->name }}</span></p>
-                </div>
                 <div class="flex items-center space-x-3 flex-wrap gap-2">
                     <a href="{{ route('tours.show', $tour) }}?from=admin" 
                        target="_blank"
@@ -248,14 +66,19 @@
 
         {{-- Success Message --}}
         @if(session('success'))
-        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-lg p-4 shadow-sm">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-emerald-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                <p class="text-emerald-800 font-medium">{{ session('success') }}</p>
-            </div>
-        </div>
+            <x-alert type="success">
+                <p class="font-medium">{{ session('success') }}</p>
+            </x-alert>
+        @endif
+        @if($errors->any())
+            <x-alert type="error">
+                <p class="font-medium mb-2">Please fix the following errors:</p>
+                <ul class="list-disc list-inside text-sm space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </x-alert>
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -479,7 +302,7 @@
                                 @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                                 @if($tour->image)
                                     <div class="mt-3">
-                                        <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="h-32 object-cover rounded-lg">
+                                        <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="h-32 object-cover rounded-lg" onerror="this.onerror=null;this.src='{{ asset('images/fallback.png') }}';">
                                     </div>
                                 @endif
                             </div>
@@ -511,7 +334,7 @@
                             <textarea name="itinerary" id="itinerary" rows="8"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm @error('itinerary') border-red-500 @enderror"
                                 placeholder='[{"day":"DAY 1","activities":[{"time":"18:00","description":"Penjemputan di bandara"}]}]'>{{ old('itinerary', $itineraryValue) }}</textarea>
-                            @error('itinerary')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            <span id="itinerary-error" class="text-red-500 text-sm mt-1 hidden">Invalid JSON format</span>
                             <p class="text-xs text-gray-500 mt-2">Format: [{"day":"DAY 1","activities":[{"time":"HH:MM","description":"Activity description"}]}]</p>
                             <button type="button" onclick="formatJSON('itinerary')" class="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition">
                                 Format JSON
@@ -845,61 +668,35 @@
 
         jsonFields.forEach(fieldId => {
             const textarea = document.getElementById(fieldId);
+            const errorSpan = document.getElementById(fieldId + '-error');
             if (textarea && textarea.value.trim()) {
                 try {
                     JSON.parse(textarea.value);
                     textarea.classList.remove('border-red-500');
+                    if (errorSpan) errorSpan.classList.add('hidden');
                 } catch (e) {
-                    // console.error(`Invalid JSON in ${fieldId}:`, e);
                     textarea.classList.add('border-red-500');
+                    if (errorSpan) errorSpan.classList.remove('hidden');
                     isValid = false;
                 }
             }
         });
 
         if (!isValid) {
-            // alert('❌ Please fix invalid JSON fields before submitting!');
+            // Optionally scroll to first error
+            const firstError = document.querySelector('.border-red-500');
+            if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return false;
         }
         
         return true;
     }
 
+
     // Initialize format buttons and validation
     document.addEventListener('DOMContentLoaded', function() {
         const jsonFields = ['itinerary', 'includes', 'excludes'];
-        
-        jsonFields.forEach(fieldId => {
-            const textarea = document.getElementById(fieldId);
-            
-            if (textarea) {
-                const container = textarea.parentElement;
-                
-                // Create format button
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.textContent = '✨ Format JSON';
-                btn.className = 'mt-2 px-3 py-1.5 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition font-medium inline-block';
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    formatJSON(fieldId);
-                };
-                
-                container.appendChild(btn);
-                
-                // Add real-time validation on blur
-                textarea.addEventListener('blur', function() {
-                    if (this.value.trim() && this.value.trim() !== '[]' && this.value.trim() !== '{}') {
-                        try {
-                            JSON.parse(this.value);
-                            this.classList.remove('border-red-500');
-                        } catch (e) {
-                            this.classList.add('border-red-500');
-                        }
-                    }
-                });
-            }
-        });
+
         
         // Attach validation to form submit
         const form = document.querySelector('form');
@@ -925,35 +722,43 @@
 
     // Auto-convert USD to other currencies
     function autoConvertPrices() {
-        const usdPrice = parseFloat(document.getElementById('price_usd').value);
-        const idrRate = parseFloat(document.getElementById('exchange_rate_idr').value) || 15000;
-        const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
+        const usdInput = document.getElementById('price_usd');
+        const idrInput = document.getElementById('price_idr');
+        const cnyInput = document.getElementById('price_cny');
+        const idrRateInput = document.getElementById('exchange_rate_idr');
+        const cnyRateInput = document.getElementById('exchange_rate_cny');
+
+        if (!usdInput || !idrInput || !cnyInput || !idrRateInput || !cnyRateInput) return;
+
+        const usdPrice = parseFloat(usdInput.value);
+        const idrRate = parseFloat(idrRateInput.value) || 15000;
+        const cnyRate = parseFloat(cnyRateInput.value) || 6.5;
 
         if (isNaN(usdPrice) || usdPrice <= 0) {
-            // alert('❌ Please enter a valid USD price first!');
+            showTemporaryMessage(usdInput, 'Please enter a valid USD price');
             return;
         }
 
-        const idrPrice = (usdPrice * idrRate).toFixed(2);
-        const cnyPrice = (usdPrice * cnyRate).toFixed(2);
+        idrInput.value = (usdPrice * idrRate).toFixed(2);
+        cnyInput.value = (usdPrice * cnyRate).toFixed(2);
 
-        document.getElementById('price_idr').value = idrPrice;
-        document.getElementById('price_cny').value = cnyPrice;
-
-        // Visual feedback
-        const idrInput = document.getElementById('price_idr');
-        const cnyInput = document.getElementById('price_cny');
-        
-        idrInput.classList.add('border-green-500', 'bg-green-50');
-        cnyInput.classList.add('border-green-500', 'bg-green-50');
-        
-        setTimeout(() => {
-            idrInput.classList.remove('border-green-500', 'bg-green-50');
-            cnyInput.classList.remove('border-green-500', 'bg-green-50');
-        }, 3000);
-
-        // alert(`✅ Converted!\n\n💵 USD: $${usdPrice}\n🇮🇩 IDR: Rp ${Number(idrPrice).toLocaleString()}\n🇨🇳 CNY: ¥${cnyPrice}`);
+        [idrInput, cnyInput].forEach(input => {
+            input.classList.add('border-green-500', 'bg-green-50');
+            setTimeout(() => {
+                input.classList.remove('border-green-500', 'bg-green-50');
+            }, 3000);
+        });
     }
+
+    function showTemporaryMessage(element, message) {
+        const msg = document.createElement('div');
+        msg.textContent = message;
+        msg.className = 'absolute bg-red-500 text-white text-xs rounded px-2 py-1 mt-1';
+        element.parentElement.style.position = 'relative';
+        element.parentElement.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
+    }
+
 
     // Real-time exchange rate update
     document.getElementById('price_usd').addEventListener('input', function() {
