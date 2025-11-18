@@ -56,26 +56,37 @@ class TourController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-            'price_usd' => 'required|numeric|min:0',
-            'price_idr' => 'nullable|numeric|min:0',
-            'price_cny' => 'nullable|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'destination_id' => 'required|exists:destinations,id',
             'image' => 'nullable|image|max:4096',
-            'itinerary' => 'nullable|json',
-            'includes' => 'nullable|json',
-            'excludes' => 'nullable|json',
+            'itinerary' => 'nullable|string',
+            'includes' => 'nullable|string',
+            'excludes' => 'nullable|string',
             'featured' => 'nullable|boolean',
-            'status' => 'nullable|in:active,inactive',
-            'target_market' => 'required|in:domestic,international,both',
-            'exchange_rate_idr' => 'nullable|numeric|min:0',
-            'exchange_rate_cny' => 'nullable|numeric|min:0',
         ]);
 
+        // Set price_usd from price field
+        $data['price_usd'] = $data['price'];
+        unset($data['price']);
+
+        // Set default values
         $data['featured'] = $request->has('featured') ? true : false;
-        $data['status'] = $data['status'] ?? 'active';
-        $data['exchange_rate_idr'] = $data['exchange_rate_idr'] ?? 15000;
-        $data['exchange_rate_cny'] = $data['exchange_rate_cny'] ?? 6.5;
+        $data['status'] = 'active';
+        $data['target_market'] = 'both';
+        $data['exchange_rate_idr'] = 15000;
+        $data['exchange_rate_cny'] = 6.5;
+
+        // Convert text to array for itinerary, includes, excludes
+        if (!empty($data['itinerary'])) {
+            $data['itinerary'] = json_encode(array_filter(explode("\n", $data['itinerary'])));
+        }
+        if (!empty($data['includes'])) {
+            $data['includes'] = json_encode(array_filter(explode("\n", $data['includes'])));
+        }
+        if (!empty($data['excludes'])) {
+            $data['excludes'] = json_encode(array_filter(explode("\n", $data['excludes'])));
+        }
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -84,14 +95,12 @@ class TourController extends Controller
 
         $tour = Tour::create($data);
 
-        // Auto-convert if only USD is provided
-        if ($tour->price_usd && (!$tour->price_idr || !$tour->price_cny)) {
-            $tour->autoConvertPrices();
-            $tour->save();
-        }
+        // Auto-convert prices
+        $tour->autoConvertPrices();
+        $tour->save();
 
         // Dispatch derivative processing job if image was uploaded
-        if ($request->hasFile('image') && $data['image']) {
+        if ($request->hasFile('image') && isset($data['image'])) {
             if (config('queue.default') === 'sync') {
                 ProcessImageDerivatives::dispatchSync($data['image'], 'public', $tour);
             } else {
@@ -131,26 +140,36 @@ class TourController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-            'price_usd' => 'required|numeric|min:0',
-            'price_idr' => 'nullable|numeric|min:0',
-            'price_cny' => 'nullable|numeric|min:0',
+            'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'destination_id' => 'required|exists:destinations,id',
             'image' => 'nullable|image|max:4096',
-            'itinerary' => 'nullable|json',
-            'includes' => 'nullable|json',
-            'excludes' => 'nullable|json',
+            'itinerary' => 'nullable|string',
+            'includes' => 'nullable|string',
+            'excludes' => 'nullable|string',
             'featured' => 'nullable|boolean',
-            'status' => 'nullable|in:active,inactive',
-            'target_market' => 'required|in:domestic,international,both',
-            'exchange_rate_idr' => 'nullable|numeric|min:0',
-            'exchange_rate_cny' => 'nullable|numeric|min:0',
         ]);
 
+        // Set price_usd from price field
+        $data['price_usd'] = $data['price'];
+        unset($data['price']);
+
+        // Set values
         $data['featured'] = $request->has('featured') ? true : false;
-        $data['status'] = $data['status'] ?? 'active';
-        $data['exchange_rate_idr'] = $data['exchange_rate_idr'] ?? 15000;
-        $data['exchange_rate_cny'] = $data['exchange_rate_cny'] ?? 6.5;
+        $data['status'] = 'active';
+        $data['exchange_rate_idr'] = $tour->exchange_rate_idr ?? 15000;
+        $data['exchange_rate_cny'] = $tour->exchange_rate_cny ?? 6.5;
+
+        // Convert text to array for itinerary, includes, excludes
+        if (!empty($data['itinerary'])) {
+            $data['itinerary'] = json_encode(array_filter(explode("\n", $data['itinerary'])));
+        }
+        if (!empty($data['includes'])) {
+            $data['includes'] = json_encode(array_filter(explode("\n", $data['includes'])));
+        }
+        if (!empty($data['excludes'])) {
+            $data['excludes'] = json_encode(array_filter(explode("\n", $data['excludes'])));
+        }
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -163,11 +182,9 @@ class TourController extends Controller
 
         $tour->update($data);
 
-        // Auto-convert if USD changed
-        if ($request->has('price_usd') && $request->input('auto_convert') === '1') {
-            $tour->autoConvertPrices();
-            $tour->save();
-        }
+        // Auto-convert prices
+        $tour->autoConvertPrices();
+        $tour->save();
 
         // Dispatch derivative processing job if image was uploaded
         if ($request->hasFile('image') && isset($data['image'])) {

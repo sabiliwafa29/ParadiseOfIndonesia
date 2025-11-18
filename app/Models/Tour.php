@@ -12,13 +12,20 @@ class Tour extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'name_id',
+        'name_en',
+        'name_zh',
         'slug',
-        'description',
-        'price',
+        'description_id',
+        'description_en',
+        'description_zh',
+        'price_usd',
+        'price_idr',
+        'price_cny',
         'duration',
         'destination_id',
         'image',
+        'image_derivatives',
         'itinerary',
         'includes',
         'excludes',
@@ -211,9 +218,8 @@ class Tour extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('status', true);
-        // atau bisa juga
-        // return $query->where('status', 'active');
+        return $query->where('status', 'active');
     }
+
 
 }
