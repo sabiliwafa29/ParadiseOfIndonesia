@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('layouts.admin')
 
 @section('content')
 <div class="min-h-screen bg-emerald-50 p-8">
