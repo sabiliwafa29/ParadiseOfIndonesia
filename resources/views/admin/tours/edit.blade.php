@@ -99,14 +99,44 @@
                             </h3>
                         </div>
                         
-                        <div class="p-6 space-y-4">
-                            {{-- Name --}}
+                        <div class="p-6 space-y-6">
+                            {{-- Tour Name - Multi-language --}}
                             <div>
-                                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Tour Name *</label>
-                                <input type="text" name="name" id="name" value="{{ old('name', $tour->name) }}" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                                    placeholder="e.g., Explore Bromo Midnight">
-                                @error('name')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                    </svg>
+                                    Tour Name (Multi-language) *
+                                </label>
+                                
+                                <div class="space-y-3">
+                                    {{-- Indonesian --}}
+                                    <div>
+                                        <label for="name_id" class="block text-xs font-medium text-gray-600 mb-1">🇮🇩 Indonesian</label>
+                                        <input type="text" name="name_id" id="name_id" value="{{ old('name_id', $tour->name_id) }}" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_id') border-red-500 @enderror"
+                                            placeholder="e.g., Jelajahi Bromo Tengah Malam">
+                                        @error('name_id')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+                                    </div>
+
+                                    {{-- English --}}
+                                    <div>
+                                        <label for="name_en" class="block text-xs font-medium text-gray-600 mb-1">🇬🇧 English</label>
+                                        <input type="text" name="name_en" id="name_en" value="{{ old('name_en', $tour->name_en) }}" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_en') border-red-500 @enderror"
+                                            placeholder="e.g., Explore Bromo Midnight">
+                                        @error('name_en')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+                                    </div>
+
+                                    {{-- Chinese --}}
+                                    <div>
+                                        <label for="name_zh" class="block text-xs font-medium text-gray-600 mb-1">🇨🇳 Chinese</label>
+                                        <input type="text" name="name_zh" id="name_zh" value="{{ old('name_zh', $tour->name_zh) }}" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_zh') border-red-500 @enderror"
+                                            placeholder="e.g., 探索布罗莫午夜">
+                                        @error('name_zh')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
                             </div>
 
                             {{-- Slug --}}
@@ -117,15 +147,6 @@
                                     placeholder="e.g., explore-bromo-midnight">
                                 @error('slug')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                                 <p class="text-xs text-gray-500 mt-1">URL-friendly version of the tour name</p>
-                            </div>
-
-                            {{-- Description --}}
-                            <div>
-                                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                                <textarea name="description" id="description" rows="4"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description') border-red-500 @enderror"
-                                    placeholder="Tour description...">{{ old('description', $tour->description) }}</textarea>
-                                @error('description')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                             </div>
 
                             {{-- Destination --}}
@@ -145,11 +166,52 @@
                         </div>
                     </div>
 
+                    {{-- Descriptions Card --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                                </svg>
+                                Descriptions (Multi-language)
+                            </h3>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            {{-- Indonesian Description --}}
+                            <div>
+                                <label for="description_id" class="block text-sm font-semibold text-gray-700 mb-2">🇮🇩 Description (Indonesian) *</label>
+                                <textarea name="description_id" id="description_id" rows="4" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('description_id') border-red-500 @enderror"
+                                    placeholder="Deskripsi tour dalam bahasa Indonesia...">{{ old('description_id', $tour->description_id) }}</textarea>
+                                @error('description_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+
+                            {{-- English Description --}}
+                            <div>
+                                <label for="description_en" class="block text-sm font-semibold text-gray-700 mb-2">🇬🇧 Description (English) *</label>
+                                <textarea name="description_en" id="description_en" rows="4" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('description_en') border-red-500 @enderror"
+                                    placeholder="Tour description in English...">{{ old('description_en', $tour->description_en) }}</textarea>
+                                @error('description_en')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+
+                            {{-- Chinese Description --}}
+                            <div>
+                                <label for="description_zh" class="block text-sm font-semibold text-gray-700 mb-2">🇨🇳 Description (Chinese) *</label>
+                                <textarea name="description_zh" id="description_zh" rows="4" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('description_zh') border-red-500 @enderror"
+                                    placeholder="中文旅游描述...">{{ old('description_zh', $tour->description_zh) }}</textarea>
+                                @error('description_zh')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- Pricing & Duration Card --}}
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4">
                             <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 Pricing & Duration
@@ -157,20 +219,24 @@
                         </div>
                         
                         <div class="p-6 grid grid-cols-2 gap-4">
-                            {{-- Price --}}
+                            {{-- Price (USD) --}}
                             <div>
-                                <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Price ($) *</label>
-                                <input type="number" name="price" id="price" value="{{ old('price', $tour->price) }}" required min="0" step="0.01"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror"
-                                    placeholder="0.00">
+                                <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">💵 Base Price (USD) *</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                    <input type="number" name="price" id="price" value="{{ old('price', $tour->price_usd) }}" required min="0" step="0.01"
+                                        class="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('price') border-red-500 @enderror"
+                                        placeholder="0.00">
+                                </div>
                                 @error('price')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                <p class="text-xs text-gray-500 mt-1">Other currencies will be auto-converted</p>
                             </div>
 
                             {{-- Duration --}}
                             <div>
-                                <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days) *</label>
+                                <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">⏱️ Duration (Days) *</label>
                                 <input type="number" name="duration" id="duration" value="{{ old('duration', $tour->duration) }}" required min="1"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('duration') border-red-500 @enderror"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('duration') border-red-500 @enderror"
                                     placeholder="1">
                                 @error('duration')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                             </div>
@@ -283,28 +349,72 @@
 
                     {{-- Media Card --}}
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
+                        <div class="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4">
                             <h3 class="text-lg font-semibold text-gray-800 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
-                                Media
+                                Tour Image
                             </h3>
                         </div>
                         
-                        <div class="p-6">
-                            {{-- Image --}}
+                        <div class="p-6 space-y-4">
+                            {{-- Current Image Preview --}}
+                            @if($tour->image)
                             <div>
-                                <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">Tour Image</label>
-                                <input type="text" name="image" id="image" value="{{ old('image', $tour->image) }}"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('image') border-red-500 @enderror"
-                                    placeholder="e.g., images/tours/bromo.jpg">
-                                @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-                                @if($tour->image)
-                                    <div class="mt-3">
-                                        <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="h-32 object-cover rounded-lg" onerror="this.onerror=null;this.src='{{ asset('images/fallback.png') }}';">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Current Image</label>
+                                <div class="relative group">
+                                    <img src="{{ asset($tour->image) }}" 
+                                         alt="{{ $tour->name }}" 
+                                         class="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
+                                         onerror="this.onerror=null;this.src='{{ asset('images/fallback.png') }}';">
+                                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition rounded-lg flex items-center justify-center">
+                                        <span class="text-white opacity-0 group-hover:opacity-100 transition font-medium">Current Tour Image</span>
                                     </div>
-                                @endif
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Upload a new image to replace the current one
+                                </p>
+                            </div>
+                            @endif
+
+                            {{-- Image Upload --}}
+                            <div>
+                                <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    📸 Upload New Image
+                                    @if(!$tour->image)
+                                        <span class="text-red-500">*</span>
+                                    @endif
+                                </label>
+                                <input type="file" 
+                                       name="image" 
+                                       id="image" 
+                                       accept="image/*"
+                                       @if(!$tour->image) required @endif
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent @error('image') border-red-500 @enderror"
+                                       onchange="previewImage(event)">
+                                @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Accepted formats: JPG, PNG, WebP (Max: 4MB) • Recommended size: 1200x800px
+                                </p>
+                            </div>
+
+                            {{-- Image Preview --}}
+                            <div id="imagePreview" class="hidden">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">New Image Preview</label>
+                                <div class="relative">
+                                    <img id="previewImg" src="" alt="Preview" class="w-full h-48 object-cover rounded-lg border-2 border-emerald-300">
+                                    <button type="button" 
+                                            onclick="clearImagePreview()" 
+                                            class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -593,9 +703,31 @@
 </div>
 
 <script>
+// Image preview function
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            previewImg.src = e.target.result;
+            preview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearImagePreview() {
+    const imageInput = document.getElementById('image');
+    const preview = document.getElementById('imagePreview');
+    imageInput.value = '';
+    preview.classList.add('hidden');
+}
+
 // Auto-generate slug from name
     document.addEventListener('DOMContentLoaded', function() {
-        const nameInput = document.getElementById('name');
+        const nameInput = document.getElementById('name_en'); // Use English name for slug
         const slugInput = document.getElementById('slug');
         
         if (nameInput && slugInput) {

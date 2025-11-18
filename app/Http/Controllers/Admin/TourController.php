@@ -148,27 +148,53 @@ class TourController extends Controller
             'includes' => 'nullable|string',
             'excludes' => 'nullable|string',
             'featured' => 'nullable|boolean',
+            'status' => 'nullable|string|in:active,inactive',
+            'target_market' => 'nullable|string|in:domestic,international,both',
+            'price_usd' => 'nullable|numeric|min:0',
+            'price_idr' => 'nullable|numeric|min:0',
+            'price_cny' => 'nullable|numeric|min:0',
+            'exchange_rate_idr' => 'nullable|numeric|min:0',
+            'exchange_rate_cny' => 'nullable|numeric|min:0',
         ]);
 
-        // Set price_usd from price field
-        $data['price_usd'] = $data['price'];
+        // Set price_usd from price field if not explicitly set
+        if (isset($data['price']) && !isset($data['price_usd'])) {
+            $data['price_usd'] = $data['price'];
+        }
         unset($data['price']);
 
         // Set values
         $data['featured'] = $request->has('featured') ? true : false;
-        $data['status'] = 'active';
-        $data['exchange_rate_idr'] = $tour->exchange_rate_idr ?? 15000;
-        $data['exchange_rate_cny'] = $tour->exchange_rate_cny ?? 6.5;
+        $data['status'] = $request->input('status', 'active');
+        $data['target_market'] = $request->input('target_market', 'both');
+        
+        // Keep existing exchange rates if not provided
+        if (!isset($data['exchange_rate_idr'])) {
+            $data['exchange_rate_idr'] = $tour->exchange_rate_idr ?? 15000;
+        }
+        if (!isset($data['exchange_rate_cny'])) {
+            $data['exchange_rate_cny'] = $tour->exchange_rate_cny ?? 6.5;
+        }
 
-        // Convert text to array for itinerary, includes, excludes
+        // JSON fields - keep as string (already JSON from form)
+        // Just validate they're valid JSON if provided
         if (!empty($data['itinerary'])) {
-            $data['itinerary'] = json_encode(array_filter(explode("\n", $data['itinerary'])));
+            $decoded = json_decode($data['itinerary']);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['itinerary' => 'Invalid JSON format for itinerary'])->withInput();
+            }
         }
         if (!empty($data['includes'])) {
-            $data['includes'] = json_encode(array_filter(explode("\n", $data['includes'])));
+            $decoded = json_decode($data['includes']);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['includes' => 'Invalid JSON format for includes'])->withInput();
+            }
         }
         if (!empty($data['excludes'])) {
-            $data['excludes'] = json_encode(array_filter(explode("\n", $data['excludes'])));
+            $decoded = json_decode($data['excludes']);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return back()->withErrors(['excludes' => 'Invalid JSON format for excludes'])->withInput();
+            }
         }
 
         // Handle image upload
@@ -182,9 +208,11 @@ class TourController extends Controller
 
         $tour->update($data);
 
-        // Auto-convert prices
-        $tour->autoConvertPrices();
-        $tour->save();
+        // Auto-convert prices if price_usd was updated
+        if (isset($data['price_usd'])) {
+            $tour->autoConvertPrices();
+            $tour->save();
+        }
 
         // Dispatch derivative processing job if image was uploaded
         if ($request->hasFile('image') && isset($data['image'])) {
