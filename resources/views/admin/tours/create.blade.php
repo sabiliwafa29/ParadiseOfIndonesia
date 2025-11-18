@@ -5,6 +5,7 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-10">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {{-- Breadcrumb --}}
         <nav class="flex mb-8" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3 text-sm">
@@ -70,49 +71,70 @@
         <form action="{{ route('admin.tours.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8 bg-white rounded-xl shadow-lg p-8">
             @csrf
 
-            {{-- Basic Info --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- Multilingual Names --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Tour Name *</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name') border-red-500 @enderror"
-                        placeholder="e.g., Explore Bromo Midnight">
-                    @error('name')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                    <label for="name_id" class="block text-sm font-semibold text-gray-700 mb-2">Nama Tour (ID) *</label>
+                    <input type="text" name="name_id" id="name_id" value="{{ old('name_id') }}" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_id') border-red-500 @enderror"
+                        placeholder="Nama dalam Bahasa Indonesia">
+                    @error('name_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
                 <div>
-                    <label for="slug" class="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
-                    <input type="text" name="slug" id="slug" value="{{ old('slug') }}" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('slug') border-red-500 @enderror"
-                        placeholder="e.g., explore-bromo-midnight">
-                    @error('slug')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-                    <p class="text-xs text-gray-500 mt-1">URL-friendly version of the tour name</p>
+                    <label for="name_en" class="block text-sm font-semibold text-gray-700 mb-2">Tour Name (EN) *</label>
+                    <input type="text" name="name_en" id="name_en" value="{{ old('name_en') }}" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_en') border-red-500 @enderror"
+                        placeholder="Name in English">
+                    @error('name_en')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
-            </div>
-            <div>
-                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                <textarea name="description" id="description" rows="3"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description') border-red-500 @enderror"
-                    placeholder="Tour description...">{{ old('description') }}</textarea>
-                @error('description')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
-            </div>
-            <div>
-                <label for="destination_id" class="block text-sm font-semibold text-gray-700 mb-2">Destination *</label>
-                <select name="destination_id" id="destination_id" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('destination_id') border-red-500 @enderror">
-                    <option value="">Select a destination...</option>
-                    @foreach($destinations as $destination)
-                        <option value="{{ $destination->id }}" {{ old('destination_id') == $destination->id ? 'selected' : '' }}>
-                            {{ $destination->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('destination_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                <div>
+                    <label for="name_zh" class="block text-sm font-semibold text-gray-700 mb-2">旅游名称 (ZH) *</label>
+                    <input type="text" name="name_zh" id="name_zh" value="{{ old('name_zh') }}" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_zh') border-red-500 @enderror"
+                        placeholder="中文名称">
+                    @error('name_zh')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
             </div>
 
-            {{-- Pricing --}}
+            {{-- Slug --}}
+            <div>
+                <label for="slug" class="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
+                <input type="text" name="slug" id="slug" value="{{ old('slug') }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('slug') border-red-500 @enderror"
+                    placeholder="e.g., explore-bromo-midnight">
+                @error('slug')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                <p class="text-xs text-gray-500 mt-1">URL-friendly version of the tour name</p>
+            </div>
+
+            {{-- Multilingual Descriptions --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="description_id" class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi (ID) *</label>
+                    <textarea name="description_id" id="description_id" rows="2"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_id') border-red-500 @enderror"
+                        required>{{ old('description_id') }}</textarea>
+                    @error('description_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+                <div>
+                    <label for="description_en" class="block text-sm font-semibold text-gray-700 mb-2">Description (EN) *</label>
+                    <textarea name="description_en" id="description_en" rows="2"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_en') border-red-500 @enderror"
+                        required>{{ old('description_en') }}</textarea>
+                    @error('description_en')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+                <div>
+                    <label for="description_zh" class="block text-sm font-semibold text-gray-700 mb-2">描述 (ZH) *</label>
+                    <textarea name="description_zh" id="description_zh" rows="2"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_zh') border-red-500 @enderror"
+                        required>{{ old('description_zh') }}</textarea>
+                    @error('description_zh')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                </div>
+            </div>
+
+            {{-- Price & Duration --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Price ($) *</label>
+                    <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD) *</label>
                     <input type="number" name="price" id="price" value="{{ old('price') }}" required min="0" step="0.01"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror"
                         placeholder="0.00">
@@ -127,12 +149,27 @@
                 </div>
             </div>
 
-            {{-- Image --}}
+            {{-- Destination --}}
+            <div>
+                <label for="destination_id" class="block text-sm font-semibold text-gray-700 mb-2">Destination *</label>
+                <select name="destination_id" id="destination_id" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('destination_id') border-red-500 @enderror">
+                    <option value="">Select a destination...</option>
+                    @foreach($destinations as $destination)
+                        <option value="{{ $destination->id }}" {{ old('destination_id') == $destination->id ? 'selected' : '' }}>
+                            {{ $destination->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('destination_id')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+            </div>
+
+            {{-- Image Upload --}}
             <div>
                 <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">Tour Image</label>
-                <input type="text" name="image" id="image" value="{{ old('image') }}"
+                <input type="file" name="image" id="image"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('image') border-red-500 @enderror"
-                    placeholder="e.g., images/tours/bromo.jpg">
+                    accept="image/*">
                 @error('image')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
             </div>
 
@@ -175,43 +212,13 @@
                 <p class="text-xs text-gray-500 mt-2">Format: ["Item 1","Item 2"]</p>
             </div>
 
-            {{-- Status & Featured --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="status" class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                    <select name="status" id="status"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-                        <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                </div>
-                <div class="flex items-center mt-6 md:mt-0">
-                    <input type="checkbox" name="featured" id="featured" value="1" {{ old('featured') ? 'checked' : '' }}
-                        class="w-4 h-4 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500">
-                    <label for="featured" class="ml-2 text-sm font-semibold text-gray-700">Mark as Featured</label>
-                </div>
+            {{-- Featured --}}
+            <div class="flex items-center mt-4">
+                <input type="checkbox" name="featured" id="featured" value="1" {{ old('featured') ? 'checked' : '' }}
+                    class="w-4 h-4 text-emerald-600 rounded focus:ring-2 focus:ring-emerald-500">
+                <label for="featured" class="ml-2 text-sm font-semibold text-gray-700">Mark as Featured</label>
             </div>
 
-            {{-- Target Market --}}
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Target Market</label>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer w-full sm:w-auto">
-                        <input type="radio" name="target_market" value="domestic" {{ old('target_market') === 'domestic' ? 'checked' : '' }} class="w-4 h-4 text-emerald-600">
-                        <span class="ml-3 font-semibold text-gray-900">🇮🇩 Domestic</span>
-                    </label>
-                    <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer w-full sm:w-auto">
-                        <input type="radio" name="target_market" value="international" {{ old('target_market') === 'international' ? 'checked' : '' }} class="w-4 h-4 text-emerald-600">
-                        <span class="ml-3 font-semibold text-gray-900">🌍 International</span>
-                    </label>
-                    <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer w-full sm:w-auto">
-                        <input type="radio" name="target_market" value="both" {{ old('target_market') === 'both' ? 'checked' : '' }} class="w-4 h-4 text-emerald-600">
-                        <span class="ml-3 font-semibold text-gray-900">🌐 Both</span>
-                    </label>
-                </div>
-            </div>
-
-            {{-- Submit --}}
             <div class="flex gap-3 mt-6">
                 <button type="submit" class="flex-1 px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-semibold flex items-center justify-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,10 +256,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Slug auto-generation
-    const nameInput = document.getElementById('name');
+    const nameEnInput = document.getElementById('name_en');
     const slugInput = document.getElementById('slug');
-    if (nameInput && slugInput) {
-        nameInput.addEventListener('input', function() {
+    if (nameEnInput && slugInput) {
+        nameEnInput.addEventListener('input', function() {
             const slug = this.value
                 .toLowerCase()
                 .trim()
