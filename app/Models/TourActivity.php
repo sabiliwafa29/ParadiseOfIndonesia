@@ -12,7 +12,6 @@ class TourActivity extends Model
     protected $fillable = [
         'tour_id',
         'name',
-        'time',
         'location',
         'photo',
         'description',

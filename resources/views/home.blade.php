@@ -547,15 +547,6 @@
                     
                     <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight">{{ $activity->name }}</h3>
                     
-                    <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-100">
-                        <div class="flex items-center text-gray-500">
-                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="font-medium text-sm">{{ $activity->time }}</span>
-                        </div>
-                    </div>
-                    
                     <a href="{{ route('tour-activities.show', $activity) }}" class="mt-4 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
                         {{ __('messages.view_details') }}
                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

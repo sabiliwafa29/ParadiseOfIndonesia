@@ -115,15 +115,6 @@
 
                         <!-- Features/Info -->
                         <div class="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-                            @if($activity->time)
-                            <span class="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                {{ $activity->time }}
-                            </span>
-                            @endif
-
                             @if($activity->location)
                             <span class="inline-flex items-center text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full font-medium">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
