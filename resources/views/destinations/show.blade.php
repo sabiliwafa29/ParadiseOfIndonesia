@@ -95,7 +95,7 @@
                 <div class="group bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
                     <!-- Tour Card Content -->
                     <div class="p-5 sm:p-6">
-                        <a href="{{ route('tours.show', $tour) }}" class="block">
+                        <a href="{{ route('tour-activities.show', $tour) }}" class="block">
                             <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-2">
                                 {{ $tour->name }}
                             </h3>
@@ -134,7 +134,7 @@
                                     ${{ number_format($tour->price, 0) }}
                                 </p>
                             </div>
-                            <a href="{{ route('tours.show', $tour) }}" 
+                            <a href="{{ route('tour-activities.show', $tour) }}" 
                                class="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300 text-sm">
                                 <span>{{ __('messages.view') ?? 'View' }}</span>
                                 <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

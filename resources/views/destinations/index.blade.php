@@ -7,7 +7,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
         <div class="text-center">
             <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 mb-4">
-                <span class="text-white font-medium text-sm md:text-base">📍 {{ __('messages.destinations_label') }}</span>
+                <span class="text-white font-medium text-sm md:text-base">📍 {{ __('messages.destination') }}</span>
             </div>
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4">{{ __('messages.popular_destinations') }}</h1>
             <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">{{ __('messages.popular_destinations_desc') }}</p>
