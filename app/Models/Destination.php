@@ -26,6 +26,12 @@ class Destination extends Model
     {
         return $this->hasMany(Tour::class);
     }
+
+    public function tourActivities()
+    {
+        return $this->hasManyThrough(TourActivity::class, Tour::class);
+    }
+    
     public function getNameAttribute()
     {
         $locale = app()->getLocale();

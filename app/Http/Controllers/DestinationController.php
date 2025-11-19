@@ -38,8 +38,8 @@ class DestinationController extends Controller
     public function show($id)
     {
         $destination = Destination::where('id', $id)->orWhere('slug', $id)->firstOrFail();
-        $tours = $destination->tours()->paginate(9);
-        return view('destinations.show', compact('destination', 'tours'));
+        $tourActivities = $destination->tourActivities()->paginate(9);
+        return view('destinations.show', compact('destination', 'tourActivities'));
     }
 
     /**

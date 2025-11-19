@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <!-- Tours Section -->
+        <!-- Tour Activities Section -->
         <div class="mb-8 sm:mb-12">
             <div class="flex items-center justify-between mb-6 sm:mb-8">
                 <div class="flex items-center gap-3">
@@ -81,62 +81,65 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                     </svg>
                     <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">
-                        {{ __('messages.tours_in') ?? 'Tours in' }} {{ $destination->name }}
+                        {{ __('messages.tour_activities_in') ?? 'Tour Activities in' }} {{ $destination->name }}
                     </h2>
                 </div>
                 <span class="hidden sm:inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold">
-                    {{ $tours->total() }} {{ __('messages.tours') ?? 'Tours' }}
+                    {{ $tourActivities->total() }} {{ __('messages.activities') ?? 'Activities' }}
                 </span>
             </div>
 
-            @if($tours->isNotEmpty())
+            @if($tourActivities->isNotEmpty())
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                @foreach($tours as $tour)
+                @foreach($tourActivities as $activity)
                 <div class="group bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
-                    <!-- Tour Card Content -->
+                    <!-- Activity Image -->
+                    <div class="relative h-56 sm:h-64 overflow-hidden">
+                        <img src="{{ asset($activity->photo) }}" alt="{{ $activity->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    <!-- Activity Card Content -->
                     <div class="p-5 sm:p-6">
-                        <a href="{{ route('tour-activities.show', $tour) }}" class="block">
+                        <a href="{{ route('tour-activities.show', $activity) }}" class="block">
                             <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-2">
-                                {{ $tour->name }}
+                                {{ $activity->name }}
                             </h3>
                         </a>
                         
+                        @if($activity->description)
                         <p class="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3 mb-4">
-                            {{ $tour->description }}
+                            {{ $activity->description }}
                         </p>
+                        @endif
 
                         <!-- Features/Info -->
                         <div class="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
-                            @if($tour->duration)
+                            @if($activity->time)
                             <span class="inline-flex items-center text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                {{ $tour->duration }}
+                                {{ $activity->time }}
                             </span>
                             @endif
 
-                            @if($tour->difficulty)
+                            @if($activity->location)
                             <span class="inline-flex items-center text-xs bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full font-medium">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
-                                {{ $tour->difficulty }}
+                                {{ $activity->location }}
                             </span>
                             @endif
                         </div>
 
-                        <!-- Price & CTA -->
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-xs text-gray-500 mb-1">{{ __('messages.from') ?? 'From' }}</p>
-                                <p class="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                    ${{ number_format($tour->price, 0) }}
-                                </p>
-                            </div>
-                            <a href="{{ route('tour-activities.show', $tour) }}" 
+                        <!-- CTA Button -->
+                        <div class="flex items-center justify-end">
+                            <a href="{{ route('tour-activities.show', $activity) }}" 
                                class="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300 text-sm">
-                                <span>{{ __('messages.view') ?? 'View' }}</span>
+                                <span>{{ __('messages.view_details') ?? 'View Details' }}</span>
                                 <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
@@ -148,10 +151,10 @@
             </div>
 
             <!-- Pagination -->
-            @if($tours->hasPages())
+            @if($tourActivities->hasPages())
             <div class="mt-8 sm:mt-12">
                 <div class="bg-white rounded-xl shadow-md p-4">
-                    {{ $tours->links() }}
+                    {{ $tourActivities->links() }}
                 </div>
             </div>
             @endif
@@ -163,8 +166,8 @@
                     <svg class="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                     </svg>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">{{ __('messages.no_tours_available') ?? 'No Tours Available' }}</h3>
-                    <p class="text-sm sm:text-base text-gray-500">{{ __('messages.check_back_soon') ?? 'Check back soon for new tours to this destination' }}</p>
+                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">{{ __('messages.no_activities_available') ?? 'No Activities Available' }}</h3>
+                    <p class="text-sm sm:text-base text-gray-500">{{ __('messages.check_back_soon_activities') ?? 'Check back soon for new activities to this destination' }}</p>
                 </div>
             </div>
             @endif
