@@ -557,15 +557,6 @@
             </div>
             @endforeach
         </div>
-
-        <div class="mt-12 md:mt-16 text-center">
-            <a href="{{ route('tour-activities.index') }}" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
-                {{ __('messages.view_all_destinations_highlight') }}
-                <svg class="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-            </a>
-        </div>
     </div>
 </div>
 
