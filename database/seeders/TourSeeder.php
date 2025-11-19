@@ -129,15 +129,15 @@ class TourSeeder extends Seeder
                 'name_en' => 'Surabaya City Tour',
                 'name_zh' => '泗水城市游',
                 'slug' => 'surabaya-city-tour',
-                'description_id' => 'Mulai dari Stasiun Gubeng Surabaya & Bandara Juanda pukul 23:00.',
-                'description_en' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM.',
-                'description_zh' => '晚上11点从泗水古本火车站和朱安达机场出发。',
-                'price_usd' => 95,
-                'price_idr' => 950, // 95 * 16700
-                'price_cny' => 715, // 95 * 6.5
+                'description_id' => 'Kota terbesar kedua di Indonesia, Kota Pahlawan di mana perjuangan dimulai dan berakhir, namun semangat kepahlawanannya tetap abadi. Nikmati perjalanan menyusuri situs-situs bersejarah masa lalu yang memukau di tengah pesatnya perkembangan dan budaya di  perkotaan.',
+                'description_en' => 'The second largest city in Indonesia, the City of Heroes where the struggle began and ended, yet the spirit of heroism remains eternal. Enjoy a journey through stunning historical sites amidst rapid urban development and culture.',
+                'description_zh' => '印度尼西亚第二大城市，英雄之城，斗争始于终结，但英雄主义精神永存。在快速的城市发展和文化中，享受穿越令人惊叹的历史遗迹的旅程。',
+                'price_usd' => 20,
+                'price_idr' => 350000, // 95 * 16700
+                'price_cny' => 148, // 95 * 6.5
                 'duration' => 2,    
                 'destination_id' => $eastJava->id,
-                'image' => 'images/bromo-adventure.jpg',
+                'image' => 'images/surabaya_tour.jpg',
                 'itinerary' => json_encode([
                     [
                         'day' => 'DAY 1',
@@ -174,7 +174,7 @@ class TourSeeder extends Seeder
                 ]),
                 'featured' => true,
                 'status' => 'active',
-                'target_market' => 'domestic',
+                'target_market' => 'both',
                 'exchange_rate_idr' => 16700,
                 'exchange_rate_cny' => 6.5,
             ],
