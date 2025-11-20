@@ -135,42 +135,30 @@ class TourSeeder extends Seeder
                 'price_usd' => 20,
                 'price_idr' => 350000, // 95 * 16700
                 'price_cny' => 148, // 95 * 6.5
-                'duration' => 2,    
+                'duration' => 1,    
                 'destination_id' => $eastJava->id,
                 'image' => 'images/surabaya_tour.jpg',
                 'itinerary' => json_encode([
                     [
-                        'day' => 'DAY 1',
+                        'day' => 'A HALF DAY',
                         'activities' => [
-                            ['time' => '23.00 - 24.00', 'description' => 'Penjemputan Peserta di Meeting poin ( stasiun Gubeng / Bandara Juanda ) '],
+                            ['time' => 'RILEX', 'description' => 'Sesuaikan dengan waktu Anda'],
                         ]
                     ],
-                    [
-                        'day' => 'DAY 2',
-                        'activities' => [
-                            ['time' => '00.00 - 03.00', 'description' => 'Perjalanan menuju titik transit atau base camp jeep Bromo.'],
-                            ['time' => '03.00 - 04.00', 'description' => 'Naik jeep untuk menuju view point Bukit Penanjakan.'],
-                            ['time' => '04.00 - 06.00', 'description' => 'Menikmati Golden Sunrise Bromo dari Bukit Penanjakan. '],
-                            ['time' => '06.00 - 07.00', 'description' => 'Turun dari Penanjakan dan menuju Lautan Pasir dan Pura Luhur Poten. '],
-                            ['time' => '07.00 - 08.30', 'description' => 'Mendaki ke Kawah Bromo dan melakukan eksplorasi di area sekitar. '],
-                            ['time' => '08.30 - 09.30', 'description' => 'Menuju spot wisata berikutnya yaitu Pasir Berbisik dan Bukit Teletubbies (Padang Savana) untuk berfoto. '],
-                            ['time' => '09.30 - 11.00', 'description' => 'Kembali ke base camp jeep. '],
-                            ['time' => '11.00 – 12.00', 'description' => 'Istirahat Break Fas/ luncht, belanja  pusat Oleh-oleh  ( optional )'],
-                            ['time' => '11.00 - 15.00', 'description' => 'Perjalanan kembali  ke Surabaya Drop point'],
-                            ['time' => '15.00', 'description' => 'Finish'],
-                        ]
-                    ]
                 ]),
                 'includes' => json_encode([
-                    'Tour Guide Profesional',
-                    'Transportasi Pribadi',
-                    'Makan Pagi',
+                    'Parkir',
+                    'Tol',
+                    'Transportasi City Car/MPV/SUV',
                     'Tiket Masuk Objek Wisata'
                 ]),
                 'excludes' => json_encode([
-                    'Penerbangan',
-                    'Hotel',
-                    'Asuransi Perjalanan'
+                    'Sarapan',
+                    'Makan Siang',
+                    'Makan Malam',
+                    'Shopping',
+                    'Tipping',
+                    'Hotel'
                 ]),
                 'featured' => true,
                 'status' => 'active',

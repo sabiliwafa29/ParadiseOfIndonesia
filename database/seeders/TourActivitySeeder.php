@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\TourActivity;
 use App\Models\Tour;
+use App\Models\Destination;
+
 
 class TourActivitySeeder extends Seeder
 {
@@ -14,6 +16,21 @@ class TourActivitySeeder extends Seeder
      */
     public function run(): void
     {
+        // Get destinations by slug/name for better targeting
+        $bali = Destination::where('slug', 'bali')->orWhere('name', 'like', '%Bali%')->first();
+        $yogyakarta = Destination::where('slug', 'yogyakarta')->orWhere('name', 'like', '%Yogyakarta%')->first();
+        $banyuwangi = Destination::where('slug', 'banyuwangi')->orWhere('name', 'like', '%Banyuwangi%')->first();
+        $bromo = Destination::where('slug', 'bromo')->orWhere('name', 'like', '%Bromo%')->first();
+        $lumajang = Destination::where('slug', 'lumajang')->orWhere('name', 'like', '%Lumajang%')->first();
+
+        // Get tours from specific destinations
+        $baliTours = $bali ? Tour::where('destination_id', $bali->id)->get() : collect();
+        $yogyaTours = $yogyakarta ? Tour::where('destination_id', $yogyakarta->id)->get() : collect();
+        $banyuwangiTours = $banyuwangi ? Tour::where('destination_id', $banyuwangi->id)->get() : collect();
+        $bromoTours = $bromo ? Tour::where('destination_id', $bromo->id)->get() : collect();
+        $lumajangTours = $lumajang ? Tour::where('destination_id', $lumajang->id)->get() : collect();
+
+        // Fallback to any tours if specific destination tours not found
         $tours = Tour::all();
 
         if ($tours->isEmpty()) {
@@ -21,24 +38,20 @@ class TourActivitySeeder extends Seeder
             return;
         }
 
+        // Bali Activities
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $baliTours->isNotEmpty() ? $baliTours->random()->id : $tours->random()->id,
             'name' => 'Snorkeling di Pulau Tabuhan',
+            'slug' => 'snorkeling-di-pulau-tabuhan',
             'location' => 'Pulau Tabuhan, Bali',
             'photo' => 'images/activities/snorkeling.jpg',
             'description' => 'Snorkeling di Pulau Tabuhan, Banyuwangi, menawarkan keindahan bawah laut dengan terumbu karang dan ikan warna-warni. Anda bisa melakukan aktivitas ini dengan menyewa alat di pantai terdekat seperti Bangsring atau menggunakan paket tur yang sudah termasuk perlengkapan, perahu, dan pemandu. Waktu terbaik untuk berkunjung adalah saat musim kemarau karena air lebih tenang dan jernih, biasanya pagi hingga siang hari.'
         ]);
 
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
-            'name' => 'Sunrise di Puncak Borobudur',
-            'location' => 'Candi Borobudur, Magelang',
-            'photo' => 'images/activities/borobudur_sunrise.jpg',
-            'description' => 'Saksikan matahari terbit yang memukau dari puncak Candi Borobudur, warisan dunia UNESCO. Pengalaman spiritual dan fotografi yang tak terlupakan di tengah kabut pagi yang mistis.'
-        ]);
-        TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $baliTours->isNotEmpty() ? $baliTours->random()->id : $tours->random()->id,
             'name' => 'Dolphin Dance Lovina Beach',
+            'slug' => 'dolphin-dance-lovina-beach',
             'location' => 'Lovina Beach, Bali',
             'photo' => 'images/activities/lovina_dolphins.jpg',
             'description' => 'Pantai Lovina adalah destinasi wisata terkenal di pesisir utara Bali, sekitar 10 km sebelah barat Singaraja, yang daya tarik utamanya adalah pengalaman melihat lumba-lumba liar di habitat aslinya saat matahari terbit 
@@ -53,16 +66,30 @@ Destinasi Sekitar: Di sekitar Lovina, pengunjung juga dapat menjelajahi tempat w
 '
         ]);
 
+        // Yogyakarta Activity
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $yogyaTours->isNotEmpty() ? $yogyaTours->random()->id : $tours->random()->id,
+            'name' => 'Sunrise di Puncak Borobudur',
+            'slug' => 'sunrise-di-puncak-borobudur',
+            'location' => 'Candi Borobudur, Magelang',
+            'photo' => 'images/activities/borobudur_sunrise.jpg',
+            'description' => 'Saksikan matahari terbit yang memukau dari puncak Candi Borobudur, warisan dunia UNESCO. Pengalaman spiritual dan fotografi yang tak terlupakan di tengah kabut pagi yang mistis.'
+        ]);
+
+        // Banyuwangi Activities
+        TourActivity::create([
+            'tour_id' => $banyuwangiTours->isNotEmpty() ? $banyuwangiTours->random()->id : $tours->random()->id,
             'name' => 'Trekking ke Kawah Ijen',
+            'slug' => 'trekking-ke-kawah-ijen',
             'location' => 'Gunung Ijen, Banyuwangi',
             'photo' => 'images/activities/ijen_trekking.jpg',
             'description' => 'Petualangan menantang mendaki Gunung Ijen untuk menyaksikan fenomena Blue Fire yang langka. Nikmati pemandangan kawah dengan danau asam terbesar di dunia dan keindahan sunrise dari ketinggian.'
         ]);
+        
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $banyuwangiTours->isNotEmpty() ? $banyuwangiTours->random()->id : $tours->random()->id,
             'name' => 'Blue Fire Ijen Carter',
+            'slug' => 'blue-fire-ijen-carter',
             'location' => 'Kawah Ijen, Banyuwangi',
             'photo' => 'images/activities/ijen_trekking.jpg',
             'description' => 'Fenomena Api Biru Kawah Ijen adalah daya tarik alam langka di perbatasan Kabupaten Banyuwangi dan Bondowoso, Jawa Timur. Api biru ini bukanlah lava cair, melainkan api dari pembakaran gas belerang yang muncul dari retakan vulkanik dan hanya dapat dilihat dengan jelas saat gelap gulita. 
@@ -76,9 +103,12 @@ Kondisi Ekstrem: Area ini penuh dengan asap belerang beracun, sehingga pengunjun
 Waktu Kunjungan Terbaik: Musim kemarau (April hingga November) adalah waktu terbaik untuk berkunjung karena kondisi cuaca lebih cerah dan jarak pandang lebih baik.
 '
         ]);
+
+        // Bromo Activity
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $bromoTours->isNotEmpty() ? $bromoTours->random()->id : $tours->random()->id,
             'name' => 'Bromo',
+            'slug' => 'bromo',
             'location' => 'Gunung Bromo, Jawa Timur',
             'photo' => 'images/activities/ijen_trekking.jpg',
             'description' => 'Gunung Bromo menawarkan pengalaman wisata alam yang memukau, dengan sunrise ikonik dari Penanjakan, lautan pasir yang luas, Kawah Bromo yang berasap, Padang Savana Teletubbies, dan Pasir Berbisik sebagai daya tarik utama yang wajib dikunjungi, terutama bagi pencinta keindahan alam. 
@@ -97,9 +127,12 @@ Menyaksikan "The Golden Sunrise of Bromo".
 Berfoto di Padang Savana Teletubbies.
 Mengunjungi Kawah Bromo dan Pasir Berbisik.'
         ]);
+
+        // Lumajang Activity
         TourActivity::create([
-            'tour_id' => $tours->random()->id,
+            'tour_id' => $lumajangTours->isNotEmpty() ? $lumajangTours->random()->id : $tours->random()->id,
             'name' => 'Tumpak Sewu Waterfall Adventure',
+            'slug' => 'tumpak-sewu-waterfall-adventure',
             'location' => 'Lumajang, Jawa Timur',
             'photo' => 'images/activities/ijen_trekking.jpg',
             'description' => 'Air Terjun Tumpak Sewu adalah destinasi wisata alam spektakuler di Jawa Timur yang sering dijuluki "Niagara Falls-nya Indonesia" karena pemandangannya yang megah menyerupai tirai air raksasa. 

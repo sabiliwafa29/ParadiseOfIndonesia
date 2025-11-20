@@ -34,8 +34,9 @@ class TourActivityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(\App\Models\TourActivity $activity)
+    public function show($id)
     {
+        $activity = \App\Models\TourActivity::where('id', $id)->orWhere('slug', $id)->firstOrFail();
         return view('tour-activities.show', compact('activity'));
     }
 

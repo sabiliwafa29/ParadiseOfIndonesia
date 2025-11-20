@@ -384,7 +384,6 @@ return [
     'thank_you_payment' => 'Thank you for your payment!',
     'confirmation_email_sent' => 'A confirmation email has been sent to',
     'view_my_bookings' => 'View My Bookings',
-    'view_details' => 'View Details',
     'register_to_manage' => 'Register to Manage',
     'browse_more_packages' => 'Browse More Packages',
     'payment_error' => 'Error',

@@ -401,7 +401,6 @@ return [
     'thank_you_payment' => 'Terima kasih atas pembayaran Anda!',
     'confirmation_email_sent' => 'Email konfirmasi telah dikirim ke',
     'view_my_bookings' => 'Lihat Booking Saya',
-    'view_details' => 'Lihat Detail',
     'register_to_manage' => 'Daftar untuk Mengelola',
     'browse_more_packages' => 'Jelajahi Paket Lainnya',
     'payment_error' => 'Error',

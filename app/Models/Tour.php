@@ -52,6 +52,11 @@ class Tour extends Model
         return $this->belongsTo(Destination::class);
     }
 
+    public function tourActivities()
+    {
+        return $this->hasMany(TourActivity::class);
+    }
+
     public function tourPackages(): BelongsToMany
     {
         return $this->belongsToMany(TourPackage::class, 'tour_tour_package', 'tour_id', 'tour_package_id');
