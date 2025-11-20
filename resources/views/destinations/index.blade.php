@@ -34,18 +34,13 @@
                     </div>
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">{{ $destination->name }}</h3>
                     <p class="text-sm md:text-base text-white/90 mb-3 line-clamp-2">{{ Str::limit($destination->description, 100) }}</p>
-                    <div class="flex items-center text-white/90">
-                        <span class="text-sm font-medium">{{ __('messages.explore_destination') }}</span>
-                        <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                        </svg>
-                    </div>
-                    <div class="flex items-center justify-end"> 
-                        <div class="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300 text-sm">
-                        <span>{{ __('messages.view_details') ?? 'View Details' }}</span>
-                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
+                    <div class="flex items-center justify-end">
+                        <a class="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300 text-sm">
+                            <span>{{ __('messages.view_details') ?? 'View Details' }}</span>
+                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </a>
