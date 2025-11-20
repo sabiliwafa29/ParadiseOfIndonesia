@@ -116,31 +116,31 @@ class TourActivitySeeder extends Seeder
         // Check if tour already exists for this destination
         $tour = Tour::where('destination_id', $destination->id)->first();
 
-        if (!$tour) {
-            // Create a new tour for this destination
-            $tour = Tour::create([
-                'name_id' => $tourName,
-                'name_en' => $tourName,
-                'name_zh' => $tourName,
-                'slug' => \Illuminate\Support\Str::slug($tourName),
-                'description_id' => 'Paket wisata terbaik untuk menjelajahi ' . $destination->name,
-                'description_en' => 'Best tour package to explore ' . $destination->name,
-                'description_zh' => '探索的最佳旅游套餐 ' . $destination->name,
-                'price_usd' => 100.00,
-                'price_idr' => 1500000.00,
-                'price_cny' => 700.00,
-                'duration' => '3 days',
-                'destination_id' => $destination->id,
-                'image' => 'images/tours/default.jpg',
-                'featured' => true,
-                'status' => 'active',
-                'target_market' => 'both',
-                'exchange_rate_idr' => 15000,
-                'exchange_rate_cny' => 7,
-            ]);
+        // if (!$tour) {
+        //     // Create a new tour for this destination
+        //     $tour = Tour::create([
+        //         'name_id' => $tourName,
+        //         'name_en' => $tourName,
+        //         'name_zh' => $tourName,
+        //         'slug' => \Illuminate\Support\Str::slug($tourName),
+        //         'description_id' => 'Paket wisata terbaik untuk menjelajahi ' . $destination->name,
+        //         'description_en' => 'Best tour package to explore ' . $destination->name,
+        //         'description_zh' => '探索的最佳旅游套餐 ' . $destination->name,
+        //         'price_usd' => 100.00,
+        //         'price_idr' => 1500000.00,
+        //         'price_cny' => 700.00,
+        //         'duration' => '3',
+        //         'destination_id' => $destination->id,
+        //         'image' => 'images/tours/default.jpg',
+        //         'featured' => true,
+        //         'status' => 'active',
+        //         'target_market' => 'both',
+        //         'exchange_rate_idr' => 15000,
+        //         'exchange_rate_cny' => 7,
+        //     ]);
 
-            $this->command->info("Created tour '{$tourName}' for destination '{$destination->name}'");
-        }
+        //     $this->command->info("Created tour '{$tourName}' for destination '{$destination->name}'");
+        // }
 
         return $tour;
     }
