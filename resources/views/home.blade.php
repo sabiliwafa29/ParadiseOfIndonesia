@@ -436,16 +436,16 @@
                                 {{ format_price(get_price($package)) }}
                             </span>
                         </div>
-                        <!-- @if($package->tours->isNotEmpty()) -->
+                        @if($package->tours->isNotEmpty())
                             <a href="{{ route('tour-packages.show', $package->id) }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300">
                                 <span>View Details</span>
                                 <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
                             </a>
-                        <!-- @else -->
-                            <!-- <span class="px-6 py-3 bg-gray-300 text-gray-600 rounded-full font-semibold cursor-not-allowed">{{ __('messages.sold_out') }}</span> -->
-                        <!-- @endif -->
+                        @else
+                            <span class="px-6 py-3 bg-gray-300 text-gray-600 rounded-full font-semibold cursor-not-allowed">{{ __('messages.sold_out') }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
