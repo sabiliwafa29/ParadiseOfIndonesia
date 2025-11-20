@@ -19,10 +19,9 @@ class LocaleMiddleware
         elseif (auth()->check() && auth()->user()->locale) {
             $locale = auth()->user()->locale;
         } 
-        // Default
+        // Default ke English untuk pengunjung pertama kali
         else {
-            // Auto detect dari browser
-            $locale = $request->getPreferredLanguage(['id', 'en', 'zh']) ?? config('app.locale');
+            $locale = 'en';
         }
 
         // Set locale

@@ -53,8 +53,6 @@ return [
     | language for the application.
     |
     */
-    'locale' => 'id', // Default language: Indonesian
-    'fallback_locale' => 'en',
     'available_locales' => ['en', 'id', 'zh'],
 
     /*
