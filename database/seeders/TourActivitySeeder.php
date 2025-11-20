@@ -18,10 +18,10 @@ class TourActivitySeeder extends Seeder
     {
         // Get destinations by slug/name for better targeting
         $bali = Destination::where('slug', 'bali')->orWhere('name', 'like', '%Bali%')->first();
-        $yogyakarta = Destination::where('slug', 'yogyakarta')->orWhere('name', 'like', '%Yogyakarta%')->first();
-        $banyuwangi = Destination::where('slug', 'banyuwangi')->orWhere('name', 'like', '%Banyuwangi%')->first();
-        $bromo = Destination::where('slug', 'bromo')->orWhere('name', 'like', '%Bromo%')->first();
-        $lumajang = Destination::where('slug', 'lumajang')->orWhere('name', 'like', '%Lumajang%')->first();
+        $yogyakarta = Destination::where('slug', 'jawatengah-yogyakarta')->orWhere('name', 'like', '%Yogyakarta%')->first();
+        $banyuwangi = Destination::where('slug', 'east-java')->orWhere('name', 'like', '%Banyuwangi%')->first();
+        $bromo = Destination::where('slug', 'east-java')->orWhere('name', 'like', '%Bromo%')->first();
+        $lumajang = Destination::where('slug', 'east-java')->orWhere('name', 'like', '%Lumajang%')->first();
 
         // Get tours from specific destinations
         $baliTours = $bali ? Tour::where('destination_id', $bali->id)->get() : collect();
