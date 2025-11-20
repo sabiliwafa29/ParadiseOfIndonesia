@@ -72,6 +72,7 @@ return [
     'featured_tours_desc' => 'Curated experiences for unforgettable journeys',
     'tour_activities' => 'Tour Activities',
     'tour_activities_desc' => 'Exciting activities and experiences at popular destinations',
+    'destinations_in' => 'Destinations in',
 
     'view_details' => 'View Details',
     'view_all_destinations' => 'View All Destinations',
@@ -260,6 +261,7 @@ return [
     'url_friendly' => 'URL-friendly version of the tour name',
     'destination' => 'Destination',
     'select_destination' => 'Select a destination...',
+    'about_destination' => 'About the Destination',
     'pricing_duration' => 'Pricing & Duration',
     'price_usd' => 'Price (USD)',
     'duration_days' => 'Duration (Days)',

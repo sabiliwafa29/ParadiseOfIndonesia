@@ -75,6 +75,7 @@ return [
     'featured_tours_desc' => 'Pengalaman kurasi untuk perjalanan tak terlupakan',
     'tour_activities' => 'Aktivitas Wisata',
     'tour_activities_desc' => 'Aktivitas dan pengalaman menarik di destinasi populer',
+    'destinations_in' => 'Destinasi di',
 
     'view_details' => 'Lihat Detail',
     'view_all_destinations' => 'Lihat Semua Destinasi',
@@ -274,6 +275,7 @@ return [
     'url_friendly' => 'Versi URL-friendly dari nama tur',
     'destination' => 'Destinasi',
     'select_destination' => 'Pilih destinasi...',
+    'about_destination' => 'Tentang Destinasi',
     'pricing_duration' => 'Harga & Durasi',
     'price_usd' => 'Harga (USD)',
     'duration_days' => 'Durasi (Hari)',

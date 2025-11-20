@@ -72,6 +72,7 @@ return [
     'featured_tours_desc' => '精心策划的难忘旅程体验',
     'tour_activities' => '旅游活动',
     'tour_activities_desc' => '热门目的地的精彩活动和体验',
+    'destinations_in' => '目的地在',
 
     'view_details' => '查看详情',
     'view_all_destinations' => '查看所有目的地',
@@ -260,6 +261,7 @@ return [
     'url_friendly' => '旅游名称的URL友好版本',
     'destination' => '目的地',
     'select_destination' => '选择目的地...',
+    'about_destination' => '关于目的地',
     'pricing_duration' => '价格和时长',
     'price_usd' => '价格（美元）',
     'duration_days' => '时长（天）',

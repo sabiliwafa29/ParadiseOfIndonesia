@@ -364,7 +364,7 @@
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Current Image</label>
                                 <div class="relative group">
-                                    <img src="{{ asset($tour->image) }}" 
+                                    <img src="{{ asset('storage/' . $tour->image) }}" 
                                          alt="{{ $tour->name }}" 
                                          class="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
                                          onerror="this.onerror=null;this.src='{{ asset('images/fallback.png') }}';">
@@ -376,7 +376,7 @@
                                     <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                     </svg>
-                                    Upload a new image to replace the current one
+                                    Path: {{ $tour->image }}
                                 </p>
                             </div>
                             @endif

@@ -244,6 +244,121 @@
                 </div>
             </div>
 
+            <!-- Itinerary Section -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    Itinerary (Jadwal Perjalanan)
+                </h2>
+
+                <div id="itinerary-container" class="space-y-6">
+                    <!-- Template untuk item itinerary pertama -->
+                    <div class="itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-bold mr-3">1</span>
+                                Day 1
+                            </h3>
+                            <button type="button" 
+                                    class="remove-itinerary text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors hidden"
+                                    title="Hapus Item">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Title ID -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Judul (ID) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       name="itinerary[0][title_id]" 
+                                       required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                       placeholder="Contoh: Hari Pertama - Tiba di Bali">
+                            </div>
+
+                            <!-- Title EN -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Title (EN) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       name="itinerary[0][title_en]" 
+                                       required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                       placeholder="Example: First Day - Arrival in Bali">
+                            </div>
+
+                            <!-- Title ZH -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    标题 (ZH) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       name="itinerary[0][title_zh]" 
+                                       required 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                       placeholder="例如：第一天 - 抵达巴厘岛">
+                            </div>
+
+                            <!-- Description ID -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Deskripsi (ID) <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="itinerary[0][description_id]" 
+                                          rows="3" 
+                                          required 
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                          placeholder="Jelaskan aktivitas di hari ini..."></textarea>
+                            </div>
+
+                            <!-- Description EN -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Description (EN) <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="itinerary[0][description_en]" 
+                                          rows="3" 
+                                          required 
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                          placeholder="Describe today's activities..."></textarea>
+                            </div>
+
+                            <!-- Description ZH -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    描述 (ZH) <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="itinerary[0][description_zh]" 
+                                          rows="3" 
+                                          required 
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                          placeholder="描述今天的活动..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Itinerary Button -->
+                <div class="mt-4">
+                    <button type="button" 
+                            id="add-itinerary" 
+                            class="w-full inline-flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-300 text-emerald-600 font-semibold rounded-lg hover:bg-emerald-50 hover:border-emerald-400 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Hari Berikutnya
+                    </button>
+                </div>
+            </div>
+
             <!-- Image Section -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
@@ -323,4 +438,140 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let itineraryCount = 1;
+    const container = document.getElementById('itinerary-container');
+    const addButton = document.getElementById('add-itinerary');
+
+    // Add new itinerary item
+    addButton.addEventListener('click', function() {
+        const newItem = document.createElement('div');
+        newItem.className = 'itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white';
+        newItem.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-bold mr-3">${itineraryCount + 1}</span>
+                    Day ${itineraryCount + 1}
+                </h3>
+                <button type="button" 
+                        class="remove-itinerary text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                        title="Hapus Item">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Judul (ID) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           name="itinerary[${itineraryCount}][title_id]" 
+                           required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                           placeholder="Contoh: Hari Kedua - Eksplorasi Pantai">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Title (EN) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           name="itinerary[${itineraryCount}][title_en]" 
+                           required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                           placeholder="Example: Second Day - Beach Exploration">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        标题 (ZH) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           name="itinerary[${itineraryCount}][title_zh]" 
+                           required 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                           placeholder="例如：第二天 - 海滩探索">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Deskripsi (ID) <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="itinerary[${itineraryCount}][description_id]" 
+                              rows="3" 
+                              required 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                              placeholder="Jelaskan aktivitas di hari ini..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Description (EN) <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="itinerary[${itineraryCount}][description_en]" 
+                              rows="3" 
+                              required 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                              placeholder="Describe today's activities..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        描述 (ZH) <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="itinerary[${itineraryCount}][description_zh]" 
+                              rows="3" 
+                              required 
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                              placeholder="描述今天的活动..."></textarea>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(newItem);
+        itineraryCount++;
+        updateRemoveButtons();
+    });
+
+    // Remove itinerary item
+    container.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-itinerary')) {
+            const item = e.target.closest('.itinerary-item');
+            item.remove();
+            updateDayNumbers();
+            updateRemoveButtons();
+        }
+    });
+
+    // Update day numbers after removal
+    function updateDayNumbers() {
+        const items = container.querySelectorAll('.itinerary-item');
+        items.forEach((item, index) => {
+            const dayNumber = index + 1;
+            const badge = item.querySelector('span.inline-flex');
+            const heading = item.querySelector('h3');
+            badge.textContent = dayNumber;
+            heading.childNodes[1].textContent = ` Day ${dayNumber}`;
+        });
+        itineraryCount = items.length;
+    }
+
+    // Show/hide remove buttons (hide if only one item)
+    function updateRemoveButtons() {
+        const items = container.querySelectorAll('.itinerary-item');
+        const removeButtons = container.querySelectorAll('.remove-itinerary');
+        
+        if (items.length <= 1) {
+            removeButtons.forEach(btn => btn.classList.add('hidden'));
+        } else {
+            removeButtons.forEach(btn => btn.classList.remove('hidden'));
+        }
+    }
+});
+</script>
 @endsection

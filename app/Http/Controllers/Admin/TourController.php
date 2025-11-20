@@ -140,28 +140,21 @@ class TourController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-            'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'destination_id' => 'required|exists:destinations,id',
-            'image' => 'nullable|image|max:4096',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'itinerary' => 'nullable|string',
             'includes' => 'nullable|string',
             'excludes' => 'nullable|string',
             'featured' => 'nullable|boolean',
             'status' => 'nullable|string|in:active,inactive',
             'target_market' => 'nullable|string|in:domestic,international,both',
-            'price_usd' => 'nullable|numeric|min:0',
+            'price_usd' => 'required|numeric|min:0',
             'price_idr' => 'nullable|numeric|min:0',
             'price_cny' => 'nullable|numeric|min:0',
             'exchange_rate_idr' => 'nullable|numeric|min:0',
             'exchange_rate_cny' => 'nullable|numeric|min:0',
         ]);
-
-        // Set price_usd from price field if not explicitly set
-        if (isset($data['price']) && !isset($data['price_usd'])) {
-            $data['price_usd'] = $data['price'];
-        }
-        unset($data['price']);
 
         // Set values
         $data['featured'] = $request->has('featured') ? true : false;
@@ -197,15 +190,25 @@ class TourController extends Controller
             }
         }
 
-        // Handle image upload
+        // Handle image upload BEFORE updating other data
         if ($request->hasFile('image')) {
             // Delete old image and derivatives if they exist
-            if ($tour->image) {
+            if ($tour->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($tour->image)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($tour->image);
             }
-            $data['image'] = $request->file('image')->store('tours', 'public');
+            
+            // Store new image
+            $imagePath = $request->file('image')->store('tours', 'public');
+            $data['image'] = $imagePath;
+            
+            \Log::info('Tour image uploaded', [
+                'tour_id' => $tour->id,
+                'image_path' => $imagePath,
+                'original_name' => $request->file('image')->getClientOriginalName()
+            ]);
         }
 
+        // Update tour with all data including image
         $tour->update($data);
 
         // Auto-convert prices if price_usd was updated
@@ -223,8 +226,8 @@ class TourController extends Controller
             }
         }
         
-        return redirect()->route('admin.tours.index')
-            ->with('success', 'Tour updated successfully.');
+        return redirect()->route('admin.tours.edit', $tour)
+            ->with('success', 'Tour updated successfully. Image: ' . ($request->hasFile('image') ? 'Updated' : 'Not changed'));
     }
 
     /**
