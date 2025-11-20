@@ -49,35 +49,19 @@
 
             <!-- Activity Content -->
             <div class="p-6 sm:p-8 md:p-12">
-                <!-- Time and Basic Info -->
+                <!-- Location Info -->
                 <div class="mb-8 sm:mb-12 pb-8 border-b border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Time Info -->
-                        <div class="bg-gradient-to-br from-orange-50 to-red-50 p-6 rounded-xl border-2 border-orange-200">
-                            <div class="flex items-center mb-2">
-                                <svg class="w-6 h-6 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <h3 class="font-bold text-gray-900">{{ __('messages.duration') ?? 'Duration' }}</h3>
-                            </div>
-                            <p class="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                                {{ $activity->time }}
-                            </p>
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
+                        <div class="flex items-center mb-2">
+                            <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <h3 class="font-bold text-gray-900">{{ __('messages.location') ?? 'Location' }}</h3>
                         </div>
-
-                        <!-- Location Card -->
-                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
-                            <div class="flex items-center mb-2">
-                                <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                <h3 class="font-bold text-gray-900">{{ __('messages.location') ?? 'Location' }}</h3>
-                            </div>
-                            <p class="text-xl sm:text-2xl font-bold text-blue-600">
-                                {{ $activity->location }}
-                            </p>
-                        </div>
+                        <p class="text-xl sm:text-2xl font-bold text-blue-600">
+                            {{ $activity->location }}
+                        </p>
                     </div>
                 </div>
 
@@ -94,121 +78,6 @@
                             <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
                                 {{ $activity->description }}
                             </p>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Highlights Section -->
-                @if($activity->highlights)
-                    <div class="mb-8 sm:mb-12">
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                            </svg>
-                            {{ __('messages.activity_highlights') ?? 'Activity Highlights' }}
-                        </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            @php
-                                $highlights = $activity->highlights;
-                                if (is_string($highlights)) {
-                                    $decoded = json_decode($highlights, true);
-                                    $highlights = is_array($decoded) ? $decoded : explode("\n", $highlights);
-                                }
-                                if (!is_array($highlights)) {
-                                    $highlights = [$highlights];
-                                }
-                            @endphp
-
-                            @foreach($highlights as $highlight)
-                                @php
-                                    if (is_array($highlight)) {
-                                        $locale = app()->getLocale();
-                                        $label = $highlight['name_'.$locale]
-                                            ?? $highlight['name_en']
-                                            ?? $highlight['name']
-                                            ?? '';
-                                    } else {
-                                        $label = trim((string)$highlight);
-                                    }
-                                @endphp
-
-                                @if($label)
-                                    <div class="flex items-start p-3 sm:p-4 bg-orange-50 border border-orange-100 rounded-lg hover:bg-orange-100 transition-colors">
-                                        <svg class="w-5 h-5 text-orange-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span class="text-sm sm:text-base text-gray-900">{{ $label }}</span>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                <!-- What to Bring Section -->
-                @if($activity->what_to_bring)
-                    <div class="mb-8 sm:mb-12">
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                            </svg>
-                            {{ __('messages.what_to_bring') ?? 'What to Bring' }}
-                        </h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            @php
-                                $items = $activity->what_to_bring;
-                                if (is_string($items)) {
-                                    $decoded = json_decode($items, true);
-                                    $items = is_array($decoded) ? $decoded : explode("\n", $items);
-                                }
-                                if (!is_array($items)) {
-                                    $items = [$items];
-                                }
-                            @endphp
-
-                            @foreach($items as $item)
-                                @php
-                                    if (is_array($item)) {
-                                        $locale = app()->getLocale();
-                                        $label = $item['name_'.$locale]
-                                            ?? $item['name_en']
-                                            ?? $item['name']
-                                            ?? '';
-                                    } else {
-                                        $label = trim((string)$item);
-                                    }
-                                @endphp
-
-                                @if($label)
-                                    <div class="flex items-start p-3 sm:p-4 bg-blue-50 border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors">
-                                        <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span class="text-sm sm:text-base text-gray-900">{{ $label }}</span>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Important Notes -->
-                @if($activity->notes)
-                    <div class="mb-8 sm:mb-12">
-                        <div class="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-6 sm:p-8">
-                            <div class="flex items-start">
-                                <svg class="w-6 h-6 text-amber-600 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-bold text-amber-900 mb-2">
-                                        {{ __('messages.important_notes') ?? 'Important Notes' }}
-                                    </h3>
-                                    <p class="text-amber-800 leading-relaxed">
-                                        {{ $activity->notes }}
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 @endif
@@ -269,14 +138,13 @@
                                 <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
                                     {{ $otherActivity->name }}
                                 </h3>
-                                <p class="text-sm text-gray-600 mb-4 flex items-center">
-                                    <svg class="w-4 h-4 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    {{ $otherActivity->time }}
-                                </p>
+                                @if($otherActivity->description)
+                                    <p class="text-sm text-gray-600 mb-4 line-clamp-2">
+                                        {{ Str::limit($otherActivity->description, 100) }}
+                                    </p>
+                                @endif
                                 <div class="flex justify-end items-center pt-4 border-t border-gray-100">
-                                    <a href="{{ route('tour-activities.show', $otherActivity) }}" 
+                                    <a href="{{ route('tour-activities.show', $otherActivity->slug ?? $otherActivity->id) }}" 
                                        class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold group-hover:gap-2 transition-all">
                                         <span class="text-sm">{{ __('messages.view') ?? 'View' }}</span>
                                         <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
