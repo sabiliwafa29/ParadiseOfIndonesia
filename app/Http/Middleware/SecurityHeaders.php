@@ -85,6 +85,7 @@ class SecurityHeaders
         $imgSrcs = ["'self'", 'data:', 'https:'];
         $fontSrcs = ["'self'", 'https:'];
         $connectSrcs = ["'self'"];
+        $formActions = ["'self'"];
         
         // Add Bunny Fonts
         $styleSrcs[] = 'https://fonts.bunny.net';
@@ -105,6 +106,16 @@ class SecurityHeaders
         $connectSrcs[] = 'https://api.sandbox.midtrans.com';
         $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
         $connectSrcs[] = 'https://app.sandbox.midtrans.com'; // For source maps
+        $formActions[] = 'https://app.midtrans.com';
+        $formActions[] = 'https://api.midtrans.com';
+        
+        // Allow production domain in development for cross-environment testing
+        if (config('app.env') !== 'production') {
+            $formActions[] = 'https://paradiseofindonesia.com';
+            $formActions[] = 'http://47.83.187.8';
+            $connectSrcs[] = 'https://paradiseofindonesia.com';
+            $connectSrcs[] = 'http://47.83.187.8';
+        }
         
         // Add OSRM for routing
         $connectSrcs[] = 'https://router.project-osrm.org';
@@ -123,8 +134,9 @@ class SecurityHeaders
             'object-src ' . implode(' ', ["'none'"]),
             'frame-src ' . implode(' ', ["'self'", 'https://app.midtrans.com', 'https://app.sandbox.midtrans.com']),
             'base-uri ' . implode(' ', ["'self'"]),
-            'form-action ' . implode(' ', ["'self'", 'https://app.midtrans.com', 'https://api.midtrans.com']),
-            "upgrade-insecure-requests",
+            'form-action ' . implode(' ', $formActions),
+            // Only upgrade insecure requests in production
+            config('app.env') === 'production' ? "upgrade-insecure-requests" : "",
         ]);
     }
 }
