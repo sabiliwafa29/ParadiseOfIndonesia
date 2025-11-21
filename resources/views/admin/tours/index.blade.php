@@ -264,7 +264,7 @@
                                     <div class="flex items-center justify-between">
                                         <div>
                                             <span class="text-2xl font-bold text-emerald-600">
-                                                ${{ number_format($tour->price ?? 0) }}
+                                                {{ format_price(get_price($tour)) }}
                                             </span>
                                             <span class="text-sm text-gray-500">/person</span>
                                         </div>
