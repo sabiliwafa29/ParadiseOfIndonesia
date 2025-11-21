@@ -87,6 +87,20 @@ class SecurityHeaders
         $connectSrcs = ["'self'"];
         $formActions = ["'self'"];
         
+        // Add app URL explicitly to form-action (untuk workaround CSP 'self' issue)
+        if ($appUrl) {
+            $formActions[] = "https://{$appUrl}";
+            $formActions[] = "http://{$appUrl}"; // fallback untuk development
+        }
+        
+        // Tambahkan domain paradiseofindonesia.com secara explicit
+        if (!in_array('https://paradiseofindonesia.com', $formActions)) {
+            $formActions[] = 'https://paradiseofindonesia.com';
+        }
+        if (!in_array('http://paradiseofindonesia.com', $formActions)) {
+            $formActions[] = 'http://paradiseofindonesia.com';
+        }
+        
         // Add Bunny Fonts
         $styleSrcs[] = 'https://fonts.bunny.net';
         $fontSrcs[] = 'https://fonts.bunny.net';
