@@ -9,10 +9,28 @@ class MidtransService
 {
     public function __construct()
     {
-        Config::$serverKey = config('services.midtrans.server_key');
-        Config::$isProduction = config('services.midtrans.is_production', false);
+        $serverKey = config('services.midtrans.server_key');
+        $isProduction = config('services.midtrans.is_production', false);
+        
+        Log::info('🔧 [MIDTRANS] Configuration loaded', [
+            'server_key_set' => !empty($serverKey),
+            'server_key_length' => $serverKey ? strlen($serverKey) : 0,
+            'server_key_prefix' => $serverKey ? substr($serverKey, 0, 10) : 'EMPTY',
+            'is_production' => $isProduction,
+            'environment' => $isProduction ? 'PRODUCTION' : 'SANDBOX',
+        ]);
+        
+        Config::$serverKey = $serverKey;
+        Config::$isProduction = $isProduction;
         Config::$isSanitized = true;
         Config::$is3ds = true;
+        
+        if (empty($serverKey)) {
+            Log::error('❌ [MIDTRANS] SERVER KEY IS EMPTY!', [
+                'config_path' => 'services.midtrans.server_key',
+                'env_key' => 'MIDTRANS_SERVER_KEY',
+            ]);
+        }
     }
 
     /**

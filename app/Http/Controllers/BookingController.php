@@ -204,22 +204,14 @@ class BookingController extends Controller
                 'tour_name' => $booking->tour ? $booking->tour->name : 'N/A',
             ]);
             
-            try {
-                $snapToken = $this->midtransService->createTransaction($booking);
-                
-                \Illuminate\Support\Facades\Log::info('✅ [TOUR BOOKING] Snap token generated successfully', [
-                    'booking_id' => $booking->id,
-                    'snap_token' => $snapToken ? 'SUCCESS' : 'FAILED',
-                    'token_length' => $snapToken ? strlen($snapToken) : 0,
-                ]);
-            } catch (\Exception $midtransError) {
-                \Illuminate\Support\Facades\Log::error('❌ [TOUR BOOKING] Midtrans error', [
-                    'booking_id' => $booking->id,
-                    'error' => $midtransError->getMessage(),
-                    'trace' => $midtransError->getTraceAsString(),
-                ]);
-                throw $midtransError;
-            }
+            $snapToken = $this->midtransService->createTransaction($booking);
+            
+            \Illuminate\Support\Facades\Log::info('✅ [TOUR BOOKING] Snap token result', [
+                'booking_id' => $booking->id,
+                'snap_token' => $snapToken ? 'SUCCESS' : 'NULL_RETURNED',
+                'token_length' => $snapToken ? strlen($snapToken) : 0,
+                'token_type' => gettype($snapToken),
+            ]);
 
             if (!$snapToken) {
                 \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Failed to generate snap token, deleting booking', [
