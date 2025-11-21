@@ -83,6 +83,14 @@ class BookingController extends Controller
     public function storeTour(Request $request, Tour $tour)
     {
         try {
+            \Illuminate\Support\Facades\Log::info('🚀 [TOUR BOOKING] Starting tour booking process', [
+                'tour_id' => $tour->id,
+                'tour_name' => $tour->name,
+                'user_id' => auth()->id(),
+                'is_guest' => auth()->guest(),
+                'request_data' => $request->all(),
+            ]);
+
             // Validasi input
             $validated = $request->validate([
                 'name' => auth()->guest() ? 'required|string|max:255' : 'nullable',
@@ -94,11 +102,8 @@ class BookingController extends Controller
                 'terms' => 'accepted',
             ]);
 
-            \Illuminate\Support\Facades\Log::info('📝 [DEBUG] Tour booking started', [
-                'tour_id' => $tour->id,
-                'tour_name' => $tour->name,
-                'validated_data' => $validated,
-                'user_id' => auth()->id(),
+            \Illuminate\Support\Facades\Log::info('✅ [TOUR BOOKING] Validation passed', [
+                'validated' => $validated,
             ]);
 
             // Prepare booking data
@@ -122,6 +127,10 @@ class BookingController extends Controller
                 $bookingData['email'] = auth()->user()->email;
                 $bookingData['contact_handle'] = auth()->user()->phone ?? $validated['phone'] ?? '';
             }
+
+            \Illuminate\Support\Facades\Log::info('📋 [TOUR BOOKING] Booking data prepared', [
+                'booking_data' => $bookingData,
+            ]);
 
             // ✅ PREVENT DUPLICATE: Cek apakah ada booking pending yang sama dalam 10 menit terakhir
             $recentBookingQuery = Booking::where('tour_id', $tour->id)
@@ -187,14 +196,30 @@ class BookingController extends Controller
             ]);
 
             // Generate Midtrans snap token
-            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Generating Midtrans snap token...');
-            
-            $snapToken = $this->midtransService->createTransaction($booking);
-            
-            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Snap token generated', [
-                'snap_token' => $snapToken ? 'SUCCESS' : 'FAILED',
-                'token_length' => $snapToken ? strlen($snapToken) : 0,
+            \Illuminate\Support\Facades\Log::info('🎫 [TOUR BOOKING] Generating Midtrans snap token...', [
+                'booking_id' => $booking->id,
+                'order_id' => $booking->order_id,
+                'total_price' => $booking->total_price,
+                'has_tour' => $booking->tour ? true : false,
+                'tour_name' => $booking->tour ? $booking->tour->name : 'N/A',
             ]);
+            
+            try {
+                $snapToken = $this->midtransService->createTransaction($booking);
+                
+                \Illuminate\Support\Facades\Log::info('✅ [TOUR BOOKING] Snap token generated successfully', [
+                    'booking_id' => $booking->id,
+                    'snap_token' => $snapToken ? 'SUCCESS' : 'FAILED',
+                    'token_length' => $snapToken ? strlen($snapToken) : 0,
+                ]);
+            } catch (\Exception $midtransError) {
+                \Illuminate\Support\Facades\Log::error('❌ [TOUR BOOKING] Midtrans error', [
+                    'booking_id' => $booking->id,
+                    'error' => $midtransError->getMessage(),
+                    'trace' => $midtransError->getTraceAsString(),
+                ]);
+                throw $midtransError;
+            }
 
             if (!$snapToken) {
                 \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Failed to generate snap token, deleting booking', [
