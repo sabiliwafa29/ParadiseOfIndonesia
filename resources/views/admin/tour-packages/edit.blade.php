@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Update day numbers after removal
+    // Update day numbers AND field names after removal
     function updateDayNumbers() {
         const items = container.querySelectorAll('.itinerary-item');
         items.forEach((item, index) => {
@@ -630,6 +630,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const heading = item.querySelector('h3');
             badge.textContent = dayNumber;
             heading.childNodes[1].textContent = ` Day ${dayNumber}`;
+            
+            // PENTING: Update nama field agar index berurutan
+            const inputs = item.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    // Ganti index lama dengan index baru
+                    const newName = name.replace(/\[(\d+)\]/, `[${index}]`);
+                    input.setAttribute('name', newName);
+                }
+            });
         });
         itineraryCount = items.length;
     }
@@ -645,6 +656,9 @@ document.addEventListener('DOMContentLoaded', function() {
             removeButtons.forEach(btn => btn.classList.remove('hidden'));
         }
     }
+    
+    // Initialize remove button visibility
+    updateRemoveButtons();
 });
 
 // Image preview function
