@@ -94,8 +94,51 @@
 
                             @foreach($itinerary as $dayIndex => $dayData)
                                 @php
-                                    // Struktur array dengan key 'day' dan 'activities'
-                                    if (is_array($dayData) && isset($dayData['day'])) {
+                                    $dayTitle = '';
+                                    $activities = [];
+                                    $noteText = null;
+                                    
+                                    // Format BARU: { title_id, title_en, title_zh, description_id, ... }
+                                    if (is_array($dayData) && (isset($dayData['title_id']) || isset($dayData['title_en']))) {
+                                        $locale = app()->getLocale();
+                                        
+                                        // Ambil title sesuai locale
+                                        $dayTitle = $dayData['title_'.$locale] 
+                                            ?? $dayData['title_en'] 
+                                            ?? $dayData['title_id']
+                                            ?? ('Day ' . ($dayIndex + 1));
+                                        
+                                        // Ambil description sesuai locale
+                                        $description = $dayData['description_'.$locale]
+                                            ?? $dayData['description_en']
+                                            ?? $dayData['description_id']
+                                            ?? '';
+                                        
+                                        // Split description by double newline untuk activities
+                                        if ($description) {
+                                            $activityLines = array_filter(
+                                                preg_split('/\n\n+/', $description),
+                                                fn($line) => !empty(trim($line))
+                                            );
+                                            
+                                            foreach ($activityLines as $line) {
+                                                // Extract time if format: [Time] Description
+                                                if (preg_match('/^\[([^\]]+)\]\s*(.+)$/s', trim($line), $matches)) {
+                                                    $activities[] = [
+                                                        'time' => $matches[1],
+                                                        'description' => trim($matches[2])
+                                                    ];
+                                                } else {
+                                                    $activities[] = [
+                                                        'time' => '',
+                                                        'description' => trim($line)
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Format LAMA: { day: {...}, activities: [...], note: {...} }
+                                    elseif (is_array($dayData) && isset($dayData['day'])) {
                                         $locale = app()->getLocale();
                                         $dayField = $dayData['day'];
 
@@ -103,6 +146,7 @@
                                         if (is_array($dayField)) {
                                             $dayTitle = $dayField[$locale]
                                                 ?? $dayField['en']
+                                                ?? $dayField['id']
                                                 ?? reset($dayField)
                                                 ?? ('Day ' . ($dayIndex + 1));
                                         } else {
@@ -112,11 +156,25 @@
                                         $activities = is_array($dayData['activities'] ?? null)
                                             ? $dayData['activities']
                                             : (isset($dayData['activities']) ? [$dayData['activities']] : []);
-                                    } else {
-                                        // Fallback: string biasa
+                                        
+                                        // Get note from old format
+                                        if (isset($dayData['note'])) {
+                                            $note = $dayData['note'];
+                                            if (is_array($note)) {
+                                                $noteText = $note[$locale]
+                                                    ?? $note['en']
+                                                    ?? $note['id']
+                                                    ?? reset($note);
+                                            } else {
+                                                $noteText = trim((string) $note);
+                                            }
+                                        }
+                                    } 
+                                    // Fallback: string biasa
+                                    else {
                                         $text = is_array($dayData) ? ($dayData['description'] ?? (string)$dayData) : (string)$dayData;
                                         $dayTitle = 'Day ' . ($dayIndex + 1);
-                                        $activities = [$text];
+                                        $activities = [['time' => '', 'description' => $text]];
                                     }
                                 @endphp
 
@@ -152,9 +210,12 @@
 
                                                     if (is_array($activity)) {
                                                         $time = $activity['time'] ?? '';
+                                                        
+                                                        // Try to get description with locale support
                                                         $locale = app()->getLocale();
                                                         $description = $activity['description_'.$locale]
                                                             ?? $activity['description_en']
+                                                            ?? $activity['description_id']
                                                             ?? $activity['description']
                                                             ?? '';
                                                     } else {
@@ -188,26 +249,8 @@
                                                 @endif
                                             @endforeach
 
-                                            {{-- NOTE per hari (opsional, multilanguage) --}}
-                                            @php
-                                                $noteText = null;
-
-                                                if (is_array($dayData) && isset($dayData['note'])) {
-                                                    $note = $dayData['note'];
-
-                                                    if (is_array($note)) {
-                                                        $locale = app()->getLocale();
-                                                        $noteText = $note['description_'.$locale]
-                                                            ?? $note['description_en']
-                                                            ?? $note['description']
-                                                            ?? reset($note);
-                                                    } else {
-                                                        $noteText = trim((string) $note);
-                                                    }
-                                                }
-                                            @endphp
-
-                                            @if(!empty($noteText))
+                                            {{-- NOTE per hari (support new format with "Catatan:" prefix) --}}
+                                            @if($noteText)
                                                 <div class="mt-4 border-t border-gray-200 pt-3 bg-amber-50 p-3 sm:p-4 rounded-lg">
                                                     <p class="text-xs uppercase tracking-wide text-amber-600 font-semibold mb-1 flex items-center gap-1">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
