@@ -146,6 +146,9 @@ class BookingController extends Controller
                     'order_id' => $existingBooking->order_id,
                 ]);
                 
+                // Load relasi sebelum generate snap token
+                $existingBooking->load('tour', 'user');
+                
                 // Generate snap token untuk booking yang sudah ada
                 $snapToken = $this->midtransService->createTransaction($existingBooking);
                 
@@ -174,9 +177,13 @@ class BookingController extends Controller
             // Create booking
             $booking = Booking::create($bookingData);
             
+            // ✅ PENTING: Load relasi tour sebelum pass ke Midtrans
+            $booking->load('tour', 'user');
+            
             \Illuminate\Support\Facades\Log::info('✅ [DEBUG] Booking created', [
                 'booking_id' => $booking->id,
                 'order_id' => $booking->order_id,
+                'has_tour' => $booking->tour ? true : false,
             ]);
 
             // Generate Midtrans snap token
