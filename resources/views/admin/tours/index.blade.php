@@ -164,10 +164,14 @@
                         let matchesSearch = true;
                         
                         // Filter by status
-                        if (currentFilter === 'featured') {
+                        if (currentFilter === 'all') {
+                            // Show all tours
+                            matchesFilter = true;
+                        } else if (currentFilter === 'featured') {
                             matchesFilter = tour.dataset.featured === '1';
                         } else if (currentFilter === 'inactive') {
-                            matchesFilter = tour.dataset.status !== 'active';
+                            // Show only inactive tours (status is not 'active')
+                            matchesFilter = tour.dataset.status === 'inactive' || tour.dataset.status === 'draft' || tour.dataset.status === '';
                         }
                         
                         // Filter by search
