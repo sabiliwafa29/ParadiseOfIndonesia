@@ -107,17 +107,10 @@ class SecurityHeaders
         $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
         $connectSrcs[] = 'https://app.sandbox.midtrans.com'; // For source maps
         $formActions[] = 'https://app.midtrans.com';
+        $formActions[] = 'https://app.sandbox.midtrans.com';
         $formActions[] = 'https://api.midtrans.com';
         
-        // Allow production domain in development for cross-environment testing
-        if (config('app.env') !== 'production') {
-            $formActions[] = 'https://paradiseofindonesia.com';
-            $formActions[] = 'http://47.83.187.8';
-            $connectSrcs[] = 'https://paradiseofindonesia.com';
-            $connectSrcs[] = 'http://47.83.187.8';
-        }
-        
-        // Add OSRM for routing
+        // OSRM for routing
         $connectSrcs[] = 'https://router.project-osrm.org';
         
         // Add unpkg CDN for Alpine.js and other libraries
