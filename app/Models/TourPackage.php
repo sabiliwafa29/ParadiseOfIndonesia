@@ -14,6 +14,7 @@ class TourPackage extends Model
 
     protected $casts = [
         'image_derivatives' => 'json',
+        'itinerary' => 'json',
     ];
 
     /**
