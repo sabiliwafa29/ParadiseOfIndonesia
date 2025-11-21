@@ -16,6 +16,7 @@ class TourActivity extends Model
         'slug',
         'location',
         'photo',
+        'photo_derivatives',
         'description',
         'highlights',
         'what_to_bring',
@@ -25,6 +26,7 @@ class TourActivity extends Model
     protected $casts = [
         'highlights' => 'array',
         'what_to_bring' => 'array',
+        'photo_derivatives' => 'array',
     ];
 
     /**

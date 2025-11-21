@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TourActivity;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Jobs\ProcessImageDerivatives;
 
 class TourActivityController extends Controller
 {
@@ -37,9 +40,19 @@ class TourActivityController extends Controller
         // Handle photo upload
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $filename = time() . '_' . $photo->getClientOriginalName();
-            $photo->move(public_path('images/activities'), $filename);
-            $validated['photo'] = 'images/activities/' . $filename;
+            
+            // Create a clean filename without spaces or special characters
+            $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $photo->getClientOriginalExtension();
+            $cleanName = Str::slug($originalName); // Convert to URL-friendly format
+            $filename = time() . '_' . $cleanName . '.' . $extension;
+            
+            // Store in Laravel Storage disk (storage/app/public/images/activities)
+            $path = $photo->storeAs('images/activities', $filename, 'public');
+            $validated['photo'] = $path;
+            
+            // Dispatch job to generate image derivatives (thumbnails, responsive sizes)
+            ProcessImageDerivatives::dispatch($path, 'public');
         }
 
         // Convert arrays to JSON
@@ -77,15 +90,47 @@ class TourActivityController extends Controller
 
         // Handle photo upload
         if ($request->hasFile('photo')) {
-            // Delete old photo
-            if ($tourActivity->photo && file_exists(public_path($tourActivity->photo))) {
+            // Delete old photo from Storage disk
+            if ($tourActivity->photo && Storage::disk('public')->exists($tourActivity->photo)) {
+                Storage::disk('public')->delete($tourActivity->photo);
+                
+                // Also delete derivatives if they exist
+                $pathInfo = pathinfo($tourActivity->photo);
+                $dir = $pathInfo['dirname'];
+                $filename = $pathInfo['filename'];
+                $ext = $pathInfo['extension'] ?? '';
+                
+                $derivatives = [
+                    $dir . '/' . $filename . '_thumb.' . $ext,
+                    $dir . '/' . $filename . '_md.' . $ext,
+                    $dir . '/' . $filename . '_lg.' . $ext,
+                ];
+                
+                foreach ($derivatives as $derivative) {
+                    if (Storage::disk('public')->exists($derivative)) {
+                        Storage::disk('public')->delete($derivative);
+                    }
+                }
+            }
+            // Also check and delete from old public path (for backward compatibility)
+            elseif ($tourActivity->photo && file_exists(public_path($tourActivity->photo))) {
                 unlink(public_path($tourActivity->photo));
             }
             
             $photo = $request->file('photo');
-            $filename = time() . '_' . $photo->getClientOriginalName();
-            $photo->move(public_path('images/activities'), $filename);
-            $validated['photo'] = 'images/activities/' . $filename;
+            
+            // Create a clean filename without spaces or special characters
+            $originalName = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $photo->getClientOriginalExtension();
+            $cleanName = Str::slug($originalName); // Convert to URL-friendly format
+            $filename = time() . '_' . $cleanName . '.' . $extension;
+            
+            // Store in Laravel Storage disk (storage/app/public/images/activities)
+            $path = $photo->storeAs('images/activities', $filename, 'public');
+            $validated['photo'] = $path;
+            
+            // Dispatch job to generate image derivatives (thumbnails, responsive sizes)
+            ProcessImageDerivatives::dispatch($path, 'public');
         }
 
         // Convert arrays to JSON
@@ -103,6 +148,33 @@ class TourActivityController extends Controller
 
     public function destroy(TourActivity $tourActivity)
     {
+        // Delete photo from Storage disk
+        if ($tourActivity->photo && Storage::disk('public')->exists($tourActivity->photo)) {
+            Storage::disk('public')->delete($tourActivity->photo);
+            
+            // Also delete derivatives if they exist
+            $pathInfo = pathinfo($tourActivity->photo);
+            $dir = $pathInfo['dirname'];
+            $filename = $pathInfo['filename'];
+            $ext = $pathInfo['extension'] ?? '';
+            
+            $derivatives = [
+                $dir . '/' . $filename . '_thumb.' . $ext,
+                $dir . '/' . $filename . '_md.' . $ext,
+                $dir . '/' . $filename . '_lg.' . $ext,
+            ];
+            
+            foreach ($derivatives as $derivative) {
+                if (Storage::disk('public')->exists($derivative)) {
+                    Storage::disk('public')->delete($derivative);
+                }
+            }
+        }
+        // Also check and delete from old public path (for backward compatibility)
+        elseif ($tourActivity->photo && file_exists(public_path($tourActivity->photo))) {
+            unlink(public_path($tourActivity->photo));
+        }
+        
         $tourActivity->delete();
         return redirect()->route('admin.tour-activities.index')->with('success', 'Activity deleted');
     }
