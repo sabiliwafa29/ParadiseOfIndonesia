@@ -256,12 +256,29 @@
 
                 <div id="itinerary-container" class="space-y-6">
                     @php
-                        $existingItinerary = old('itinerary', $tourPackage->itinerary ?? []);
-                        if (is_string($existingItinerary)) {
-                            $existingItinerary = json_decode($existingItinerary, true) ?? [];
+                        // Ambil data itinerary dari old() atau database
+                        $existingItinerary = old('itinerary');
+                        
+                        // Jika tidak ada old data, ambil dari database
+                        if (!$existingItinerary) {
+                            $existingItinerary = $tourPackage->itinerary;
                         }
+                        
+                        // Pastikan dalam bentuk array
+                        if (!is_array($existingItinerary)) {
+                            $existingItinerary = [];
+                        }
+                        
+                        // Jika kosong, buat minimal 1 item
                         if (empty($existingItinerary)) {
-                            $existingItinerary = [[]]; // Minimal 1 item kosong
+                            $existingItinerary = [[
+                                'title_id' => '',
+                                'title_en' => '',
+                                'title_zh' => '',
+                                'description_id' => '',
+                                'description_en' => '',
+                                'description_zh' => ''
+                            ]];
                         }
                     @endphp
 

@@ -12,9 +12,27 @@ class TourPackage extends Model
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'name_id',
+        'name_en', 
+        'name_zh',
+        'description_id',
+        'description_en',
+        'description_zh',
+        'price',
+        'image',
+        'image_derivatives',
+        'includes_guide',
+        'includes_transport',
+        'itinerary',
+    ];
+
     protected $casts = [
-        'image_derivatives' => 'json',
-        'itinerary' => 'json',
+        'image_derivatives' => 'array',
+        'itinerary' => 'array',
+        'price' => 'decimal:2',
+        'includes_guide' => 'boolean',
+        'includes_transport' => 'boolean',
     ];
 
     /**

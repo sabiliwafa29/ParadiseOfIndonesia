@@ -45,26 +45,10 @@ class TourPackageController extends Controller
             'includes_transport' => 'boolean',
             'tours' => 'nullable|array',
             'tours.*' => 'exists:tours,id',
-            'itinerary' => 'nullable|array',
-            'itinerary.*.title_id' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.title_en' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.title_zh' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.description_id' => 'required_with:itinerary|string',
-            'itinerary.*.description_en' => 'required_with:itinerary|string',
-            'itinerary.*.description_zh' => 'required_with:itinerary|string',
         ]);
-
-        // Handle checkbox (jika tidak dicentang, tidak akan ada di request)
-        $validated['includes_guide'] = $request->has('includes_guide') ? 1 : 0;
-        $validated['includes_transport'] = $request->has('includes_transport') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('tour-packages', 'public');
-        }
-
-        // Reset array index (0, 1, 2...) - Laravel akan otomatis convert ke JSON
-        if (isset($validated['itinerary'])) {
-            $validated['itinerary'] = array_values($validated['itinerary']);
         }
 
         $package = TourPackage::create($validated);
@@ -73,36 +57,32 @@ class TourPackageController extends Controller
             $package->tours()->sync($validated['tours']);
         }
 
-        return redirect()->route('admin.tour-packages.index')
+        return redirect()->route('tour-packages.index')
             ->with('success', 'Tour package created successfully');
     }
 
     /**
      * Display the specified tour package.
      */
-    public function show(TourPackage $tourPackage)
+    public function show(TourPackage $package)
     {
-        $tourPackage->load('tours.destination');
-        return view('admin.tour-packages.show', compact('tourPackage'));
+        $package->load('tours.destination');
+        return view('tour-packages.show', compact('package'));
     }
 
     /**
      * Show the form for editing the specified tour package.
      */
-    public function edit(TourPackage $tourPackage)
+    public function edit(TourPackage $package)
     {
         $tours = Tour::all();
-        
-        // Tidak perlu decode manual karena sudah ada cast 'json' di model
-        // Laravel otomatis mengubah JSON string menjadi array
-        
-        return view('admin.tour-packages.edit', compact('tourPackage', 'tours'));
+        return view('tour-packages.edit', compact('package', 'tours'));
     }
 
     /**
      * Update the specified tour package in storage.
      */
-    public function update(Request $request, TourPackage $tourPackage)
+    public function update(Request $request, TourPackage $package)
     {
         $validated = $request->validate([
             'name_id' => 'required|string|max:255',
@@ -117,52 +97,36 @@ class TourPackageController extends Controller
             'includes_transport' => 'boolean',
             'tours' => 'nullable|array',
             'tours.*' => 'exists:tours,id',
-            'itinerary' => 'nullable|array',
-            'itinerary.*.title_id' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.title_en' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.title_zh' => 'required_with:itinerary|string|max:255',
-            'itinerary.*.description_id' => 'required_with:itinerary|string',
-            'itinerary.*.description_en' => 'required_with:itinerary|string',
-            'itinerary.*.description_zh' => 'required_with:itinerary|string',
         ]);
 
-        // Handle checkbox
-        $validated['includes_guide'] = $request->has('includes_guide') ? 1 : 0;
-        $validated['includes_transport'] = $request->has('includes_transport') ? 1 : 0;
-
         if ($request->hasFile('image')) {
-            if ($tourPackage->image && Storage::disk('public')->exists($tourPackage->image)) {
-                Storage::disk('public')->delete($tourPackage->image);
+            if ($package->image && Storage::disk('public')->exists($package->image)) {
+                Storage::disk('public')->delete($package->image);
             }
             $validated['image'] = $request->file('image')->store('tour-packages', 'public');
         }
 
-        // Reset array index - Laravel otomatis convert ke JSON
-        if (isset($validated['itinerary'])) {
-            $validated['itinerary'] = array_values($validated['itinerary']);
-        }
+        $package->update($validated);
 
-        $tourPackage->update($validated);
+        $package->tours()->sync($validated['tours'] ?? []);
 
-        $tourPackage->tours()->sync($validated['tours'] ?? []);
-
-        return redirect()->route('admin.tour-packages.show', $tourPackage)
+        return redirect()->route('tour-packages.show', $package)
             ->with('success', 'Tour package updated successfully');
     }
 
     /**
      * Remove the specified tour package from storage.
      */
-    public function destroy(TourPackage $tourPackage)
+    public function destroy(TourPackage $package)
     {
-        if ($tourPackage->image && Storage::disk('public')->exists($tourPackage->image)) {
-            Storage::disk('public')->delete($tourPackage->image);
+        if ($package->image && Storage::disk('public')->exists($package->image)) {
+            Storage::disk('public')->delete($package->image);
         }
 
-        $tourPackage->tours()->detach();
-        $tourPackage->delete();
+        $package->tours()->detach();
+        $package->delete();
 
-        return redirect()->route('admin.tour-packages.index')
+        return redirect()->route('tour-packages.index')
             ->with('success', 'Tour package deleted successfully');
     }
 }

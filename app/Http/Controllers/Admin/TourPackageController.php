@@ -44,8 +44,6 @@ class TourPackageController extends Controller
             'description_zh' => 'required|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|max:2048',
-            'includes_guide' => 'boolean',
-            'includes_transport' => 'boolean',
             'itinerary' => 'nullable|array',
             'itinerary.*.title_id' => 'required|string',
             'itinerary.*.title_en' => 'required|string',
@@ -57,6 +55,11 @@ class TourPackageController extends Controller
             'tours.*' => 'exists:tours,id',
         ]);
 
+        // Handle checkbox
+        $validated['includes_guide'] = $request->has('includes_guide');
+        $validated['includes_transport'] = $request->has('includes_transport');
+
+        // Handle image upload
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('tour-packages', 'public');
         }
@@ -97,8 +100,6 @@ class TourPackageController extends Controller
             'description_zh' => 'required|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|max:2048',
-            'includes_guide' => 'boolean',
-            'includes_transport' => 'boolean',
             'itinerary' => 'nullable|array',
             'itinerary.*.title_id' => 'required|string',
             'itinerary.*.title_en' => 'required|string',
@@ -110,6 +111,11 @@ class TourPackageController extends Controller
             'tours.*' => 'exists:tours,id',
         ]);
 
+        // Handle checkbox yang tidak dicentang (tidak ada di request)
+        $validated['includes_guide'] = $request->has('includes_guide');
+        $validated['includes_transport'] = $request->has('includes_transport');
+
+        // Handle image upload
         if ($request->hasFile('image')) {
             if ($tourPackage->image && \Storage::disk('public')->exists($tourPackage->image)) {
                 \Storage::disk('public')->delete($tourPackage->image);
@@ -117,8 +123,10 @@ class TourPackageController extends Controller
             $validated['image'] = $request->file('image')->store('tour-packages', 'public');
         }
 
+        // Update tour package
         $tourPackage->update($validated);
 
+        // Sync tours
         $tourPackage->tours()->sync($validated['tours'] ?? []);
 
         // Dispatch derivative processing job if image was uploaded
