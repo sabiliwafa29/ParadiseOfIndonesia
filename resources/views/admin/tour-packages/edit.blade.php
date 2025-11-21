@@ -321,6 +321,58 @@
                     @endphp
 
                     @foreach($existingItinerary as $index => $item)
+                    @php
+                        // Konversi struktur lama ke struktur baru
+                        $titleId = '';
+                        $titleEn = '';
+                        $titleZh = '';
+                        $descId = '';
+                        $descEn = '';
+                        $descZh = '';
+                        
+                        // Cek apakah format baru (title_id exists) atau format lama (day exists)
+                        if (isset($item['title_id'])) {
+                            // Format baru - langsung ambil
+                            $titleId = $item['title_id'] ?? '';
+                            $titleEn = $item['title_en'] ?? '';
+                            $titleZh = $item['title_zh'] ?? '';
+                            $descId = $item['description_id'] ?? '';
+                            $descEn = $item['description_en'] ?? '';
+                            $descZh = $item['description_zh'] ?? '';
+                        } elseif (isset($item['day'])) {
+                            // Format lama - convert dari day/activities
+                            $titleId = $item['day']['id'] ?? '';
+                            $titleEn = $item['day']['en'] ?? '';
+                            $titleZh = $item['day']['zh'] ?? '';
+                            
+                            // Gabungkan semua activities menjadi description
+                            if (isset($item['activities']) && is_array($item['activities'])) {
+                                $activitiesId = [];
+                                $activitiesEn = [];
+                                $activitiesZh = [];
+                                
+                                foreach ($item['activities'] as $activity) {
+                                    if (isset($activity['description_id'])) {
+                                        $time = $activity['time'] ?? '';
+                                        $activitiesId[] = ($time ? "[$time] " : '') . $activity['description_id'];
+                                        $activitiesEn[] = ($time ? "[$time] " : '') . ($activity['description_en'] ?? '');
+                                        $activitiesZh[] = ($time ? "[$time] " : '') . ($activity['description_zh'] ?? '');
+                                    }
+                                }
+                                
+                                $descId = implode("\n\n", $activitiesId);
+                                $descEn = implode("\n\n", $activitiesEn);
+                                $descZh = implode("\n\n", $activitiesZh);
+                                
+                                // Tambahkan note jika ada
+                                if (isset($item['note']['id'])) {
+                                    $descId .= "\n\nCatatan: " . $item['note']['id'];
+                                    $descEn .= "\n\nNote: " . ($item['note']['en'] ?? '');
+                                    $descZh .= "\n\n注意: " . ($item['note']['zh'] ?? '');
+                                }
+                            }
+                        }
+                    @endphp
                     <div class="itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-gray-800 flex items-center">
@@ -344,7 +396,7 @@
                                 </label>
                                 <input type="text" 
                                        name="itinerary[{{ $index }}][title_id]" 
-                                       value="{{ $item['title_id'] ?? '' }}"
+                                       value="{{ $titleId }}"
                                        required 
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
                                        placeholder="Contoh: Hari Pertama - Tiba di Bali">
@@ -357,7 +409,7 @@
                                 </label>
                                 <input type="text" 
                                        name="itinerary[{{ $index }}][title_en]" 
-                                       value="{{ $item['title_en'] ?? '' }}"
+                                       value="{{ $titleEn }}"
                                        required 
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
                                        placeholder="Example: First Day - Arrival in Bali">
@@ -370,7 +422,7 @@
                                 </label>
                                 <input type="text" 
                                        name="itinerary[{{ $index }}][title_zh]" 
-                                       value="{{ $item['title_zh'] ?? '' }}"
+                                       value="{{ $titleZh }}"
                                        required 
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
                                        placeholder="例如：第一天 - 抵达巴厘岛">
@@ -382,10 +434,10 @@
                                     Deskripsi (ID) <span class="text-red-500">*</span>
                                 </label>
                                 <textarea name="itinerary[{{ $index }}][description_id]" 
-                                          rows="3" 
+                                          rows="5" 
                                           required 
                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
-                                          placeholder="Jelaskan aktivitas di hari ini...">{{ $item['description_id'] ?? '' }}</textarea>
+                                          placeholder="Jelaskan aktivitas di hari ini...">{{ $descId }}</textarea>
                             </div>
 
                             <!-- Description EN -->
@@ -394,10 +446,10 @@
                                     Description (EN) <span class="text-red-500">*</span>
                                 </label>
                                 <textarea name="itinerary[{{ $index }}][description_en]" 
-                                          rows="3" 
+                                          rows="5" 
                                           required 
                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
-                                          placeholder="Describe today's activities...">{{ $item['description_en'] ?? '' }}</textarea>
+                                          placeholder="Describe today's activities...">{{ $descEn }}</textarea>
                             </div>
 
                             <!-- Description ZH -->
@@ -406,10 +458,10 @@
                                     描述 (ZH) <span class="text-red-500">*</span>
                                 </label>
                                 <textarea name="itinerary[{{ $index }}][description_zh]" 
-                                          rows="3" 
+                                          rows="5" 
                                           required 
                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
-                                          placeholder="描述今天的活动...">{{ $item['description_zh'] ?? '' }}</textarea>
+                                          placeholder="描述今天的活动...">{{ $descZh }}</textarea>
                             </div>
                         </div>
                     </div>
