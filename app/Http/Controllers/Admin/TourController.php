@@ -31,10 +31,9 @@ class TourController extends Controller
             ->latest()
             ->paginate(15);
 
-        // Get statistics
+        // Get statistics - consistent with displayed tours filter
         $totalBookings = 0;
         $totalRevenue = 0;
-        $featuredCount = 0;
         
         // Check if Booking model exists
         if (class_exists(\App\Models\Booking::class)) {
@@ -43,7 +42,11 @@ class TourController extends Controller
                 ->sum('total_price');
         }
         
-        $featuredCount = Tour::where('featured', true)->count();
+        // Count featured tours with same filter as displayed tours
+        $featuredCount = Tour::forMarket($userMarket)
+            ->active()
+            ->where('featured', true)
+            ->count();
 
         return view('admin.tours.index', compact('tours', 'userMarket', 'userCountry', 'userCurrency', 'totalBookings', 'totalRevenue', 'featuredCount'));
     }

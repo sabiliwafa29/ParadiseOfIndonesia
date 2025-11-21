@@ -29,7 +29,20 @@
                     <div class="group bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
                         <div class="relative h-56 overflow-hidden">
                             <a href="{{ route('tours.show', $tour) }}">
-                                <img src="{{ asset($tour->image) }}" alt="{{ $tour->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                @if($tour->image)
+                                    @include('components.responsive-image', [
+                                        'path' => $tour->image, 
+                                        'alt' => $tour->name ?? '', 
+                                        'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700', 
+                                        'derivatives' => $tour->image_derivatives
+                                    ])
+                                @else
+                                    <div class="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                                        <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                @endif
                             </a>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                             <div class="absolute top-4 left-4">
