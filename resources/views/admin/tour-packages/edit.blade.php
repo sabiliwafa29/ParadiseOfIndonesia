@@ -254,6 +254,33 @@
                     Itinerary (Jadwal Perjalanan)
                 </h2>
 
+                <!-- DEBUG INFO -->
+                <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                    <p class="font-bold text-yellow-800 mb-2">🐛 DEBUG INFORMATION:</p>
+                    <div class="text-sm text-yellow-700 space-y-1 font-mono">
+                        @php
+                            $rawItinerary = $tourPackage->getRawOriginal('itinerary');
+                            $castedItinerary = $tourPackage->itinerary;
+                            $oldItinerary = old('itinerary');
+                        @endphp
+                        <p><strong>Raw DB Value:</strong> {{ $rawItinerary ? substr(json_encode($rawItinerary), 0, 200) : 'NULL' }}...</p>
+                        <p><strong>Casted Value:</strong> {{ $castedItinerary ? substr(json_encode($castedItinerary), 0, 200) : 'NULL' }}...</p>
+                        <p><strong>Old Input:</strong> {{ $oldItinerary ? 'EXISTS' : 'NULL' }}</p>
+                        <p><strong>Is Array:</strong> {{ is_array($castedItinerary) ? 'YES' : 'NO' }}</p>
+                        <p><strong>Array Count:</strong> {{ is_array($castedItinerary) ? count($castedItinerary) : '0' }}</p>
+                        <p><strong>JSON Decode Test:</strong> 
+                            @php
+                                if (is_string($rawItinerary)) {
+                                    $decoded = json_decode($rawItinerary, true);
+                                    echo json_last_error() === JSON_ERROR_NONE ? 'SUCCESS' : 'FAILED: ' . json_last_error_msg();
+                                } else {
+                                    echo 'NOT STRING';
+                                }
+                            @endphp
+                        </p>
+                    </div>
+                </div>
+
                 <div id="itinerary-container" class="space-y-6">
                     @php
                         // Ambil data itinerary dari old() atau database
@@ -264,13 +291,22 @@
                             $existingItinerary = $tourPackage->itinerary;
                         }
                         
+                        // Debug: Log nilai
+                        \Log::info('=== ITINERARY DEBUG ===');
+                        \Log::info('Raw from DB: ' . json_encode($tourPackage->getRawOriginal('itinerary')));
+                        \Log::info('After casting: ' . json_encode($tourPackage->itinerary));
+                        \Log::info('Type: ' . gettype($existingItinerary));
+                        \Log::info('Is Array: ' . (is_array($existingItinerary) ? 'YES' : 'NO'));
+                        
                         // Pastikan dalam bentuk array
                         if (!is_array($existingItinerary)) {
+                            \Log::warning('Converting to array because type is: ' . gettype($existingItinerary));
                             $existingItinerary = [];
                         }
                         
                         // Jika kosong, buat minimal 1 item
                         if (empty($existingItinerary)) {
+                            \Log::info('Empty itinerary, creating default item');
                             $existingItinerary = [[
                                 'title_id' => '',
                                 'title_en' => '',
@@ -280,6 +316,8 @@
                                 'description_zh' => ''
                             ]];
                         }
+                        
+                        \Log::info('Final itinerary count: ' . count($existingItinerary));
                     @endphp
 
                     @foreach($existingItinerary as $index => $item)
@@ -531,12 +569,39 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let itineraryCount = {{ count($existingItinerary) }};
+    // === DEBUG CONSOLE ===
+    console.log('🐛 === ITINERARY DEBUG START ===');
+    console.log('Initial itinerary count from PHP:', {{ count($existingItinerary) }});
+    console.log('Itinerary data:', @json($existingItinerary));
+    console.log('Tour Package ID:', {{ $tourPackage->id }});
+    console.log('Raw itinerary from model:', @json($tourPackage->itinerary));
+    
+    // Check DOM elements
     const container = document.getElementById('itinerary-container');
+    const items = container.querySelectorAll('.itinerary-item');
+    console.log('DOM: Found', items.length, 'itinerary items in container');
+    
+    items.forEach((item, index) => {
+        const inputs = item.querySelectorAll('input[type="text"], textarea');
+        console.log(`DOM: Day ${index + 1} has ${inputs.length} input fields`);
+        
+        // Log each field value
+        inputs.forEach(input => {
+            console.log(`  - ${input.name}: "${input.value}"`);
+        });
+    });
+    console.log('🐛 === ITINERARY DEBUG END ===');
+    // === END DEBUG ===
+
+    let itineraryCount = {{ count($existingItinerary) }};
     const addButton = document.getElementById('add-itinerary');
+
+    console.log('Itinerary manager initialized with count:', itineraryCount);
 
     // Add new itinerary item
     addButton.addEventListener('click', function() {
+        console.log('➕ Adding new itinerary item, current count:', itineraryCount);
+        
         const newItem = document.createElement('div');
         newItem.className = 'itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white';
         newItem.innerHTML = `
@@ -625,22 +690,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         container.appendChild(newItem);
         itineraryCount++;
+        console.log('✅ Item added, new count:', itineraryCount);
         updateRemoveButtons();
     });
 
     // Remove itinerary item
     container.addEventListener('click', function(e) {
         if (e.target.closest('.remove-itinerary')) {
+            console.log('🗑️ Removing itinerary item');
             const item = e.target.closest('.itinerary-item');
+            const itemIndex = Array.from(container.querySelectorAll('.itinerary-item')).indexOf(item);
+            console.log('Item index to remove:', itemIndex);
+            
             item.remove();
             updateDayNumbers();
             updateRemoveButtons();
+            
+            console.log('✅ Item removed, remaining count:', container.querySelectorAll('.itinerary-item').length);
         }
     });
 
     // Update day numbers AND field names after removal
     function updateDayNumbers() {
+        console.log('🔄 Updating day numbers and field names...');
         const items = container.querySelectorAll('.itinerary-item');
+        
         items.forEach((item, index) => {
             const dayNumber = index + 1;
             const badge = item.querySelector('span.inline-flex');
@@ -648,18 +722,25 @@ document.addEventListener('DOMContentLoaded', function() {
             badge.textContent = dayNumber;
             heading.childNodes[1].textContent = ` Day ${dayNumber}`;
             
+            console.log(`  - Day ${dayNumber}: Updating field names`);
+            
             // PENTING: Update nama field agar index berurutan
             const inputs = item.querySelectorAll('input[type="text"], textarea');
             inputs.forEach(input => {
-                const name = input.getAttribute('name');
-                if (name) {
+                const oldName = input.getAttribute('name');
+                if (oldName) {
                     // Ganti index lama dengan index baru
-                    const newName = name.replace(/\[(\d+)\]/, `[${index}]`);
+                    const newName = oldName.replace(/\[(\d+)\]/, `[${index}]`);
                     input.setAttribute('name', newName);
+                    
+                    if (oldName !== newName) {
+                        console.log(`    ${oldName} → ${newName}`);
+                    }
                 }
             });
         });
         itineraryCount = items.length;
+        console.log('✅ Update complete, total items:', itineraryCount);
     }
 
     // Show/hide remove buttons (hide if only one item)
@@ -667,27 +748,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const items = container.querySelectorAll('.itinerary-item');
         const removeButtons = container.querySelectorAll('.remove-itinerary');
         
+        console.log('🔘 Updating remove buttons visibility, items count:', items.length);
+        
         if (items.length <= 1) {
             removeButtons.forEach(btn => btn.classList.add('hidden'));
+            console.log('  - Hiding remove buttons (only 1 item)');
         } else {
             removeButtons.forEach(btn => btn.classList.remove('hidden'));
+            console.log('  - Showing remove buttons');
         }
     }
     
     // Initialize remove button visibility
+    console.log('🎬 Initializing remove buttons...');
     updateRemoveButtons();
+    console.log('✅ Initialization complete!');
 });
 
 // Image preview function
 function previewImage(event) {
+    console.log('🖼️ Image selected for preview');
     const input = event.target;
     if (input.files && input.files[0]) {
+        console.log('  - File:', input.files[0].name, '(' + (input.files[0].size / 1024).toFixed(2) + ' KB)');
         const reader = new FileReader();
         reader.onload = function(e) {
             const preview = document.getElementById('image-preview');
             const img = document.getElementById('preview-img');
             img.src = e.target.result;
             preview.classList.remove('hidden');
+            console.log('✅ Image preview loaded');
         }
         reader.readAsDataURL(input.files[0]);
     }
