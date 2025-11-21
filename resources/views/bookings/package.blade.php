@@ -20,9 +20,25 @@
                 <!-- Package Card -->
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden sticky top-6">
                     <div class="relative h-48">
-                        <img src="{{ asset($package->image) }}" 
-                             alt="{{ $package->name }}" 
-                             class="w-full h-full object-cover">
+                        @if($package->image)
+                            @if(isset($package->image_derivatives) && $package->image_derivatives)
+                                @include('components.responsive-image', [
+                                    'path' => $package->image,
+                                    'alt' => $package->name,
+                                    'class' => 'w-full h-full object-cover',
+                                    'derivatives' => $package->image_derivatives
+                                ])
+                            @else
+                                <img src="{{ \Storage::disk('public')->exists($package->image) ? \Storage::disk('public')->url($package->image) : asset($package->image) }}" 
+                                     alt="{{ $package->name }}" 
+                                     class="w-full h-full object-cover"
+                                     onerror="this.src='{{ asset('images/placeholder-tour.jpg') }}'">
+                            @endif
+                        @else
+                            <img src="{{ asset('images/placeholder-tour.jpg') }}" 
+                                 alt="{{ $package->name }}" 
+                                 class="w-full h-full object-cover">
+                        @endif
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                         <div class="absolute bottom-4 left-4 right-4 text-white">
                             <h2 class="text-xl font-bold drop-shadow-lg">{{ $package->name }}</h2>

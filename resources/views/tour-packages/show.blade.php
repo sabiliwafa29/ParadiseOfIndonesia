@@ -18,9 +18,25 @@
         <div class="bg-white overflow-hidden shadow-xl rounded-2xl">
             <!-- Package Header with Image -->
             <div class="relative h-64 sm:h-80 md:h-96 overflow-hidden">
-                <img src="{{ asset($package->image) }}" 
-                     alt="{{ $package->name }}" 
-                     class="w-full h-full object-cover">
+                @if($package->image)
+                    @if(isset($package->image_derivatives) && $package->image_derivatives)
+                        @include('components.responsive-image', [
+                            'path' => $package->image,
+                            'alt' => $package->name,
+                            'class' => 'w-full h-full object-cover',
+                            'derivatives' => $package->image_derivatives
+                        ])
+                    @else
+                        <img src="{{ \Storage::disk('public')->exists($package->image) ? \Storage::disk('public')->url($package->image) : asset($package->image) }}" 
+                             alt="{{ $package->name }}" 
+                             class="w-full h-full object-cover"
+                             onerror="this.src='{{ asset('images/placeholder-tour.jpg') }}'">
+                    @endif
+                @else
+                    <img src="{{ asset('images/placeholder-tour.jpg') }}" 
+                         alt="{{ $package->name }}" 
+                         class="w-full h-full object-cover">
+                @endif
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8 md:p-12 text-white">
                     <div class="inline-flex items-center gap-2 bg-emerald-500/90 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
@@ -395,9 +411,25 @@
                     @foreach($relatedPackages as $relatedPackage)
                         <div class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative h-48 overflow-hidden">
-                                <img src="{{ asset($relatedPackage->image) }}" 
-                                     alt="{{ $relatedPackage->name }}" 
-                                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                @if($relatedPackage->image)
+                                    @if(isset($relatedPackage->image_derivatives) && $relatedPackage->image_derivatives)
+                                        @include('components.responsive-image', [
+                                            'path' => $relatedPackage->image,
+                                            'alt' => $relatedPackage->name,
+                                            'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500',
+                                            'derivatives' => $relatedPackage->image_derivatives
+                                        ])
+                                    @else
+                                        <img src="{{ \Storage::disk('public')->exists($relatedPackage->image) ? \Storage::disk('public')->url($relatedPackage->image) : asset($relatedPackage->image) }}" 
+                                             alt="{{ $relatedPackage->name }}" 
+                                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                             onerror="this.src='{{ asset('images/placeholder-tour.jpg') }}'">
+                                    @endif
+                                @else
+                                    <img src="{{ asset('images/placeholder-tour.jpg') }}" 
+                                         alt="{{ $relatedPackage->name }}" 
+                                         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                @endif
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                             </div>
                             <div class="p-5 sm:p-6">

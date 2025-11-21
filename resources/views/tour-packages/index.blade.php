@@ -33,9 +33,25 @@
             <div class="group relative bg-white rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
                 <!-- Image Section -->
                 <div class="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                    <img src="{{ asset($package->image) }}" 
-                         alt="{{ $package->name }}" 
-                         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    @if($package->image)
+                        @if(isset($package->image_derivatives) && $package->image_derivatives)
+                            @include('components.responsive-image', [
+                                'path' => $package->image,
+                                'alt' => $package->name,
+                                'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700',
+                                'derivatives' => $package->image_derivatives
+                            ])
+                        @else
+                            <img src="{{ \Storage::disk('public')->exists($package->image) ? \Storage::disk('public')->url($package->image) : asset($package->image) }}" 
+                                 alt="{{ $package->name }}" 
+                                 class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                 onerror="this.src='{{ asset('images/placeholder-tour.jpg') }}'">
+                        @endif
+                    @else
+                        <img src="{{ asset('images/placeholder-tour.jpg') }}" 
+                             alt="{{ $package->name }}" 
+                             class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                     
                     <!-- Best Seller Badge -->
