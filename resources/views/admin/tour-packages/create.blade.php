@@ -368,18 +368,55 @@
                     Gambar Package
                 </h2>
 
-                <div>
-                    <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Upload Gambar <span class="text-gray-500 font-normal">(Opsional)</span>
-                    </label>
-                    <div class="relative">
-                        <input type="file" 
-                               name="image" 
-                               id="image" 
-                               accept="image/*"
-                               class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 hover:border-emerald-400 transition-colors cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                <div class="space-y-4">
+                    <div>
+                        <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Upload Gambar <span class="text-gray-500 font-normal">(Opsional)</span>
+                        </label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-emerald-400 transition-colors bg-gray-50">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-emerald-500">
+                                        <span>Upload a file</span>
+                                        <input id="image" 
+                                               name="image" 
+                                               type="file" 
+                                               class="sr-only" 
+                                               accept="image/*"
+                                               onchange="previewImage(event)">
+                                    </label>
+                                    <p class="pl-1">or drag and drop</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500 flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Disarankan: Gambar dengan rasio 16:9 atau 4:3 untuk tampilan optimal
+                        </p>
                     </div>
-                    <p class="mt-2 text-sm text-gray-500">Format: JPG, PNG, GIF (Max: 2MB)</p>
+
+                    <!-- Image Preview -->
+                    <div id="image-preview" class="hidden">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">Preview Gambar</label>
+                        <div class="relative inline-block">
+                            <div class="max-h-80 rounded-xl shadow-lg border-2 border-emerald-300 overflow-hidden">
+                                <img id="preview-img" class="w-full h-full object-cover" alt="Preview">
+                            </div>
+                            <span class="absolute top-3 left-3 px-3 py-1.5 bg-blue-500 text-white text-xs font-semibold rounded-full shadow-lg flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Preview
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -573,5 +610,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Image preview function
+function previewImage(event) {
+    const input = event.target;
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('image-preview');
+            const img = document.getElementById('preview-img');
+            img.src = e.target.result;
+            preview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 </script>
 @endsection

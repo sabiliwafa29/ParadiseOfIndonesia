@@ -125,6 +125,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gradient-to-r from-emerald-50 to-teal-50">
                         <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Image</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Package Name</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Guide</th>
@@ -135,6 +136,24 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($packages as $package)
                         <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="w-20 h-20 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-emerald-400 to-teal-500">
+                                    @if($package->image)
+                                        @include('components.responsive-image', [
+                                            'path' => $package->image, 
+                                            'alt' => $package->name_en ?? '', 
+                                            'class' => 'w-full h-full object-cover', 
+                                            'derivatives' => $package->image_derivatives ?? null
+                                        ])
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
                             <td class="px-6 py-4">
                                 <div class="space-y-1">
                                     <div class="flex items-center">
@@ -216,7 +235,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
+                            <td colspan="6" class="px-6 py-12 text-center">
                                 <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                                 </svg>
@@ -234,6 +253,24 @@
                 @forelse($packages as $package)
                 <div class="p-4 hover:bg-gray-50 transition-colors">
                     <div class="space-y-3">
+                        <!-- Package Image -->
+                        <div class="w-full h-48 rounded-xl overflow-hidden shadow-md bg-gradient-to-br from-emerald-400 to-teal-500">
+                            @if($package->image)
+                                @include('components.responsive-image', [
+                                    'path' => $package->image, 
+                                    'alt' => $package->name_en ?? '', 
+                                    'class' => 'w-full h-full object-cover', 
+                                    'derivatives' => $package->image_derivatives ?? null
+                                ])
+                            @else
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                        </div>
+
                         <!-- Package Names -->
                         <div>
                             <div class="flex items-center mb-2">
