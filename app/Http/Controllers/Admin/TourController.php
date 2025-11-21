@@ -31,7 +31,21 @@ class TourController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('admin.tours.index', compact('tours', 'userMarket', 'userCountry', 'userCurrency'));
+        // Get statistics
+        $totalBookings = 0;
+        $totalRevenue = 0;
+        $featuredCount = 0;
+        
+        // Check if Booking model exists
+        if (class_exists(\App\Models\Booking::class)) {
+            $totalBookings = \App\Models\Booking::count();
+            $totalRevenue = \App\Models\Booking::where('payment_status', 'paid')
+                ->sum('total_price');
+        }
+        
+        $featuredCount = Tour::where('featured', true)->count();
+
+        return view('admin.tours.index', compact('tours', 'userMarket', 'userCountry', 'userCurrency', 'totalBookings', 'totalRevenue', 'featuredCount'));
     }
 
     /**

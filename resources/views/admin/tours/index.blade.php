@@ -51,12 +51,12 @@
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm font-medium">Active Tours</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $tours->where('status', 'active')->count() }}</p>
+                        <p class="text-gray-600 text-sm font-medium">Featured Tours</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $featuredCount ?? 0 }}</p>
                     </div>
                     <div class="bg-blue-100 rounded-full p-3">
                         <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                         </svg>
                     </div>
                 </div>
@@ -65,12 +65,12 @@
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm font-medium">Bookings</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">247</p>
+                        <p class="text-gray-600 text-sm font-medium">Total Bookings</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $totalBookings ?? 0 }}</p>
                     </div>
                     <div class="bg-yellow-100 rounded-full p-3">
                         <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                         </svg>
                     </div>
                 </div>
@@ -79,8 +79,14 @@
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-600 text-sm font-medium">Revenue</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">$42.5K</p>
+                        <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">
+                            @if(($totalRevenue ?? 0) > 0)
+                                ${{ number_format($totalRevenue / 1000, 1) }}K
+                            @else
+                                $0
+                            @endif
+                        </p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
                         <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,31 +98,72 @@
         </div>
 
         {{-- Main Content --}}
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden" x-data="{ 
+            filter: 'all',
+            search: '',
+            get filteredTours() {
+                let tours = Array.from(document.querySelectorAll('.tour-card'));
+                
+                tours.forEach(tour => {
+                    let matchesFilter = true;
+                    let matchesSearch = true;
+                    
+                    // Filter by status
+                    if (this.filter === 'featured') {
+                        matchesFilter = tour.dataset.featured === '1';
+                    } else if (this.filter === 'inactive') {
+                        matchesFilter = tour.dataset.status !== 'active';
+                    }
+                    
+                    // Filter by search
+                    if (this.search) {
+                        const searchLower = this.search.toLowerCase();
+                        const name = tour.dataset.name.toLowerCase();
+                        const description = tour.dataset.description.toLowerCase();
+                        matchesSearch = name.includes(searchLower) || description.includes(searchLower);
+                    }
+                    
+                    // Show/hide based on filters
+                    if (matchesFilter && matchesSearch) {
+                        tour.style.display = 'block';
+                    } else {
+                        tour.style.display = 'none';
+                    }
+                });
+            }
+        }">
             {{-- Tabs/Filter Section --}}
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex space-x-4">
-                        <button class="px-4 py-2 text-sm font-semibold text-emerald-700 bg-emerald-100 rounded-lg">
+                        <button @click="filter = 'all'; filteredTours" 
+                                :class="filter === 'all' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
+                                class="px-4 py-2 text-sm rounded-lg transition">
                             All Tours
                         </button>
-                        <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                        <button @click="filter = 'featured'; filteredTours" 
+                                :class="filter === 'featured' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
+                                class="px-4 py-2 text-sm rounded-lg transition">
                             Featured
                         </button>
-                        <button class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">
+                        <button @click="filter = 'inactive'; filteredTours" 
+                                :class="filter === 'inactive' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
+                                class="px-4 py-2 text-sm rounded-lg transition">
                             Inactive
                         </button>
                     </div>
                     <div class="flex items-center space-x-3">
                         <div class="relative">
                             <input type="text" 
+                                   x-model="search"
+                                   @input="filteredTours"
                                    placeholder="Search tours..." 
                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
                             <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </div>
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition">
+                        <button class="p-2 hover:bg-gray-100 rounded-lg transition" title="More filters">
                             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
                             </svg>
@@ -129,7 +176,11 @@
             <div class="p-6">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     @foreach($tours as $tour)
-                    <div class="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                    <div class="tour-card group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                         data-status="{{ $tour->status ?? 'active' }}"
+                         data-featured="{{ $tour->featured ? '1' : '0' }}"
+                         data-name="{{ $tour->name }}"
+                         data-description="{{ Str::limit($tour->description, 100) }}">
                         <div class="flex">
                             {{-- Image Section --}}
                             <div class="w-48 h-48 bg-gradient-to-br from-emerald-400 to-teal-500 flex-shrink-0 relative overflow-hidden">
