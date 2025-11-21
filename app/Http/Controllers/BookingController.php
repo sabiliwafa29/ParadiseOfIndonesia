@@ -75,6 +75,160 @@ class BookingController extends Controller
         return view('bookings.package', compact('package'));
     }
 
+    public function tour(Tour $tour)
+    {
+        return view('bookings.tour', compact('tour'));
+    }
+
+    public function storeTour(Request $request, Tour $tour)
+    {
+        try {
+            // Validasi input
+            $validated = $request->validate([
+                'name' => auth()->guest() ? 'required|string|max:255' : 'nullable',
+                'email' => auth()->guest() ? 'required|email' : 'nullable',
+                'phone' => auth()->guest() ? 'required|string|max:20' : 'nullable',
+                'date' => 'required|date|after:today',
+                'guests' => 'required|integer|min:1|max:50',
+                'special_requests' => 'nullable|string|max:500',
+                'terms' => 'accepted',
+            ]);
+
+            \Illuminate\Support\Facades\Log::info('📝 [DEBUG] Tour booking started', [
+                'tour_id' => $tour->id,
+                'tour_name' => $tour->name,
+                'validated_data' => $validated,
+                'user_id' => auth()->id(),
+            ]);
+
+            // Prepare booking data
+            $bookingData = [
+                'user_id' => auth()->id(),
+                'tour_id' => $tour->id,
+                'date' => $validated['date'],
+                'guests' => $validated['guests'],
+                'special_requests' => $validated['special_requests'] ?? null,
+                'status' => 'pending',
+                'payment_status' => 'pending',
+            ];
+
+            // Untuk guest, simpan data kontak
+            if (auth()->guest()) {
+                $bookingData['full_name'] = $validated['name'];
+                $bookingData['email'] = $validated['email'];
+                $bookingData['contact_handle'] = $validated['phone'];
+            } else {
+                $bookingData['full_name'] = auth()->user()->name;
+                $bookingData['email'] = auth()->user()->email;
+                $bookingData['contact_handle'] = auth()->user()->phone ?? $validated['phone'] ?? '';
+            }
+
+            // ✅ PREVENT DUPLICATE: Cek apakah ada booking pending yang sama dalam 10 menit terakhir
+            $recentBookingQuery = Booking::where('tour_id', $tour->id)
+                ->where('date', $validated['date'])
+                ->where('guests', $validated['guests'])
+                ->where('status', 'pending')
+                ->where('payment_status', '!=', 'paid')
+                ->where('created_at', '>=', now()->subMinutes(10));
+            
+            // Jika user login, cek by user_id, jika guest cek by email
+            if (auth()->check()) {
+                $recentBookingQuery->where('user_id', auth()->id());
+            } else {
+                $recentBookingQuery->where('email', $bookingData['email']);
+            }
+            
+            $existingBooking = $recentBookingQuery->first();
+            
+            if ($existingBooking) {
+                \Illuminate\Support\Facades\Log::info('⚠️ [DEBUG] Duplicate booking detected, redirecting to existing', [
+                    'existing_booking_id' => $existingBooking->id,
+                    'order_id' => $existingBooking->order_id,
+                ]);
+                
+                // Generate snap token untuk booking yang sudah ada
+                $snapToken = $this->midtransService->createTransaction($existingBooking);
+                
+                return view('bookings.payment', [
+                    'booking' => $existingBooking,
+                    'snapToken' => $snapToken
+                ])->with('info', 'You already have a pending booking for this tour. Please complete the payment.');
+            }
+
+            // Calculate price
+            $pricePerPerson = get_price($tour);
+            $totalPrice = $pricePerPerson * $validated['guests'];
+
+            // Generate order ID
+            $orderId = OrderIdService::generate('TOUR');
+            
+            $bookingData['total_price'] = $totalPrice;
+            $bookingData['order_id'] = $orderId;
+
+            \Illuminate\Support\Facades\Log::info('💰 [DEBUG] Price calculated', [
+                'price_per_person' => $pricePerPerson,
+                'total_price' => $totalPrice,
+                'order_id' => $orderId,
+            ]);
+
+            // Create booking
+            $booking = Booking::create($bookingData);
+            
+            \Illuminate\Support\Facades\Log::info('✅ [DEBUG] Booking created', [
+                'booking_id' => $booking->id,
+                'order_id' => $booking->order_id,
+            ]);
+
+            // Generate Midtrans snap token
+            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Generating Midtrans snap token...');
+            
+            $snapToken = $this->midtransService->createTransaction($booking);
+            
+            \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Snap token generated', [
+                'snap_token' => $snapToken ? 'SUCCESS' : 'FAILED',
+                'token_length' => $snapToken ? strlen($snapToken) : 0,
+            ]);
+
+            if (!$snapToken) {
+                \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Failed to generate snap token, deleting booking', [
+                    'booking_id' => $booking->id,
+                ]);
+                
+                // Hapus booking jika gagal generate snap token
+                $booking->delete();
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Failed to create payment transaction. Please try again or contact admin.');
+            }
+
+            \Illuminate\Support\Facades\Log::info('🚀 [DEBUG] Redirecting to payment page', [
+                'booking_id' => $booking->id,
+                'has_snap_token' => !empty($snapToken),
+            ]);
+
+            // Simpan snap token di session
+            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
+            
+            // Simpan booking ID di session untuk guest access
+            session(['last_booking_id' => $booking->id]);
+
+            // Redirect to payment page
+            return redirect()->route('bookings.payment', $booking);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('❌ [DEBUG] Error creating tour booking: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'tour_id' => $tour->id ?? null,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while processing your booking: ' . $e->getMessage());
+        }
+    }
+
     public function storePackage(StorePackageBookingRequest $request, TourPackage $package)
     {
         try {
