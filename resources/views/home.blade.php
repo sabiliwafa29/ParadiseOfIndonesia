@@ -420,7 +420,20 @@
             @foreach($tourPackages as $package)
             <div class="group relative bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                 <div class="relative h-64 overflow-hidden">
-                    <img src="{{ asset($package->image) }}" alt="{{ $package->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    @if($package->image)
+                        @include('components.responsive-image', [
+                            'path' => $package->image, 
+                            'alt' => $package->name ?? '', 
+                            'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700', 
+                            'derivatives' => $package->image_derivatives ?? null
+                        ])
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     <div class="absolute top-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
                         {{ __('messages.best_seller') }}
@@ -463,7 +476,20 @@
             @foreach($tours as $tour)
             <div class="group bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
                 <div class="relative h-56 overflow-hidden">
-                    <img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="{{ asset($tour->image) }}" alt="{{ $tour->name }}">
+                    @if($tour->image)
+                        @include('components.responsive-image', [
+                            'path' => $tour->image, 
+                            'alt' => $tour->name ?? '', 
+                            'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700', 
+                            'derivatives' => $tour->image_derivatives
+                        ])
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                     <div class="absolute top-4 left-4">
                         <a href="{{ route('destinations.show', $tour->destination) }}" class="inline-block px-4 py-2 bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full text-sm font-bold hover:bg-white transition-colors">
@@ -528,7 +554,20 @@
             @foreach($tourActivities as $activity)
             <div class="group relative overflow-hidden rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white flex flex-col">
                 <div class="relative h-64 overflow-hidden">
-                    <img src="{{ asset($activity->photo) }}" alt="{{ $activity->name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    @if($activity->photo)
+                        @include('components.responsive-image', [
+                            'path' => $activity->photo, 
+                            'alt' => $activity->name ?? '', 
+                            'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700', 
+                            'derivatives' => $activity->photo_derivatives ?? null
+                        ])
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                 </div>
                 

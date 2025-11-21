@@ -98,65 +98,29 @@
         </div>
 
         {{-- Main Content --}}
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden" x-data="{ 
-            filter: 'all',
-            search: '',
-            get filteredTours() {
-                let tours = Array.from(document.querySelectorAll('.tour-card'));
-                
-                tours.forEach(tour => {
-                    let matchesFilter = true;
-                    let matchesSearch = true;
-                    
-                    // Filter by status
-                    if (this.filter === 'featured') {
-                        matchesFilter = tour.dataset.featured === '1';
-                    } else if (this.filter === 'inactive') {
-                        matchesFilter = tour.dataset.status !== 'active';
-                    }
-                    
-                    // Filter by search
-                    if (this.search) {
-                        const searchLower = this.search.toLowerCase();
-                        const name = tour.dataset.name.toLowerCase();
-                        const description = tour.dataset.description.toLowerCase();
-                        matchesSearch = name.includes(searchLower) || description.includes(searchLower);
-                    }
-                    
-                    // Show/hide based on filters
-                    if (matchesFilter && matchesSearch) {
-                        tour.style.display = 'block';
-                    } else {
-                        tour.style.display = 'none';
-                    }
-                });
-            }
-        }">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             {{-- Tabs/Filter Section --}}
             <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex space-x-4">
-                        <button @click="filter = 'all'; filteredTours" 
-                                :class="filter === 'all' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
-                                class="px-4 py-2 text-sm rounded-lg transition">
+                        <button onclick="filterTours('all')" id="filter-all"
+                                class="px-4 py-2 text-sm rounded-lg transition text-emerald-700 bg-emerald-100 font-semibold">
                             All Tours
                         </button>
-                        <button @click="filter = 'featured'; filteredTours" 
-                                :class="filter === 'featured' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
-                                class="px-4 py-2 text-sm rounded-lg transition">
+                        <button onclick="filterTours('featured')" id="filter-featured"
+                                class="px-4 py-2 text-sm rounded-lg transition text-gray-600 hover:bg-gray-100 font-medium">
                             Featured
                         </button>
-                        <button @click="filter = 'inactive'; filteredTours" 
-                                :class="filter === 'inactive' ? 'text-emerald-700 bg-emerald-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 font-medium'"
-                                class="px-4 py-2 text-sm rounded-lg transition">
+                        <button onclick="filterTours('inactive')" id="filter-inactive"
+                                class="px-4 py-2 text-sm rounded-lg transition text-gray-600 hover:bg-gray-100 font-medium">
                             Inactive
                         </button>
                     </div>
                     <div class="flex items-center space-x-3">
                         <div class="relative">
                             <input type="text" 
-                                   x-model="search"
-                                   @input="filteredTours"
+                                   id="search-input"
+                                   oninput="searchTours()"
                                    placeholder="Search tours..." 
                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
                             <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,6 +135,57 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                let currentFilter = 'all';
+
+                function filterTours(filter) {
+                    currentFilter = filter;
+                    
+                    // Update button styles
+                    document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                        btn.className = 'px-4 py-2 text-sm rounded-lg transition text-gray-600 hover:bg-gray-100 font-medium';
+                    });
+                    document.getElementById('filter-' + filter).className = 'px-4 py-2 text-sm rounded-lg transition text-emerald-700 bg-emerald-100 font-semibold';
+                    
+                    applyFilters();
+                }
+
+                function searchTours() {
+                    applyFilters();
+                }
+
+                function applyFilters() {
+                    const searchValue = document.getElementById('search-input').value.toLowerCase();
+                    const tours = document.querySelectorAll('.tour-card');
+                    
+                    tours.forEach(tour => {
+                        let matchesFilter = true;
+                        let matchesSearch = true;
+                        
+                        // Filter by status
+                        if (currentFilter === 'featured') {
+                            matchesFilter = tour.dataset.featured === '1';
+                        } else if (currentFilter === 'inactive') {
+                            matchesFilter = tour.dataset.status !== 'active';
+                        }
+                        
+                        // Filter by search
+                        if (searchValue) {
+                            const name = tour.dataset.name.toLowerCase();
+                            const description = tour.dataset.description.toLowerCase();
+                            matchesSearch = name.includes(searchValue) || description.includes(searchValue);
+                        }
+                        
+                        // Show/hide based on filters
+                        if (matchesFilter && matchesSearch) {
+                            tour.style.display = 'block';
+                        } else {
+                            tour.style.display = 'none';
+                        }
+                    });
+                }
+            </script>
 
             {{-- Tours Grid --}}
             <div class="p-6">
