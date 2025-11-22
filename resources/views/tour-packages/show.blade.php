@@ -125,10 +125,19 @@
                                     try {
                                         $dayTitle = 'DAY ' . ($dayIndex + 1);
                                         $activities = [];
+                                        $locale = app()->getLocale();
                                         
                                         // Case 1: Array dengan struktur 'day' dan 'activities'
                                         if (is_array($dayData) && isset($dayData['day'])) {
-                                            $dayTitle = $dayData['day'];
+                                            // Check if day is multi-language array
+                                            if (is_array($dayData['day'])) {
+                                                $dayTitle = $dayData['day'][$locale] 
+                                                    ?? $dayData['day']['en'] 
+                                                    ?? $dayData['day']['id']
+                                                    ?? 'DAY ' . ($dayIndex + 1);
+                                            } else {
+                                                $dayTitle = $dayData['day'];
+                                            }
                                             
                                             if (isset($dayData['activities'])) {
                                                 if (is_array($dayData['activities'])) {
@@ -197,6 +206,7 @@
                                                 try {
                                                     $time = '';
                                                     $description = '';
+                                                    $locale = app()->getLocale();
                                                     
                                                     // Safety check
                                                     if (empty($activity)) {
@@ -206,9 +216,19 @@
                                                     // Case 1: Activity adalah array dengan time dan description
                                                     if (is_array($activity)) {
                                                         $time = isset($activity['time']) ? strval($activity['time']) : '';
-                                                        $description = isset($activity['description']) ? strval($activity['description']) : '';
                                                         
-                                                        // Jika tidak ada description tapi ada value lain, gunakan itu
+                                                        // Check for multi-language description
+                                                        if (isset($activity['description_' . $locale])) {
+                                                            $description = $activity['description_' . $locale];
+                                                        } elseif (isset($activity['description_en'])) {
+                                                            $description = $activity['description_en'];
+                                                        } elseif (isset($activity['description_id'])) {
+                                                            $description = $activity['description_id'];
+                                                        } elseif (isset($activity['description'])) {
+                                                            $description = strval($activity['description']);
+                                                        }
+                                                        
+                                                        // Jika masih kosong, coba ambil value lain
                                                         if (empty($description) && !empty($activity)) {
                                                             $description = implode(' ', array_filter($activity, 'is_string'));
                                                         }
