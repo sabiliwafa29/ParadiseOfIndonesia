@@ -142,6 +142,9 @@ use App\Helpers\ItineraryHelper;
                                             @endphp
                                             
                                             <div class="flex gap-2 md:gap-3">
+                                                {{-- Debug: Show raw time value --}}
+                                                {{-- Time value: "{{ $parsed['time'] }}" | Empty: {{ empty($parsed['time']) ? 'YES' : 'NO' }} | Trimmed: "{{ trim($parsed['time']) }}" --}}
+                                                
                                                 @if(!empty($parsed['time']) && trim($parsed['time']) !== '')
                                                     <div class="flex-shrink-0">
                                                         <span class="inline-block px-2 py-1 md:px-3 md:py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs md:text-sm font-semibold">
