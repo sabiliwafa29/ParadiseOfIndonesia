@@ -16,60 +16,157 @@ class TourSeeder extends Seeder
 
 
         $tours = [
-            [
-                'name_id' => 'Jelajah Bromo',
-                'name_en' => 'Explore Bromo',
-                'name_zh' => '探索布罗莫',
-                'slug' => 'explore-bromo',
-                'description_id' => 'Mulai dari Stasiun Gubeng Surabaya & Bandara Juanda pukul 23:00.',
-                'description_en' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM.',
-                'description_zh' => '晚上11点从泗水古本火车站和朱安达机场出发。',
-                'price_usd' => 95,
-                'price_idr' => 950000, 
-                'price_cny' => 715, 
-                'duration' => 2,    
-                'destination_id' => $eastJava->id,
-                'image' => 'images/bromo-midnight.jpg',
-                'itinerary' => json_encode([
-                    [
-                        'day' => 'DAY 1',
-                        'activities' => [
-                            ['time' => '23.00 - 24.00', 'description' => 'Penjemputan Peserta di Meeting poin ( stasiun Gubeng / Bandara Juanda ) '],
-                        ]
+        [
+            'name_id' => 'Jelajah Bromo',
+            'name_en' => 'Explore Bromo',
+            'name_zh' => '探索布罗莫',
+            'slug' => 'explore-bromo',
+            'description_id' => 'Mulai dari Stasiun Gubeng Surabaya & Bandara Juanda pukul 23:00.',
+            'description_en' => 'Start from Surabaya Gubeng & Juanda airport at 11:00 PM.',
+            'description_zh' => '晚上11点从泗水古本火车站和朱安达机场出发。',
+            'price_usd' => 95,
+            'price_idr' => 950000, 
+            'price_cny' => 715, 
+            'duration' => 2,    
+            'destination_id' => $eastJava->id,
+            'image' => 'images/bromo-midnight.jpg',
+            
+            // ✅ CONVERTED TO MULTI-LANGUAGE
+            'itinerary' => json_encode([
+                [
+                    'day' => [
+                        'id' => 'HARI 1',
+                        'en' => 'DAY 1',
+                        'zh' => '第1天',
                     ],
-                    [
-                        'day' => 'DAY 2',
-                        'activities' => [
-                            ['time' => '00.00 - 03.00', 'description' => 'Perjalanan menuju titik transit atau base camp jeep Bromo.'],
-                            ['time' => '03.00 - 04.00', 'description' => 'Naik jeep untuk menuju view point Bukit Penanjakan.'],
-                            ['time' => '04.00 - 06.00', 'description' => 'Menikmati Golden Sunrise Bromo dari Bukit Penanjakan. '],
-                            ['time' => '06.00 - 07.00', 'description' => 'Turun dari Penanjakan dan menuju Lautan Pasir dan Pura Luhur Poten. '],
-                            ['time' => '07.00 - 08.30', 'description' => 'Mendaki ke Kawah Bromo dan melakukan eksplorasi di area sekitar. '],
-                            ['time' => '08.30 - 09.30', 'description' => 'Menuju spot wisata berikutnya yaitu Pasir Berbisik dan Bukit Teletubbies (Padang Savana) untuk berfoto. '],
-                            ['time' => '09.30 - 11.00', 'description' => 'Kembali ke base camp jeep. '],
-                            ['time' => '11.00 – 12.00', 'description' => 'Istirahat Break Fas/ luncht, belanja  pusat Oleh-oleh  ( optional )'],
-                            ['time' => '11.00 - 15.00', 'description' => 'Perjalanan kembali  ke Surabaya Drop point'],
-                            ['time' => '15.00', 'description' => 'Finish'],
-                        ]
+                    'activities' => [
+                        [
+                            'time' => '23.00 - 24.00',
+                            'description_id' => 'Penjemputan Peserta di Meeting Point (Stasiun Gubeng / Bandara Juanda)',
+                            'description_en' => 'Pick up participants at Meeting Point (Gubeng Station / Juanda Airport)',
+                            'description_zh' => '在集合点接参与者（古本火车站/朱安达机场）',
+                        ],
                     ]
-                ]),
-                'includes' => json_encode([
-                    'Tour Guide Profesional',
-                    'Transportasi Pribadi',
-                    'Makan Pagi',
-                    'Tiket Masuk Objek Wisata'
-                ]),
-                'excludes' => json_encode([
-                    'Penerbangan',
-                    'Hotel',
-                    'Asuransi Perjalanan'
-                ]),
-                'featured' => true,
-                'status' => 'active',
-                'target_market' => 'international',
-                'exchange_rate_idr' => 16700,
-                'exchange_rate_cny' => 6.5,
-            ],
+                ],
+                [
+                    'day' => [
+                        'id' => 'HARI 2',
+                        'en' => 'DAY 2',
+                        'zh' => '第2天',
+                    ],
+                    'activities' => [
+                        [
+                            'time' => '00.00 - 03.00',
+                            'description_id' => 'Perjalanan menuju titik transit atau base camp jeep Bromo.',
+                            'description_en' => 'Journey to transit point or Bromo jeep base camp.',
+                            'description_zh' => '前往中转点或布罗莫吉普车大本营。',
+                        ],
+                        [
+                            'time' => '03.00 - 04.00',
+                            'description_id' => 'Naik jeep untuk menuju view point Bukit Penanjakan.',
+                            'description_en' => 'Take jeep to Penanjakan Hill viewpoint.',
+                            'description_zh' => '乘吉普车前往佩南贾坎山观景点。',
+                        ],
+                        [
+                            'time' => '04.00 - 06.00',
+                            'description_id' => 'Menikmati Golden Sunrise Bromo dari Bukit Penanjakan.',
+                            'description_en' => 'Enjoy Bromo Golden Sunrise from Penanjakan Hill.',
+                            'description_zh' => '从佩南贾坎山欣赏布罗莫金色日出。',
+                        ],
+                        [
+                            'time' => '06.00 - 07.00',
+                            'description_id' => 'Turun dari Penanjakan dan menuju Lautan Pasir dan Pura Luhur Poten.',
+                            'description_en' => 'Descend from Penanjakan and head to Sea of Sand and Pura Luhur Poten.',
+                            'description_zh' => '从佩南贾坎下山，前往沙海和普拉卢胡尔波腾寺。',
+                        ],
+                        [
+                            'time' => '07.00 - 08.30',
+                            'description_id' => 'Mendaki ke Kawah Bromo dan melakukan eksplorasi di area sekitar.',
+                            'description_en' => 'Climb to Bromo Crater and explore the surrounding area.',
+                            'description_zh' => '攀登布罗莫火山口并探索周边地区。',
+                        ],
+                        [
+                            'time' => '08.30 - 09.30',
+                            'description_id' => 'Menuju spot wisata berikutnya yaitu Pasir Berbisik dan Bukit Teletubbies (Padang Savana) untuk berfoto.',
+                            'description_en' => 'Head to next tourist spots: Whispering Sand and Teletubbies Hill (Savana Field) for photos.',
+                            'description_zh' => '前往下一个旅游景点：沙语和天线宝宝山（萨瓦纳田）拍照。',
+                        ],
+                        [
+                            'time' => '09.30 - 11.00',
+                            'description_id' => 'Kembali ke base camp jeep.',
+                            'description_en' => 'Return to jeep base camp.',
+                            'description_zh' => '返回吉普车大本营。',
+                        ],
+                        [
+                            'time' => '11.00 - 12.00',
+                            'description_id' => 'Istirahat, makan siang, belanja di pusat oleh-oleh (opsional).',
+                            'description_en' => 'Rest, lunch, shopping at souvenir center (optional).',
+                            'description_zh' => '休息、午餐、在纪念品中心购物（可选）。',
+                        ],
+                        [
+                            'time' => '12.00 - 15.00',
+                            'description_id' => 'Perjalanan kembali ke Surabaya Drop Point.',
+                            'description_en' => 'Return journey to Surabaya Drop Point.',
+                            'description_zh' => '返回泗水下车点。',
+                        ],
+                        [
+                            'time' => '15.00',
+                            'description_id' => 'Selesai',
+                            'description_en' => 'Finish',
+                            'description_zh' => '结束',
+                        ],
+                    ]
+                ]
+            ]),
+            
+            // ✅ Also update includes/excludes to multi-language
+            'includes' => json_encode([
+                [
+                    'name_id' => 'Tour Guide Profesional',
+                    'name_en' => 'Professional Tour Guide',
+                    'name_zh' => '专业导游',
+                ],
+                [
+                    'name_id' => 'Transportasi Pribadi',
+                    'name_en' => 'Private Transportation',
+                    'name_zh' => '私人交通',
+                ],
+                [
+                    'name_id' => 'Makan Pagi',
+                    'name_en' => 'Breakfast',
+                    'name_zh' => '早餐',
+                ],
+                [
+                    'name_id' => 'Tiket Masuk Objek Wisata',
+                    'name_en' => 'Tourist Attraction Entrance Tickets',
+                    'name_zh' => '旅游景点门票',
+                ],
+            ]),
+            
+            'excludes' => json_encode([
+                [
+                    'name_id' => 'Penerbangan',
+                    'name_en' => 'Flight',
+                    'name_zh' => '航班',
+                ],
+                [
+                    'name_id' => 'Hotel',
+                    'name_en' => 'Hotel',
+                    'name_zh' => '酒店',
+                ],
+                [
+                    'name_id' => 'Asuransi Perjalanan',
+                    'name_en' => 'Travel Insurance',
+                    'name_zh' => '旅行保险',
+                ],
+            ]),
+            
+            'featured' => true,
+            'status' => 'active',
+            'target_market' => 'international',
+            'exchange_rate_idr' => 16700,
+            'exchange_rate_cny' => 6.5,
+        ],
             [
                 'name_id' => 'Petualangan Bromo',
                 'name_en' => 'Adventure Bromo',

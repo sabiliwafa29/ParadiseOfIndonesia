@@ -92,93 +92,25 @@ use App\Helpers\ItineraryHelper;
                         <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6">{{ __('messages.itinerary') }}</h2>
                         <div class="space-y-3 md:space-y-6" x-data="{ openDay: null }">
                             @php
-                                try {
-                                    $itinerary = $package->itinerary;
-                                    
-                                    // Safety check: pastikan itinerary tidak null
-                                    if (empty($itinerary)) {
-                                        $itinerary = [];
-                                    }
-                                    
-                                    // Jika JSON string, decode dengan error handling
-                                    if (is_string($itinerary)) {
-                                        $decoded = json_decode($itinerary, true);
-                                        // Cek jika json_decode berhasil dan hasilnya array
-                                        $itinerary = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : [$itinerary];
-                                    }
-                                    
-                                    // Pastikan adalah array, jika bukan convert ke array
-                                    if (!is_array($itinerary)) {
-                                        $itinerary = [$itinerary];
-                                    }
-                                    
-                                    // Filter empty values
-                                    $itinerary = array_filter($itinerary, function($item) {
-                                        return !empty($item);
-                                    });
-                                } catch (\Exception $e) {
-                                    // Jika terjadi error, set itinerary kosong
-                                    $itinerary = [];
-                                    \Log::error('Error parsing itinerary: ' . $e->getMessage());
-                                }
+                                $itinerary = ItineraryHelper::parseItinerary($package->itinerary);
                             @endphp
                             
                             @foreach($itinerary as $dayIndex => $dayData)
                                 @php
-                                    try {
-                                        $dayTitle = 'DAY ' . ($dayIndex + 1);
-                                        $activities = [];
-                                        
-                                        // Case 1: Array dengan struktur 'day' dan 'activities'
-                                        if (is_array($dayData) && isset($dayData['day'])) {
-                                            $dayTitle = $dayData['day'];
-                                            
-                                            if (isset($dayData['activities'])) {
-                                                if (is_array($dayData['activities'])) {
-                                                    $activities = $dayData['activities'];
-                                                } elseif (is_string($dayData['activities'])) {
-                                                    $activities = [$dayData['activities']];
-                                                }
-                                            }
-                                        } 
-                                        // Case 2: Array dengan key 'description'
-                                        elseif (is_array($dayData) && isset($dayData['description'])) {
-                                            $activities = [strval($dayData['description'])];
-                                        }
-                                        // Case 3: Array biasa (list of activities)
-                                        elseif (is_array($dayData)) {
-                                            $activities = array_values($dayData);
-                                        }
-                                        // Case 4: String langsung
-                                        else {
-                                            $activities = [strval($dayData)];
-                                        }
-                                        
-                                        // Filter empty activities
-                                        $activities = array_filter($activities, function($act) {
-                                            return !empty($act);
-                                        });
-                                        
-                                        // ✅ ENHANCED LOGGING
-                                        if (empty($activities)) {
-                                            \Log::warning('Empty activities for day ' . $dayTitle . ' | Raw data: ' . json_encode($dayData));
-                                            continue;
-                                        }
-                                        
-                                        \Log::debug('Parsed day: ' . $dayTitle . ' | Activity count: ' . count($activities));
-                                        
-                                    } catch (\Exception $e) {
-                                        \Log::error('Error parsing day data: ' . $e->getMessage() . ' | Day index: ' . $dayIndex . ' | Data: ' . json_encode($dayData));
+                                    $day = ItineraryHelper::parseDayData($dayData, $dayIndex);
+                                    
+                                    // Skip if no activities
+                                    if (empty($day['activities'])) {
                                         continue;
                                     }
-                                    @endphp
+                                @endphp
                                 
                                 <div class="bg-white border-l-4 border-emerald-500 rounded-lg shadow-sm hover:shadow-md transition">
                                     <!-- Day Header - Clickable -->
                                     <button 
                                         @click="openDay = openDay === {{ $dayIndex }} ? null : {{ $dayIndex }}"
                                         class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none">
-                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $dayTitle }}</h3>
+                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $day['title'] }}</h3>
                                         <svg 
                                             class="w-5 h-5 md:w-6 md:h-6 text-emerald-600 transform transition-transform duration-200"
                                             :class="{ 'rotate-180': openDay === {{ $dayIndex }} }"
@@ -199,29 +131,21 @@ use App\Helpers\ItineraryHelper;
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
-                                        @foreach($activities as $activity)
+                                        @foreach($day['activities'] as $activity)
                                             @php
-                                                try {
-                                                    // Use helper for consistent parsing
-                                                    $parsed = ItineraryHelper::parseActivity($activity);
-                                                    $time = $parsed['time'];
-                                                    $description = $parsed['description'];
-                                                    
-                                                    // Skip if description is empty
-                                                    if (empty($description)) {
-                                                        continue;
-                                                    }
-                                                } catch (\Exception $e) {
-                                                    \Log::error('Error in activity loop: ' . $e->getMessage());
+                                                $parsed = ItineraryHelper::parseActivity($activity);
+                                                
+                                                // Skip if description is empty
+                                                if (empty($parsed['description'])) {
                                                     continue;
                                                 }
                                             @endphp
                                             
                                             <div class="flex gap-2 md:gap-3">
-                                                @if($time)
+                                                @if($parsed['time'])
                                                     <div class="flex-shrink-0">
                                                         <span class="inline-block px-2 py-1 md:px-3 md:py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs md:text-sm font-semibold">
-                                                            {{ $time }}
+                                                            {{ $parsed['time'] }}
                                                         </span>
                                                     </div>
                                                 @else
@@ -233,7 +157,7 @@ use App\Helpers\ItineraryHelper;
                                                 @endif
                                                 
                                                 <div class="flex-1">
-                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $description }}</p>
+                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $parsed['description'] }}</p>
                                                 </div>
                                             </div>
                                         @endforeach
