@@ -58,23 +58,23 @@ class ItineraryHelper
             // Case 2: Activity adalah string
             $activityStr = trim(strval($activity));
 
-            // Format 1: [HH:MM - HH:MM] atau [HH:MM] dengan/tanpa bracket
-            if (preg_match('/^\[(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\]\s*(.*)$/i', $activityStr, $matches)) {
+            // Format 1: [HH:MM – HH:MM] atau [HH:MM] dengan bracket (support dash dan en-dash)
+            if (preg_match('/^\[(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\]\s*(.*)$/u', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
-            // Format 2: HH:MM - HH:MM: atau HH:MM: (tanpa bracket)
-            elseif (preg_match('/^(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\s*[:\-–]\s*(.+)$/i', $activityStr, $matches)) {
+            // Format 2: HH:MM – HH:MM: atau HH:MM: (tanpa bracket, with colon after time)
+            elseif (preg_match('/^(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\s*[:\-–]\s*(.+)$/u', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
             // Format 3: -> HH:MM atau arrow prefix
-            elseif (preg_match('/^(?:->|→)\s*(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\s*[:\-–]?\s*(.*)$/i', $activityStr, $matches)) {
+            elseif (preg_match('/^(?:->|→)\s*(\d{1,2}[:.]\d{2}(?:\s*[–\-]\s*\d{1,2}[:.]\d{2})?)\s*[:\-–]?\s*(.*)$/u', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
             // Format 4: HH:MM di awal tanpa separator (misal: "08:00 Breakfast")
-            elseif (preg_match('/^(\d{1,2}:\d{2})\s+([A-Za-z].*)$/i', $activityStr, $matches)) {
+            elseif (preg_match('/^(\d{1,2}[:.]\d{2})\s+([A-Za-z].*)$/u', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
