@@ -23,11 +23,13 @@ class ItineraryHelper
 
     /**
      * Parse activity string and extract time and description
+     * Returns: ['time' => string, 'description' => string, 'note' => string]
      */
     public static function parseActivity($activity): array
     {
         $time = '';
         $description = '';
+        $note = '';
 
         try {
             // Safety check
@@ -93,12 +95,21 @@ class ItineraryHelper
             else {
                 $description = $activityStr;
             }
+            
+            // Extract note from description if it contains "Note:" or "Catatan:"
+            if (!empty($description)) {
+                // Check for note patterns (case insensitive)
+                if (preg_match('/(.*?)[\.\s]+(Note|Catatan|Hinweis|注意):\s*(.+)$/uis', $description, $noteMatches)) {
+                    $description = trim($noteMatches[1]);
+                    $note = trim($noteMatches[3]);
+                }
+            }
 
         } catch (\Exception $e) {
             Log::error('ItineraryHelper::parseActivity error: ' . $e->getMessage());
         }
 
-        return compact('time', 'description');
+        return compact('time', 'description', 'note');
     }
 
     /**

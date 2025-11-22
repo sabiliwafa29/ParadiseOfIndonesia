@@ -135,9 +135,18 @@ use App\Helpers\ItineraryHelper;
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
+                                        @php
+                                            $activityNotes = [];
+                                        @endphp
+                                        
                                         @foreach($day['activities'] as $activity)
                                             @php
                                                 $parsed = ItineraryHelper::parseActivity($activity);
+                                                
+                                                // Collect note if exists
+                                                if (!empty($parsed['note'])) {
+                                                    $activityNotes[] = $parsed['note'];
+                                                }
                                                 
                                                 // Skip if description is empty
                                                 if (empty($parsed['description'])) {
@@ -166,11 +175,19 @@ use App\Helpers\ItineraryHelper;
                                             </div>
                                         @endforeach
                                         
-                                        {{-- Display note if exists --}}
-                                        @if(!empty($day['note']))
+                                        {{-- Display notes if exist (from day or from activities) --}}
+                                        @php
+                                            $allNotes = [];
+                                            if (!empty($day['note'])) {
+                                                $allNotes[] = $day['note'];
+                                            }
+                                            $allNotes = array_merge($allNotes, $activityNotes);
+                                        @endphp
+                                        
+                                        @if(!empty($allNotes))
                                             <div class="mt-3 pt-3 border-t border-gray-200">
                                                 <p class="text-xs md:text-sm text-gray-600 italic leading-relaxed">
-                                                    <span class="font-semibold">{{ __('messages.note') ?? 'Note' }}:</span> {{ $day['note'] }}
+                                                    <span class="font-semibold">{{ __('messages.note') ?? 'Note' }}:</span> {{ implode(' ', $allNotes) }}
                                                 </p>
                                             </div>
                                         @endif
