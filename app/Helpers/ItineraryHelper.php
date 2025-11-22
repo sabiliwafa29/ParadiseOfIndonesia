@@ -208,6 +208,17 @@ class ItineraryHelper
             $activities = [];
             $locale = App::getLocale();
             
+            // Debug logging
+            Log::debug('parseDayData called', [
+                'dayIndex' => $dayIndex,
+                'dataType' => gettype($dayData),
+                'isArray' => is_array($dayData),
+                'hasDay' => is_array($dayData) && isset($dayData['day']),
+                'hasActivities' => is_array($dayData) && isset($dayData['activities']),
+                'hasDescription' => is_array($dayData) && isset($dayData['description']),
+                'keys' => is_array($dayData) ? array_keys($dayData) : 'N/A'
+            ]);
+            
             // Case 1: Array with 'day' and 'activities' structure
             if (is_array($dayData) && isset($dayData['day'])) {
                 // Handle multilingual day title

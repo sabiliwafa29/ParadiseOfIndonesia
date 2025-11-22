@@ -29,7 +29,7 @@ class TourPackage extends Model
 
     protected $casts = [
         'image_derivatives' => 'array',
-        'itinerary' => 'array',
+        'itinerary' => 'json',
         'price' => 'decimal:2',
         'includes_guide' => 'boolean',
         'includes_transport' => 'boolean',
