@@ -240,7 +240,31 @@ class ItineraryHelper
                     }
                 }
             } 
-            // Case 2: Array with 'description' key
+            // Case 2: Array with 'title_id/title_en' and 'description_id/description_en' keys (production format)
+            elseif (is_array($dayData) && (isset($dayData['title_id']) || isset($dayData['title_en']))) {
+                // Extract multilingual title
+                $dayTitle = $dayData['title_' . $locale]
+                    ?? $dayData['title_id']
+                    ?? $dayData['title_en']
+                    ?? 'DAY ' . ($dayIndex + 1);
+                
+                // Extract multilingual description and split into activities
+                $desc = $dayData['description_' . $locale]
+                    ?? $dayData['description_id']
+                    ?? $dayData['description_en']
+                    ?? $dayData['description']
+                    ?? '';
+                
+                if (!empty($desc)) {
+                    // Check if description contains multiple activities with time patterns
+                    if (preg_match_all('/\[(\d{1,2}[:.]\d{2})/u', $desc) > 1) {
+                        $activities = self::splitMultiActivityString($desc);
+                    } else {
+                        $activities = [$desc];
+                    }
+                }
+            }
+            // Case 3: Array with 'description' key
             elseif (is_array($dayData) && isset($dayData['description'])) {
                 // Check if description contains multiple activities
                 $desc = strval($dayData['description']);
@@ -250,11 +274,11 @@ class ItineraryHelper
                     $activities = [$desc];
                 }
             }
-            // Case 3: Plain array (list of activities)
+            // Case 4: Plain array (list of activities)
             elseif (is_array($dayData)) {
                 $activities = array_values($dayData);
             }
-            // Case 4: Direct string
+            // Case 5: Direct string
             else {
                 $stringData = strval($dayData);
                 // Check if string contains multiple activities
