@@ -94,6 +94,18 @@ use App\Helpers\ItineraryHelper;
                 @if($tour->itinerary)
                     <div class="mb-8 md:mb-12">
                         <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6">{{ __('messages.itinerary') }}</h2>
+                        
+                        {{-- DEBUG: Show current locale --}}
+                        <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded text-xs">
+                            <p class="font-bold text-yellow-800">🐛 DEBUG: Current Locale = <span class="bg-yellow-200 px-2 py-1 rounded">{{ app()->getLocale() }}</span></p>
+                            @if(!empty($tour->itinerary) && is_array($tour->itinerary) && isset($tour->itinerary[0]))
+                                <p class="text-yellow-700 mt-2">First day keys: {{ implode(', ', array_keys($tour->itinerary[0])) }}</p>
+                                @if(isset($tour->itinerary[0]['title_zh']))
+                                    <p class="text-yellow-700">title_zh exists: {{ $tour->itinerary[0]['title_zh'] }}</p>
+                                @endif
+                            @endif
+                        </div>
+                        
                         <div class="space-y-3 md:space-y-6" x-data="{ openDay: null }">
                             @php
                                 $itinerary = ItineraryHelper::parseItinerary($tour->itinerary);

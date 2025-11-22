@@ -280,6 +280,16 @@ class ItineraryHelper
                     ?? $dayData['title_en']
                     ?? 'DAY ' . ($dayIndex + 1);
                 
+                // Debug logging
+                Log::debug('ItineraryHelper locale detection', [
+                    'locale' => $locale,
+                    'title_' . $locale => $dayData['title_' . $locale] ?? 'NOT SET',
+                    'title_id' => $dayData['title_id'] ?? 'NOT SET',
+                    'title_en' => $dayData['title_en'] ?? 'NOT SET',
+                    'title_zh' => $dayData['title_zh'] ?? 'NOT SET',
+                    'selected_title' => $dayTitle
+                ]);
+                
                 // Extract multilingual description and split into activities
                 $desc = $dayData['description_' . $locale]
                     ?? $dayData['description_id']
