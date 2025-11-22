@@ -62,6 +62,9 @@ class ItineraryHelper
             if (preg_match('/^\[(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\]\s*(.*)$/u', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
+                
+                // Remove subsequent time entries from description
+                $description = preg_replace('/\n\n?\[\d{1,2}[:.]\d{2}.*$/us', '', $description);
             }
             // Format 2: HH:MM – HH:MM: atau HH:MM: (tanpa bracket, with colon after time)
             elseif (preg_match('/^(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\s*[:\-–]\s*(.+)$/u', $activityStr, $matches)) {
@@ -221,13 +224,20 @@ class ItineraryHelper
                     if (is_array($dayData['activities'])) {
                         $activities = $dayData['activities'];
                     } elseif (is_string($dayData['activities'])) {
-                        $activities = [$dayData['activities']];
+                        // Split string activities by newline and time pattern
+                        $activities = self::splitMultiActivityString($dayData['activities']);
                     }
                 }
             } 
             // Case 2: Array with 'description' key
             elseif (is_array($dayData) && isset($dayData['description'])) {
-                $activities = [strval($dayData['description'])];
+                // Check if description contains multiple activities
+                $desc = strval($dayData['description']);
+                if (preg_match_all('/\[(\d{1,2}[:.]\d{2})/u', $desc) > 1) {
+                    $activities = self::splitMultiActivityString($desc);
+                } else {
+                    $activities = [$desc];
+                }
             }
             // Case 3: Plain array (list of activities)
             elseif (is_array($dayData)) {
@@ -235,7 +245,13 @@ class ItineraryHelper
             }
             // Case 4: Direct string
             else {
-                $activities = [strval($dayData)];
+                $stringData = strval($dayData);
+                // Check if string contains multiple activities
+                if (preg_match_all('/\[(\d{1,2}[:.]\d{2})/u', $stringData) > 1) {
+                    $activities = self::splitMultiActivityString($stringData);
+                } else {
+                    $activities = [$stringData];
+                }
             }
             
             // Filter empty activities
@@ -260,5 +276,28 @@ class ItineraryHelper
                 'activities' => []
             ];
         }
+    }
+
+    /**
+     * Split a multi-activity string into array of individual activities
+     * Handles strings like: "[22.00 - 23.00] Activity 1\n\n[23.00 - 02.00] Activity 2"
+     * 
+     * @param string $activityString
+     * @return array
+     */
+    private static function splitMultiActivityString(string $activityString): array
+    {
+        // Split by double newline followed by time pattern [HH:MM]
+        $activities = preg_split('/\n\n+(?=\[)/u', trim($activityString));
+        
+        // If that didn't work, try single newline
+        if (count($activities) === 1) {
+            $activities = preg_split('/\n(?=\[)/u', trim($activityString));
+        }
+        
+        // Filter and trim
+        return array_values(array_filter(array_map('trim', $activities), function($act) {
+            return !empty($act);
+        }));
     }
 }
