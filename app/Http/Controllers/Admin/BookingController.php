@@ -10,7 +10,7 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'tour', 'tour.destination']);
+        $query = Booking::with(['user', 'tour', 'tour.destination', 'package']);
         
         // Filter by status
         if ($request->filled('status')) {
@@ -28,7 +28,13 @@ class BookingController extends Controller
                     $q->where('name_id', 'like', "%{$search}%")
                       ->orWhere('name_en', 'like', "%{$search}%")
                       ->orWhere('name_zh', 'like', "%{$search}%");
-                });
+                })
+                ->orWhereHas('package', function($q) use ($search) {
+                    $q->where('name_id', 'like', "%{$search}%")
+                      ->orWhere('name_en', 'like', "%{$search}%")
+                      ->orWhere('name_zh', 'like', "%{$search}%");
+                })
+                ->orWhere('full_name', 'like', "%{$search}%");
             });
         }
         

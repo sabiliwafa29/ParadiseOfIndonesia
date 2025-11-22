@@ -204,26 +204,57 @@
                                             </span>
                                         </div>
                                         <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition">
-                                            {{ $booking->tour ? \App\Helpers\LanguageHelper::get($booking->tour, 'name') : 'N/A' }}
+                                            @if($booking->tour)
+                                                {{ \App\Helpers\LanguageHelper::get($booking->tour, 'name') }}
+                                            @elseif($booking->package)
+                                                <span class="inline-flex items-center">
+                                                    <svg class="w-4 h-4 mr-1 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                                    </svg>
+                                                    {{ \App\Helpers\LanguageHelper::get($booking->package, 'name') }}
+                                                </span>
+                                            @else
+                                                <span class="text-gray-400">No Tour/Package</span>
+                                            @endif
                                         </h3>
                                         <p class="text-sm text-gray-500 mt-1">
-                                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            </svg>
-                                            {{ ($booking->tour && $booking->tour->destination) ? \App\Helpers\LanguageHelper::get($booking->tour->destination, 'name') : 'N/A' }}
+                                            @if($booking->tour && $booking->tour->destination)
+                                                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                </svg>
+                                                {{ \App\Helpers\LanguageHelper::get($booking->tour->destination, 'name') }}
+                                            @elseif($booking->package)
+                                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <span class="text-purple-600 font-medium">Package Booking</span>
+                                            @else
+                                                <span class="text-gray-400">-</span>
+                                            @endif
                                         </p>
                                     </div>
                                 </div>
 
                                 {{-- Customer Info --}}
                                 <div class="flex items-center space-x-3 mb-4 p-3 bg-gray-50 rounded-lg">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold">
-                                        {{ substr($booking->user->name ?? 'U', 0, 1) }}
+                                    @php
+                                        $customerName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+                                        $customerEmail = $booking->user->email ?? $booking->email ?? null;
+                                        $isGuest = !$booking->user_id;
+                                    @endphp
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ $isGuest ? 'from-gray-400 to-gray-500' : 'from-blue-400 to-indigo-500' }} flex items-center justify-center text-white font-bold">
+                                        {{ substr($customerName, 0, 1) }}
                                     </div>
                                     <div class="flex-1">
-                                        <p class="font-semibold text-gray-800">{{ $booking->user->name ?? 'Unknown' }}</p>
-                                        <p class="text-xs text-gray-500">{{ $booking->user->email ?? 'N/A' }}</p>
+                                        <p class="font-semibold text-gray-800">
+                                            {{ $customerName }}
+                                            @if($isGuest)
+                                                <span class="ml-1 px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full">Guest</span>
+                                            @endif
+                                        </p>
+                                        <p class="text-xs text-gray-500">{{ $customerEmail ?? 'No email' }}</p>
                                     </div>
                                 </div>
 
