@@ -127,9 +127,10 @@ class DashboardController extends Controller
         
         // Get recent tours
         $recentTours = Tour::latest()->take(3)->get()->map(function($tour) {
+            $tourName = \App\Helpers\LanguageHelper::get($tour, 'name');
             return [
                 'type' => 'tour',
-                'message' => "New tour package '{$tour->name}' was created",
+                'message' => "New tour package '{$tourName}' was created",
                 'created_at' => $tour->created_at,
                 'icon' => 'tour'
             ];
@@ -151,10 +152,10 @@ class DashboardController extends Controller
                     
                     // Get tour/package name
                     if ($booking->tour) {
-                        $itemName = $booking->tour->name;
+                        $itemName = \App\Helpers\LanguageHelper::get($booking->tour, 'name');
                         $itemType = 'tour';
                     } elseif ($booking->package) {
-                        $itemName = $booking->package->name;
+                        $itemName = \App\Helpers\LanguageHelper::get($booking->package, 'name');
                         $itemType = 'package';
                     } else {
                         $itemName = 'Unknown';

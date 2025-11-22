@@ -321,7 +321,7 @@
                     {{-- Pagination --}}
                     @if($bookings->hasPages())
                     <div class="mt-8">
-                        {{ $bookings->links() }}
+                        {{ $bookings->appends(request()->query())->links() }}
                     </div>
                     @endif
                 @endif

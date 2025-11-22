@@ -193,9 +193,16 @@
                                         <div>
                                             <h3 class="font-semibold text-gray-800">{{ $userName }}</h3>
                                             @if($booking->tour)
-                                                <p class="text-sm text-gray-600">{{ $booking->tour->name }}</p>
+                                                <p class="text-sm text-gray-600">{{ \App\Helpers\LanguageHelper::get($booking->tour, 'name') }}</p>
                                             @elseif($booking->package)
-                                                <p class="text-sm text-gray-600">{{ $booking->package->name }}</p>
+                                                <p class="text-sm text-gray-600">
+                                                    <span class="inline-flex items-center text-purple-600">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                                        </svg>
+                                                        {{ \App\Helpers\LanguageHelper::get($booking->package, 'name') }}
+                                                    </span>
+                                                </p>
                                             @else
                                                 <p class="text-sm text-gray-600">-</p>
                                             @endif
@@ -250,7 +257,7 @@
                                 <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 overflow-hidden">
                                     @if($tour->image)
                                         @if($tour->image)
-                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => $tour->name ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
+                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => \App\Helpers\LanguageHelper::get($tour, 'name') ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
                                         @endif
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
@@ -261,7 +268,7 @@
                                     @endif
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800">{{ $tour->name }}</h3>
+                                    <h3 class="font-semibold text-gray-800">{{ \App\Helpers\LanguageHelper::get($tour, 'name') }}</h3>
                                     <div class="flex items-center space-x-3 mt-1">
                                         <span class="text-sm text-gray-600 flex items-center">
                                             <svg class="w-4 h-4 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
@@ -269,7 +276,7 @@
                                             </svg>
                                             {{ $tour->bookings_count ?? 0 }} bookings
                                         </span>
-                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price ?? 0) }}</span>
+                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price_usd ?? $tour->price ?? 0) }}</span>
                                     </div>
                                 </div>
                             </div>
