@@ -32,20 +32,28 @@ class ItineraryHelper
         try {
             // Safety check
             if (empty($activity)) {
+                Log::debug('ItineraryHelper::parseActivity - Activity is empty');
                 return compact('time', 'description');
             }
 
             // Case 1: Activity adalah array
             if (is_array($activity)) {
+                Log::debug('ItineraryHelper::parseActivity - Activity is array: ' . json_encode($activity));
+                
                 $time = $activity['time'] ?? '';
                 
                 // Get description based on locale
                 $locale = App::getLocale();
+                Log::debug('ItineraryHelper::parseActivity - Current locale: ' . $locale);
+                
                 $description = $activity['description_' . $locale]
                     ?? $activity['description_id']
                     ?? $activity['description_en']
                     ?? $activity['description']
                     ?? '';
+                
+                Log::debug('ItineraryHelper::parseActivity - Extracted time: "' . $time . '"');
+                Log::debug('ItineraryHelper::parseActivity - Extracted description: "' . substr($description, 0, 100) . '..."');
                 
                 // If still empty, try to implode string values
                 if (empty($description) && !empty($activity)) {

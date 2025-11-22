@@ -95,6 +95,18 @@ use App\Helpers\ItineraryHelper;
                                 $itinerary = ItineraryHelper::parseItinerary($package->itinerary);
                             @endphp
                             
+                            {{-- DEBUG: Show raw itinerary data (remove this after debugging) --}}
+                            @if(config('app.debug'))
+                                <div class="bg-yellow-100 border-2 border-yellow-500 p-4 rounded-lg mb-4">
+                                    <h3 class="font-bold text-yellow-800 mb-2">🐛 DEBUG INFO (Remove in production)</h3>
+                                    <div class="text-xs text-gray-800 space-y-2">
+                                        <div><strong>Package:</strong> {{ $package->name }}</div>
+                                        <div><strong>Itinerary Type:</strong> {{ gettype($package->itinerary) }}</div>
+                                        <div><strong>Days Count:</strong> {{ count($itinerary) }}</div>
+                                    </div>
+                                </div>
+                            @endif
+                            
                             @foreach($itinerary as $dayIndex => $dayData)
                                 @php
                                     $day = ItineraryHelper::parseDayData($dayData, $dayIndex);
@@ -104,6 +116,14 @@ use App\Helpers\ItineraryHelper;
                                         continue;
                                     }
                                 @endphp
+                                
+                                {{-- DEBUG: Show day data (remove after debugging) --}}
+                                @if(config('app.debug'))
+                                    <details class="bg-blue-100 border border-blue-300 p-2 rounded text-xs mb-2">
+                                        <summary class="cursor-pointer font-bold">DEBUG: {{ $day['title'] }} ({{ count($day['activities']) }} activities)</summary>
+                                        <pre class="mt-2 text-xs overflow-auto">{{ json_encode($dayData, JSON_PRETTY_PRINT) }}</pre>
+                                    </details>
+                                @endif
                                 
                                 <div class="bg-white border-l-4 border-emerald-500 rounded-lg shadow-sm hover:shadow-md transition">
                                     <!-- Day Header - Clickable -->
@@ -131,7 +151,7 @@ use App\Helpers\ItineraryHelper;
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
-                                        @foreach($day['activities'] as $activity)
+                                        @foreach($day['activities'] as $activityIndex => $activity)
                                             @php
                                                 $parsed = ItineraryHelper::parseActivity($activity);
                                                 
@@ -140,6 +160,19 @@ use App\Helpers\ItineraryHelper;
                                                     continue;
                                                 }
                                             @endphp
+                                            
+                                            {{-- DEBUG: Show parsed activity (remove after debugging) --}}
+                                            @if(config('app.debug'))
+                                                <div class="bg-green-100 border border-green-300 p-2 rounded text-xs mb-2">
+                                                    <div><strong>Activity {{ $activityIndex }}:</strong></div>
+                                                    <div><strong>Time:</strong> "{{ $parsed['time'] }}" (empty: {{ empty($parsed['time']) ? 'YES' : 'NO' }})</div>
+                                                    <div><strong>Description:</strong> {{ Str::limit($parsed['description'], 100) }}</div>
+                                                    <details class="mt-1">
+                                                        <summary class="cursor-pointer">Raw data</summary>
+                                                        <pre class="text-xs mt-1">{{ json_encode($activity, JSON_PRETTY_PRINT) }}</pre>
+                                                    </details>
+                                                </div>
+                                            @endif
                                             
                                             <div class="flex gap-2 md:gap-3">
                                                 @if($parsed['time'])
