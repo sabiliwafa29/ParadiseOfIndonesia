@@ -25,7 +25,9 @@ class BookingController extends Controller
                     $q->where('name', 'like', "%{$search}%");
                 })
                 ->orWhereHas('tour', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
+                    $q->where('name_id', 'like', "%{$search}%")
+                      ->orWhere('name_en', 'like', "%{$search}%")
+                      ->orWhere('name_zh', 'like', "%{$search}%");
                 });
             });
         }

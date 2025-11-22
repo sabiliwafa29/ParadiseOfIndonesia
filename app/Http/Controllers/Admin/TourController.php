@@ -240,8 +240,8 @@ class TourController extends Controller
             }
         }
         
-        return redirect()->route('admin.tours.edit', $tour)
-            ->with('success', 'Tour updated successfully. Image: ' . ($request->hasFile('image') ? 'Updated' : 'Not changed'));
+        return redirect()->route('admin.tours.index')
+            ->with('success', 'Tour updated successfully.');
     }
 
     /**

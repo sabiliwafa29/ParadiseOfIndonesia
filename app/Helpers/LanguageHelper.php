@@ -70,6 +70,43 @@ class LanguageHelper
         }
     }
 
+    /**
+     * Get multilingual field value based on current locale with fallback
+     * 
+     * @param object $model The model instance
+     * @param string $field The field name (without locale suffix)
+     * @param string|null $locale Override locale (optional)
+     * @return string|null
+     */
+    public static function get($model, $field, $locale = null)
+    {
+        if (!$model) {
+            return null;
+        }
+
+        $locale = $locale ?? app()->getLocale();
+        $fieldWithLocale = $field . '_' . $locale;
+
+        // Try to get the field with current locale
+        if (isset($model->$fieldWithLocale) && !empty($model->$fieldWithLocale)) {
+            return $model->$fieldWithLocale;
+        }
+
+        // Fallback chain: id -> en -> zh -> original field
+        $fallbackLocales = ['id', 'en', 'zh'];
+        foreach ($fallbackLocales as $fallbackLocale) {
+            if ($fallbackLocale === $locale) continue; // Skip already tried locale
+            
+            $fallbackField = $field . '_' . $fallbackLocale;
+            if (isset($model->$fallbackField) && !empty($model->$fallbackField)) {
+                return $model->$fallbackField;
+            }
+        }
+
+        // Last resort: try field without locale suffix
+        return $model->$field ?? null;
+    }
+
     public static function getPrice($model, $locale = null)
     {
         $locale = $locale ?? app()->getLocale();
