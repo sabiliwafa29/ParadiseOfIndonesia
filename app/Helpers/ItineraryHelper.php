@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
 
 class ItineraryHelper
 {
@@ -37,8 +38,16 @@ class ItineraryHelper
             // Case 1: Activity adalah array
             if (is_array($activity)) {
                 $time = $activity['time'] ?? '';
-                $description = $activity['description'] ?? '';
                 
+                // Get description based on locale
+                $locale = App::getLocale();
+                $description = $activity['description_' . $locale]
+                    ?? $activity['description_id']
+                    ?? $activity['description_en']
+                    ?? $activity['description']
+                    ?? '';
+                
+                // If still empty, try to implode string values
                 if (empty($description) && !empty($activity)) {
                     $description = implode(' ', array_filter($activity, 'is_string'));
                 }
@@ -49,17 +58,27 @@ class ItineraryHelper
             // Case 2: Activity adalah string
             $activityStr = trim(strval($activity));
 
-            // Format 1: [HH:MM - HH:MM] atau [HH:MM]
-            if (preg_match('/^\[?([\d:]+(?:\s*[-–]\s*[\d:]+)?)\]?:?\s*(.*)$/i', $activityStr, $matches)) {
+            // Format 1: [HH:MM - HH:MM] atau [HH:MM] dengan/tanpa bracket
+            if (preg_match('/^\[(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\]\s*(.*)$/i', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
-            // Format 2: -> HH:MM - HH:MM: atau HH:MM:
-            elseif (preg_match('/^->?\s*([\d:]+(?:\s*[-–]\s*[\d:]+)?):?\s*(.*)$/i', $activityStr, $matches)) {
+            // Format 2: HH:MM - HH:MM: atau HH:MM: (tanpa bracket)
+            elseif (preg_match('/^(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\s*[:\-–]\s*(.+)$/i', $activityStr, $matches)) {
                 $time = trim($matches[1]);
                 $description = trim($matches[2]);
             }
-            // Format 3: Plain text
+            // Format 3: -> HH:MM atau arrow prefix
+            elseif (preg_match('/^(?:->|→)\s*(\d{1,2}:\d{2}(?:\s*[-–]\s*\d{1,2}:\d{2})?)\s*[:\-–]?\s*(.*)$/i', $activityStr, $matches)) {
+                $time = trim($matches[1]);
+                $description = trim($matches[2]);
+            }
+            // Format 4: HH:MM di awal tanpa separator (misal: "08:00 Breakfast")
+            elseif (preg_match('/^(\d{1,2}:\d{2})\s+([A-Za-z].*)$/i', $activityStr, $matches)) {
+                $time = trim($matches[1]);
+                $description = trim($matches[2]);
+            }
+            // Format 5: Plain text (no time)
             else {
                 $description = $activityStr;
             }
@@ -184,10 +203,19 @@ class ItineraryHelper
         try {
             $dayTitle = 'DAY ' . ($dayIndex + 1);
             $activities = [];
+            $locale = App::getLocale();
             
             // Case 1: Array with 'day' and 'activities' structure
             if (is_array($dayData) && isset($dayData['day'])) {
-                $dayTitle = $dayData['day'];
+                // Handle multilingual day title
+                if (is_array($dayData['day'])) {
+                    $dayTitle = $dayData['day'][$locale]
+                        ?? $dayData['day']['id']
+                        ?? $dayData['day']['en']
+                        ?? 'DAY ' . ($dayIndex + 1);
+                } else {
+                    $dayTitle = $dayData['day'];
+                }
                 
                 if (isset($dayData['activities'])) {
                     if (is_array($dayData['activities'])) {
