@@ -269,6 +269,22 @@ class ItineraryHelper
                     ?? $dayData['description']
                     ?? '';
                 
+                // Remove note from description if it exists
+                // Notes usually don't have time brackets at the start
+                if (!empty($desc)) {
+                    // Split by newlines and filter out notes (paragraphs without time brackets at start)
+                    $lines = explode("\n\n", $desc);
+                    $descFiltered = [];
+                    foreach ($lines as $line) {
+                        $line = trim($line);
+                        // Only include lines that start with time brackets [...]
+                        if (preg_match('/^\[/', $line)) {
+                            $descFiltered[] = $line;
+                        }
+                    }
+                    $desc = implode("\n\n", $descFiltered);
+                }
+                
                 if (!empty($desc)) {
                     // Check if description contains multiple activities with time patterns (numeric or text)
                     if (preg_match_all('/\[[^\]]+\]/u', $desc) > 1) {
