@@ -58,13 +58,27 @@ class ItineraryHelper
             // Case 2: Activity adalah string
             $activityStr = trim(strval($activity));
 
-            // Format 1: [HH:MM – HH:MM] atau [HH:MM] dengan bracket (support dash dan en-dash)
-            if (preg_match('/^\[(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\]\s*(.*)$/u', $activityStr, $matches)) {
-                $time = trim($matches[1]);
-                $description = trim($matches[2]);
+            // Format 1a: [Text Time] - e.g., [Sore], [Malam], [Morning], [Evening]
+            if (preg_match('/^\[([^\]]+)\]\s*(.*)$/u', $activityStr, $matches)) {
+                $potentialTime = trim($matches[1]);
+                $potentialDesc = trim($matches[2]);
                 
-                // Remove subsequent time entries from description
-                $description = preg_replace('/\n\n?\[\d{1,2}[:.]\d{2}.*$/us', '', $description);
+                // Check if it's a text-based time (contains letters, not just numbers/symbols)
+                if (preg_match('/[A-Za-z]/u', $potentialTime)) {
+                    $time = $potentialTime;
+                    $description = $potentialDesc;
+                    
+                    // Remove subsequent time entries from description
+                    $description = preg_replace('/\n\n?\[.+?\].*$/us', '', $description);
+                }
+                // Check if it's a numeric time format
+                elseif (preg_match('/\d{1,2}[:.]\d{2}/', $potentialTime)) {
+                    $time = $potentialTime;
+                    $description = $potentialDesc;
+                    
+                    // Remove subsequent time entries from description
+                    $description = preg_replace('/\n\n?\[\d{1,2}[:.]\d{2}.*$/us', '', $description);
+                }
             }
             // Format 2: HH:MM – HH:MM: atau HH:MM: (tanpa bracket, with colon after time)
             elseif (preg_match('/^(\d{1,2}[:.]\d{2}\s*[–\-]\s*\d{1,2}[:.]\d{2}|\d{1,2}[:.]\d{2})\s*[:\-–]\s*(.+)$/u', $activityStr, $matches)) {
