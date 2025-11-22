@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@php
+use App\Helpers\ItineraryHelper;
+@endphp
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
@@ -125,19 +128,10 @@
                                     try {
                                         $dayTitle = 'DAY ' . ($dayIndex + 1);
                                         $activities = [];
-                                        $locale = app()->getLocale();
                                         
                                         // Case 1: Array dengan struktur 'day' dan 'activities'
                                         if (is_array($dayData) && isset($dayData['day'])) {
-                                            // Check if day is multi-language array
-                                            if (is_array($dayData['day'])) {
-                                                $dayTitle = $dayData['day'][$locale] 
-                                                    ?? $dayData['day']['en'] 
-                                                    ?? $dayData['day']['id']
-                                                    ?? 'DAY ' . ($dayIndex + 1);
-                                            } else {
-                                                $dayTitle = $dayData['day'];
-                                            }
+                                            $dayTitle = $dayData['day'];
                                             
                                             if (isset($dayData['activities'])) {
                                                 if (is_array($dayData['activities'])) {
@@ -165,15 +159,19 @@
                                             return !empty($act);
                                         });
                                         
-                                        // Skip jika tidak ada activities
+                                        // ✅ ENHANCED LOGGING
                                         if (empty($activities)) {
+                                            \Log::warning('Empty activities for day ' . $dayTitle . ' | Raw data: ' . json_encode($dayData));
                                             continue;
                                         }
+                                        
+                                        \Log::debug('Parsed day: ' . $dayTitle . ' | Activity count: ' . count($activities));
+                                        
                                     } catch (\Exception $e) {
-                                        \Log::error('Error parsing day data: ' . $e->getMessage());
+                                        \Log::error('Error parsing day data: ' . $e->getMessage() . ' | Day index: ' . $dayIndex . ' | Data: ' . json_encode($dayData));
                                         continue;
                                     }
-                                @endphp
+                                    @endphp
                                 
                                 <div class="bg-white border-l-4 border-emerald-500 rounded-lg shadow-sm hover:shadow-md transition">
                                     <!-- Day Header - Clickable -->
@@ -204,54 +202,17 @@
                                         @foreach($activities as $activity)
                                             @php
                                                 try {
-                                                    $time = '';
-                                                    $description = '';
-                                                    $locale = app()->getLocale();
+                                                    // Use helper for consistent parsing
+                                                    $parsed = ItineraryHelper::parseActivity($activity);
+                                                    $time = $parsed['time'];
+                                                    $description = $parsed['description'];
                                                     
-                                                    // Safety check
-                                                    if (empty($activity)) {
-                                                        continue;
-                                                    }
-                                                    
-                                                    // Case 1: Activity adalah array dengan time dan description
-                                                    if (is_array($activity)) {
-                                                        $time = isset($activity['time']) ? strval($activity['time']) : '';
-                                                        
-                                                        // Check for multi-language description
-                                                        if (isset($activity['description_' . $locale])) {
-                                                            $description = $activity['description_' . $locale];
-                                                        } elseif (isset($activity['description_en'])) {
-                                                            $description = $activity['description_en'];
-                                                        } elseif (isset($activity['description_id'])) {
-                                                            $description = $activity['description_id'];
-                                                        } elseif (isset($activity['description'])) {
-                                                            $description = strval($activity['description']);
-                                                        }
-                                                        
-                                                        // Jika masih kosong, coba ambil value lain
-                                                        if (empty($description) && !empty($activity)) {
-                                                            $description = implode(' ', array_filter($activity, 'is_string'));
-                                                        }
-                                                    } 
-                                                    // Case 2: Activity adalah string
-                                                    else {
-                                                        $activityStr = trim(strval($activity));
-                                                        
-                                                        // Try to parse time format "HH:MM" or "HH:MM - HH:MM" at start
-                                                        if (preg_match('/^->?\s*([\d:]+(?:\s*-\s*[\d:]+)?):?\s*(.*)$/i', $activityStr, $matches)) {
-                                                            $time = trim($matches[1]);
-                                                            $description = trim($matches[2]);
-                                                        } else {
-                                                            $description = $activityStr;
-                                                        }
-                                                    }
-                                                    
-                                                    // Skip jika description kosong
+                                                    // Skip if description is empty
                                                     if (empty($description)) {
                                                         continue;
                                                     }
                                                 } catch (\Exception $e) {
-                                                    // Skip activity yang error
+                                                    \Log::error('Error in activity loop: ' . $e->getMessage());
                                                     continue;
                                                 }
                                             @endphp

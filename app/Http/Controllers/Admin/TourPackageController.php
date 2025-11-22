@@ -7,6 +7,7 @@ use App\Jobs\ProcessImageDerivatives;
 use Illuminate\Http\Request;
 use App\Models\TourPackage;
 use App\Models\Tour;
+use App\Helpers\ItineraryHelper;
 
 class TourPackageController extends Controller
 {
@@ -78,6 +79,19 @@ class TourPackageController extends Controller
                 ProcessImageDerivatives::dispatch($validated['image'], 'public', $package);
             }
         }
+
+        // Validate itinerary structure
+        if ($request->has('itinerary')) {
+            $itinerary = $request->input('itinerary');
+            $errors = ItineraryHelper::validate($itinerary);
+            
+            if (!empty($errors)) {
+                return back()
+                    ->withErrors(['itinerary' => 'Itinerary validation failed: ' . implode(', ', $errors)])
+                    ->withInput();
+            }
+        }
+
 
         return redirect()->route('admin.tour-packages.index')
             ->with('success', 'Tour package created successfully');
