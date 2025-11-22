@@ -85,203 +85,108 @@
 
                 <!-- Detailed Itinerary -->
                 @if($package->itinerary)
-                    <div class="mb-8 sm:mb-12">
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                            </svg>
-                            {{ __('messages.itinerary') ?? 'Itinerary' }}
-                        </h2>
-                        <div class="space-y-4 sm:space-y-6" id="itinerary-container">
+                    <div class="mb-8 md:mb-12">
+                        <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6">{{ __('messages.itinerary') }}</h2>
+                        <div class="space-y-3 md:space-y-6" x-data="{ openDay: null }">
                             @php
                                 $itinerary = $package->itinerary;
-
-                                // Jika string JSON, decode
+                                
+                                // Jika JSON, decode
                                 if (is_string($itinerary)) {
                                     $decoded = json_decode($itinerary, true);
-                                    $itinerary = is_array($decoded) ? $decoded : explode("\n", $itinerary);
+                                    $itinerary = is_array($decoded) ? $decoded : [$itinerary];
                                 }
-
-                                // Pastikan array
+                                
+                                // Pastikan adalah array
                                 if (!is_array($itinerary)) {
                                     $itinerary = [$itinerary];
                                 }
                             @endphp
-
+                            
                             @foreach($itinerary as $dayIndex => $dayData)
                                 @php
-                                    $dayTitle = '';
-                                    $activities = [];
-                                    $noteText = null;
-                                    
-                                    // Format BARU: { title_id, title_en, title_zh, description_id, ... }
-                                    if (is_array($dayData) && (isset($dayData['title_id']) || isset($dayData['title_en']))) {
-                                        $locale = app()->getLocale();
-                                        
-                                        // Ambil title sesuai locale
-                                        $dayTitle = $dayData['title_'.$locale] 
-                                            ?? $dayData['title_en'] 
-                                            ?? $dayData['title_id']
-                                            ?? ('Day ' . ($dayIndex + 1));
-                                        
-                                        // Ambil description sesuai locale
-                                        $description = $dayData['description_'.$locale]
-                                            ?? $dayData['description_en']
-                                            ?? $dayData['description_id']
-                                            ?? '';
-                                        
-                                        // Split description by double newline untuk activities
-                                        if ($description) {
-                                            $activityLines = array_filter(
-                                                preg_split('/\n\n+/', $description),
-                                                fn($line) => !empty(trim($line))
-                                            );
-                                            
-                                            foreach ($activityLines as $line) {
-                                                // Extract time if format: [Time] Description
-                                                if (preg_match('/^\[([^\]]+)\]\s*(.+)$/s', trim($line), $matches)) {
-                                                    $activities[] = [
-                                                        'time' => $matches[1],
-                                                        'description' => trim($matches[2])
-                                                    ];
-                                                } else {
-                                                    $activities[] = [
-                                                        'time' => '',
-                                                        'description' => trim($line)
-                                                    ];
-                                                }
-                                            }
-                                        }
-                                    }
-                                    // Format LAMA: { day: {...}, activities: [...], note: {...} }
-                                    elseif (is_array($dayData) && isset($dayData['day'])) {
-                                        $locale = app()->getLocale();
-                                        $dayField = $dayData['day'];
-
-                                        // dayField bisa string atau array multilanguage
-                                        if (is_array($dayField)) {
-                                            $dayTitle = $dayField[$locale]
-                                                ?? $dayField['en']
-                                                ?? $dayField['id']
-                                                ?? reset($dayField)
-                                                ?? ('Day ' . ($dayIndex + 1));
-                                        } else {
-                                            $dayTitle = (string) $dayField;
-                                        }
-
-                                        $activities = is_array($dayData['activities'] ?? null)
-                                            ? $dayData['activities']
-                                            : (isset($dayData['activities']) ? [$dayData['activities']] : []);
-                                        
-                                        // Get note from old format
-                                        if (isset($dayData['note'])) {
-                                            $note = $dayData['note'];
-                                            if (is_array($note)) {
-                                                $noteText = $note[$locale]
-                                                    ?? $note['en']
-                                                    ?? $note['id']
-                                                    ?? reset($note);
-                                            } else {
-                                                $noteText = trim((string) $note);
-                                            }
-                                        }
-                                    } 
-                                    // Fallback: string biasa
-                                    else {
+                                    // Jika array dengan key 'day' dan 'activities'
+                                    if (is_array($dayData) && isset($dayData['day'])) {
+                                        $dayTitle = $dayData['day'];
+                                        $activities = is_array($dayData['activities']) ? $dayData['activities'] : [$dayData['activities'] ?? ''];
+                                    } else {
+                                        // Jika string, cek apakah ada format "DAY X :"
                                         $text = is_array($dayData) ? ($dayData['description'] ?? (string)$dayData) : (string)$dayData;
-                                        $dayTitle = 'Day ' . ($dayIndex + 1);
-                                        $activities = [['time' => '', 'description' => $text]];
+                                        $dayTitle = 'DAY ' . ($dayIndex + 1);
+                                        $activities = [$text];
                                     }
                                 @endphp
-
-                                @if(!empty(array_filter($activities)))
-                                    <div class="bg-white border-l-4 border-emerald-500 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden itinerary-item">
-                                        <!-- Day Header - Clickable -->
-                                        <button 
-                                            onclick="toggleDay(this)"
-                                            data-day-index="{{ $dayIndex }}"
-                                            class="w-full text-left p-4 sm:p-6 flex justify-between items-center focus:outline-none hover:bg-gray-50 transition-colors">
-                                            <span class="text-base sm:text-lg md:text-xl font-bold text-emerald-600 flex items-center gap-2">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                                {{ $dayTitle }}
-                                            </span>
-                                            <svg 
-                                                class="chevron w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 transform transition-transform duration-200 rotate-0"
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                        </button>
-
-                                        <!-- Activities - Collapsible -->
-                                        <div 
-                                            class="activities-content hidden px-4 pb-4 sm:px-6 sm:pb-6 space-y-3 sm:space-y-4 bg-gray-50">
-                                            @foreach($activities as $activity)
-                                                @php
-                                                    $time = '';
-                                                    $description = '';
-
-                                                    if (is_array($activity)) {
-                                                        $time = $activity['time'] ?? '';
-                                                        
-                                                        // Try to get description with locale support
-                                                        $locale = app()->getLocale();
-                                                        $description = $activity['description_'.$locale]
-                                                            ?? $activity['description_en']
-                                                            ?? $activity['description_id']
-                                                            ?? $activity['description']
-                                                            ?? '';
+                                
+                                <div class="bg-white border-l-4 border-emerald-500 rounded-lg shadow-sm hover:shadow-md transition">
+                                    <!-- Day Header - Clickable -->
+                                    <button 
+                                        @click="openDay = openDay === {{ $dayIndex }} ? null : {{ $dayIndex }}"
+                                        class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none">
+                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $dayTitle }}</h3>
+                                        <svg 
+                                            class="w-5 h-5 md:w-6 md:h-6 text-emerald-600 transform transition-transform duration-200"
+                                            :class="{ 'rotate-180': openDay === {{ $dayIndex }} }"
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Activities - Collapsible -->
+                                    <div 
+                                        x-show="openDay === {{ $dayIndex }}"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                        x-transition:enter-end="opacity-100 transform translate-y-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
+                                        @foreach($activities as $activity)
+                                            @php
+                                                // Parse activity jika ada format "HH:MM - HH:MM: Deskripsi"
+                                                $time = '';
+                                                $description = '';
+                                                
+                                                if (is_array($activity)) {
+                                                    $time = $activity['time'] ?? '';
+                                                    $description = $activity['description'] ?? '';
+                                                } else {
+                                                    $activity = trim((string)$activity);
+                                                    
+                                                    // Cek jika ada format "-> HH:MM:" atau "HH:MM - HH:MM:"
+                                                    if (preg_match('/^->?\s*([\d:]+(?:\s*-\s*[\d:]+)?):?\s*(.*)$/i', $activity, $matches)) {
+                                                        $time = trim($matches[1]);
+                                                        $description = trim($matches[2]);
                                                     } else {
-                                                        $description = trim((string)$activity);
+                                                        $description = $activity;
                                                     }
-                                                @endphp
-
-                                                @if($description)
-                                                    <div class="flex gap-2 sm:gap-3 bg-white p-3 sm:p-4 rounded-lg">
-                                                        @if($time)
-                                                            <div class="flex-shrink-0">
-                                                                <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs sm:text-sm font-semibold">
-                                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                                    </svg>
-                                                                    {{ $time }}
-                                                                </span>
-                                                            </div>
-                                                        @else
-                                                            <div class="flex-shrink-0 mt-1">
-                                                                <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                                                </svg>
-                                                            </div>
-                                                        @endif
-
-                                                        <div class="flex-1">
-                                                            <p class="text-sm sm:text-base text-gray-700 leading-relaxed">{{ $description }}</p>
-                                                        </div>
+                                                }
+                                            @endphp
+                                            
+                                            <div class="flex gap-2 md:gap-3">
+                                                @if($time)
+                                                    <div class="flex-shrink-0">
+                                                        <span class="inline-block px-2 py-1 md:px-3 md:py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs md:text-sm font-semibold">
+                                                            {{ $time }}
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <div class="flex-shrink-0 mt-1">
+                                                        <svg class="w-3 h-3 md:w-4 md:h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                                        </svg>
                                                     </div>
                                                 @endif
-                                            @endforeach
-
-                                            {{-- NOTE per hari (support new format with "Catatan:" prefix) --}}
-                                            @if($noteText)
-                                                <div class="mt-4 border-t border-gray-200 pt-3 bg-amber-50 p-3 sm:p-4 rounded-lg">
-                                                    <p class="text-xs uppercase tracking-wide text-amber-600 font-semibold mb-1 flex items-center gap-1">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                        </svg>
-                                                        {{ __('messages.note') ?? 'Note' }}
-                                                    </p>
-                                                    <p class="text-gray-700 text-sm leading-relaxed">
-                                                        {{ $noteText }}
-                                                    </p>
+                                                
+                                                <div class="flex-1">
+                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $description }}</p>
                                                 </div>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endif
+                                </div>
                             @endforeach
                         </div>
                     </div>

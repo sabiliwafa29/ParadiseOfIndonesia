@@ -67,15 +67,6 @@
                         $userCurrency = LocationService::isIndonesia() ? 'IDR' : 'CNY';
                     @endphp
 
-                    <!-- <div class="mt-4 flex items-center justify-between">
-                        <div class="flex items-center">
-                            <i class="fas fa-clock text-gray-400"></i>
-                            <span class="ml-2 text-sm md:text-base text-gray-500">{{ $tour->duration }} {{ __('messages.days') }}</span>
-                        </div>
-                        <div class="text-lg md:text-xl font-bold text-emerald-600">
-                            {{ $tour->getFormattedPrice($userCurrency) }}
-                        </div>
-                    </div> -->
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
                         <p class="text-lg font-bold text-gray-900">{{ $tour->getFormattedPrice($userCurrency) }}</p>
