@@ -59,7 +59,7 @@ class ItineraryHelper
             $activityStr = trim(strval($activity));
 
             // Format 1a: [Text Time] - e.g., [Sore], [Malam], [Morning], [Evening]
-            if (preg_match('/^\[([^\]]+)\]\s*(.*)$/u', $activityStr, $matches)) {
+            if (preg_match('/^\[([^\]]+)\]\s*(.*)$/us', $activityStr, $matches)) {
                 $potentialTime = trim($matches[1]);
                 $potentialDesc = trim($matches[2]);
                 
@@ -67,17 +67,11 @@ class ItineraryHelper
                 if (preg_match('/[A-Za-z]/u', $potentialTime)) {
                     $time = $potentialTime;
                     $description = $potentialDesc;
-                    
-                    // Remove subsequent time entries from description
-                    $description = preg_replace('/\n\n?\[.+?\].*$/us', '', $description);
                 }
                 // Check if it's a numeric time format
                 elseif (preg_match('/\d{1,2}[:.]\d{2}/', $potentialTime)) {
                     $time = $potentialTime;
                     $description = $potentialDesc;
-                    
-                    // Remove subsequent time entries from description
-                    $description = preg_replace('/\n\n?\[\d{1,2}[:.]\d{2}.*$/us', '', $description);
                 }
             }
             // Format 2: HH:MM – HH:MM: atau HH:MM: (tanpa bracket, with colon after time)
