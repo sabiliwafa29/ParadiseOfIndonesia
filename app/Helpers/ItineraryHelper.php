@@ -214,6 +214,7 @@ class ItineraryHelper
         try {
             $dayTitle = 'DAY ' . ($dayIndex + 1);
             $activities = [];
+            $note = '';
             $locale = App::getLocale();
             
             // Debug logging
@@ -247,6 +248,18 @@ class ItineraryHelper
                         $activities = self::splitMultiActivityString($dayData['activities']);
                     }
                 }
+                
+                // Extract note if exists
+                if (isset($dayData['note'])) {
+                    if (is_array($dayData['note'])) {
+                        $note = $dayData['note'][$locale]
+                            ?? $dayData['note']['id']
+                            ?? $dayData['note']['en']
+                            ?? '';
+                    } else {
+                        $note = $dayData['note'];
+                    }
+                }
             } 
             // Case 2: Array with 'title_id/title_en' and 'description_id/description_en' keys (production format)
             elseif (is_array($dayData) && (isset($dayData['title_id']) || isset($dayData['title_en']))) {
@@ -263,20 +276,36 @@ class ItineraryHelper
                     ?? $dayData['description']
                     ?? '';
                 
-                // Remove note from description if it exists
+                // Separate notes from activities
                 // Notes usually don't have time brackets at the start
                 if (!empty($desc)) {
-                    // Split by newlines and filter out notes (paragraphs without time brackets at start)
+                    // Split by newlines and separate activities from notes
                     $lines = explode("\n\n", $desc);
                     $descFiltered = [];
+                    $noteLines = [];
+                    
                     foreach ($lines as $line) {
                         $line = trim($line);
                         // Only include lines that start with time brackets [...]
                         if (preg_match('/^\[/', $line)) {
                             $descFiltered[] = $line;
+                        } else {
+                            // This is a note
+                            $noteLines[] = $line;
                         }
                     }
+                    
                     $desc = implode("\n\n", $descFiltered);
+                    $note = implode("\n\n", $noteLines);
+                }
+                
+                // Also check for note_id/note_en keys
+                if (empty($note) && isset($dayData['note_' . $locale])) {
+                    $note = $dayData['note_' . $locale];
+                } elseif (empty($note) && isset($dayData['note_id'])) {
+                    $note = $dayData['note_id'];
+                } elseif (empty($note) && isset($dayData['note_en'])) {
+                    $note = $dayData['note_en'];
                 }
                 
                 if (!empty($desc)) {
@@ -325,14 +354,16 @@ class ItineraryHelper
             
             return [
                 'title' => $dayTitle,
-                'activities' => array_values($activities)
+                'activities' => array_values($activities),
+                'note' => $note
             ];
             
         } catch (\Exception $e) {
             Log::error('ItineraryHelper::parseDayData error: ' . $e->getMessage() . ' | Day index: ' . $dayIndex . ' | Data: ' . json_encode($dayData));
             return [
                 'title' => 'DAY ' . ($dayIndex + 1),
-                'activities' => []
+                'activities' => [],
+                'note' => ''
             ];
         }
     }

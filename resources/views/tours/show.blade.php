@@ -165,6 +165,15 @@ use App\Helpers\ItineraryHelper;
                                                 </div>
                                             </div>
                                         @endforeach
+                                        
+                                        {{-- Display note if exists --}}
+                                        @if(!empty($day['note']))
+                                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                                <p class="text-xs md:text-sm text-gray-600 italic leading-relaxed">
+                                                    <span class="font-semibold">{{ __('messages.note') ?? 'Note' }}:</span> {{ $day['note'] }}
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
