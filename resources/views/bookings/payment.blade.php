@@ -212,73 +212,55 @@
 <script type="text/javascript">
     // Define initializeMidtrans function BEFORE loading Midtrans script
     window.initializeMidtrans = function() {
-        console.log('Initializing Midtrans...');
-        
         const payButton = document.getElementById('pay-button');
-        
+
         if (!payButton) {
-            console.error('Pay button not found');
             return;
         }
-        
+
         if (typeof snap === 'undefined') {
-            console.error('Snap is undefined');
             return;
         }
-        
-        console.log('Midtrans initialized successfully');
-        
+
         payButton.onclick = function() {
-            console.log('Pay button clicked');
-            
             try {
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result) {
-                        console.log('Payment success:', result);
                         // Reload the payment page to show success state with registration option
                         window.location.reload();
                     },
                     onPending: function(result) {
-                        console.log('Payment pending:', result);
                         // Reload to show pending state
                         window.location.reload();
                     },
                     onError: function(result) {
-                        console.error('Payment error:', result);
                         // Reload to show error state
                         window.location.reload();
                     },
                     onClose: function() {
-                        console.log('Payment popup closed');
-                        // Just close, user can click pay button again if needed
+                        // User closed the payment popup
                     }
                 });
-                
             } catch (error) {
-                console.error('Error calling snap.pay():', error);
                 // Reload to show any error messages
                 window.location.reload();
             }
         };
     };
-    
+
     // Fallback: Initialize after DOM loaded if onload doesn't trigger
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded');
-        
         // Wait for Snap to be available
         let attempts = 0;
         const maxAttempts = 10;
-        
+
         const checkSnap = setInterval(function() {
             attempts++;
-            
+
             if (typeof snap !== 'undefined') {
-                console.log('Snap found, initializing...');
                 clearInterval(checkSnap);
                 window.initializeMidtrans();
             } else if (attempts >= maxAttempts) {
-                console.error('Snap not found after', maxAttempts, 'attempts');
                 clearInterval(checkSnap);
             }
         }, 500);

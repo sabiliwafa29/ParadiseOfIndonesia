@@ -25,11 +25,30 @@ class DashboardController extends Controller
         $totalTours = Tour::count();
         $activeTours = $hasStatusColumn ? Tour::where('status', 'active')->count() : $totalTours;
         $totalBookings = $hasBookingModel ? Booking::count() : 247;
-        $totalRevenue = $hasBookingModel ? Booking::where('status', 'completed')->sum('total_price') : 42500;
+
+        // Calculate total revenue: support multiple possible success status values
+        if ($hasBookingModel) {
+            // Common completed/paid statuses used across systems
+            $successfulStatuses = ['completed', 'paid', 'success'];
+            $totalRevenue = Booking::whereIn('status', $successfulStatuses)->sum('total_price');
+
+            // If sum is zero, try summing all bookings as a last resort (in case status values differ)
+            if (empty($totalRevenue)) {
+                $totalRevenue = Booking::sum('total_price');
+            }
+        } else {
+            $totalRevenue = 42500;
+        }
         
         // Cek apakah kolom role ada di tabel users
         $hasRoleColumn = \Schema::hasColumn('users', 'role');
-        $totalCustomers = $hasRoleColumn ? User::where('role', 'customer')->count() : User::count();
+        if ($hasRoleColumn) {
+            $customersByRole = User::where('role', 'customer')->count();
+            // If there are no users with role 'customer', fallback to total users
+            $totalCustomers = $customersByRole > 0 ? $customersByRole : User::count();
+        } else {
+            $totalCustomers = User::count();
+        }
         
         $pendingBookings = $hasBookingModel ? Booking::where('status', 'pending')->count() : 12;
 

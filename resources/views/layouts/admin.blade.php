@@ -306,7 +306,7 @@
                     chevronIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>';
                 }
                 
-                console.log('Sidebar toggled:', sidebarOpen ? 'OPEN' : 'CLOSED');
+                // Sidebar toggled (no debug log)
             }
             
             // Add click event to both buttons

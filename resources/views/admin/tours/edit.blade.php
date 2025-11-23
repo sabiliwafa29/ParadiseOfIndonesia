@@ -1102,7 +1102,6 @@ function clearImagePreview() {
             const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
             
             // Show preview (optional)
-            // console.log('USD: $' + usdPrice + ' ≈ Rp ' + (usdPrice * idrRate).toLocaleString() + ' ≈ ¥' + (usdPrice * cnyRate).toFixed(2));
         }
     });
 
@@ -1210,6 +1209,6 @@ function clearImagePreview() {
         copyTemplate: (fieldId, template) => copyToClipboard(template, fieldId)
     };
 
-    // console.log('✅ Tour form script loaded successfully');
+    // Tour form script loaded
 </script>
 @endsection
