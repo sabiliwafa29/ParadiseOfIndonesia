@@ -78,7 +78,7 @@
 
             <!-- Payment Button or Success Message -->
             @if($booking->payment_status !== 'paid')
-                @if($snapToken)
+                @if(isset($snapToken) && $snapToken)
                     <button id="pay-button" 
                             class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +176,7 @@
 </div>
 @endsection
 
-@if($snapToken)
+@if(isset($snapToken) && $snapToken)
 @push('scripts')
 <script type="text/javascript">
     // Define initializeMidtrans function BEFORE loading Midtrans script
