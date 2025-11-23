@@ -51,7 +51,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ __('messages.tour') ?? 'Tour' }}</p>
-                        <p class="font-semibold text-gray-900">{{ $booking->tour->name }}</p>
+                        <p class="font-semibold text-gray-900">{{ $booking->tour ? $booking->tour->name : 'Tour Not Found' }}</p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ __('messages.order_id') ?? 'Order ID' }}</p>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{{ __('messages.contact') ?? 'Contact' }}</p>
-                        <p class="font-semibold text-gray-900 truncate">{{ $booking->email ?? $booking->user->email ?? 'N/A' }}</p>
+                        <p class="font-semibold text-gray-900 truncate">{{ $booking->email ?? ($booking->user ? $booking->user->email : 'N/A') }}</p>
                     </div>
                     <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-4 border-2 border-emerald-200">
                         <p class="text-xs text-emerald-600 uppercase tracking-wide mb-1 font-semibold">{{ __('messages.total_price') ?? 'Total Price' }}</p>
