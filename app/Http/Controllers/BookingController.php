@@ -40,7 +40,7 @@ class BookingController extends Controller
             $guidePrice = $validated['guide'] ? $guidePricePerGuest * $validated['guests'] : 0;
             $transportPrice = $validated['transport'] ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost = $guidePrice + $transportPrice;
-            $basePrice = $tour->price * $validated['guests'];
+            $basePrice = get_price($tour) * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID
@@ -305,7 +305,7 @@ class BookingController extends Controller
             $transportPrice = !empty($validated['transport']) ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost      = $guidePrice + $transportPrice;
 
-            $basePrice  = $package->price * $validated['guests'];
+            $basePrice  = get_price($package) * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID

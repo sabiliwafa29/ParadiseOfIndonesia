@@ -153,24 +153,68 @@
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Price -->
+            <!-- Price IDR -->
             <div>
-                <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="price_idr" class="block text-sm font-semibold text-gray-700 mb-2">
                     Harga (IDR) <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
                     <span class="absolute left-3 top-3 text-gray-500 font-semibold">Rp</span>
                     <input type="number" 
-                           name="price" 
-                           id="price" 
-                           value="{{ old('price', $tourPackage->price ?? '') }}" 
+                           name="price_idr" 
+                           id="price_idr" 
+                           value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}" 
                            required 
                            min="0" 
                            step="0.01" 
-                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror" 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_idr') border-red-500 @enderror" 
                            placeholder="0">
                 </div>
-                @error('price')
+                @error('price_idr')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Price USD -->
+            <div>
+                <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Harga (USD) <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-gray-500 font-semibold">$</span>
+                    <input type="number" 
+                           name="price_usd" 
+                           id="price_usd" 
+                           value="{{ old('price_usd', $tourPackage->price_usd ?? '') }}" 
+                           required 
+                           min="0" 
+                           step="0.01" 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_usd') border-red-500 @enderror" 
+                           placeholder="0">
+                </div>
+                @error('price_usd')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Price CNY -->
+            <div>
+                <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Harga (CNY) <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-gray-500 font-semibold">¥</span>
+                    <input type="number" 
+                           name="price_cny" 
+                           id="price_cny" 
+                           value="{{ old('price_cny', $tourPackage->price_cny ?? '') }}" 
+                           required 
+                           min="0" 
+                           step="0.01" 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_cny') border-red-500 @enderror" 
+                           placeholder="0">
+                </div>
+                @error('price_cny')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>

@@ -50,7 +50,7 @@ class BookingController extends Controller
         $guidePrice = ($validated['guide'] ?? false) ? $guidePricePerGuest * $validated['guests'] : 0;
         $transportPrice = ($validated['transport'] ?? false) ? $transportPricePerGuest * $validated['guests'] : 0;
         $addonCost = $guidePrice + $transportPrice;
-        $totalPrice = ($tour->price * $validated['guests']) + $addonCost;
+        $totalPrice = (get_price($tour) * $validated['guests']) + $addonCost;
 
         // Generate order ID
         $orderId = OrderIdService::generate('BOOK');
