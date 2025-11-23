@@ -44,21 +44,33 @@
                             <p class="text-xs text-gray-500 whitespace-nowrap">Admin Panel</p>
                         </div>
                     </div>
-                    <button @click="sidebarOpen = !sidebarOpen" 
-                            class="text-white bg-emerald-600 hover:bg-emerald-700 transition-all flex-shrink-0 p-2 rounded-lg shadow-md hover:shadow-lg"
-                            title="Toggle Sidebar">
-                        <template x-if="sidebarOpen">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-                            </svg>
-                        </template>
-                        <template x-if="!sidebarOpen">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
-                            </svg>
-                        </template>
+                    <!-- DEBUG: Button Container -->
+                    <button @click="sidebarOpen = !sidebarOpen; console.log('Sidebar toggled:', sidebarOpen)" 
+                            class="text-white bg-emerald-600 hover:bg-emerald-700 transition-all flex-shrink-0 p-2 rounded-lg shadow-md hover:shadow-lg min-w-[36px] min-h-[36px]"
+                            title="Toggle Sidebar"
+                            style="border: 2px solid red;">
+                        <!-- DEBUG: sidebarOpen value -->
+                        <span class="sr-only" x-text="'Sidebar: ' + sidebarOpen"></span>
+                        
+                        <!-- Simple chevron left (when open) -->
+                        <svg x-show="sidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        
+                        <!-- Simple chevron right (when closed) -->
+                        <svg x-show="!sidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        
+                        <!-- Fallback text if SVG fails -->
+                        <span x-show="false" class="text-xs">☰</span>
                     </button>
                 </div>
+            </div>
+            
+            <!-- DEBUG INFO -->
+            <div class="p-2 bg-yellow-100 text-xs text-center">
+                <span x-text="'Alpine loaded. Sidebar: ' + (sidebarOpen ? 'OPEN (w-64)' : 'CLOSED (w-20)')"></span>
             </div>
 
             <nav class="p-4 space-y-1">
