@@ -15,8 +15,8 @@ class TourSessionController extends Controller
             
             // Calculate stats
             $totalSessions = TourSession::count();
-            $upcomingSessions = TourSession::where('date', '>=', now())->count();
-            $pastSessions = TourSession::where('date', '<', now())->count();
+            $upcomingSessions = TourSession::where('start_date', '>=', now())->count();
+            $pastSessions = TourSession::where('end_date', '<', now())->count();
             
             return view('admin.tour-sessions.index', compact('sessions', 'totalSessions', 'upcomingSessions', 'pastSessions'));
         } catch (\Exception $e) {
@@ -40,8 +40,11 @@ class TourSessionController extends Controller
     {
         $validated = $request->validate([
             'tour_package_id' => 'required|exists:tour_packages,id',
-            'date' => 'required|date',
-            'capacity' => 'nullable|integer',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'location' => 'required|string|max:255',
         ]);
 
         TourSession::create($validated);
@@ -63,8 +66,11 @@ class TourSessionController extends Controller
     public function update(Request $request, TourSession $tourSession)
     {
         $validated = $request->validate([
-            'date' => 'required|date',
-            'capacity' => 'nullable|integer',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'location' => 'required|string|max:255',
         ]);
 
         $tourSession->update($validated);

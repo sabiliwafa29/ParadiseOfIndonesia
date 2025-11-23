@@ -103,9 +103,9 @@
                     <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Tour Package</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Capacity</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Session Name</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Location</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date Range</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                         </tr>
@@ -113,7 +113,7 @@
                     <tbody class="divide-y divide-gray-200">
                         @foreach($sessions as $session)
                             @php
-                                $isUpcoming = \Carbon\Carbon::parse($session->date)->isFuture();
+                                $isUpcoming = \Carbon\Carbon::parse($session->start_date)->isFuture();
                                 $packageName = $session->tourPackage 
                                     ? \App\Helpers\LanguageHelper::get($session->tourPackage, 'name', app()->getLocale())
                                     : 'N/A';
@@ -130,30 +130,23 @@
                                             </svg>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-semibold text-gray-900">{{ $packageName }}</div>
-                                            @if($session->tourPackage && $session->tourPackage->tours && $session->tourPackage->tours->isNotEmpty() && $session->tourPackage->tours->first()->destination)
-                                                <div class="text-xs text-gray-500 flex items-center mt-1">
-                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                    </svg>
-                                                    {{ \App\Helpers\LanguageHelper::get($session->tourPackage->tours->first()->destination, 'name', app()->getLocale()) }}
-                                                </div>
-                                            @endif
+                                            <div class="text-sm font-semibold text-gray-900">{{ $session->name }}</div>
+                                            <div class="text-xs text-gray-500">Package: {{ $packageName }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900 font-medium">{{ \Carbon\Carbon::parse($session->date)->format('d M Y') }}</div>
-                                    <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($session->date)->format('l') }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         </svg>
-                                        <span class="text-sm text-gray-900 font-medium">{{ $session->capacity ?? 'Unlimited' }}</span>
+                                        <span class="text-sm text-gray-900">{{ $session->location }}</span>
                                     </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900 font-medium">{{ \Carbon\Carbon::parse($session->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($session->end_date)->format('d M Y') }}</div>
+                                    <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($session->start_date)->diffInDays(\Carbon\Carbon::parse($session->end_date)) + 1 }} days</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($isUpcoming)
