@@ -126,6 +126,57 @@ class DashboardController extends Controller
             ]);
         }
 
+        // Calculate month-over-month revenue change (percentage for overall comparison)
+        $revenueChangePercent = 0;
+        $revenueChangePositive = true;
+        $values = $monthlyRevenue->values();
+        $count = $values->count();
+        if ($count > 0) {
+            $lastRevenue = $values[$count - 1]->revenue ?? 0;
+            $prevRevenue = $count > 1 ? ($values[$count - 2]->revenue ?? 0) : 0;
+
+            if ($prevRevenue == 0) {
+                $revenueChangePercent = $lastRevenue == 0 ? 0 : 100;
+            } else {
+                $revenueChangePercent = (($lastRevenue - $prevRevenue) / $prevRevenue) * 100;
+            }
+
+            $revenueChangePercent = round($revenueChangePercent, 1);
+            $revenueChangePositive = $revenueChangePercent >= 0;
+        }
+
+        // Compute percent change for each month relative to previous month
+        $monthlyRevenue = $monthlyRevenue->values();
+        $processed = collect();
+        $prevRev = null;
+        foreach ($monthlyRevenue as $m) {
+            $rev = $m->revenue ?? 0;
+            if ($prevRev === null) {
+                $pct = 0;
+                $pos = true;
+            } else {
+                if ($prevRev == 0) {
+                    $pct = $rev == 0 ? 0 : 100;
+                } else {
+                    $pct = (($rev - $prevRev) / $prevRev) * 100;
+                }
+                $pos = $pct >= 0;
+            }
+
+            $processed->push((object)[
+                'month' => $m->month,
+                'year' => $m->year,
+                'revenue' => $rev,
+                'percent_change' => round($pct, 1),
+                'percent_positive' => $pos,
+            ]);
+
+            $prevRev = $rev;
+        }
+
+        // Replace monthlyRevenue with processed collection for the view
+        $monthlyRevenue = $processed;
+
         // Booking Status Distribution
         if ($hasBookingModel) {
             $bookingsByStatus = Booking::select('status', DB::raw('count(*) as count'))
@@ -226,6 +277,9 @@ class DashboardController extends Controller
             'bookingsByStatus',
             'recentActivities',
             'topDestinations'
-        ));
+        ))->with([
+            'revenueChangePercent' => $revenueChangePercent,
+            'revenueChangePositive' => $revenueChangePositive,
+        ]);
     }
 }

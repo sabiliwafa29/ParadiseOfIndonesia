@@ -66,7 +66,11 @@
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
                             </svg>
-                            <span class="font-semibold">+12.5%</span> from last month
+                            @php
+                                $sign = $revenueChangePercent >= 0 ? '+' : '';
+                                $colorClass = $revenueChangePositive ? 'text-green-600' : 'text-red-600';
+                            @endphp
+                            <span class="font-semibold {{ $colorClass }}">{{ $sign }}{{ $revenueChangePercent }}%</span> from last month
                         </p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
@@ -126,8 +130,11 @@
                         <div class="flex-1 flex flex-col items-center group">
                             <div class="relative w-full bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-lg hover:from-emerald-600 hover:to-emerald-500 transition-all duration-300 cursor-pointer" 
                                  style="height: {{ $height }}%">
-                                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                    ${{ number_format($data->revenue) }}
+                                <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">
+                                    <div>${{ number_format($data->revenue) }}</div>
+                                    <div class="mt-1 text-xs {{ $data->percent_positive ? 'text-green-300' : 'text-red-300' }}">
+                                        {!! $data->percent_positive ? '&#9650;' : '&#9660;' !!} {{ $data->percent_change }}%
+                                    </div>
                                 </div>
                             </div>
                             <p class="text-xs text-gray-600 mt-2">{{ $monthName }}</p>
