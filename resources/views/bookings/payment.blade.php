@@ -138,6 +138,37 @@
                         </a>
                     </div>
                 @else
+                    <!-- Guest User - Show Registration/Login Options -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-6 mb-4">
+                        <div class="flex items-start">
+                            <svg class="w-8 h-8 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-bold text-blue-900 mb-2">{{ __('messages.create_account_benefits') ?? 'Want to track your bookings?' }}</h4>
+                                <p class="text-blue-800 text-sm mb-4">
+                                    {{ __('messages.register_to_manage') ?? 'Register an account to easily view and manage all your bookings in one place!' }}
+                                </p>
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="{{ route('register') }}" 
+                                       class="flex-1 inline-flex items-center justify-center py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                        </svg>
+                                        {{ __('messages.create_account') ?? 'Create Account' }}
+                                    </a>
+                                    <a href="{{ route('login') }}" 
+                                       class="flex-1 inline-flex items-center justify-center py-3 bg-white text-blue-600 border-2 border-blue-300 rounded-lg font-semibold hover:bg-blue-50 transition-all">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                        </svg>
+                                        {{ __('messages.login') ?? 'Login' }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="flex flex-col sm:flex-row gap-3">
                         <a href="{{ route('home') }}" 
                            class="flex-1 inline-flex items-center justify-center py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg">
@@ -204,26 +235,29 @@
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result) {
                         console.log('Payment success:', result);
-                        alert('{{ __("messages.payment_success") ?? "Payment successful! Thank you for your booking." }}');
-                        window.location.href = "{{ route('my-bookings') }}";
+                        // Reload the payment page to show success state with registration option
+                        window.location.reload();
                     },
                     onPending: function(result) {
                         console.log('Payment pending:', result);
-                        alert('{{ __("messages.payment_pending") ?? "Waiting for your payment!" }}');
+                        // Reload to show pending state
+                        window.location.reload();
                     },
                     onError: function(result) {
                         console.error('Payment error:', result);
-                        alert('{{ __("messages.payment_failed") ?? "Payment failed! Please try again." }}');
+                        // Reload to show error state
+                        window.location.reload();
                     },
                     onClose: function() {
                         console.log('Payment popup closed');
-                        alert('{{ __("messages.payment_closed") ?? "You closed the payment popup. Please complete your payment to confirm your booking." }}');
+                        // Just close, user can click pay button again if needed
                     }
                 });
                 
             } catch (error) {
                 console.error('Error calling snap.pay():', error);
-                alert('Error: ' + error.message);
+                // Reload to show any error messages
+                window.location.reload();
             }
         };
     };
