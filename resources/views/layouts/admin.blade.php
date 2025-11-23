@@ -168,9 +168,13 @@
             <header class="bg-white shadow-sm sticky top-0 z-40">
                 <div class="flex items-center justify-between px-8 py-4">
                     <div class="flex items-center space-x-4">
-                        <button class="lg:hidden text-gray-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button @click="sidebarOpen = !sidebarOpen" 
+                                class="text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 p-2 rounded-lg transition-all">
+                            <svg x-show="sidebarOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            <svg x-show="!sidebarOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8M4 18h16"/>
                             </svg>
                         </button>
                         <h1 class="text-2xl font-bold text-gray-800">
