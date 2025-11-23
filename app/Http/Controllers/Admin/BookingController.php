@@ -56,7 +56,7 @@ class BookingController extends Controller
             'confirmed' => Booking::where('status', 'confirmed')->count(),
             'completed' => Booking::where('status', 'completed')->count(),
             'cancelled' => Booking::where('status', 'cancelled')->count(),
-            'total_revenue' => Booking::whereIn('status', ['confirmed', 'completed'])->sum('total_price'),
+            'total_revenue' => Booking::whereIn('status', config('bookings.success_statuses', ['confirmed', 'completed']))->sum('total_price'),
             'today_bookings' => Booking::whereDate('created_at', today())->count(),
         ];
         

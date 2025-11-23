@@ -29,7 +29,7 @@ class DashboardController extends Controller
         // Calculate total revenue: support multiple possible success status values
         if ($hasBookingModel) {
             // Common completed/paid statuses used across systems
-            $successfulStatuses = ['completed', 'paid', 'success'];
+            $successfulStatuses = config('bookings.success_statuses', ['confirmed', 'completed']);
             $totalRevenue = Booking::whereIn('status', $successfulStatuses)->sum('total_price');
 
             // If sum is zero, try summing all bookings as a last resort (in case status values differ)
