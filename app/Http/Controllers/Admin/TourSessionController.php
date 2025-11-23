@@ -10,7 +10,7 @@ class TourSessionController extends Controller
 {
     public function index()
     {
-        $sessions = TourSession::with(['tourPackage.destination'])->latest()->paginate(20);
+        $sessions = TourSession::with(['tourPackage.tours.destination'])->latest()->paginate(20);
         
         // Calculate stats
         $totalSessions = TourSession::count();
@@ -22,7 +22,7 @@ class TourSessionController extends Controller
 
     public function create()
     {
-        $tourPackages = \App\Models\TourPackage::with('destination')->get();
+        $tourPackages = \App\Models\TourPackage::with('tours.destination')->get();
         return view('admin.tour-sessions.create', compact('tourPackages'));
     }
 

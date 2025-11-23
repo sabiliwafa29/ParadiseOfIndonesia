@@ -44,6 +44,7 @@ class TourPackage extends Model
     {
         return $this->belongsToMany(Tour::class, 'tour_tour_package', 'tour_package_id', 'tour_id');
     }
+    
     public function getNameAttribute()
     {
         $locale = app()->getLocale();
