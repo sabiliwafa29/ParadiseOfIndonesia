@@ -96,75 +96,85 @@
                 </div>
             @endif
 
-            <!-- Date Field -->
-            <div class="mb-8">
-                <label for="date" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+            <!-- Session Name Field -->
+            <div class="mb-6">
+                <label for="name" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
                     </svg>
-                    Session Date
+                    Session Name
                     <span class="text-red-500 ml-1">*</span>
                 </label>
-                <div class="relative">
-                    <input type="date" 
-                           id="date"
-                           name="date" 
-                           value="{{ old('date', $tourSession->date->format('Y-m-d')) }}"
-                           class="w-full px-4 py-3 pl-12 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('date') border-red-300 bg-red-50 @else border-gray-300 @enderror"
-                           required>
-                    <div class="absolute left-4 top-3.5 pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                </div>
-                @error('date')
-                    <div class="flex items-center mt-2 text-red-600">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="text-sm font-medium">{{ $message }}</span>
-                    </div>
+                <input type="text" id="name" name="name" value="{{ old('name', $tourSession->name) }}" required
+                       class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('name') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                @error('name')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Capacity Field -->
-            <div class="mb-8">
-                <label for="capacity" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+            <!-- Description Field -->
+            <div class="mb-6">
+                <label for="description" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
                     </svg>
-                    Capacity
-                    <span class="text-gray-400 text-xs ml-2">(Optional)</span>
+                    Description
+                    <span class="text-red-500 ml-1">*</span>
                 </label>
-                <div class="relative">
-                    <input type="number" 
-                           id="capacity"
-                           name="capacity" 
-                           value="{{ old('capacity', $tourSession->capacity) }}"
-                           min="1"
-                           placeholder="Enter maximum capacity (leave empty for unlimited)"
-                           class="w-full px-4 py-3 pl-12 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('capacity') border-red-300 bg-red-50 @else border-gray-300 @enderror">
-                    <div class="absolute left-4 top-3.5 pointer-events-none">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                <textarea id="description" name="description" rows="4" required
+                          class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('description') border-red-300 bg-red-50 @else border-gray-300 @enderror">{{ old('description', $tourSession->description) }}</textarea>
+                @error('description')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Date Range Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="start_date" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                    </div>
+                        Start Date
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <input type="date" id="start_date" name="start_date" value="{{ old('start_date', $tourSession->start_date->format('Y-m-d')) }}" required
+                           class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('start_date') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                    @error('start_date')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-                @error('capacity')
-                    <div class="flex items-center mt-2 text-red-600">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+
+                <div>
+                    <label for="end_date" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        <span class="text-sm font-medium">{{ $message }}</span>
-                    </div>
-                @else
-                    <p class="mt-2 text-sm text-gray-500 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Leave empty for unlimited capacity
-                    </p>
+                        End Date
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <input type="date" id="end_date" name="end_date" value="{{ old('end_date', $tourSession->end_date->format('Y-m-d')) }}" required
+                           class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('end_date') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                    @error('end_date')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Location Field -->
+            <div class="mb-8">
+                <label for="location" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Location
+                    <span class="text-red-500 ml-1">*</span>
+                </label>
+                <input type="text" id="location" name="location" value="{{ old('location', $tourSession->location) }}" required
+                       class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition @error('location') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                @error('location')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -190,7 +200,8 @@
 
     <!-- Session Status Info -->
     @php
-        $isUpcoming = \Carbon\Carbon::parse($tourSession->date)->isFuture();
+        $isUpcoming = \Carbon\Carbon::parse($tourSession->start_date)->isFuture();
+        $duration = \Carbon\Carbon::parse($tourSession->start_date)->diffInDays(\Carbon\Carbon::parse($tourSession->end_date)) + 1;
     @endphp
     <div class="mt-6 max-w-3xl">
         <div class="bg-gradient-to-r from-{{ $isUpcoming ? 'green' : 'gray' }}-50 to-{{ $isUpcoming ? 'emerald' : 'gray' }}-50 border border-{{ $isUpcoming ? 'green' : 'gray' }}-200 rounded-xl p-6">
@@ -216,9 +227,9 @@
                     </h3>
                     <p class="text-gray-600">
                         @if($isUpcoming)
-                            This session is scheduled for <strong>{{ \Carbon\Carbon::parse($tourSession->date)->format('l, d F Y') }}</strong> ({{ \Carbon\Carbon::parse($tourSession->date)->diffForHumans() }})
+                            This session is scheduled from <strong>{{ \Carbon\Carbon::parse($tourSession->start_date)->format('d M') }}</strong> to <strong>{{ \Carbon\Carbon::parse($tourSession->end_date)->format('d M Y') }}</strong> ({{ $duration }} days)
                         @else
-                            This session was held on <strong>{{ \Carbon\Carbon::parse($tourSession->date)->format('l, d F Y') }}</strong> ({{ \Carbon\Carbon::parse($tourSession->date)->diffForHumans() }})
+                            This session was held from <strong>{{ \Carbon\Carbon::parse($tourSession->start_date)->format('d M') }}</strong> to <strong>{{ \Carbon\Carbon::parse($tourSession->end_date)->format('d M Y') }}</strong>
                         @endif
                     </p>
                 </div>
@@ -226,4 +237,18 @@
         </div>
     </div>
 </div>
+
+<script>
+// Auto-update end date min when start date changes
+document.getElementById('start_date').addEventListener('change', function() {
+    const startDate = this.value;
+    const endDateInput = document.getElementById('end_date');
+    endDateInput.min = startDate;
+    
+    // If end date is before start date, update it
+    if (endDateInput.value && endDateInput.value < startDate) {
+        endDateInput.value = startDate;
+    }
+});
+</script>
 @endsection
