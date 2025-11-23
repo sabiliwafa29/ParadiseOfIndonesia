@@ -10,20 +10,30 @@ class TourSessionController extends Controller
 {
     public function index()
     {
-        $sessions = TourSession::with(['tourPackage.tours.destination'])->latest()->paginate(20);
-        
-        // Calculate stats
-        $totalSessions = TourSession::count();
-        $upcomingSessions = TourSession::where('date', '>=', now())->count();
-        $pastSessions = TourSession::where('date', '<', now())->count();
-        
-        return view('admin.tour-sessions.index', compact('sessions', 'totalSessions', 'upcomingSessions', 'pastSessions'));
+        try {
+            $sessions = TourSession::with(['tourPackage.tours.destination'])->latest()->paginate(20);
+            
+            // Calculate stats
+            $totalSessions = TourSession::count();
+            $upcomingSessions = TourSession::where('date', '>=', now())->count();
+            $pastSessions = TourSession::where('date', '<', now())->count();
+            
+            return view('admin.tour-sessions.index', compact('sessions', 'totalSessions', 'upcomingSessions', 'pastSessions'));
+        } catch (\Exception $e) {
+            \Log::error('TourSession index error: ' . $e->getMessage());
+            return back()->with('error', 'Error loading tour sessions: ' . $e->getMessage());
+        }
     }
 
     public function create()
     {
-        $tourPackages = \App\Models\TourPackage::with('tours.destination')->get();
-        return view('admin.tour-sessions.create', compact('tourPackages'));
+        try {
+            $tourPackages = \App\Models\TourPackage::with('tours.destination')->get();
+            return view('admin.tour-sessions.create', compact('tourPackages'));
+        } catch (\Exception $e) {
+            \Log::error('TourSession create error: ' . $e->getMessage());
+            return back()->with('error', 'Error loading form: ' . $e->getMessage());
+        }
     }
 
     public function store(Request $request)
@@ -41,7 +51,13 @@ class TourSessionController extends Controller
 
     public function edit(TourSession $tourSession)
     {
-        return view('admin.tour-sessions.edit', compact('tourSession'));
+        try {
+            $tourSession->load('tourPackage.tours.destination');
+            return view('admin.tour-sessions.edit', compact('tourSession'));
+        } catch (\Exception $e) {
+            \Log::error('TourSession edit error: ' . $e->getMessage());
+            return back()->with('error', 'Error loading session: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, TourSession $tourSession)

@@ -82,7 +82,7 @@
                         @foreach($tourPackages as $package)
                             <option value="{{ $package->id }}" {{ old('tour_package_id') == $package->id ? 'selected' : '' }}>
                                 {{ \App\Helpers\LanguageHelper::get($package, 'name', app()->getLocale()) }}
-                                @if($package->tours->first() && $package->tours->first()->destination)
+                                @if($package->tours && $package->tours->isNotEmpty() && $package->tours->first()->destination)
                                     - {{ \App\Helpers\LanguageHelper::get($package->tours->first()->destination, 'name', app()->getLocale()) }}
                                 @endif
                             </option>
