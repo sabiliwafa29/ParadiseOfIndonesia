@@ -20,8 +20,15 @@
 
         <!-- Error Messages -->
 
-        <!-- Pricing Section (always visible) -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <!-- Pricing Section (always visible) -->
+                <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" 
+                            method="POST" 
+                            enctype="multipart/form-data" 
+                            class="space-y-6">
+                        @csrf
+                        @method('PUT')
+
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
             <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                 <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8"/>
@@ -69,15 +76,7 @@
             </div>
         </div>
 
-        <!-- Form -->
-        <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" 
-              method="POST" 
-              enctype="multipart/form-data" 
-              class="space-y-6">
-            @csrf
-            @method('PUT')
-
-            <!-- Package Names Section -->
+                        <!-- Package Names Section -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
                     <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
