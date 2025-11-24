@@ -43,9 +43,9 @@ class TourPackageController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-                'price_idr' => 'required|numeric|min:0',
-                'price_usd' => 'required|numeric|min:0',
-                'price_cny' => 'required|numeric|min:0',
+                'price_idr' => 'nullable|numeric|min:0',
+                'price_usd' => 'nullable|numeric|min:0',
+                'price_cny' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
             'itinerary' => 'nullable|array',
             'itinerary.*.title_id' => 'required|string',
@@ -57,6 +57,11 @@ class TourPackageController extends Controller
             'tours' => 'nullable|array',
             'tours.*' => 'exists:tours,id',
         ]);
+
+        // Require at least one price field
+        if (empty($request->input('price_idr')) && empty($request->input('price_usd')) && empty($request->input('price_cny'))) {
+            return back()->withErrors(['price_usd' => 'Please provide at least one price (IDR, USD or CNY)'])->withInput();
+        }
 
         // Handle checkbox
         $validated['includes_guide'] = $request->has('includes_guide');
@@ -94,6 +99,8 @@ class TourPackageController extends Controller
             }
         }
 
+        
+
 
         return redirect()->route('admin.tour-packages.index')
             ->with('success', 'Tour package created successfully');
@@ -114,9 +121,9 @@ class TourPackageController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-                'price_idr' => 'required|numeric|min:0',
-                'price_usd' => 'required|numeric|min:0',
-                'price_cny' => 'required|numeric|min:0',
+                'price_idr' => 'nullable|numeric|min:0',
+                'price_usd' => 'nullable|numeric|min:0',
+                'price_cny' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
             'itinerary' => 'nullable|array',
             'itinerary.*.title_id' => 'required|string',
@@ -154,6 +161,11 @@ class TourPackageController extends Controller
             } else {
                 ProcessImageDerivatives::dispatch($validated['image'], 'public', $tourPackage);
             }
+        }
+
+        // Require at least one price field
+        if (empty($validated['price_idr']) && empty($validated['price_usd']) && empty($validated['price_cny'])) {
+            return back()->withErrors(['price_usd' => 'Please provide at least one price (IDR, USD or CNY)'])->withInput();
         }
 
         return redirect()->route('admin.tour-packages.index')

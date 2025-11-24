@@ -19,6 +19,18 @@
         </div>
 
         <!-- Error Messages -->
+        @if($errors->any())
+            <div class="mb-6">
+                <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg">
+                    <strong class="font-semibold">There were validation errors:</strong>
+                    <ul class="mt-2 list-disc list-inside text-sm">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
 
                 <!-- Pricing Section (always visible) -->
                 <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" 
