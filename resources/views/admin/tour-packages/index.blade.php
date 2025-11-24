@@ -54,7 +54,7 @@
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" 
+                        <input type="text"
                            name="search" 
                            value="{{ request('search') }}" 
                            placeholder="Cari nama paket..." 
@@ -65,6 +65,15 @@
                     <span class="sm:hidden">Cari</span>
                     <span class="hidden sm:inline">Cari Package</span>
                 </button>
+                <div class="flex items-center gap-2">
+                        <select id="currency-select" name="currency" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                        <option value="">Auto</option>
+                        <option value="idr" {{ request('currency') === 'idr' ? 'selected' : '' }}>IDR</option>
+                        <option value="usd" {{ request('currency') === 'usd' ? 'selected' : '' }}>USD</option>
+                        <option value="cny" {{ request('currency') === 'cny' ? 'selected' : '' }}>CNY</option>
+                    </select>
+                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 1]) }}" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm">Show All</a>
+                </div>
                 @if(request('search'))
                     <a href="{{ route('admin.tour-packages.index') }}" 
                        class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
@@ -162,6 +171,23 @@
                                 @php
                                     $colLabel = $displayMode === 'idr' ? 'Price (IDR)' : ($displayMode === 'cny' ? 'Price (CNY)' : 'Price (USD)');
                                 @endphp
+
+                        /* De-emphasize secondary currency lines on desktop */
+                        .secondary-currency { font-size: 0.95rem; opacity: 0.9; }
+
+                        </style>
+
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const select = document.getElementById('currency-select');
+                            const form = document.getElementById('packages-search-form');
+                            if (select && form) {
+                                select.addEventListener('change', function() {
+                                    form.submit();
+                                });
+                            }
+                        });
+                        </script>
                                 <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">{{ $colLabel }}</th>
                             @endif
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Guide</th>
@@ -219,11 +245,29 @@
                             @else
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($displayMode === 'idr')
-                                        <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                                <span class="text-sm text-red-600 ml-2">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
                                     @elseif($displayMode === 'cny')
-                                        <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                                <span class="text-sm text-blue-600 ml-2">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
                                     @else
-                                        <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                                <span class="text-sm text-red-600 ml-2">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
                             @endif

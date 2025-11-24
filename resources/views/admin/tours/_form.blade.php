@@ -140,10 +140,10 @@
                 </label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-600 font-semibold">$</span>
-                    <input type="number" 
-                           step="0.01" 
-                           name="price" 
-                           value="{{ old('price', $tour->price ?? '') }}" 
+                          <input type="number" 
+                              step="0.01" 
+                              name="price" 
+                              value="{{ old('price', $tour->price_usd ?? $tour->price ?? '') }}" 
                            class="block w-full pl-8 pr-4 py-3 rounded-lg border-2 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('price') border-red-500 bg-red-50 @else border-gray-300 @enderror"
                            placeholder="299.00"
                            required>

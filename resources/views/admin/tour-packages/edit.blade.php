@@ -19,71 +19,55 @@
         </div>
 
         <!-- Error Messages -->
-        @if ($errors->any())
-            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md">
-                <div class="flex items-start">
-                    <svg class="w-6 h-6 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div class="flex-1">
-                        <p class="font-bold text-red-800 mb-2">Terdapat beberapa kesalahan:</p>
-                        <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+
+        <!-- Pricing Section (always visible) -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8"/>
+                </svg>
+                Pricing (Editable)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="price_idr_display" class="block text-sm font-semibold text-gray-700 mb-2">Price (IDR)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">IDR</span>
+                                <input type="hidden" name="price_idr" id="price_idr" value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}">
+                                <input type="text" id="price_idr_display" autocomplete="off"
+                                       value="{{ old('price_idr', $tourPackage->price_idr ?? '') ? number_format(old('price_idr', $tourPackage->price_idr ?? 0), 0, ',', '.') : '' }}"
+                                       class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_idr') border-red-500 @enderror"
+                                       placeholder="e.g. 1.500.000">
+                            </div>
+                            @error('price_idr')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                        </div>
+
+                <div>
+                    <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">USD</span>
+                        <input type="number" name="price_usd" id="price_usd" step="0.01" min="0"
+                               value="{{ old('price_usd', $tourPackage->price_usd ?? '') }}"
+                               class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_usd') border-red-500 @enderror"
+                               placeholder="e.g. 99.99">
                     </div>
+                    @error('price_usd')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
-                    <!-- Pricing Section -->
-                    <div class="bg-white rounded-xl shadow-md p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8"/>
-                            </svg>
-                            Pricing (Editable)
-                        </h2>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label for="price_idr" class="block text-sm font-semibold text-gray-700 mb-2">Price (IDR)</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">IDR</span>
-                                    <input type="number" name="price_idr" id="price_idr" step="1" min="0"
-                                           value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}"
-                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_idr') border-red-500 @enderror"
-                                           placeholder="e.g. 1500000">
-                                </div>
-                                @error('price_idr')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                            </div>
-
-                            <div>
-                                <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD)</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">USD</span>
-                                    <input type="number" name="price_usd" id="price_usd" step="0.01" min="0"
-                                           value="{{ old('price_usd', $tourPackage->price_usd ?? '') }}"
-                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_usd') border-red-500 @enderror"
-                                           placeholder="e.g. 99.99">
-                                </div>
-                                @error('price_usd')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                            </div>
-
-                            <div>
-                                <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">Price (CNY)</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">CNY</span>
-                                    <input type="number" name="price_cny" id="price_cny" step="0.01" min="0"
-                                           value="{{ old('price_cny', $tourPackage->price_cny ?? '') }}"
-                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_cny') border-red-500 @enderror"
-                                           placeholder="e.g. 699.00">
-                                </div>
-                                @error('price_cny')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                            </div>
-                        </div>
+                <div>
+                    <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">Price (CNY)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">CNY</span>
+                        <input type="number" name="price_cny" id="price_cny" step="0.01" min="0"
+                               value="{{ old('price_cny', $tourPackage->price_cny ?? '') }}"
+                               class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_cny') border-red-500 @enderror"
+                               placeholder="e.g. 699.00">
                     </div>
+                    @error('price_cny')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
             </div>
-        @endif
+        </div>
 
         <!-- Form -->
         <form action="{{ route('admin.tour-packages.update', $tourPackage) }}" 
@@ -331,6 +315,45 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+            </script>
+            <script>
+            // price_idr display formatting: keep hidden numeric input in sync
+            document.addEventListener('DOMContentLoaded', function() {
+                const hidden = document.getElementById('price_idr');
+                const disp = document.getElementById('price_idr_display');
+                function formatNumber(n) {
+                    if (n === null || n === undefined || n === '') return '';
+                    try {
+                        return new Intl.NumberFormat('id-ID').format(Number(n));
+                    } catch(e) {
+                        return n;
+                    }
+                }
+
+                function rawDigits(str) {
+                    return (str || '').toString().replace(/[^0-9]/g, '');
+                }
+
+                // initialize display from hidden
+                if (hidden && disp) {
+                    disp.value = hidden.value ? formatNumber(hidden.value) : '';
+
+                    // when user types in display, update hidden with raw number and reformat
+                    disp.addEventListener('input', function(e) {
+                        const raw = rawDigits(disp.value);
+                        hidden.value = raw;
+                        const cursorPos = disp.selectionStart;
+                        disp.value = raw ? formatNumber(raw) : '';
+                        // try to restore cursor near end (simple heuristic)
+                        try { disp.setSelectionRange(disp.value.length, disp.value.length); } catch(err) {}
+                    });
+
+                    // also on blur reformat
+                    disp.addEventListener('blur', function() {
+                        disp.value = hidden.value ? formatNumber(hidden.value) : '';
+                    });
+                }
+            });
             </script>
             @php
                 $existingItinerary = $tourPackage->itinerary ?? [];

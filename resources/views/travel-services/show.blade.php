@@ -23,7 +23,7 @@
                     <div class="mt-4">
                         <span class="text-gray-700 font-semibold">Price:</span>
                         <span class="ml-2 text-xl font-bold text-emerald-600">
-                            Rp {{ number_format($service->price, 0, ',', '.') }}
+                            {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }}
                         </span>
                     </div>
 

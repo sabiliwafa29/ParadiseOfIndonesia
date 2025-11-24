@@ -283,7 +283,7 @@
                                             </svg>
                                             {{ $tour->bookings_count ?? 0 }} bookings
                                         </span>
-                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price_usd ?? $tour->price ?? 0) }}</span>
+                                        <span class="text-sm font-bold text-emerald-600">{{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($tour) ) }}</span>
                                     </div>
                                 </div>
                             </div>

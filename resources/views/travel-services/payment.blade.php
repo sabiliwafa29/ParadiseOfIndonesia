@@ -8,7 +8,7 @@
 
         <div class="bg-gray-100 p-4 rounded-md mb-6">
             <p><strong>Order ID:</strong> {{ $orderId }}</p>
-            <p><strong>Amount:</strong> Rp {{ number_format($service->price, 0, ',', '.') }}</p>
+            <p><strong>Amount:</strong> {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }}</p>
         </div>
 
         <button id="pay-button" 
