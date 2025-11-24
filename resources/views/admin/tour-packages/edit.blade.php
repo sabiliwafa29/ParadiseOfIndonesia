@@ -34,6 +34,54 @@
                         </ul>
                     </div>
                 </div>
+
+                    <!-- Pricing Section -->
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8"/>
+                            </svg>
+                            Pricing (Editable)
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="price_idr" class="block text-sm font-semibold text-gray-700 mb-2">Price (IDR)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">IDR</span>
+                                    <input type="number" name="price_idr" id="price_idr" step="1" min="0"
+                                           value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}"
+                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_idr') border-red-500 @enderror"
+                                           placeholder="e.g. 1500000">
+                                </div>
+                                @error('price_idr')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                            </div>
+
+                            <div>
+                                <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">USD</span>
+                                    <input type="number" name="price_usd" id="price_usd" step="0.01" min="0"
+                                           value="{{ old('price_usd', $tourPackage->price_usd ?? '') }}"
+                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_usd') border-red-500 @enderror"
+                                           placeholder="e.g. 99.99">
+                                </div>
+                                @error('price_usd')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                            </div>
+
+                            <div>
+                                <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">Price (CNY)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">CNY</span>
+                                    <input type="number" name="price_cny" id="price_cny" step="0.01" min="0"
+                                           value="{{ old('price_cny', $tourPackage->price_cny ?? '') }}"
+                                           class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_cny') border-red-500 @enderror"
+                                           placeholder="e.g. 699.00">
+                                </div>
+                                @error('price_cny')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                    </div>
             </div>
         @endif
 
@@ -603,5 +651,5 @@
 </div>
 
 
-</script>
+@endsection
 @endsection
