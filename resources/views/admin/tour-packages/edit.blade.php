@@ -120,7 +120,7 @@
             <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Itinerary manager (no debug logs)
-                let itineraryCount = {{ count($existingItinerary) }};
+                let itineraryCount = {{ isset($existingItinerary) ? count($existingItinerary) : 0 }};
                 const addButton = document.getElementById('add-itinerary');
                 const container = document.getElementById('itinerary-container');
 
@@ -284,38 +284,25 @@
                 }
             }
             </script>
-                            $existingItinerary = $tourPackage->itinerary;
-                        }
-                        
-                        // Debug: Log nilai
-                        \Log::info('=== ITINERARY DEBUG ===');
-                        \Log::info('Raw from DB: ' . json_encode($tourPackage->getRawOriginal('itinerary')));
-                        \Log::info('After casting: ' . json_encode($tourPackage->itinerary));
-                        \Log::info('Type: ' . gettype($existingItinerary));
-                        \Log::info('Is Array: ' . (is_array($existingItinerary) ? 'YES' : 'NO'));
-                        
-                        // Pastikan dalam bentuk array
-                        if (!is_array($existingItinerary)) {
-                            \Log::warning('Converting to array because type is: ' . gettype($existingItinerary));
-                            $existingItinerary = [];
-                        }
-                        
-                        // Jika kosong, buat minimal 1 item
-                        if (empty($existingItinerary)) {
-                            \Log::info('Empty itinerary, creating default item');
-                            $existingItinerary = [[
-                                'title_id' => '',
-                                'title_en' => '',
-                                'title_zh' => '',
-                                'description_id' => '',
-                                'description_en' => '',
-                                'description_zh' => ''
-                            ]];
-                        }
-                        
-                        \Log::info('Final itinerary count: ' . count($existingItinerary));
-                    @endphp
+            @php
+                $existingItinerary = $tourPackage->itinerary ?? [];
+                if (!is_array($existingItinerary)) {
+                    $existingItinerary = [];
+                }
 
+                if (empty($existingItinerary)) {
+                    $existingItinerary = [[
+                        'title_id' => '',
+                        'title_en' => '',
+                        'title_zh' => '',
+                        'description_id' => '',
+                        'description_en' => '',
+                        'description_zh' => ''
+                    ]];
+                }
+            @endphp
+
+            <div id="itinerary-container" class="space-y-4">
                     @foreach($existingItinerary as $index => $item)
                     @php
                         // Konversi struktur lama ke struktur baru
