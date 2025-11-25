@@ -271,54 +271,73 @@
 
     @push('scripts')
     @if(in_array(\App\Helpers\LanguageHelper::getCurrentCurrency(), ['USD','CNY']))
-    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency={{ \App\Helpers\LanguageHelper::getCurrentCurrency() }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const bookingId = {{ $booking->id }};
             const currency = '{{ \App\Helpers\LanguageHelper::getCurrentCurrency() }}';
+            const clientId = '{{ config('services.paypal.client_id') }}';
 
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return fetch('/api/paypal/' + bookingId + '/create-order', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ currency: currency })
-                    }).then(function(res) {
-                        return res.json();
-                    }).then(function(orderData) {
-                        if (!orderData || !orderData.id) {
-                            throw new Error('Failed to create PayPal order');
-                        }
-                        return orderData.id;
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return fetch('/api/paypal/' + bookingId + '/capture-order', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ orderID: data.orderID })
-                    }).then(function(res) { return res.json(); })
-                    .then(function(captureData) {
-                        console.log('PayPal capture:', captureData);
-                        window.location.reload();
-                    }).catch(function(err) {
-                        console.error('Capture error', err);
-                        alert('Payment failed, please try again.');
-                    });
-                },
-                onError: function(err) {
-                    console.error('PayPal error', err);
-                    alert('Payment failed, please try again.');
+            // Load PayPal SDK dynamically to avoid race conditions / CSP timing issues
+            const paypalSrc = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}`;
+            const script = document.createElement('script');
+            script.src = paypalSrc;
+            script.async = true;
+
+            script.onload = function() {
+                if (typeof paypal === 'undefined') {
+                    console.error('PayPal SDK loaded but `paypal` is undefined');
+                    return;
                 }
-            }).render('#paypal-button-container');
+
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return fetch('/api/paypal/' + bookingId + '/create-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({ currency: currency })
+                        }).then(function(res) {
+                            return res.json();
+                        }).then(function(orderData) {
+                            if (!orderData || !orderData.id) {
+                                throw new Error('Failed to create PayPal order');
+                            }
+                            return orderData.id;
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return fetch('/api/paypal/' + bookingId + '/capture-order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({ orderID: data.orderID })
+                        }).then(function(res) { return res.json(); })
+                        .then(function(captureData) {
+                            console.log('PayPal capture:', captureData);
+                            window.location.reload();
+                        }).catch(function(err) {
+                            console.error('Capture error', err);
+                            alert('Payment failed, please try again.');
+                        });
+                    },
+                    onError: function(err) {
+                        console.error('PayPal error', err);
+                        alert('Payment failed, please try again.');
+                    }
+                }).render('#paypal-button-container');
+            };
+
+            script.onerror = function(e) {
+                console.error('Failed to load PayPal SDK', e);
+            };
+
+            document.head.appendChild(script);
         });
     </script>
     @endif

@@ -116,10 +116,17 @@ class SecurityHeaders
         // Add Midtrans domains for payment integration
         $scriptSrcs[] = 'https://app.midtrans.com';
         $scriptSrcs[] = 'https://app.sandbox.midtrans.com';
+    // PayPal SDK and assets
+    $scriptSrcs[] = 'https://www.paypal.com';
+    $scriptSrcs[] = 'https://www.paypal.com/sdk/js';
+    $scriptSrcs[] = 'https://www.paypalobjects.com';
         $connectSrcs[] = 'https://api.midtrans.com';
         $connectSrcs[] = 'https://api.sandbox.midtrans.com';
         $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
         $connectSrcs[] = 'https://app.sandbox.midtrans.com'; // For source maps
+    // PayPal API endpoints
+    $connectSrcs[] = 'https://api-m.paypal.com';
+    $connectSrcs[] = 'https://api-m.sandbox.paypal.com';
         $formActions[] = 'https://app.midtrans.com';
         $formActions[] = 'https://app.sandbox.midtrans.com';
         $formActions[] = 'https://api.midtrans.com';
