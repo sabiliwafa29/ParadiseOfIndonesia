@@ -137,6 +137,25 @@ class SecurityHeaders
         // Add unpkg CDN for Alpine.js and other libraries
         $scriptSrcs[] = 'https://unpkg.com';
 
+        // Ensure PayPal frame/connect domains are allowed (sandbox + production)
+        $frameSrcs = ["'self'", 'https://app.midtrans.com', 'https://app.sandbox.midtrans.com'];
+        // PayPal frames (both www and non-www hosts, sandbox and prod)
+        $frameSrcs[] = 'https://www.sandbox.paypal.com';
+        $frameSrcs[] = 'https://sandbox.paypal.com';
+        $frameSrcs[] = 'https://www.paypal.com';
+        $frameSrcs[] = 'https://paypal.com';
+
+        // Add PayPal logger/connect host (www.sandbox.paypal.com) to connect-src if not present
+        if (!in_array('https://www.sandbox.paypal.com', $connectSrcs)) {
+            $connectSrcs[] = 'https://www.sandbox.paypal.com';
+        }
+        if (!in_array('https://sandbox.paypal.com', $connectSrcs)) {
+            $connectSrcs[] = 'https://sandbox.paypal.com';
+        }
+        if (!in_array('https://www.paypal.com', $connectSrcs)) {
+            $connectSrcs[] = 'https://www.paypal.com';
+        }
+
         return implode('; ', [
             'default-src ' . implode(' ', ["'self'"]),
             'script-src ' . implode(' ', $scriptSrcs),
@@ -146,7 +165,7 @@ class SecurityHeaders
             'connect-src ' . implode(' ', $connectSrcs),
             'media-src ' . implode(' ', ["'self'", 'https:']),
             'object-src ' . implode(' ', ["'none'"]),
-            'frame-src ' . implode(' ', ["'self'", 'https://app.midtrans.com', 'https://app.sandbox.midtrans.com']),
+            'frame-src ' . implode(' ', $frameSrcs),
             'base-uri ' . implode(' ', ["'self'"]),
             'form-action ' . implode(' ', $formActions),
             // Only upgrade insecure requests in production
