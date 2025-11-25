@@ -323,5 +323,3 @@
     </script>
     @endif
     @endpush
-@endpush
-@endif
