@@ -78,7 +78,12 @@
 
             <!-- Payment Button or Success Message -->
             @if($booking->payment_status !== 'paid')
-                @if($snapToken)
+                @php
+                    $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+                @endphp
+
+                {{-- If currency is IDR -> Midtrans, otherwise show PayPal button (USD/CNY) --}}
+                @if($currency === 'IDR' && $snapToken)
                     <button id="pay-button" 
                             class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,6 +92,9 @@
                         {{ __('messages.pay_now') ?? 'Pay Now' }}
                     </button>
                     <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
+                @elseif(in_array($currency, ['USD', 'CNY']))
+                    <div id="paypal-button-container" class="w-full"></div>
+                    <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
                 @else
                     <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg mb-4">
                         <div class="flex items-start">
@@ -281,5 +289,62 @@
         src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.client_key') }}"
         onload="window.initializeMidtrans()"></script>
+    @endpush
+    @endif
+
+    @push('scripts')
+    @if(in_array(\App\Helpers\LanguageHelper::getCurrentCurrency(), ['USD','CNY']))
+    <script src="https://www.paypal.com/sdk/js?client-id={{ config('services.paypal.client_id') }}&currency={{ \App\Helpers\LanguageHelper::getCurrentCurrency() }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingId = {{ $booking->id }};
+            const currency = '{{ \App\Helpers\LanguageHelper::getCurrentCurrency() }}';
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return fetch('/api/paypal/' + bookingId + '/create-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ currency: currency })
+                    }).then(function(res) {
+                        return res.json();
+                    }).then(function(orderData) {
+                        if (!orderData || !orderData.id) {
+                            throw new Error('Failed to create PayPal order');
+                        }
+                        return orderData.id;
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return fetch('/api/paypal/' + bookingId + '/capture-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ orderID: data.orderID })
+                    }).then(function(res) { return res.json(); })
+                    .then(function(captureData) {
+                        console.log('PayPal capture:', captureData);
+                        window.location.reload();
+                    }).catch(function(err) {
+                        console.error('Capture error', err);
+                        alert('Payment failed, please try again.');
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal error', err);
+                    alert('Payment failed, please try again.');
+                }
+            }).render('#paypal-button-container');
+        });
+    </script>
+    @endif
+    @endpush
 @endpush
 @endif

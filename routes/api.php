@@ -48,3 +48,9 @@ Route::middleware('throttle:60,60')->group(function () {
     Route::get('/health/detailed', [App\Http\Controllers\Api\HealthController::class, 'detailed']);
     Route::get('/health/osrm', [App\Http\Controllers\Api\HealthController::class, 'osrm']);
 });
+
+// PayPal endpoints (used by client-side PayPal Buttons)
+use App\Http\Controllers\PayPalController;
+
+Route::post('/paypal/{booking}/create-order', [PayPalController::class, 'createOrder']);
+Route::post('/paypal/{booking}/capture-order', [PayPalController::class, 'captureOrder']);
