@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@php
+use App\Helpers\ItineraryHelper;
+@endphp
 
 @section('content')
 <div class="py-12 bg-gray-50">
@@ -67,15 +70,6 @@
                         $userCurrency = LocationService::isIndonesia() ? 'IDR' : 'CNY';
                     @endphp
 
-                    <!-- <div class="mt-4 flex items-center justify-between">
-                        <div class="flex items-center">
-                            <i class="fas fa-clock text-gray-400"></i>
-                            <span class="ml-2 text-sm md:text-base text-gray-500">{{ $tour->duration }} {{ __('messages.days') }}</span>
-                        </div>
-                        <div class="text-lg md:text-xl font-bold text-emerald-600">
-                            {{ $tour->getFormattedPrice($userCurrency) }}
-                        </div>
-                    </div> -->
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
                         <p class="text-lg font-bold text-gray-900">{{ $tour->getFormattedPrice($userCurrency) }}</p>
@@ -100,33 +94,30 @@
                 @if($tour->itinerary)
                     <div class="mb-8 md:mb-12">
                         <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-4 md:mb-6">{{ __('messages.itinerary') }}</h2>
+                        
+                        {{-- DEBUG: Show current locale --}}
+                        <div class="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded text-xs">
+                            <p class="font-bold text-yellow-800">🐛 DEBUG: Current Locale = <span class="bg-yellow-200 px-2 py-1 rounded">{{ app()->getLocale() }}</span></p>
+                            @if(!empty($tour->itinerary) && is_array($tour->itinerary) && isset($tour->itinerary[0]))
+                                <p class="text-yellow-700 mt-2">First day keys: {{ implode(', ', array_keys($tour->itinerary[0])) }}</p>
+                                @if(isset($tour->itinerary[0]['title_zh']))
+                                    <p class="text-yellow-700">title_zh exists: {{ $tour->itinerary[0]['title_zh'] }}</p>
+                                @endif
+                            @endif
+                        </div>
+                        
                         <div class="space-y-3 md:space-y-6" x-data="{ openDay: null }">
                             @php
-                                $itinerary = $tour->itinerary;
-                                
-                                // Jika JSON, decode
-                                if (is_string($itinerary)) {
-                                    $decoded = json_decode($itinerary, true);
-                                    $itinerary = is_array($decoded) ? $decoded : [$itinerary];
-                                }
-                                
-                                // Pastikan adalah array
-                                if (!is_array($itinerary)) {
-                                    $itinerary = [$itinerary];
-                                }
+                                $itinerary = ItineraryHelper::parseItinerary($tour->itinerary);
                             @endphp
                             
                             @foreach($itinerary as $dayIndex => $dayData)
                                 @php
-                                    // Jika array dengan key 'day' dan 'activities'
-                                    if (is_array($dayData) && isset($dayData['day'])) {
-                                        $dayTitle = $dayData['day'];
-                                        $activities = is_array($dayData['activities']) ? $dayData['activities'] : [$dayData['activities'] ?? ''];
-                                    } else {
-                                        // Jika string, cek apakah ada format "DAY X :"
-                                        $text = is_array($dayData) ? ($dayData['description'] ?? (string)$dayData) : (string)$dayData;
-                                        $dayTitle = 'DAY ' . ($dayIndex + 1);
-                                        $activities = [$text];
+                                    $day = ItineraryHelper::parseDayData($dayData, $dayIndex);
+                                    
+                                    // Skip if no activities
+                                    if (empty($day['activities'])) {
+                                        continue;
                                     }
                                 @endphp
                                 
@@ -135,7 +126,7 @@
                                     <button 
                                         @click="openDay = openDay === {{ $dayIndex }} ? null : {{ $dayIndex }}"
                                         class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none">
-                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $dayTitle }}</h3>
+                                        <h3 class="text-base md:text-lg font-bold text-emerald-600">{{ $day['title'] }}</h3>
                                         <svg 
                                             class="w-5 h-5 md:w-6 md:h-6 text-emerald-600 transform transition-transform duration-200"
                                             :class="{ 'rotate-180': openDay === {{ $dayIndex }} }"
@@ -156,33 +147,30 @@
                                         x-transition:leave-start="opacity-100"
                                         x-transition:leave-end="opacity-0"
                                         class="px-4 pb-4 md:px-6 md:pb-6 space-y-2 md:space-y-3 ml-2 md:ml-4">
-                                        @foreach($activities as $activity)
+                                        @php
+                                            $activityNotes = [];
+                                        @endphp
+                                        
+                                        @foreach($day['activities'] as $activity)
                                             @php
-                                                // Parse activity jika ada format "HH:MM - HH:MM: Deskripsi"
-                                                $time = '';
-                                                $description = '';
+                                                $parsed = ItineraryHelper::parseActivity($activity);
                                                 
-                                                if (is_array($activity)) {
-                                                    $time = $activity['time'] ?? '';
-                                                    $description = $activity['description'] ?? '';
-                                                } else {
-                                                    $activity = trim((string)$activity);
-                                                    
-                                                    // Cek jika ada format "-> HH:MM:" atau "HH:MM - HH:MM:"
-                                                    if (preg_match('/^->?\s*([\d:]+(?:\s*-\s*[\d:]+)?):?\s*(.*)$/i', $activity, $matches)) {
-                                                        $time = trim($matches[1]);
-                                                        $description = trim($matches[2]);
-                                                    } else {
-                                                        $description = $activity;
-                                                    }
+                                                // Collect note if exists
+                                                if (!empty($parsed['note'])) {
+                                                    $activityNotes[] = $parsed['note'];
+                                                }
+                                                
+                                                // Skip if description is empty
+                                                if (empty($parsed['description'])) {
+                                                    continue;
                                                 }
                                             @endphp
                                             
                                             <div class="flex gap-2 md:gap-3">
-                                                @if($time)
+                                                @if(!empty($parsed['time']) && trim($parsed['time']) !== '')
                                                     <div class="flex-shrink-0">
                                                         <span class="inline-block px-2 py-1 md:px-3 md:py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs md:text-sm font-semibold">
-                                                            {{ $time }}
+                                                            {{ $parsed['time'] }}
                                                         </span>
                                                     </div>
                                                 @else
@@ -194,10 +182,27 @@
                                                 @endif
                                                 
                                                 <div class="flex-1">
-                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $description }}</p>
+                                                    <p class="text-sm md:text-base text-gray-700 leading-relaxed">{{ $parsed['description'] }}</p>
                                                 </div>
                                             </div>
                                         @endforeach
+                                        
+                                        {{-- Display notes if exist (from day or from activities) --}}
+                                        @php
+                                            $allNotes = [];
+                                            if (!empty($day['note'])) {
+                                                $allNotes[] = $day['note'];
+                                            }
+                                            $allNotes = array_merge($allNotes, $activityNotes);
+                                        @endphp
+                                        
+                                        @if(!empty($allNotes))
+                                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                                <p class="text-xs md:text-sm text-gray-600 italic leading-relaxed">
+                                                    <span class="font-semibold">{{ __('messages.note') ?? 'Note' }}:</span> {{ implode(' ', $allNotes) }}
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
@@ -206,26 +211,71 @@
                 @endif
 
                 <!-- Facilities Included -->
-                @if($tour->includes)
+                @if(!empty($tour->includes))
                     <div class="mb-12">
                         <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.whats_included') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @php
-                                $includes = is_array($tour->includes) ? $tour->includes : json_decode($tour->includes, true) ?? [];
+                                $locale = app()->getLocale();
+                                
+                                try {
+                                    $includes = $tour->includes;
+                                    
+                                    if (empty($includes)) {
+                                        $includes = [];
+                                    } elseif (is_string($includes)) {
+                                        $decoded = json_decode($includes, true);
+                                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                            $includes = $decoded;
+                                        } else {
+                                            $includes = array_filter(explode("\n", $includes));
+                                        }
+                                    } elseif (!is_array($includes)) {
+                                        $includes = [$includes];
+                                    }
+                                    
+                                    $includes = array_filter($includes, function($item) {
+                                        return !empty($item);
+                                    });
+                                } catch (\Exception $e) {
+                                    $includes = [];
+                                }
                             @endphp
+                            
                             @forelse($includes as $item)
-                                <div class="flex items-start p-4 bg-green-50 rounded-lg">
-                                    <svg class="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span class="text-gray-900">
-                                        @if(is_array($item))
-                                            {{ $item['name'] ?? $item }}
-                                        @else
-                                            {{ $item }}
-                                        @endif
-                                    </span>
-                                </div>
+                                @php
+                                    try {
+                                        $label = '';
+                                        
+                                        if (is_array($item)) {
+                                            // Multi-language format
+                                            $label = $item['name_'.$locale]
+                                                ?? $item['name_en']
+                                                ?? $item['name_id']
+                                                ?? $item['name']
+                                                ?? $item['label']
+                                                ?? '';
+                                            
+                                            if (empty($label) && !empty($item)) {
+                                                $label = reset($item);
+                                            }
+                                        } else {
+                                            // Simple string format
+                                            $label = trim(strval($item));
+                                        }
+                                    } catch (\Exception $e) {
+                                        $label = '';
+                                    }
+                                @endphp
+                                
+                                @if(!empty($label))
+                                    <div class="flex items-start p-4 bg-green-50 rounded-lg">
+                                        <svg class="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span class="text-gray-900">{{ $label }}</span>
+                                    </div>
+                                @endif
                             @empty
                                 <p class="text-gray-600 col-span-2">{{ __('messages.no_facilities_info') }}</p>
                             @endforelse
@@ -234,26 +284,66 @@
                 @endif
 
                 <!-- Excludes -->
-                @if($tour->excludes)
+                @if(!empty($tour->excludes))
                     <div class="mb-12">
                         <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ __('messages.whats_not_included') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @php
-                                $excludes = is_array($tour->excludes) ? $tour->excludes : json_decode($tour->excludes, true) ?? [];
+                                $locale = app()->getLocale();
+
+                                try {
+                                    $excludes = $tour->excludes;
+                                    
+                                    if (empty($excludes)) {
+                                        $excludes = [];
+                                    } elseif (is_string($excludes)) {
+                                        $decoded = json_decode($excludes, true);
+                                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                            $excludes = $decoded;
+                                        } else {
+                                            $excludes = array_filter(explode("\n", $excludes));
+                                        }
+                                    } elseif (!is_array($excludes)) {
+                                        $excludes = [$excludes];
+                                    }
+                                    
+                                    $excludes = array_filter($excludes, function($item) {
+                                        return !empty($item);
+                                    });
+                                } catch (\Exception $e) {
+                                    $excludes = [];
+                                }
                             @endphp
                             @forelse($excludes as $item)
-                                <div class="flex items-start p-4 bg-red-50 rounded-lg">
-                                    <svg class="w-6 h-6 text-red-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span class="text-gray-900">
-                                        @if(is_array($item))
-                                            {{ $item['name'] ?? $item }}
-                                        @else
-                                            {{ $item }}
-                                        @endif
-                                    </span>
-                                </div>
+                                @php
+                                    try {
+                                        $label = '';
+                                        if (is_array($item)) {
+                                            $locale = app()->getLocale();
+                                            $label = $item['name_'.$locale]
+                                                ?? $item['name_en']
+                                                ?? $item['name']
+                                                ?? $item['label']
+                                                ?? '';
+                                            if (empty($label) && !empty($item)) {
+                                                $label = reset($item);
+                                            }
+                                        } else {
+                                            $label = trim(strval($item));
+                                        }
+                                    } catch (\Exception $e) {
+                                        $label = '';
+                                    }
+                                @endphp
+                                
+                                @if(!empty($label))
+                                    <div class="flex items-start p-4 bg-red-50 rounded-lg">
+                                        <svg class="w-6 h-6 text-red-600 mr-3 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span class="text-gray-900">{{ $label }}</span>
+                                    </div>
+                                @endif
                             @empty
                                 <p class="text-gray-600 col-span-2">{{ __('messages.no_exclusions') }}</p>
                             @endforelse

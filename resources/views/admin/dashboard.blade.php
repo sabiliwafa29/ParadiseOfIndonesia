@@ -66,7 +66,11 @@
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
                             </svg>
-                            <span class="font-semibold">+12.5%</span> from last month
+                            @php
+                                $sign = $revenueChangePercent >= 0 ? '+' : '';
+                                $colorClass = $revenueChangePositive ? 'text-green-600' : 'text-red-600';
+                            @endphp
+                            <span class="font-semibold {{ $colorClass }}">{{ $sign }}{{ $revenueChangePercent }}%</span> from last month
                         </p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
@@ -126,8 +130,11 @@
                         <div class="flex-1 flex flex-col items-center group">
                             <div class="relative w-full bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-lg hover:from-emerald-600 hover:to-emerald-500 transition-all duration-300 cursor-pointer" 
                                  style="height: {{ $height }}%">
-                                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                    ${{ number_format($data->revenue) }}
+                                <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">
+                                    <div>${{ number_format($data->revenue) }}</div>
+                                    <div class="mt-1 text-xs {{ $data->percent_positive ? 'text-green-300' : 'text-red-300' }}">
+                                        {!! $data->percent_positive ? '&#9650;' : '&#9660;' !!} {{ $data->percent_change }}%
+                                    </div>
                                 </div>
                             </div>
                             <p class="text-xs text-gray-600 mt-2">{{ $monthName }}</p>
@@ -193,9 +200,16 @@
                                         <div>
                                             <h3 class="font-semibold text-gray-800">{{ $userName }}</h3>
                                             @if($booking->tour)
-                                                <p class="text-sm text-gray-600">{{ $booking->tour->name }}</p>
+                                                <p class="text-sm text-gray-600">{{ \App\Helpers\LanguageHelper::get($booking->tour, 'name') }}</p>
                                             @elseif($booking->package)
-                                                <p class="text-sm text-gray-600">{{ $booking->package->name }}</p>
+                                                <p class="text-sm text-gray-600">
+                                                    <span class="inline-flex items-center text-purple-600">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                                        </svg>
+                                                        {{ \App\Helpers\LanguageHelper::get($booking->package, 'name') }}
+                                                    </span>
+                                                </p>
                                             @else
                                                 <p class="text-sm text-gray-600">-</p>
                                             @endif
@@ -250,7 +264,7 @@
                                 <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 overflow-hidden">
                                     @if($tour->image)
                                         @if($tour->image)
-                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => $tour->name ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
+                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => \App\Helpers\LanguageHelper::get($tour, 'name') ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
                                         @endif
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
@@ -261,7 +275,7 @@
                                     @endif
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800">{{ $tour->name }}</h3>
+                                    <h3 class="font-semibold text-gray-800">{{ \App\Helpers\LanguageHelper::get($tour, 'name') }}</h3>
                                     <div class="flex items-center space-x-3 mt-1">
                                         <span class="text-sm text-gray-600 flex items-center">
                                             <svg class="w-4 h-4 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
@@ -269,7 +283,7 @@
                                             </svg>
                                             {{ $tour->bookings_count ?? 0 }} bookings
                                         </span>
-                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price ?? 0) }}</span>
+                                        <span class="text-sm font-bold text-emerald-600">{{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($tour) ) }}</span>
                                     </div>
                                 </div>
                             </div>

@@ -61,7 +61,7 @@ class TravelServiceController extends Controller
         $distance = $distanceResult['distance'];
 
         // Hitung total price (bisa ditambahkan logic untuk round-trip)
-        $basePrice = $service->price;
+        $basePrice = \App\Helpers\LanguageHelper::getPrice($service);
         $totalPrice = $basePrice;
         if ($validated['booking_type'] === 'round-trip') {
             $totalPrice = $basePrice * 1.8; // 80% discount untuk return trip

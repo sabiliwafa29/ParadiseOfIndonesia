@@ -19,7 +19,9 @@ class TourPackage extends Model
         'description_id',
         'description_en',
         'description_zh',
-        'price',
+        'price_idr',
+        'price_usd',
+        'price_cny',
         'image',
         'image_derivatives',
         'includes_guide',
@@ -29,8 +31,10 @@ class TourPackage extends Model
 
     protected $casts = [
         'image_derivatives' => 'array',
-        'itinerary' => 'array',
-        'price' => 'decimal:2',
+        'itinerary' => 'json',
+        'price_idr' => 'decimal:2',
+        'price_usd' => 'decimal:2',
+        'price_cny' => 'decimal:2',
         'includes_guide' => 'boolean',
         'includes_transport' => 'boolean',
     ];
@@ -44,6 +48,7 @@ class TourPackage extends Model
     {
         return $this->belongsToMany(Tour::class, 'tour_tour_package', 'tour_package_id', 'tour_id');
     }
+    
     public function getNameAttribute()
     {
         $locale = app()->getLocale();

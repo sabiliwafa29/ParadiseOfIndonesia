@@ -89,7 +89,7 @@
                         <div>
                             <span class="text-xs sm:text-sm text-gray-500 block mb-1">{{ __('messages.starting_from') ?? 'Starting from' }}</span>
                             <span class="text-xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                                Rp {{ number_format($service->price, 0, ',', '.') }}
+                                {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }}
                             </span>
                         </div>
                         <a href="{{ route('travel-services.booking', $service) }}" 

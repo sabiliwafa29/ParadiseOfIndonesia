@@ -1,31 +1,284 @@
 @extends('layouts.admin')
 
-@section('content')
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-semibold mb-4">Create Tour Session</h1>
+@section('page-title', 'Create Tour Session')
 
-    <form action="{{ route('admin.tour-sessions.store') }}" method="POST">
-        @csrf
-        <div class="mb-4">
-            <label class="block mb-1">Tour</label>
-            <select name="tour_id" @class(['w-full p-2', 'border border-red-500' => $errors->has('tour_id'), 'border border-gray-300' => !$errors->has('tour_id')])>
-                @foreach(App\Models\Tour::all() as $t)
-                    <option value="{{ $t->id }}" {{ old('tour_id') == $t->id ? 'selected' : '' }}>{{ $t->name ?? $t->title ?? 'Tour #' . $t->id }}</option>
-                @endforeach
-            </select>
-            @error('tour_id')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
+@section('content')
+<div class="p-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:text-emerald-600 inline-flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <a href="{{ route('admin.tour-sessions.index') }}" class="text-gray-600 hover:text-emerald-600 ml-1 md:ml-2">Tour Sessions</a>
+                </div>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-gray-800 font-semibold ml-1 md:ml-2">Create Session</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-2">
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Create Tour Session</h1>
+                <p class="text-gray-600 mt-1">Schedule a new tour session for your packages</p>
+            </div>
         </div>
-        <div class="mb-4">
-            <label class="block mb-1">Date</label>
-            <input type="date" name="date" value="{{ old('date') }}" @class(['w-full p-2', 'border border-red-500' => $errors->has('date'), 'border border-gray-300' => !$errors->has('date')]) required>
-            @error('date')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-3xl">
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 px-8 py-6 border-b border-emerald-100">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                <svg class="w-6 h-6 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Session Details
+            </h2>
+            <p class="text-sm text-gray-600 mt-1">Fill in the information below to create a new tour session</p>
         </div>
-        <div class="mb-4">
-            <label class="block mb-1">Capacity</label>
-            <input type="number" name="capacity" value="{{ old('capacity') }}" @class(['w-full p-2', 'border border-red-500' => $errors->has('capacity'), 'border border-gray-300' => !$errors->has('capacity')])>
-            @error('capacity')<p class="text-sm text-red-600 mt-1">{{ $message }}</p>@enderror
+
+        <form action="{{ route('admin.tour-sessions.store') }}" method="POST" class="p-8">
+            @csrf
+
+            <!-- Tour Package Field -->
+            <div class="mb-8">
+                <label for="tour_package_id" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    Tour Package
+                    <span class="text-red-500 ml-1">*</span>
+                </label>
+                <div class="relative">
+                    <select id="tour_package_id"
+                            name="tour_package_id" 
+                            class="w-full px-4 py-3 pl-12 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition appearance-none bg-white @error('tour_package_id') border-red-300 bg-red-50 @else border-gray-300 @enderror"
+                            required>
+                        <option value="">Select a tour package</option>
+                        @foreach($tourPackages as $package)
+                            <option value="{{ $package->id }}" {{ old('tour_package_id') == $package->id ? 'selected' : '' }}>
+                                {{ \App\Helpers\LanguageHelper::get($package, 'name', app()->getLocale()) }}
+                                @if($package->tours && $package->tours->isNotEmpty() && $package->tours->first()->destination)
+                                    - {{ \App\Helpers\LanguageHelper::get($package->tours->first()->destination, 'name', app()->getLocale()) }}
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="absolute left-4 top-3.5 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <div class="absolute right-4 top-3.5 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+                @error('tour_package_id')
+                    <div class="flex items-center mt-2 text-red-600">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm font-medium">{{ $message }}</span>
+                    </div>
+                @else
+                    <p class="mt-2 text-sm text-gray-500 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Select the tour package for this session
+                    </p>
+                @enderror
+            </div>
+
+            <!-- Session Name Field -->
+            <div class="mb-6">
+                <label for="name" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                    </svg>
+                    Session Name
+                    <span class="text-red-500 ml-1">*</span>
+                </label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                       placeholder="e.g., Summer Adventure 2025"
+                       class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition @error('name') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                @error('name')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Description Field -->
+            <div class="mb-6">
+                <label for="description" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+                    </svg>
+                    Description
+                    <span class="text-red-500 ml-1">*</span>
+                </label>
+                <textarea id="description" name="description" rows="4" required
+                          placeholder="Describe this tour session..."
+                          class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition @error('description') border-red-300 bg-red-50 @else border-gray-300 @enderror">{{ old('description') }}</textarea>
+                @error('description')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Date Range Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="start_date" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Start Date
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <input type="date" id="start_date" name="start_date" value="{{ old('start_date') }}" required
+                           min="{{ date('Y-m-d') }}"
+                           class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition @error('start_date') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                    @error('start_date')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="end_date" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        End Date
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <input type="date" id="end_date" name="end_date" value="{{ old('end_date') }}" required
+                           min="{{ date('Y-m-d') }}"
+                           class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition @error('end_date') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                    @error('end_date')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Location Field -->
+            <div class="mb-8">
+                <label for="location" class="block text-sm font-bold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Location
+                    <span class="text-red-500 ml-1">*</span>
+                </label>
+                <input type="text" id="location" name="location" value="{{ old('location') }}" required
+                       placeholder="e.g., Bali, Indonesia"
+                       class="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition @error('location') border-red-300 bg-red-50 @else border-gray-300 @enderror">
+                @error('location')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                <a href="{{ route('admin.tour-sessions.index') }}" 
+                   class="inline-flex items-center px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    Create Session
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Help Info Card -->
+    <div class="mt-6 max-w-3xl">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+            <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Tips for Creating Sessions</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span><strong>Tour Package:</strong> Choose the package that will be offered in this session</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span><strong>Date:</strong> Sessions can only be scheduled for future dates</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span><strong>Date Range:</strong> End date must be on or after the start date</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span><strong>Location:</strong> Specify where the tour session will take place</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <button class="px-4 py-2 bg-emerald-500 text-white rounded">Create</button>
-    </form>
+    </div>
 </div>
+
+<script>
+// Auto-update end date min when start date changes
+document.getElementById('start_date').addEventListener('change', function() {
+    const startDate = this.value;
+    const endDateInput = document.getElementById('end_date');
+    endDateInput.min = startDate;
+    
+    // If end date is before start date, update it
+    if (endDateInput.value && endDateInput.value < startDate) {
+        endDateInput.value = startDate;
+    }
+});
+</script>
 @endsection

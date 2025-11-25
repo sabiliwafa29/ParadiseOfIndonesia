@@ -1,6 +1,33 @@
 @extends('layouts.admin')
 
 @section('content')
+@php
+    // Determine display mode for prices:
+    // - If `show_all=1` query param is present -> show all currencies
+    // - Else if `currency` is provided via request or session -> show that currency only
+    // - Else fall back to app locale mapping (id -> IDR, zh -> CNY, otherwise USD)
+    function __mapCurrency($val) {
+        $v = strtolower(trim((string)$val));
+        if (in_array($v, ['idr', 'id', 'rupiah'])) return 'idr';
+        if (in_array($v, ['cny', 'cn', 'zh', 'rmb', 'yuan'])) return 'cny';
+        return 'usd';
+    }
+
+    $forceAll = request()->boolean('show_all');
+    $requested = request('currency') ?? session('currency');
+    $locale = app()->getLocale();
+
+    if ($forceAll) {
+        $displayMode = 'all';
+    } elseif ($requested) {
+        $displayMode = __mapCurrency($requested);
+    } else {
+        // Map locale to currency by default
+        $displayMode = __mapCurrency($locale);
+        // If locale mapping yields a currency but you prefer to show all by default,
+        // change $displayMode = 'all';
+    }
+@endphp
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
     <div class="max-w-7xl mx-auto">
         <!-- Header Section -->
@@ -27,7 +54,7 @@
                     <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" 
+                        <input type="text"
                            name="search" 
                            value="{{ request('search') }}" 
                            placeholder="Cari nama paket..." 
@@ -38,6 +65,15 @@
                     <span class="sm:hidden">Cari</span>
                     <span class="hidden sm:inline">Cari Package</span>
                 </button>
+                <div class="flex items-center gap-2">
+                        <select id="currency-select" name="currency" class="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                        <option value="">Auto</option>
+                        <option value="idr" {{ request('currency') === 'idr' ? 'selected' : '' }}>IDR</option>
+                        <option value="usd" {{ request('currency') === 'usd' ? 'selected' : '' }}>USD</option>
+                        <option value="cny" {{ request('currency') === 'cny' ? 'selected' : '' }}>CNY</option>
+                    </select>
+                    <a href="{{ request()->fullUrlWithQuery(['show_all' => 1]) }}" class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm">Show All</a>
+                </div>
                 @if(request('search'))
                     <a href="{{ route('admin.tour-packages.index') }}" 
                        class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
@@ -127,7 +163,33 @@
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Image</th>
                             <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Package Name</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price</th>
+                            @if($displayMode === 'all')
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price (IDR)</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price (USD)</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Price (CNY)</th>
+                            @else
+                                @php
+                                    $colLabel = $displayMode === 'idr' ? 'Price (IDR)' : ($displayMode === 'cny' ? 'Price (CNY)' : 'Price (USD)');
+                                @endphp
+
+                        /* De-emphasize secondary currency lines on desktop */
+                        .secondary-currency { font-size: 0.95rem; opacity: 0.9; }
+
+                        </style>
+
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const select = document.getElementById('currency-select');
+                            const form = document.getElementById('packages-search-form');
+                            if (select && form) {
+                                select.addEventListener('change', function() {
+                                    form.submit();
+                                });
+                            }
+                        });
+                        </script>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">{{ $colLabel }}</th>
+                            @endif
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Guide</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Transport</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
@@ -170,9 +232,45 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
-                            </td>
+                            @if($displayMode === 'all')
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                </td>
+                            @else
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($displayMode === 'idr')
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                                <span class="text-sm text-red-600 ml-2">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
+                                    @elseif($displayMode === 'cny')
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                                <span class="text-sm text-blue-600 ml-2">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="flex flex-col">
+                                            <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                            <div class="mt-1 secondary-currency">
+                                                <span class="text-sm text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                                <span class="text-sm text-red-600 ml-2">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </td>
+                            @endif
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 @if($package->includes_guide)
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
@@ -290,7 +388,11 @@
                         <!-- Price -->
                         <div class="flex items-center justify-between pt-2 border-t border-gray-100">
                             <span class="text-sm text-gray-600">Harga</span>
-                            <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
+                            <div class="flex flex-col items-end">
+                                <span class="text-lg font-bold text-emerald-600">Rp {{ number_format($package->price_idr, 0, ',', '.') }}</span>
+                                <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
+                                <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
+                            </div>
                         </div>
 
                         <!-- Includes -->

@@ -40,7 +40,7 @@ class BookingController extends Controller
             $guidePrice = $validated['guide'] ? $guidePricePerGuest * $validated['guests'] : 0;
             $transportPrice = $validated['transport'] ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost = $guidePrice + $transportPrice;
-            $basePrice = $tour->price * $validated['guests'];
+            $basePrice = get_price($tour) * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID
@@ -305,7 +305,7 @@ class BookingController extends Controller
             $transportPrice = !empty($validated['transport']) ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost      = $guidePrice + $transportPrice;
 
-            $basePrice  = $package->price * $validated['guests'];
+            $basePrice  = get_price($package) * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID
@@ -406,26 +406,42 @@ class BookingController extends Controller
 
 public function showPayment(Booking $booking)
     {
-        // Authorization: allow if user_id matches OR email matches OR no auth (guest with session)
-        if (auth()->check()) {
-            $this->authorize('view', $booking);
-        } else {
-            // Guest: verify via session or email
-            $sessionBookingId = session('last_booking_id');
-            if ($sessionBookingId !== $booking->id) {
-                abort(403, 'Unauthorized access to this booking.');
+        try {
+            // Authorization: allow if user_id matches OR email matches OR no auth (guest with session)
+            if (auth()->check()) {
+                $this->authorize('view', $booking);
+            } else {
+                // Guest: verify via session or email
+                $sessionBookingId = session('last_booking_id');
+                if ($sessionBookingId !== $booking->id) {
+                    abort(403, 'Unauthorized access to this booking.');
+                }
             }
-        }
 
-        // Ambil snap token dari session atau generate baru
-        $snapToken = session('booking_' . $booking->id . '_snap_token');
-        
-        if (!$snapToken && $booking->payment_status !== 'paid') {
-            $snapToken = $this->midtransService->createTransaction($booking);
-            session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
-        }
+            // Load relasi untuk ensure data lengkap
+            $booking->load(['tour', 'package', 'user']);
+            
+            // Ambil snap token dari session atau generate baru
+            $snapToken = session('booking_' . $booking->id . '_snap_token');
+            
+            if (!$snapToken && $booking->payment_status !== 'paid') {
+                $snapToken = $this->midtransService->createTransaction($booking);
+                session(['booking_' . $booking->id . '_snap_token' => $snapToken]);
+            }
 
-        return view('bookings.package-payment', compact('booking', 'snapToken'));
+            // Tentukan view berdasarkan jenis booking
+            $view = $booking->package_id ? 'bookings.package-payment' : 'bookings.payment';
+            
+            return view($view, compact('booking', 'snapToken'));
+        } catch (\Exception $e) {
+            \Log::error('Error showing payment page: ' . $e->getMessage(), [
+                'booking_id' => $booking->id ?? null,
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            return redirect()->route('home')
+                ->with('error', 'Error loading payment page: ' . $e->getMessage());
+        }
     }
 
     /**

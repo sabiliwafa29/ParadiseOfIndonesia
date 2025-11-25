@@ -16,7 +16,11 @@ class GalleryController extends Controller
     public function index()
     {
         $galleries = Gallery::latest()->paginate(20);
-        return view('admin.gallery.index', compact('galleries'));
+        
+        // Calculate stats
+        $totalImages = Gallery::count();
+        
+        return view('admin.gallery.index', compact('galleries', 'totalImages'));
     }
 
     public function create()

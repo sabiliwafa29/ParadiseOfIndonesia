@@ -180,30 +180,20 @@
 <script type="text/javascript">
     // Define initializeMidtrans function BEFORE loading Midtrans script
     window.initializeMidtrans = function() {
-        console.log('Initializing Midtrans...');
-        
         const payButton = document.getElementById('pay-button');
-        
+
         if (!payButton) {
-            console.error('Pay button not found');
             return;
         }
-        
+
         if (typeof snap === 'undefined') {
-            console.error('Snap is undefined');
             return;
         }
-        
-        console.log('Midtrans initialized successfully');
-        
+
         payButton.onclick = function() {
-            console.log('Pay button clicked');
-            
             try {
                 snap.pay('{{ $snapToken }}', {
                     onSuccess: function(result) {
-                        console.log('Payment success:', result);
-                        
                         // Update payment status via API
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
                             method: 'POST',
@@ -215,17 +205,13 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            console.log('Status updated:', data);
                             window.location.reload();
                         })
                         .catch(error => {
-                            console.error('Error updating status:', error);
                             window.location.reload();
                         });
                     },
                     onPending: function(result) {
-                        console.log('Payment pending:', result);
-                        
                         // Update payment status via API
                         fetch('/api/bookings/{{ $booking->id }}/payment-status', {
                             method: 'POST',
@@ -237,47 +223,38 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            console.log('Pending status updated:', data);
                             window.location.reload();
                         })
                         .catch(error => {
-                            console.error('Error updating pending status:', error);
                             window.location.reload();
                         });
                     },
                     onError: function(result) {
-                        console.error('Payment error:', result);
                         alert('{{ __("messages.payment_failed") ?? "Payment failed! Please try again." }}');
                     },
                     onClose: function() {
-                        console.log('Payment popup closed');
+                        // User closed the payment popup
                     }
                 });
-                
             } catch (error) {
-                console.error('Error calling snap.pay():', error);
                 alert('Error: ' + error.message);
             }
         };
     };
-    
+
     // Fallback: Initialize after DOM loaded if onload doesn't trigger
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM loaded');
-        
         // Wait for Snap to be available
         let attempts = 0;
         const maxAttempts = 10;
-        
+
         const checkSnap = setInterval(function() {
             attempts++;
-            
+
             if (typeof snap !== 'undefined') {
-                console.log('Snap found, initializing...');
                 clearInterval(checkSnap);
                 window.initializeMidtrans();
             } else if (attempts >= maxAttempts) {
-                console.error('Snap not found after', maxAttempts, 'attempts');
                 clearInterval(checkSnap);
             }
         }, 500);

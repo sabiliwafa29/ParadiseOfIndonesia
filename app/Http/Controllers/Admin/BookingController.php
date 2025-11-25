@@ -10,7 +10,7 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'tour', 'tour.destination']);
+        $query = Booking::with(['user', 'tour', 'tour.destination', 'package']);
         
         // Filter by status
         if ($request->filled('status')) {
@@ -22,11 +22,20 @@ class BookingController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->whereHas('user', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
+                    $q->where('name', 'ILIKE', "%{$search}%");
                 })
                 ->orWhereHas('tour', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                });
+                    $q->where('name_id', 'ILIKE', "%{$search}%")
+                      ->orWhere('name_en', 'ILIKE', "%{$search}%")
+                      ->orWhere('name_zh', 'ILIKE', "%{$search}%");
+                })
+                ->orWhereHas('package', function($q) use ($search) {
+                    $q->where('name_id', 'ILIKE', "%{$search}%")
+                      ->orWhere('name_en', 'ILIKE', "%{$search}%")
+                      ->orWhere('name_zh', 'ILIKE', "%{$search}%");
+                })
+                ->orWhere('full_name', 'ILIKE', "%{$search}%")
+                ->orWhere('email', 'ILIKE', "%{$search}%");
             });
         }
         
@@ -47,7 +56,7 @@ class BookingController extends Controller
             'confirmed' => Booking::where('status', 'confirmed')->count(),
             'completed' => Booking::where('status', 'completed')->count(),
             'cancelled' => Booking::where('status', 'cancelled')->count(),
-            'total_revenue' => Booking::whereIn('status', ['confirmed', 'completed'])->sum('total_price'),
+            'total_revenue' => Booking::whereIn('status', config('bookings.success_statuses', ['confirmed', 'completed']))->sum('total_price'),
             'today_bookings' => Booking::whereDate('created_at', today())->count(),
         ];
         

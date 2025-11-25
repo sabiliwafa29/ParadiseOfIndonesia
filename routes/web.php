@@ -47,6 +47,7 @@ Route::post('/bookings/tour/{tour}', [BookingController::class, 'storeTour'])->n
 
 Route::get('/bookings/{booking}/payment', [BookingController::class, 'showPayment'])->name('bookings.payment');
 
+// Tour Sessions - Commented out (use admin panel for management)
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
 Route::get('/tour-sessions/{session}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
 Route::get('/bookings/session/{session}', [BookingController::class, 'createFromSession'])->name('bookings.session');

@@ -14,7 +14,7 @@
                 <h3 class="font-semibold text-lg">{{ $service->name }}</h3>
                 <p class="text-gray-600">{{ $service->description }}</p>
                 <p class="text-gray-800 font-bold mt-2">
-                    Rp {{ number_format($service->price, 0, ',', '.') }} / km
+                    {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }} / km
                 </p>
             </div>
 
@@ -31,7 +31,7 @@
                 
                 <p><strong>Total Price:</strong> 
                     <span class="text-emerald-700 font-bold text-lg">
-                        Rp {{ number_format($booking->total_price ?? ($distance * $service->price), 0, ',', '.') }}
+                        {{ \App\Helpers\LanguageHelper::formatPrice( $booking->total_price ?? ($distance * \App\Helpers\LanguageHelper::getPrice($service)) ) }}
                     </span>
                 </p>
             </div>

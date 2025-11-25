@@ -158,7 +158,13 @@ class TourController extends Controller
             'duration' => 'required|integer|min:1',
             'destination_id' => 'required|exists:destinations,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
-            'itinerary' => 'nullable|string',
+            'itinerary' => 'nullable|array',
+            'itinerary.*.title_id' => 'required_with:itinerary|string',
+            'itinerary.*.title_en' => 'required_with:itinerary|string',
+            'itinerary.*.title_zh' => 'required_with:itinerary|string',
+            'itinerary.*.description_id' => 'required_with:itinerary|string',
+            'itinerary.*.description_en' => 'required_with:itinerary|string',
+            'itinerary.*.description_zh' => 'required_with:itinerary|string',
             'includes' => 'nullable|string',
             'excludes' => 'nullable|string',
             'featured' => 'nullable|boolean',
@@ -184,14 +190,7 @@ class TourController extends Controller
             $data['exchange_rate_cny'] = $tour->exchange_rate_cny ?? 6.5;
         }
 
-        // JSON fields - keep as string (already JSON from form)
-        // Just validate they're valid JSON if provided
-        if (!empty($data['itinerary'])) {
-            $decoded = json_decode($data['itinerary']);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return back()->withErrors(['itinerary' => 'Invalid JSON format for itinerary'])->withInput();
-            }
-        }
+        // JSON fields validation for includes/excludes (still string format)
         if (!empty($data['includes'])) {
             $decoded = json_decode($data['includes']);
             if (json_last_error() !== JSON_ERROR_NONE) {
@@ -241,8 +240,8 @@ class TourController extends Controller
             }
         }
         
-        return redirect()->route('admin.tours.edit', $tour)
-            ->with('success', 'Tour updated successfully. Image: ' . ($request->hasFile('image') ? 'Updated' : 'Not changed'));
+        return redirect()->route('admin.tours.index')
+            ->with('success', 'Tour updated successfully.');
     }
 
     /**

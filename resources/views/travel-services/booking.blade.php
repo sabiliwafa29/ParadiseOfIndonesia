@@ -22,7 +22,7 @@
                         <h3 class="text-lg font-semibold">{{ $service->name }}</h3>
                         <p class="text-gray-600 mt-1">{{ $service->description }}</p>
                         <p class="text-gray-700 mt-2 font-bold">
-                            Rp {{ number_format($service->price, 0, ',', '.') }}
+                            {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }}
                         </p>
                     </div>
 
@@ -125,7 +125,7 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-const pricePerKm = {{ $service->price }};
+const pricePerKm = {{ \App\Helpers\LanguageHelper::getPrice($service) }};
 
 document.addEventListener("DOMContentLoaded", function () {
     const map = L.map('map').setView([-8.65, 115.22], 10);

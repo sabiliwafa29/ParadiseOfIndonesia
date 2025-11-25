@@ -224,7 +224,7 @@
                                 <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">💵 Base Price (USD) *</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-gray-500">$</span>
-                                    <input type="number" name="price" id="price" value="{{ old('price', $tour->price_usd) }}" required min="0" step="0.01"
+                                    <input type="number" name="price" id="price" value="{{ old('price', $tour->price_usd ?? $tour->price ?? '') }}" required min="0" step="0.01"
                                         class="w-full pl-7 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('price') border-red-500 @enderror"
                                         placeholder="0.00">
                                 </div>
@@ -424,35 +424,236 @@
                         <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
                             <h3 class="text-lg font-semibold text-gray-800 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                                 </svg>
-                                Itinerary (JSON Format)
+                                Itinerary (Jadwal Perjalanan)
                             </h3>
                         </div>
                         
                         <div class="p-6">
-                            @php
-                                // Handle both string and array formats
-                                if (is_string($tour->itinerary)) {
-                                    $itineraryValue = $tour->itinerary;
-                                } elseif (is_array($tour->itinerary) || is_object($tour->itinerary)) {
-                                    $itineraryValue = json_encode($tour->itinerary, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-                                } else {
-                                    $itineraryValue = '[]';
-                                }
-                            @endphp
-                            <textarea name="itinerary" id="itinerary" rows="8"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono text-sm @error('itinerary') border-red-500 @enderror"
-                                placeholder='[{"day":"DAY 1","activities":[{"time":"18:00","description":"Penjemputan di bandara"}]}]'>{{ old('itinerary', $itineraryValue) }}</textarea>
-                            <span id="itinerary-error" class="text-red-500 text-sm mt-1 hidden">Invalid JSON format</span>
-                            <p class="text-xs text-gray-500 mt-2">Format: [{"day":"DAY 1","activities":[{"time":"HH:MM","description":"Activity description"}]}]</p>
-                            <button type="button" onclick="formatJSON('itinerary')" class="mt-2 px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300 transition">
-                                Format JSON
-                            </button>
-                        </div>
-                    </div>
+                            <!-- DEBUG INFO -->
+                            <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded text-xs">
+                                <p class="font-bold text-yellow-800 mb-2">🐛 DEBUG INFORMATION:</p>
+                                <div class="text-yellow-700 space-y-1 font-mono">
+                                    @php
+                                        $rawItinerary = $tour->getRawOriginal('itinerary');
+                                        $castedItinerary = $tour->itinerary;
+                                    @endphp
+                                    <p><strong>Raw DB:</strong> {{ $rawItinerary ? Str::limit(json_encode($rawItinerary), 150) : 'NULL' }}</p>
+                                    <p><strong>After Cast:</strong> {{ $castedItinerary ? Str::limit(json_encode($castedItinerary), 150) : 'NULL' }}</p>
+                                    <p><strong>Type:</strong> {{ gettype($castedItinerary) }}</p>
+                                    <p><strong>Is Array:</strong> {{ is_array($castedItinerary) ? 'YES' : 'NO' }}</p>
+                                    <p><strong>Count:</strong> {{ is_array($castedItinerary) ? count($castedItinerary) : '0' }}</p>
+                                </div>
+                            </div>
+                            
+                            <div id="itinerary-container" class="space-y-6">
+                                @php
+                                    // Ambil data itinerary dari old() atau database
+                                    $existingItinerary = old('itinerary');
+                                    
+                                    // Jika tidak ada old data, ambil dari database
+                                    if (!$existingItinerary) {
+                                        $existingItinerary = $tour->itinerary;
+                                    }
+                                    
+                                    // Debug: Log nilai
+                                    \Log::info('=== TOURS EDIT ITINERARY DEBUG ===');
+                                    \Log::info('Type: ' . gettype($existingItinerary));
+                                    \Log::info('Value: ' . json_encode($existingItinerary));
+                                    
+                                    // Jika string JSON, decode dulu
+                                    if (is_string($existingItinerary)) {
+                                        $decoded = json_decode($existingItinerary, true);
+                                        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                            $existingItinerary = $decoded;
+                                        } else {
+                                            $existingItinerary = [];
+                                        }
+                                    }
+                                    
+                                    // Pastikan dalam bentuk array
+                                    if (!is_array($existingItinerary)) {
+                                        $existingItinerary = [];
+                                    }
+                                    
+                                    // Jika kosong, buat minimal 1 item
+                                    if (empty($existingItinerary)) {
+                                        $existingItinerary = [[
+                                            'title_id' => '',
+                                            'title_en' => '',
+                                            'title_zh' => '',
+                                            'description_id' => '',
+                                            'description_en' => '',
+                                            'description_zh' => ''
+                                        ]];
+                                    }
+                                    
+                                    \Log::info('Final count: ' . count($existingItinerary));
+                                @endphp
 
-                    {{-- Includes Card --}}
+                                @foreach($existingItinerary as $index => $item)
+                                @php
+                                    // Konversi struktur lama ke struktur baru
+                                    $titleId = '';
+                                    $titleEn = '';
+                                    $titleZh = '';
+                                    $descId = '';
+                                    $descEn = '';
+                                    $descZh = '';
+                                    
+                                    // Cek apakah format baru (title_id exists) atau format lama (day exists)
+                                    if (isset($item['title_id'])) {
+                                        // Format baru - langsung ambil
+                                        $titleId = $item['title_id'] ?? '';
+                                        $titleEn = $item['title_en'] ?? '';
+                                        $titleZh = $item['title_zh'] ?? '';
+                                        $descId = $item['description_id'] ?? '';
+                                        $descEn = $item['description_en'] ?? '';
+                                        $descZh = $item['description_zh'] ?? '';
+                                    } elseif (isset($item['day'])) {
+                                        // Format lama - convert dari day/activities
+                                        $titleId = is_array($item['day']) ? ($item['day']['id'] ?? '') : $item['day'];
+                                        $titleEn = is_array($item['day']) ? ($item['day']['en'] ?? '') : $item['day'];
+                                        $titleZh = is_array($item['day']) ? ($item['day']['zh'] ?? '') : $item['day'];
+                                        
+                                        // Gabungkan semua activities menjadi description
+                                        if (isset($item['activities']) && is_array($item['activities'])) {
+                                            $activitiesId = [];
+                                            $activitiesEn = [];
+                                            $activitiesZh = [];
+                                            
+                                            foreach ($item['activities'] as $activity) {
+                                                if (is_array($activity)) {
+                                                    $time = $activity['time'] ?? '';
+                                                    $activitiesId[] = ($time ? "[$time] " : '') . ($activity['description_id'] ?? $activity['description'] ?? '');
+                                                    $activitiesEn[] = ($time ? "[$time] " : '') . ($activity['description_en'] ?? $activity['description'] ?? '');
+                                                    $activitiesZh[] = ($time ? "[$time] " : '') . ($activity['description_zh'] ?? $activity['description'] ?? '');
+                                                } else {
+                                                    // String activity
+                                                    $activitiesId[] = $activity;
+                                                    $activitiesEn[] = $activity;
+                                                    $activitiesZh[] = $activity;
+                                                }
+                                            }
+                                            
+                                            $descId = implode("\n\n", $activitiesId);
+                                            $descEn = implode("\n\n", $activitiesEn);
+                                            $descZh = implode("\n\n", $activitiesZh);
+                                        }
+                                    }
+                                @endphp
+                                <div class="itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-lg font-bold text-gray-800 flex items-center">
+                                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-bold mr-3">{{ $index + 1 }}</span>
+                                            Day {{ $index + 1 }}
+                                        </h4>
+                                        <button type="button" 
+                                                class="remove-itinerary text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors {{ count($existingItinerary) <= 1 ? 'hidden' : '' }}"
+                                                title="Hapus Item">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <!-- Title ID -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                Judul (ID) <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   name="itinerary[{{ $index }}][title_id]" 
+                                                   value="{{ $titleId }}"
+                                                   required 
+                                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                   placeholder="Contoh: DAY 1 - Kedatangan di Surabaya">
+                                        </div>
+
+                                        <!-- Title EN -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                Title (EN) <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   name="itinerary[{{ $index }}][title_en]" 
+                                                   value="{{ $titleEn }}"
+                                                   required 
+                                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                   placeholder="Example: DAY 1 - Arrival in Surabaya">
+                                        </div>
+
+                                        <!-- Title ZH -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                标题 (ZH) <span class="text-red-500">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                   name="itinerary[{{ $index }}][title_zh]" 
+                                                   value="{{ $titleZh }}"
+                                                   required 
+                                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                   placeholder="例如：第1天 - 抵达泗水">
+                                        </div>
+
+                                        <!-- Description ID -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                Deskripsi (ID) <span class="text-red-500">*</span>
+                                                <span class="text-xs text-gray-500 font-normal block mt-1">Format: [Waktu] Aktivitas. Pisahkan dengan enter 2x. Contoh: [Sore] Penjemputan di bandara</span>
+                                            </label>
+                                            <textarea name="itinerary[{{ $index }}][description_id]" 
+                                                      rows="5" 
+                                                      required 
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                      placeholder="[Sore] Penjemputan di bandara&#10;&#10;[Malam] Check-in hotel">{{ $descId }}</textarea>
+                                        </div>
+
+                                        <!-- Description EN -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                Description (EN) <span class="text-red-500">*</span>
+                                                <span class="text-xs text-gray-500 font-normal block mt-1">Format: [Time] Activity. Separate with 2 enters. Example: [Evening] Airport pickup</span>
+                                            </label>
+                                            <textarea name="itinerary[{{ $index }}][description_en]" 
+                                                      rows="5" 
+                                                      required 
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                      placeholder="[Evening] Airport pickup&#10;&#10;[Night] Hotel check-in">{{ $descEn }}</textarea>
+                                        </div>
+
+                                        <!-- Description ZH -->
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                                描述 (ZH) <span class="text-red-500">*</span>
+                                                <span class="text-xs text-gray-500 font-normal block mt-1">格式：[时间] 活动。用两个回车分隔。例如：[傍晚] 机场接机</span>
+                                            </label>
+                                            <textarea name="itinerary[{{ $index }}][description_zh]" 
+                                                      rows="5" 
+                                                      required 
+                                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                                      placeholder="[傍晚] 机场接机&#10;&#10;[晚上] 酒店入住">{{ $descZh }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Add Itinerary Button -->
+                            <div class="mt-4">
+                                <button type="button" 
+                                        id="add-itinerary" 
+                                        class="w-full inline-flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-300 text-emerald-600 font-semibold rounded-lg hover:bg-emerald-50 hover:border-emerald-400 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Tambah Hari Berikutnya
+                                </button>
+                            </div>
+                        </div>
+                    </div>                    {{-- Includes Card --}}
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                         <div class="border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-6 py-4">
                             <h3 class="text-lg font-semibold text-gray-800 flex items-center">
@@ -607,7 +808,7 @@
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
-                            Save Changes
+                            Update Tour
                         </button>
                         <a href="{{ route('admin.tours.index') }}" 
                             class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-semibold">
@@ -901,7 +1102,103 @@ function clearImagePreview() {
             const cnyRate = parseFloat(document.getElementById('exchange_rate_cny').value) || 6.5;
             
             // Show preview (optional)
-            // console.log('USD: $' + usdPrice + ' ≈ Rp ' + (usdPrice * idrRate).toLocaleString() + ' ≈ ¥' + (usdPrice * cnyRate).toFixed(2));
+        }
+    });
+
+    // Itinerary Management
+    let itineraryIndex = document.querySelectorAll('.itinerary-item').length;
+
+    // Add new itinerary day
+    document.getElementById('add-itinerary')?.addEventListener('click', function() {
+        const container = document.getElementById('itinerary-container');
+        const newItem = `
+            <div class="itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-lg font-bold text-gray-800 flex items-center">
+                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-bold mr-3">${itineraryIndex + 1}</span>
+                        Day ${itineraryIndex + 1}
+                    </h4>
+                    <button type="button" 
+                            class="remove-itinerary text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                            title="Hapus Item">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Judul (ID) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="itinerary[${itineraryIndex}][title_id]" value="" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                               placeholder="Contoh: DAY ${itineraryIndex + 1} - Kedatangan di Surabaya">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Title (EN) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="itinerary[${itineraryIndex}][title_en]" value="" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                               placeholder="Example: DAY ${itineraryIndex + 1} - Arrival in Surabaya">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            标题 (ZH) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="itinerary[${itineraryIndex}][title_zh]" value="" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                               placeholder="例如：第${itineraryIndex + 1}天 - 抵达泗水">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Deskripsi (ID) <span class="text-red-500">*</span>
+                            <span class="text-xs text-gray-500 font-normal block mt-1">Format: [Waktu] Aktivitas. Pisahkan dengan enter 2x. Contoh: [Sore] Penjemputan di bandara</span>
+                        </label>
+                        <textarea name="itinerary[${itineraryIndex}][description_id]" rows="5" required 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                  placeholder="[Sore] Penjemputan di bandara&#10;&#10;[Malam] Check-in hotel"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Description (EN) <span class="text-red-500">*</span>
+                            <span class="text-xs text-gray-500 font-normal block mt-1">Format: [Time] Activity. Separate with 2 enters. Example: [Evening] Airport pickup</span>
+                        </label>
+                        <textarea name="itinerary[${itineraryIndex}][description_en]" rows="5" required 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                  placeholder="[Evening] Airport pickup&#10;&#10;[Night] Hotel check-in"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            描述 (ZH) <span class="text-red-500">*</span>
+                            <span class="text-xs text-gray-500 font-normal block mt-1">格式：[时间] 活动。用两个回车分隔。例如：[傍晚] 机场接机</span>
+                        </label>
+                        <textarea name="itinerary[${itineraryIndex}][description_zh]" rows="5" required 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+                                  placeholder="[傍晚] 机场接机&#10;&#10;[晚上] 酒店入住"></textarea>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', newItem);
+        itineraryIndex++;
+    });
+
+    // Remove itinerary day (event delegation)
+    document.getElementById('itinerary-container')?.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-itinerary')) {
+            const item = e.target.closest('.itinerary-item');
+            if (document.querySelectorAll('.itinerary-item').length > 1) {
+                item.remove();
+                // Reindex remaining items
+                document.querySelectorAll('.itinerary-item').forEach((item, index) => {
+                    item.querySelector('span.bg-emerald-500').textContent = index + 1;
+                    item.querySelector('h4').childNodes[2].textContent = ` Day ${index + 1}`;
+                });
+            } else {
+                alert('Minimal harus ada 1 hari dalam itinerary');
+            }
         }
     });
 
@@ -912,6 +1209,6 @@ function clearImagePreview() {
         copyTemplate: (fieldId, template) => copyToClipboard(template, fieldId)
     };
 
-    // console.log('✅ Tour form script loaded successfully');
+    // Tour form script loaded
 </script>
 @endsection
