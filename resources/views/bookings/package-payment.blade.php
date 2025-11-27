@@ -76,26 +76,37 @@
                 </div>
             </div>
 
-            <!-- Payment Button or Success Message -->
+            <!-- Payment Methods -->
             @if($booking->payment_status !== 'paid')
-                @php
-                    $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
-                @endphp
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Midtrans Card -->
+                    <div class="bg-white p-6 rounded-lg border">
+                        <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_midtrans') ?? 'Pay with Midtrans (VA / e-wallets)' }}</h4>
+                        <p class="text-sm text-gray-600 mb-4">{{ __('messages.midtrans_desc') ?? 'Use local Indonesian payment methods (virtual accounts, e-wallets).' }}</p>
+                        @if(!empty($snapToken))
+                            <button id="pay-button"
+                                    class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-bold">
+                                {{ __('messages.pay_now') ?? 'Pay Now' }}
+                            </button>
+                        @else
+                            <button disabled class="w-full py-3 bg-gray-300 text-gray-700 rounded-lg font-semibold">
+                                {{ __('messages.pay_now') ?? 'Pay Now' }}
+                            </button>
+                            <p class="text-xs text-red-500 mt-2">{{ __('messages.midtrans_unavailable') ?? 'Midtrans payment currently unavailable. Please try another method.' }}</p>
+                        @endif
+                        <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
+                    </div>
 
-                {{-- If currency is IDR -> Midtrans, otherwise show PayPal button (USD/CNY) --}}
-                @if($currency === 'IDR' && $snapToken)
-                    <button id="pay-button" 
-                            class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                        {{ __('messages.pay_now') ?? 'Pay Now' }}
-                    </button>
-                    <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
-                @elseif(in_array($currency, ['USD', 'CNY']))
-                    <div id="paypal-button-container" class="w-full"></div>
-                    <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
-                @else
+                    <!-- PayPal Card -->
+                    <div class="bg-white p-6 rounded-lg border">
+                        <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_paypal') ?? 'Pay with PayPal' }}</h4>
+                        <p class="text-sm text-gray-600 mb-4">{{ __('messages.paypal_desc') ?? 'Pay securely using PayPal (cards or PayPal balance).' }}</p>
+                        <div id="paypal-button-container" class="w-full"></div>
+                        <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
+                    </div>
+                </div>
+                <div class="mt-4"></div>
+            @else
                     <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg mb-4">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -270,7 +281,7 @@
     @endif
 
     @push('scripts')
-    @if(in_array(\App\Helpers\LanguageHelper::getCurrentCurrency(), ['USD','CNY']))
+    @if(config('services.paypal.client_id'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const bookingId = {{ $booking->id }};

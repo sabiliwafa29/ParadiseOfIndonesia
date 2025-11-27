@@ -25,6 +25,7 @@ class Booking extends Model
         'transport_service',
         'addon_cost',
         'total_price',
+        'currency',
         'status',
         'payment_id',
         'payment_status',

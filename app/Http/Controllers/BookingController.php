@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\StorePackageBookingRequest;
 use App\Services\MidtransService;
 use App\Services\OrderIdService;
+use App\Helpers\LanguageHelper;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -55,6 +56,7 @@ class BookingController extends Controller
                 'transport_service' => $validated['transport'],
                 'addon_cost' => $addonCost,
                 'total_price' => $totalPrice,
+                'currency' => LanguageHelper::getCurrentCurrency(),
                 'status' => 'pending',
                 'order_id' => $orderId,
             ]);
@@ -176,6 +178,8 @@ class BookingController extends Controller
             
             $bookingData['total_price'] = $totalPrice;
             $bookingData['order_id'] = $orderId;
+            // Persist currency at booking creation so payment choice is deterministic
+            $bookingData['currency'] = LanguageHelper::getCurrentCurrency();
 
             \Illuminate\Support\Facades\Log::info('💰 [DEBUG] Price calculated', [
                 'price_per_person' => $pricePerPerson,
@@ -333,6 +337,7 @@ class BookingController extends Controller
                 'transport_service'=> $validated['transport'] ?? false,
                 'addon_cost'       => $addonCost,
                 'total_price'      => $totalPrice,
+                'currency'         => LanguageHelper::getCurrentCurrency(),
                 'status'           => 'pending',
                 'order_id'         => $orderId,
             ]);

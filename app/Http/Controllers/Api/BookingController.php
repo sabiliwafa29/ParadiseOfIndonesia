@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Tour;
+use App\Helpers\LanguageHelper;
 use Illuminate\Http\Request;
 use App\Services\MidtransService;
 use App\Services\OrderIdService;
@@ -64,6 +65,7 @@ class BookingController extends Controller
             'transport_service' => $validated['transport'] ?? false,
             'addon_cost' => $addonCost,
             'total_price' => $totalPrice,
+            'currency' => LanguageHelper::getCurrentCurrency(),
             'status' => 'pending',
             'order_id' => $orderId,
         ]);

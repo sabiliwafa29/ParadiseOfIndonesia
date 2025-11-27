@@ -52,5 +52,8 @@ Route::middleware('throttle:60,60')->group(function () {
 // PayPal endpoints (used by client-side PayPal Buttons)
 use App\Http\Controllers\PayPalController;
 
-Route::post('/paypal/{booking}/create-order', [PayPalController::class, 'createOrder']);
-Route::post('/paypal/{booking}/capture-order', [PayPalController::class, 'captureOrder']);
+// PayPal endpoints need session/web middleware for guest bookings (session-based access)
+Route::middleware('web')->group(function () {
+    Route::post('/paypal/{booking}/create-order', [PayPalController::class, 'createOrder']);
+    Route::post('/paypal/{booking}/capture-order', [PayPalController::class, 'captureOrder']);
+});
