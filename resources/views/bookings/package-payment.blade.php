@@ -78,35 +78,29 @@
 
             <!-- Payment Methods -->
             @if($booking->payment_status !== 'paid')
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Midtrans Card -->
-                    <div class="bg-white p-6 rounded-lg border">
-                        <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_midtrans') ?? 'Pay with Midtrans (VA / e-wallets)' }}</h4>
-                        <p class="text-sm text-gray-600 mb-4">{{ __('messages.midtrans_desc') ?? 'Use local Indonesian payment methods (virtual accounts, e-wallets).' }}</p>
-                        @if(!empty($snapToken))
+                @if(!empty($snapToken))
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Midtrans Card -->
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_midtrans') ?? 'Pay with Midtrans (VA / e-wallets)' }}</h4>
+                            <p class="text-sm text-gray-600 mb-4">{{ __('messages.midtrans_desc') ?? 'Use local Indonesian payment methods (virtual accounts, e-wallets).' }}</p>
                             <button id="pay-button"
                                     class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-bold">
                                 {{ __('messages.pay_now') ?? 'Pay Now' }}
                             </button>
-                        @else
-                            <button disabled class="w-full py-3 bg-gray-300 text-gray-700 rounded-lg font-semibold">
-                                {{ __('messages.pay_now') ?? 'Pay Now' }}
-                            </button>
-                            <p class="text-xs text-red-500 mt-2">{{ __('messages.midtrans_unavailable') ?? 'Midtrans payment currently unavailable. Please try another method.' }}</p>
-                        @endif
-                        <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
-                    </div>
+                            <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
+                        </div>
 
-                    <!-- PayPal Card -->
-                    <div class="bg-white p-6 rounded-lg border">
-                        <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_paypal') ?? 'Pay with PayPal' }}</h4>
-                        <p class="text-sm text-gray-600 mb-4">{{ __('messages.paypal_desc') ?? 'Pay securely using PayPal (cards or PayPal balance).' }}</p>
-                        <div id="paypal-button-container" class="w-full"></div>
-                        <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
+                        <!-- PayPal Card -->
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_paypal') ?? 'Pay with PayPal' }}</h4>
+                            <p class="text-sm text-gray-600 mb-4">{{ __('messages.paypal_desc') ?? 'Pay securely using PayPal (cards or PayPal balance).' }}</p>
+                            <div id="paypal-button-container" class="w-full"></div>
+                            <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="mt-4"></div>
-            @else
+                    <div class="mt-4"></div>
+                @else
                     <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg mb-4">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
