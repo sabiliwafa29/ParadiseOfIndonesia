@@ -151,7 +151,7 @@ use App\Helpers\ItineraryHelper;
                                             @endphp
                                             
                                             <div class="flex gap-2 md:gap-3">
-                                                {{-- Debug: Show raw time value --}}
+                                                
                                                 {{-- Time value: "{{ $parsed['time'] }}" | Empty: {{ empty($parsed['time']) ? 'YES' : 'NO' }} | Trimmed: "{{ trim($parsed['time']) }}" --}}
                                                 
                                                 @if(!empty($parsed['time']) && trim($parsed['time']) !== '')

@@ -431,21 +431,7 @@
                         </div>
                         
                         <div class="p-6">
-                            <!-- DEBUG INFO -->
-                            <div class="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded text-xs">
-                                <p class="font-bold text-yellow-800 mb-2">🐛 DEBUG INFORMATION:</p>
-                                <div class="text-yellow-700 space-y-1 font-mono">
-                                    @php
-                                        $rawItinerary = $tour->getRawOriginal('itinerary');
-                                        $castedItinerary = $tour->itinerary;
-                                    @endphp
-                                    <p><strong>Raw DB:</strong> {{ $rawItinerary ? Str::limit(json_encode($rawItinerary), 150) : 'NULL' }}</p>
-                                    <p><strong>After Cast:</strong> {{ $castedItinerary ? Str::limit(json_encode($castedItinerary), 150) : 'NULL' }}</p>
-                                    <p><strong>Type:</strong> {{ gettype($castedItinerary) }}</p>
-                                    <p><strong>Is Array:</strong> {{ is_array($castedItinerary) ? 'YES' : 'NO' }}</p>
-                                    <p><strong>Count:</strong> {{ is_array($castedItinerary) ? count($castedItinerary) : '0' }}</p>
-                                </div>
-                            </div>
+                            
                             
                             <div id="itinerary-container" class="space-y-6">
                                 @php
@@ -457,10 +443,7 @@
                                         $existingItinerary = $tour->itinerary;
                                     }
                                     
-                                    // Debug: Log nilai
-                                    \Log::info('=== TOURS EDIT ITINERARY DEBUG ===');
-                                    \Log::info('Type: ' . gettype($existingItinerary));
-                                    \Log::info('Value: ' . json_encode($existingItinerary));
+                                    
                                     
                                     // Jika string JSON, decode dulu
                                     if (is_string($existingItinerary)) {
@@ -489,7 +472,7 @@
                                         ]];
                                     }
                                     
-                                    \Log::info('Final count: ' . count($existingItinerary));
+                                    
                                 @endphp
 
                                 @foreach($existingItinerary as $index => $item)
@@ -962,7 +945,6 @@ function clearImagePreview() {
         const textarea = document.getElementById(textareaId);
         
         if (!textarea) {
-            // console.error(`Textarea with id "${textareaId}" not found`);
             return;
         }
 
@@ -986,9 +968,6 @@ function clearImagePreview() {
             }, 3000);
             
         } catch (e) {
-            // console.error('JSON Parse Error:', e);
-            // alert('❌ Invalid JSON format!\n\nError: ' + e.message);
-            
             // Visual feedback for error
             textarea.classList.add('border-red-500');
         }
@@ -1202,12 +1181,7 @@ function clearImagePreview() {
         }
     });
 
-    // Export function for debugging (optional)
-    window.debugTourForm = {
-        validateAll: validateJSONBeforeSubmit,
-        formatField: formatJSON,
-        copyTemplate: (fieldId, template) => copyToClipboard(template, fieldId)
-    };
+    
 
     // Tour form script loaded
 </script>

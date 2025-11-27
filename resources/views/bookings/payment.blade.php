@@ -303,10 +303,9 @@
         script.async = true;
 
         script.onload = function() {
-            if (typeof paypal === 'undefined') {
-                console.error('PayPal SDK loaded but `paypal` is undefined');
-                return;
-            }
+                if (typeof paypal === 'undefined') {
+                    return;
+                }
 
             paypal.Buttons({
                 createOrder: function(data, actions) {
@@ -327,7 +326,7 @@
                         return orderData.id;
                     });
                 },
-                onApprove: function(data, actions) {
+                    onApprove: function(data, actions) {
                     return fetch('/api/paypal/' + bookingId + '/capture-order', {
                         method: 'POST',
                         headers: {
@@ -338,22 +337,21 @@
                         body: JSON.stringify({ orderID: data.orderID })
                     }).then(function(res) { return res.json(); })
                     .then(function(captureData) {
-                        console.log('PayPal capture:', captureData);
+                        // Successful capture: refresh to show updated status
                         window.location.reload();
                     }).catch(function(err) {
-                        console.error('Capture error', err);
+                        // Notify user on failure
                         alert('Payment failed, please try again.');
                     });
                 },
                 onError: function(err) {
-                    console.error('PayPal error', err);
                     alert('Payment failed, please try again.');
                 }
             }).render('#paypal-button-container');
         };
 
         script.onerror = function(e) {
-            console.error('Failed to load PayPal SDK', e);
+            // Loading error handled silently; show a user-friendly message elsewhere if needed
         };
 
         document.head.appendChild(script);
