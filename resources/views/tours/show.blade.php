@@ -1,11 +1,32 @@
 @extends('layouts.app')
 @php
 use App\Helpers\ItineraryHelper;
+use Illuminate\Support\Str;
 @endphp
+
+@section('title', $tour->name . ' — ' . config('app.name', 'Paradise Of Indonesia'))
+@section('meta_description', Str::limit(strip_tags($tour->description ?? ''), 160))
+@section('og_title', $tour->name)
+@section('og_description', Str::limit(strip_tags($tour->description ?? ''), 200))
+@section('og_image', $tour->image ? asset('storage/' . $tour->image) : asset('images/og-default.jpg'))
+@section('canonical', route('tours.show', $tour))
+
+@section('baidu_site_verification', config('services.baidu.verification', ''))
 
 @section('content')
 <div class="py-12 bg-gray-50">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        {{-- JSON-LD for Tour (improves rich results) --}}
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'TouristAttraction',
+                'name' => $tour->name,
+                'description' => Str::limit(strip_tags($tour->description ?? ''), 300),
+                'image' => $tour->image ? asset('storage/' . $tour->image) : asset('images/og-default.jpg'),
+                'url' => route('tours.show', $tour),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
         
         <!-- Back Button -->
         <div class="mb-6">

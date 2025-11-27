@@ -6,7 +6,58 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
 
-        <title>{{ config('app.name', 'Paradise Of Indonesia') }}</title>
+        <title>@yield('title', config('app.name', 'Paradise Of Indonesia'))</title>
+
+        {{-- Primary SEO meta (per-page overrides available via @section) --}}
+        <meta name="description" content="@yield('meta_description', 'Explore tours, packages and travel services in Indonesia. Find curated experiences across Bali, Bromo, and beyond with Paradise Of Indonesia.')">
+        <meta name="keywords" content="@yield('meta_keywords', 'Indonesia tour, Bali tour, Bromo, travel, tour packages')">
+        <meta name="robots" content="@yield('meta_robots', 'index,follow')">
+        <link rel="canonical" href="@yield('canonical', url()->current())">
+
+        {{-- Hreflang / locale hints (adjust per-site routing if you have localized URLs) --}}
+        <link rel="alternate" hreflang="en" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="id" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="zh" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
+
+        {{-- OpenGraph / Twitter Card defaults (per-page overrides via sections) --}}
+        @php
+            $ogTitle = trim($__env->yieldContent('og_title') ?: $__env->yieldContent('title') ?: config('app.name','Paradise Of Indonesia'));
+            $metaDescription = trim($__env->yieldContent('og_description') ?: $__env->yieldContent('meta_description') ?: 'Explore tours, packages and travel services in Indonesia.');
+            $ogUrl = trim($__env->yieldContent('og_url') ?: url()->current());
+            $ogImage = trim($__env->yieldContent('og_image') ?: asset('images/og-default.jpg'));
+            $twitterTitle = trim($__env->yieldContent('twitter_title') ?: $ogTitle);
+            $twitterDesc = trim($__env->yieldContent('twitter_description') ?: $metaDescription);
+            $twitterImage = trim($__env->yieldContent('twitter_image') ?: $ogImage);
+        @endphp
+
+        <meta property="og:site_name" content="{{ config('app.name', 'Paradise Of Indonesia') }}">
+        <meta property="og:title" content="{{ $ogTitle }}">
+        <meta property="og:description" content="{{ $metaDescription }}">
+        <meta property="og:type" content="@yield('og_type', 'website')">
+        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta property="og:image" content="{{ $ogImage }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $twitterTitle }}">
+        <meta name="twitter:description" content="{{ $twitterDesc }}">
+        <meta name="twitter:image" content="{{ $twitterImage }}">
+
+    {{-- Search console verifications (set via config/services.php -> search_console) --}}
+    <meta name="google-site-verification" content="{{ config('services.search_console.google_verification', '') }}">
+    <meta name="baidu-site-verification" content="{{ config('services.search_console.baidu_verification', '') ?: $__env->yieldContent('baidu_site_verification') }}">
+        <meta name="renderer" content="webkit">
+
+        {{-- JSON-LD structured data: Organization + WebSite (basic) --}}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "{{ config('app.name', 'Paradise Of Indonesia') }}",
+                "url": "{{ url('/') }}",
+                "logo": "{{ asset('logo-paradise.ico') }}",
+                "sameAs": []
+            }
+        </script>
 
     <!-- Fonts (gunakan font sistem untuk menghindari CSP external styles) -->
     {{-- <link rel="preconnect" href="https://fonts.bunny.net">

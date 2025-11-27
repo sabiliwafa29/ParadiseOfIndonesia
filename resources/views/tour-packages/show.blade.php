@@ -1,11 +1,32 @@
 @extends('layouts.app')
 @php
 use App\Helpers\ItineraryHelper;
+use Illuminate\Support\Str;
 @endphp
+
+@section('title', $package->name . ' — ' . config('app.name', 'Paradise Of Indonesia'))
+@section('meta_description', Str::limit(strip_tags($package->description ?? ''), 160))
+@section('og_title', $package->name)
+@section('og_description', Str::limit(strip_tags($package->description ?? ''), 200))
+@section('og_image', $package->image ? asset('storage/' . $package->image) : asset('images/og-default.jpg'))
+@section('canonical', route('tour-packages.show', $package))
+
+@section('baidu_site_verification', config('services.baidu.verification', ''))
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- JSON-LD for Package (improves rich results) --}}
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'TouristAttraction',
+                'name' => $package->name,
+                'description' => Str::limit(strip_tags($package->description ?? ''), 300),
+                'image' => $package->image ? asset('storage/' . $package->image) : asset('images/og-default.jpg'),
+                'url' => route('tour-packages.show', $package),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
         <!-- Back Button -->
         <div class="mb-6">
             <a href="{{ route('tour-packages.index') }}" 
