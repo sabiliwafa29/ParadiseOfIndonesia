@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Tour;
 use App\Models\TourPackage;
@@ -92,14 +93,41 @@ class GenerateSitemap extends Command
         // Build XML
         $xml = $this->buildXml($urls);
 
-        $dir = dirname($output);
-        if (! $this->files->exists($dir)) {
-            $this->files->makeDirectory($dir, 0755, true);
+        // Prefer writing to the storage disk 'public' to avoid public/ permission issues in some environments.
+        $written = false;
+        if ($output === 'public/sitemap.xml') {
+            try {
+                Storage::disk('public')->put('sitemap.xml', $xml);
+                $this->info("Sitemap written to storage disk 'public' at storage/app/public/sitemap.xml (urls: " . count($urls) . ")");
+                $this->info("If you want it at /sitemap.xml, ensure a symlinked storage (php artisan storage:link) or copy the file to public/ by deployment scripts.");
+                $written = true;
+            } catch (\Exception $e) {
+                // Fall back to writing directly to the requested output path below
+                $this->warn('Failed to write to storage disk public: ' . $e->getMessage());
+            }
         }
 
-        $this->files->put($output, $xml);
+        if (! $written) {
+            $dir = dirname($output);
+            if (! $this->files->exists($dir)) {
+                try {
+                    $this->files->makeDirectory($dir, 0755, true);
+                } catch (\Exception $e) {
+                    $this->error("Unable to create directory {$dir}: " . $e->getMessage());
+                    $this->error('Permission denied writing sitemap. On many servers you should allow the web user or deploy user to write to the target directory.');
+                    return 1;
+                }
+            }
 
-        $this->info("Sitemap written to {$output} (urls: " . count($urls) . ")");
+            try {
+                $this->files->put($output, $xml);
+                $this->info("Sitemap written to {$output} (urls: " . count($urls) . ")");
+            } catch (\Exception $e) {
+                $this->error('Failed to write sitemap to ' . $output . ': ' . $e->getMessage());
+                $this->error('Common fixes: ensure ownership/permissions for the web/deploy user, or use storage disk public and run `php artisan storage:link`.');
+                return 1;
+            }
+        }
 
         return 0;
     }
