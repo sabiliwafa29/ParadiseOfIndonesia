@@ -16,6 +16,7 @@ return [
     'profile' => '个人资料',
     'logout' => '登出',
     'search_placeholder' => '搜索旅游、目的地...',
+
     'view_tours' => '查看旅游',
     'explore_now' => '立即探索',
     'slide_title1' => '美丽的巴厘岛',
@@ -34,6 +35,7 @@ return [
     'slide_desc7' => '沉浸在丰富的传统和仪式中',
     'slide_title8' => '传统舞蹈与文化',
     'slide_desc8' => '体验充满活力的文化遗产',
+
     'island_paradise' => '岛屿天堂',
     'underwater_wonder' => '水下奇观',
     'ancient_heritage' => '古代遗产',
@@ -42,6 +44,7 @@ return [
     'volcanic_landscape' => '火山景观',
     'cultural_experience' => '文化体验',
     'living_heritage' => '活的遗产',
+
     'why_choose' => '为什么选择印尼天堂？',
     'tagline' => '一键点击，天堂在您手中',
     'comfort' => '舒适',
@@ -56,9 +59,11 @@ return [
     'happy_desc' => '您的幸福是我们组织每次旅行的首要任务',
     'custom' => '定制套餐',
     'custom_desc' => '根据您的偏好定制专属旅行套餐。',
+
     'best_packages_label' => '最佳套餐',
     'destinations_label' => '目的地',
     'featured_tours_label' => '精选旅游',
+
     'best_packages' => '最佳旅游套餐',
     'best_packages_desc' => '与我们一起探索印尼最佳目的地',
     'popular_destinations' => '热门目的地',
@@ -68,12 +73,15 @@ return [
     'tour_activities' => '旅游活动',
     'tour_activities_desc' => '热门目的地的精彩活动和体验',
     'destinations_in' => '目的地在',
+
     'view_details' => '查看详情',
     'view_all_destinations' => '查看所有目的地',
     'view_all_tours' => '查看所有旅游',
     'view_all_activities' => '查看所有活动',
     'days' => '天',
     'no_tours_available' => '暂无旅游',
+
+    // Tour Activities
     'featured_activities' => '精选活动和景点',
     'learn_more' => '了解更多',
     'no_activities_found' => '未找到旅游活动。',
@@ -88,11 +96,15 @@ return [
     'view_tour_packages' => '查看旅游套餐',
     'other_activities' => '其他活动',
     'view_all_destinations_highlight' => '查看所有目的地亮点',
+
+    // Travel Services
     'choose_travel_companion' => '选择您完美的旅行伴侣',
     'seats' => '座位',
     'select' => '选择',
     'no_services_found' => '未找到旅行服务',
     'check_back_soon' => '稍后查看可用的旅行服务',
+
+    // Tour Sessions
     'back_to_sessions' => '返回时段',
     'active_session' => '活跃时段',
     'session_description' => '时段描述',
@@ -105,17 +117,22 @@ return [
     'other_available_sessions' => '其他可用时段',
     'explore_upcoming_sessions' => '探索我们即将到来的旅游时段，找到您完美的冒险',
     'tour_package' => '旅游套餐',
+
+    // Discover Tours
     'discover_amazing_tours' => '探索印度尼西亚各地的精彩旅游',
     'contact_us' => '联系我们',
+
     'stay_updated' => '保持更新！',
     'subscribe_newsletter' => '订阅我们的新闻通讯，获取独家优惠和旅行技巧',
     'enter_email' => '输入您的邮箱',
     'subscribe' => '订阅',
     'privacy_notice' => '我们尊重您的隐私。您可以随时取消订阅。',
+
     'best_seller' => '畅销',
     'starting_from' => '起价',
     'sold_out' => '售罄',
     'explore_destination' => '探索目的地',
+
     'back_to_package' => '返回套餐',
     'back_to_tours' => '返回旅游',
     'about_this_tour' => '关于此旅游',
@@ -137,6 +154,7 @@ return [
     'day' => '天',
     'activities' => '活动',
     'time' => '时间',
+
     'tour_guide' => '导游',
     'transport' => '交通',
     'no_tour_packages' => '未找到旅游套餐。',
@@ -152,16 +170,22 @@ return [
     'check_back_later' => '请稍后查看或联系我们获取更多信息。',
     'ready_to_book' => '准备预订此套餐？',
     'contact_us_today' => '今天联系我们，开始您在印度尼西亚的难忘旅程',
+    'contact_us' => '联系我们',
     'view_more_packages' => '查看更多套餐',
     'other_package_options' => '其他套餐选项',
     'note' => '备注',
+
+    'tour_sessions' => '旅游时段',
     'no_tour_sessions' => '未找到旅游时段。',
     'date' => '日期',
     'guests' => '客人',
     'associated_package' => '相关套餐',
     'no_package_available' => '无可用套餐',
+
     'tours_in' => '旅游在',
+
     'no_images_found' => '画廊中未找到图片。',
+
     'no_bookings_yet' => '您还没有预订。',
     'browse_tours' => '浏览旅游',
     'confirmed' => '已确认',
@@ -184,6 +208,7 @@ return [
     'complete_your_booking' => '完成您的预订',
     'tour' => '旅游',
     'pay_now_with_midtrans' => '使用Midtrans立即付款',
+
     'about_paradise' => '通过我们精心策划的旅行体验发现印度尼西亚之美。从原始海滩到古老寺庙，我们为您带来印度尼西亚文化和自然的精华。',
     'quick_links' => '快速链接',
     'about_us' => '关于我们',
@@ -196,6 +221,7 @@ return [
     'address_detail' => 'Jalan Gading Karya 2 No 1 Kel. Gading Kecamatan Tambaksari kota Surabaya Jawa Timur',
     'all_rights_reserved' => '版权所有',
     'by_company' => '由PT Putra Nusantara Berkilau提供',
+
     'admin_dashboard' => '仪表盘',
     'admin_panel' => '管理面板',
     'welcome_back' => '欢迎回来！以下是今天的情况',
@@ -215,13 +241,16 @@ return [
     'view_all_bookings' => '查看所有预订',
     'popular_tours' => '热门旅游',
     'bookings' => '预订',
+    'view_all_tours' => '查看所有旅游',
     'recent_activities' => '最近活动',
     'no_recent_activities' => '暂无最近活动',
+
     'manage_organize' => '管理和组织您的旅游套餐',
     'new_package' => '新套餐',
     'create_new_tour' => '创建新旅游套餐',
     'fill_details' => '填写以下详细信息以创建新旅游套餐',
     'back_to_list' => '返回列表',
+    'tour_information' => '旅游套餐信息',
     'edit_tour' => '编辑旅游',
     'update_details' => '更新以下内容',
     'preview' => '预览',
@@ -277,6 +306,7 @@ return [
     'high_quality_images' => '使用高质量图片以获得更好展示',
     'clear_descriptions' => '撰写清晰且吸引人的描述以吸引客户',
     'double_check' => '仔细检查价格和时长信息',
+
     'delete_account' => '删除账户',
     'delete_warning' => '删除账户后，所有资源和数据将被永久删除。删除前请下载您想保留的数据。',
     'are_you_sure' => '您确定要删除账户吗？',
@@ -296,7 +326,10 @@ return [
     'email_unverified' => '您的电子邮件地址尚未验证。',
     'resend_verification' => '点击此处重新发送验证邮件。',
     'verification_sent' => '新的验证链接已发送到您的电子邮件地址。',
+
     'youre_logged_in' => '您已登录！',
+
+    // Booking Package
     'book_this_package' => '预订此套餐',
     'fill_booking_details' => '填写您的详细信息以完成预订',
     'personal_information' => '个人信息',
@@ -325,8 +358,11 @@ return [
     'ijen_description' => '夜间徒步见证著名的蓝火现象和伊真火山口壮观的日出',
     'tabuhan_route' => '塔布汉岛浮潜路线',
     'tabuhan_description' => '在塔布汉岛周围探索水下天堂，享受浮潜和海洋活动',
+
+    // Booking Show & Reschedule
     'reschedule_booking' => '重新安排预订',
     'cancel_booking' => '取消预订',
+    'complete_payment' => '完成付款',
     'booking_cancelled' => '此预订已被取消',
     'current_date' => '当前日期',
     'new_date' => '新日期',
@@ -340,6 +376,8 @@ return [
     'people' => '人',
     'person' => '人',
     'rescheduled' => '已重新安排',
+
+    // Package Payment
     'payment_complete' => '付款完成',
     'payment_pending' => '待付款',
     'booking_paid' => '您的预订已付款！',
@@ -357,19 +395,24 @@ return [
     'payment_token_error' => '支付令牌不可用',
     'payment_token_error_desc' => '生成支付令牌时出错。请重试预订。',
     'package' => '套餐',
+    'contact' => '联系方式',
     'thank_you_payment' => '感谢您的付款！',
     'confirmation_email_sent' => '确认邮件已发送至',
     'thank_you' => '感谢您的付款！',
     'confirmation_sent' => '确认邮件已发送至',
     'view_my_bookings' => '查看我的预订',
+    'view_details' => '查看详情',
     'register_to_manage' => '注册管理',
     'browse_more_packages' => '浏览更多套餐',
     'payment_error' => '错误',
     'payment_error_message' => '创建支付交易失败。请联系管理员。',
+    'back_to_package' => '返回套餐',
     'payment_success' => '付款成功！',
     'payment_success_booking_paid' => '付款成功！您的预订已付款。',
     'payment_success_but_update_failed' => '付款成功，但状态更新失败。请联系客服。',
     'payment_success_refresh' => '付款成功！请刷新页面。',
+
+    // Additional Info Messages
     'important_information' => '重要信息',
     'important_info' => '重要信息',
     'booking_linked_to_account' => '此预订已关联到您的账户。您可以从以下位置查看和管理',
@@ -378,55 +421,36 @@ return [
     'booking_email' => '此预订已关联到您的邮箱',
     'register_with_email' => '使用此邮箱注册以管理您的预订。',
     'with_email' => '使用此邮箱注册以管理您的预订。',
+
+    // Travel Services
     'pickup_location' => '接送地点',
     'search_pickup_location' => '搜索接送地点...',
+    'destination' => '目的地',
     'search_destination' => '搜索目的地...',
     'booking_type' => '预订类型',
     'one_way' => '单程',
     'round_trip' => '往返',
     'pickup_date_time' => '接送日期和时间',
     'estimated_distance' => '预计距离',
+    'total_price' => '总价',
     'calculating' => '计算中...',
     'booking' => '预订',
     'travel_booking_confirmed' => '您的旅行预订已确认！',
     'amount' => '金额',
     'booked' => '已预订',
+
+    // Admin
     'total_packages' => '套餐总数',
     'active_tours' => '活跃旅游',
     'no_tour_packages_yet' => '暂无旅游套餐',
     'search_packages' => '搜索套餐...',
     'all_packages' => '所有套餐',
+
+    // Pagination
     'previous' => '上一页',
     'next' => '下一页',
     'showing' => '显示',
     'to' => '至',
     'of' => '共',
     'results' => '结果',
-    'back_to_destinations' => 'Back To Destinations',
-    'back_to_home' => 'Back To Home',
-    'back_to_tour' => 'Back To Tour',
-    'book_this_tour' => 'Book This Tour',
-    'booking_as' => 'Booking As',
-    'browse_more_tours' => 'Browse More Tours',
-    'browse_packages' => 'Browse Packages',
-    'check_back_soon_activities' => 'Check Back Soon Activities',
-    'create_account' => 'Create Account',
-    'create_account_benefits' => 'Create Account Benefits',
-    'enter_full_name' => 'Enter Full Name',
-    'enter_phone' => 'Enter Phone',
-    'enter_special_requests' => 'Enter Special Requests',
-    'i_agree_to' => 'I Agree To',
-    'no_activities_available' => 'No Activities Available',
-    'optional' => 'Optional',
-    'payment_info_desc' => 'Payment Info Desc',
-    'payment_successful' => 'Payment Successful',
-    'payment_successful_desc' => 'Payment Successful Desc',
-    'phone' => 'Phone',
-    'proceed_to_payment' => 'Proceed To Payment',
-    'special_requests' => 'Special Requests',
-    'terms_and_conditions' => 'Terms And Conditions',
-    'tour_activities_in' => 'Tour Activities In',
-    'tour_date' => 'Tour Date',
-    'tour_price' => 'Tour Price',
-
 ];

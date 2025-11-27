@@ -16,6 +16,8 @@ return [
     'profile' => 'Profil',
     'logout' => 'Keluar',
     'search_placeholder' => 'Cari tur, destinasi...',
+
+    // Home Page
     'view_tours' => 'Lihat Tur',
     'explore_now' => 'Jelajahi Sekarang',
     'slide_title1' => 'Indahnya Bali',
@@ -34,6 +36,8 @@ return [
     'slide_desc7' => 'Rasakan tradisi dan ritual yang kaya',
     'slide_title8' => 'Tari dan Budaya Tradisional',
     'slide_desc8' => 'Rasakan warisan budaya yang hidup',
+    
+    // Homepage badges
     'island_paradise' => 'Surga Pulau',
     'underwater_wonder' => 'Keajaiban Bawah Laut',
     'ancient_heritage' => 'Warisan Kuno',
@@ -42,6 +46,7 @@ return [
     'volcanic_landscape' => 'Lanskap Vulkanik',
     'cultural_experience' => 'Pengalaman Budaya',
     'living_heritage' => 'Warisan Hidup',
+
     'why_choose' => 'Kenapa Memilih Paradise Of Indonesia?',
     'tagline' => 'Satu Klik, Surga di Tangan Anda',
     'comfort' => 'Kenyamanan',
@@ -56,9 +61,12 @@ return [
     'happy_desc' => 'Kebahagiaan Anda adalah prioritas kami dalam setiap perjalanan yang kami selenggarakan',
     'custom' => 'Paket Khusus',
     'custom_desc' => 'Buat paket perjalanan Anda sendiri yang disesuaikan dengan preferensi Anda.',
+
+    // Section labels
     'best_packages_label' => 'PAKET TERBAIK',
     'destinations_label' => 'DESTINASI',
     'featured_tours_label' => 'TUR UNGGULAN',
+
     'best_packages' => 'Paket Tour Terbaik',
     'best_packages_desc' => 'Jelajahi destinasi terbaik Indonesia bersama kami',
     'popular_destinations' => 'Destinasi Populer',
@@ -68,12 +76,15 @@ return [
     'tour_activities' => 'Aktivitas Wisata',
     'tour_activities_desc' => 'Aktivitas dan pengalaman menarik di destinasi populer',
     'destinations_in' => 'Destinasi di',
+
     'view_details' => 'Lihat Detail',
     'view_all_destinations' => 'Lihat Semua Destinasi',
     'view_all_tours' => 'Lihat Semua Tur',
     'view_all_activities' => 'Lihat Semua Aktivitas',
     'days' => 'hari',
     'no_tours_available' => 'Tidak Ada Tur Tersedia',
+
+    // Tour Activities
     'featured_activities' => 'Aktivitas & atraksi unggulan',
     'learn_more' => 'Pelajari Lebih Lanjut',
     'no_activities_found' => 'Tidak ada aktivitas tur ditemukan.',
@@ -88,11 +99,15 @@ return [
     'view_tour_packages' => 'Lihat Paket Tur',
     'other_activities' => 'Aktivitas Lainnya',
     'view_all_destinations_highlight' => 'Lihat Semua Highlight Destinasi',
+
+    // Travel Services
     'choose_travel_companion' => 'Pilih teman perjalanan yang sempurna untuk perjalanan Anda',
     'seats' => 'kursi',
     'select' => 'Pilih',
     'no_services_found' => 'Layanan Travel Tidak Ditemukan',
     'check_back_soon' => 'Periksa kembali segera untuk layanan travel yang tersedia',
+
+    // Tour Sessions
     'back_to_sessions' => 'Kembali ke Sesi',
     'active_session' => 'Sesi Aktif',
     'session_description' => 'Deskripsi Sesi',
@@ -105,17 +120,25 @@ return [
     'other_available_sessions' => 'Sesi Lain yang Tersedia',
     'explore_upcoming_sessions' => 'Jelajahi sesi tur mendatang kami dan temukan petualangan sempurna Anda',
     'tour_package' => 'Paket Tur',
+
+    // Discover Tours
     'discover_amazing_tours' => 'Temukan tur menakjubkan di seluruh Indonesia',
     'contact_us' => 'Hubungi Kami',
+
+    // Newsletter
     'stay_updated' => 'Tetap Update!',
     'subscribe_newsletter' => 'Berlangganan newsletter kami dan dapatkan penawaran eksklusif serta tips perjalanan',
     'enter_email' => 'Masukkan email Anda',
     'subscribe' => 'Berlangganan',
     'privacy_notice' => 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
+
+    // Tour cards
     'best_seller' => 'Terlaris',
     'starting_from' => 'Mulai dari',
     'sold_out' => 'Habis Terjual',
     'explore_destination' => 'Jelajahi Destinasi',
+
+    // Tour Show Page
     'back_to_package' => 'Kembali ke Paket',
     'back_to_tours' => 'Kembali ke Tur',
     'about_this_tour' => 'Tentang Tur Ini',
@@ -137,6 +160,8 @@ return [
     'day' => 'Hari',
     'activities' => 'Aktivitas',
     'time' => 'Waktu',
+
+    // Tour Packages
     'tour_guide' => 'Pemandu Wisata',
     'transport' => 'Transportasi',
     'no_tour_packages' => 'Tidak ada paket tur ditemukan.',
@@ -152,16 +177,26 @@ return [
     'check_back_later' => 'Silakan cek kembali nanti atau hubungi kami untuk informasi lebih lanjut.',
     'ready_to_book' => 'Siap memesan paket ini?',
     'contact_us_today' => 'Hubungi kami hari ini dan mulai perjalanan tak terlupakan Anda di Indonesia',
+    'contact_us' => 'Hubungi Kami',
     'view_more_packages' => 'Lihat Paket Lainnya',
     'other_package_options' => 'Opsi Paket Lainnya',
     'note' => 'Catatan',
+
+    // Tour Sessions
+    'tour_sessions' => 'Sesi Tur',
     'no_tour_sessions' => 'Tidak ada sesi tur ditemukan.',
     'date' => 'Tanggal',
     'guests' => 'Tamu',
     'associated_package' => 'Paket Terkait',
     'no_package_available' => 'Tidak Ada Paket Tersedia',
+
+    // Destinations
     'tours_in' => 'Tur di',
+
+    // Gallery
     'no_images_found' => 'Tidak ada gambar ditemukan di galeri.',
+
+    // My Bookings
     'no_bookings_yet' => 'Anda belum melakukan pemesanan.',
     'browse_tours' => 'Jelajahi Tur',
     'confirmed' => 'Dikonfirmasi',
@@ -184,6 +219,8 @@ return [
     'complete_your_booking' => 'Selesaikan Pemesanan Anda',
     'tour' => 'Tur',
     'pay_now_with_midtrans' => 'Bayar Sekarang dengan Midtrans',
+
+    // Footer
     'about_paradise' => 'Temukan keindahan Indonesia dengan pengalaman perjalanan kurasi kami. Dari pantai yang masih asli hingga candi kuno, kami menghadirkan yang terbaik dari budaya dan alam Indonesia.',
     'quick_links' => 'Tautan Cepat',
     'about_us' => 'Tentang Kami',
@@ -196,6 +233,8 @@ return [
     'address_detail' => 'Jalan Gading Karya 2 No 1 Kel. Gading Kecamatan Tambaksari kota Surabaya Jawa Timur',
     'all_rights_reserved' => 'Hak cipta dilindungi',
     'by_company' => 'oleh PT Putra Nusantara Berkilau',
+
+    // Admin Dashboard
     'admin_dashboard' => 'Dashboard',
     'admin_panel' => 'Panel Admin',
     'welcome_back' => 'Selamat datang kembali! Berikut yang terjadi hari ini',
@@ -215,13 +254,17 @@ return [
     'view_all_bookings' => 'Lihat semua booking',
     'popular_tours' => 'Tur Populer',
     'bookings' => 'booking',
+    'view_all_tours' => 'Lihat semua tur',
     'recent_activities' => 'Aktivitas Terbaru',
     'no_recent_activities' => 'Tidak ada aktivitas terbaru',
+
+    // Tour Management
     'manage_organize' => 'Kelola dan atur paket tur Anda',
     'new_package' => 'Paket Baru',
     'create_new_tour' => 'Buat Paket Tur Baru',
     'fill_details' => 'Isi detail di bawah untuk membuat paket tur baru',
     'back_to_list' => 'Kembali ke Daftar',
+    'tour_information' => 'Informasi Paket Tur',
     'edit_tour' => 'Edit Tur',
     'update_details' => 'Perbarui detail dari',
     'preview' => 'Pratinjau',
@@ -277,6 +320,8 @@ return [
     'high_quality_images' => 'Gunakan gambar berkualitas tinggi untuk presentasi yang lebih baik',
     'clear_descriptions' => 'Tulis deskripsi yang jelas dan menarik untuk menarik pelanggan',
     'double_check' => 'Periksa kembali informasi harga dan durasi',
+
+    // Profile
     'delete_account' => 'Hapus Akun',
     'delete_warning' => 'Setelah akun Anda dihapus, semua sumber daya dan datanya akan dihapus secara permanen. Sebelum menghapus akun Anda, silakan unduh data atau informasi apa pun yang ingin Anda simpan.',
     'are_you_sure' => 'Apakah Anda yakin ingin menghapus akun Anda?',
@@ -296,7 +341,11 @@ return [
     'email_unverified' => 'Alamat email Anda belum diverifikasi.',
     'resend_verification' => 'Klik di sini untuk mengirim ulang email verifikasi.',
     'verification_sent' => 'Tautan verifikasi baru telah dikirim ke alamat email Anda.',
-    'youre_logged_in' => 'Anda sudah login!',
+
+    // Dashboard
+    'youre_logged_in' => "Anda sudah login!",
+
+    // Booking Package
     'book_this_package' => 'Pesan Paket Ini',
     'fill_booking_details' => 'Isi detail Anda untuk menyelesaikan pemesanan',
     'personal_information' => 'Informasi Pribadi',
@@ -325,8 +374,11 @@ return [
     'ijen_description' => 'Trekking malam untuk menyaksikan fenomena Api Biru dan sunrise yang menakjubkan di Kawah Ijen',
     'tabuhan_route' => 'Rute Snorkeling Pulau Tabuhan',
     'tabuhan_description' => 'Jelajahi surga bawah laut dengan snorkeling dan aktivitas laut di sekitar Pulau Tabuhan',
+
+    // Booking Show & Reschedule
     'reschedule_booking' => 'Jadwal Ulang Booking',
     'cancel_booking' => 'Batalkan Booking',
+    'complete_payment' => 'Selesaikan Pembayaran',
     'booking_cancelled' => 'Booking ini telah dibatalkan',
     'current_date' => 'Tanggal Saat Ini',
     'new_date' => 'Tanggal Baru',
@@ -340,6 +392,8 @@ return [
     'people' => 'orang',
     'person' => 'orang',
     'rescheduled' => 'Dijadwalkan Ulang',
+
+    // Package Payment
     'payment_complete' => 'Pembayaran Selesai',
     'payment_pending' => 'Pembayaran Tertunda',
     'booking_paid' => 'Pemesanan Anda telah dibayar!',
@@ -357,6 +411,7 @@ return [
     'payment_token_error' => 'Token Pembayaran Tidak Tersedia',
     'payment_token_error_desc' => 'Terjadi kesalahan saat menghasilkan token pembayaran. Silakan coba memesan lagi.',
     'package' => 'Paket',
+    'contact' => 'Kontak',
     'thank_you_payment' => 'Terima kasih atas pembayaran Anda!',
     'confirmation_email_sent' => 'Email konfirmasi telah dikirim ke',
     'thank_you' => 'Terima kasih atas pembayaran Anda!',
@@ -366,10 +421,13 @@ return [
     'browse_more_packages' => 'Jelajahi Paket Lainnya',
     'payment_error' => 'Error',
     'payment_error_message' => 'Gagal membuat transaksi pembayaran. Silakan hubungi admin.',
+    'back_to_package' => 'Kembali ke Paket',
     'payment_success' => 'Pembayaran berhasil!',
     'payment_success_booking_paid' => 'Pembayaran berhasil! Booking Anda telah dibayar.',
     'payment_success_but_update_failed' => 'Pembayaran berhasil, tetapi pembaruan status gagal. Silakan hubungi support.',
     'payment_success_refresh' => 'Pembayaran berhasil! Silakan refresh halaman.',
+
+    // Additional Info Messages
     'important_information' => 'Informasi Penting',
     'important_info' => 'Informasi Penting',
     'booking_linked_to_account' => 'Booking ini terhubung dengan akun Anda. Anda dapat melihat dan mengelolanya dari',
@@ -378,55 +436,36 @@ return [
     'booking_email' => 'Booking ini terhubung dengan email Anda',
     'register_with_email' => 'dengan email ini untuk mengelola booking Anda.',
     'with_email' => 'dengan email ini untuk mengelola booking Anda.',
+
+    // Travel Services
     'pickup_location' => 'Lokasi Penjemputan',
     'search_pickup_location' => 'Cari lokasi penjemputan...',
+    'destination' => 'Tujuan',
     'search_destination' => 'Cari tujuan...',
     'booking_type' => 'Tipe Booking',
     'one_way' => 'Sekali Jalan',
     'round_trip' => 'Pulang Pergi',
     'pickup_date_time' => 'Tanggal & Waktu Penjemputan',
     'estimated_distance' => 'Estimasi Jarak',
+    'total_price' => 'Total Harga',
     'calculating' => 'Menghitung...',
     'booking' => 'Booking',
     'travel_booking_confirmed' => 'Booking perjalanan Anda telah dikonfirmasi!',
     'amount' => 'Jumlah',
     'booked' => 'dipesan',
+
+    // Admin
     'total_packages' => 'Total Paket',
     'active_tours' => 'Tur Aktif',
     'no_tour_packages_yet' => 'Belum ada paket tur',
     'search_packages' => 'Cari paket...',
     'all_packages' => 'Semua Paket',
+
+    // Pagination
     'previous' => 'Sebelumnya',
     'next' => 'Selanjutnya',
     'showing' => 'Menampilkan',
     'to' => 'sampai',
     'of' => 'dari',
     'results' => 'hasil',
-    'back_to_destinations' => 'Back To Destinations',
-    'back_to_home' => 'Back To Home',
-    'back_to_tour' => 'Back To Tour',
-    'book_this_tour' => 'Book This Tour',
-    'booking_as' => 'Booking As',
-    'browse_more_tours' => 'Browse More Tours',
-    'browse_packages' => 'Browse Packages',
-    'check_back_soon_activities' => 'Check Back Soon Activities',
-    'create_account' => 'Create Account',
-    'create_account_benefits' => 'Create Account Benefits',
-    'enter_full_name' => 'Enter Full Name',
-    'enter_phone' => 'Enter Phone',
-    'enter_special_requests' => 'Enter Special Requests',
-    'i_agree_to' => 'I Agree To',
-    'no_activities_available' => 'No Activities Available',
-    'optional' => 'Optional',
-    'payment_info_desc' => 'Payment Info Desc',
-    'payment_successful' => 'Payment Successful',
-    'payment_successful_desc' => 'Payment Successful Desc',
-    'phone' => 'Phone',
-    'proceed_to_payment' => 'Proceed To Payment',
-    'special_requests' => 'Special Requests',
-    'terms_and_conditions' => 'Terms And Conditions',
-    'tour_activities_in' => 'Tour Activities In',
-    'tour_date' => 'Tour Date',
-    'tour_price' => 'Tour Price',
-
 ];

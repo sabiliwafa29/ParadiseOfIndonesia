@@ -16,6 +16,7 @@ return [
     'profile' => 'Profile',
     'logout' => 'Log Out',
     'search_placeholder' => 'Search tours, destinations...',
+
     'view_tours' => 'View Tours',
     'explore_now' => 'Explore Now',
     'slide_title1' => 'Beautiful Bali',
@@ -34,6 +35,7 @@ return [
     'slide_desc7' => 'Immerse in rich traditions and rituals',
     'slide_title8' => 'Traditional Dance and Culture',
     'slide_desc8' => 'Experience the vibrant cultural heritage',
+
     'island_paradise' => 'Island Paradise',
     'underwater_wonder' => 'Underwater Wonder',
     'ancient_heritage' => 'Ancient Heritage',
@@ -42,6 +44,7 @@ return [
     'volcanic_landscape' => 'Volcanic Landscape',
     'cultural_experience' => 'Cultural Experience',
     'living_heritage' => 'Living Heritage',
+
     'why_choose' => 'Why Choose Paradise Of Indonesia?',
     'tagline' => 'One Click, Heaven in Your Hands',
     'comfort' => 'Comfort',
@@ -56,9 +59,11 @@ return [
     'happy_desc' => 'Your happiness is our priority in every trip we organize',
     'custom' => 'Custom Package',
     'custom_desc' => 'Create your own travel package tailored to your preferences.',
+
     'best_packages_label' => 'BEST PACKAGES',
     'destinations_label' => 'DESTINATIONS',
     'featured_tours_label' => 'FEATURED TOURS',
+
     'best_packages' => 'Best Tour Packages',
     'best_packages_desc' => 'Explore the best destinations in Indonesia with us',
     'popular_destinations' => 'Popular Destinations',
@@ -68,12 +73,15 @@ return [
     'tour_activities' => 'Tour Activities',
     'tour_activities_desc' => 'Exciting activities and experiences at popular destinations',
     'destinations_in' => 'Destinations in',
+
     'view_details' => 'View Details',
     'view_all_destinations' => 'View All Destinations',
     'view_all_tours' => 'View All Tours',
     'view_all_activities' => 'View All Activities',
     'days' => 'days',
     'no_tours_available' => 'No Tours Available',
+
+    // Tour Activities
     'featured_activities' => 'Featured activities & attractions',
     'learn_more' => 'Learn More',
     'no_activities_found' => 'No tour activities found.',
@@ -88,11 +96,15 @@ return [
     'view_tour_packages' => 'View Tour Packages',
     'other_activities' => 'Other Activities',
     'view_all_destinations_highlight' => 'View All Destination Highlights',
+
+    // Travel Services
     'choose_travel_companion' => 'Choose your perfect travel companion for your journey',
     'seats' => 'seats',
     'select' => 'Select',
     'no_services_found' => 'No Travel Services Found',
     'check_back_soon' => 'Check back soon for available travel services',
+
+    // Tour Sessions
     'back_to_sessions' => 'Back to Sessions',
     'active_session' => 'Active Session',
     'session_description' => 'Session Description',
@@ -105,23 +117,28 @@ return [
     'other_available_sessions' => 'Other Available Sessions',
     'explore_upcoming_sessions' => 'Explore our upcoming tour sessions and find your perfect adventure',
     'tour_package' => 'Tour Package',
+
+    // Discover Tours
     'discover_amazing_tours' => 'Discover amazing tours across Indonesia',
     'contact_us' => 'Contact Us',
+
     'stay_updated' => 'Stay Updated!',
     'subscribe_newsletter' => 'Subscribe to our newsletter and get exclusive deals and travel tips',
     'enter_email' => 'Enter your email',
     'subscribe' => 'Subscribe',
     'privacy_notice' => 'We respect your privacy. Unsubscribe at any time.',
+
     'best_seller' => 'Best Seller',
     'starting_from' => 'Starting from',
     'sold_out' => 'Sold Out',
     'explore_destination' => 'Explore Destination',
+
     'back_to_package' => 'Back to Package',
     'back_to_tours' => 'Back to Tours',
     'about_this_tour' => 'About This Tour',
     'itinerary' => 'Itinerary',
-    'whats_included' => 'What\'s Included',
-    'whats_not_included' => 'What\'s Not Included',
+    'whats_included' => "What's Included",
+    'whats_not_included' => "What's Not Included",
     'no_facilities_info' => 'No facilities included information available.',
     'no_exclusions' => 'No exclusions listed.',
     'ready_for_adventure' => 'Ready for this adventure?',
@@ -137,6 +154,7 @@ return [
     'day' => 'Day',
     'activities' => 'Activities',
     'time' => 'Time',
+
     'tour_guide' => 'Tour Guide',
     'transport' => 'Transport',
     'no_tour_packages' => 'No tour packages found.',
@@ -152,17 +170,23 @@ return [
     'check_back_later' => 'Please check back later or contact us for more information.',
     'ready_to_book' => 'Ready to book this package?',
     'contact_us_today' => 'Contact us today and start your unforgettable journey through Indonesia',
+    'contact_us' => 'Contact Us',
     'view_more_packages' => 'View More Packages',
     'other_package_options' => 'Other Package Options',
+
+    'tour_sessions' => 'Tour Sessions',
     'no_tour_sessions' => 'No tour sessions found.',
     'date' => 'Date',
     'guests' => 'Guests',
     'associated_package' => 'Associated Package',
     'no_package_available' => 'No Package Available',
     'note' => 'Note',
+
     'tours_in' => 'Tours in',
+
     'no_images_found' => 'No images found in the gallery.',
-    'no_bookings_yet' => 'You haven\'t made any bookings yet.',
+
+    'no_bookings_yet' => "You haven't made any bookings yet.",
     'browse_tours' => 'Browse Tours',
     'confirmed' => 'Confirmed',
     'pending' => 'Pending',
@@ -184,6 +208,7 @@ return [
     'complete_your_booking' => 'Complete Your Booking',
     'tour' => 'Tour',
     'pay_now_with_midtrans' => 'Pay Now with Midtrans',
+
     'about_paradise' => 'Discover the beauty of Indonesia with our curated travel experiences. From pristine beaches to ancient temples, we bring you the best of Indonesian culture and nature.',
     'quick_links' => 'Quick Links',
     'about_us' => 'About Us',
@@ -196,9 +221,10 @@ return [
     'address_detail' => 'Jalan Gading Karya 2 No 1 Kel. Gading Kecamatan Tambaksari kota Surabaya Jawa Timur',
     'all_rights_reserved' => 'All rights reserved',
     'by_company' => 'by PT Putra Nusantara Berkilau',
+
     'admin_dashboard' => 'Dashboard',
     'admin_panel' => 'Admin Panel',
-    'welcome_back' => 'Welcome back! Here\'s what\'s happening today',
+    'welcome_back' => "Welcome back! Here's what's happening today",
     'total_tours' => 'Total Tours',
     'active' => 'active',
     'total_bookings' => 'Total Bookings',
@@ -215,13 +241,16 @@ return [
     'view_all_bookings' => 'View all bookings',
     'popular_tours' => 'Popular Tours',
     'bookings' => 'bookings',
+    'view_all_tours' => 'View all tours',
     'recent_activities' => 'Recent Activities',
     'no_recent_activities' => 'No recent activities',
+
     'manage_organize' => 'Manage and organize your tour packages',
     'new_package' => 'New Package',
     'create_new_tour' => 'Create New Tour Package',
     'fill_details' => 'Fill in the details below to create a new tour package',
     'back_to_list' => 'Back to List',
+    'tour_information' => 'Tour Package Information',
     'edit_tour' => 'Edit Tour',
     'update_details' => 'Update the details of',
     'preview' => 'Preview',
@@ -245,8 +274,8 @@ return [
     'media' => 'Media',
     'tour_image' => 'Tour Image',
     'itinerary_json' => 'Itinerary (JSON Format)',
-    'whats_included_json' => 'What\'s Included (JSON Array)',
-    'whats_not_included_json' => 'What\'s Not Included (JSON Array)',
+    'whats_included_json' => "What's Included (JSON Array)",
+    'whats_not_included_json' => "What's Not Included (JSON Array)",
     'format_json' => 'Format JSON',
     'settings' => 'Settings',
     'inactive' => 'Inactive',
@@ -277,6 +306,7 @@ return [
     'high_quality_images' => 'Use high-quality images for better presentation',
     'clear_descriptions' => 'Write clear and engaging descriptions to attract customers',
     'double_check' => 'Double-check pricing and duration information',
+
     'delete_account' => 'Delete Account',
     'delete_warning' => 'Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.',
     'are_you_sure' => 'Are you sure you want to delete your account?',
@@ -290,13 +320,15 @@ return [
     'save' => 'Save',
     'saved' => 'Saved.',
     'profile_information' => 'Profile Information',
-    'update_profile_info' => 'Update your account\'s profile information and email address.',
+    'update_profile_info' => "Update your account's profile information and email address.",
     'name' => 'Name',
     'email' => 'Email',
     'email_unverified' => 'Your email address is unverified.',
     'resend_verification' => 'Click here to re-send the verification email.',
     'verification_sent' => 'A new verification link has been sent to your email address.',
-    'youre_logged_in' => 'You\'re logged in!',
+
+    'youre_logged_in' => "You're logged in!",
+
     'book_this_package' => 'Book This Package',
     'fill_booking_details' => 'Fill in your details to complete your booking',
     'personal_information' => 'Personal Information',
@@ -325,8 +357,11 @@ return [
     'ijen_description' => 'Night trekking to witness the famous Blue Fire phenomenon and stunning sunrise at Ijen Crater',
     'tabuhan_route' => 'Tabuhan Island Snorkeling Route',
     'tabuhan_description' => 'Explore underwater paradise with snorkeling and marine activities around Tabuhan Island',
+
+    // Booking Show & Reschedule
     'reschedule_booking' => 'Reschedule Booking',
     'cancel_booking' => 'Cancel Booking',
+    'complete_payment' => 'Complete Payment',
     'booking_cancelled' => 'This booking has been cancelled',
     'current_date' => 'Current Date',
     'new_date' => 'New Date',
@@ -340,6 +375,8 @@ return [
     'people' => 'people',
     'person' => 'person',
     'rescheduled' => 'Rescheduled',
+
+    // Package Payment
     'payment_complete' => 'Payment Complete',
     'payment_pending' => 'Payment Pending',
     'booking_paid' => 'Your booking has been paid!',
@@ -357,6 +394,7 @@ return [
     'payment_token_error' => 'Payment Token Not Available',
     'payment_token_error_desc' => 'There was an error generating the payment token. Please try booking again.',
     'package' => 'Package',
+    'contact' => 'Contact',
     'thank_you_payment' => 'Thank you for your payment!',
     'confirmation_email_sent' => 'A confirmation email has been sent to',
     'thank_you' => 'Thank you for your payment!',
@@ -366,10 +404,13 @@ return [
     'browse_more_packages' => 'Browse More Packages',
     'payment_error' => 'Error',
     'payment_error_message' => 'Failed to create payment transaction. Please contact admin.',
+    'back_to_package' => 'Back to Package',
     'payment_success' => 'Payment success!',
     'payment_success_booking_paid' => 'Payment success! Your booking has been paid.',
     'payment_success_but_update_failed' => 'Payment success, but status update failed. Please contact support.',
     'payment_success_refresh' => 'Payment success! Please refresh the page.',
+
+    // Additional Info Messages
     'important_information' => 'Important Information',
     'important_info' => 'Important Information',
     'booking_linked_to_account' => 'This booking is linked to your account. You can view and manage it from',
@@ -378,55 +419,37 @@ return [
     'booking_email' => 'This booking is linked to your email',
     'register_with_email' => 'with this email to manage your bookings.',
     'with_email' => 'with this email to manage your bookings.',
+
+    // Travel Services
     'pickup_location' => 'Pickup Location',
     'search_pickup_location' => 'Search pickup location...',
+    'destination' => 'Destination',
     'search_destination' => 'Search destination...',
     'booking_type' => 'Booking Type',
     'one_way' => 'One Way',
     'round_trip' => 'Round Trip',
     'pickup_date_time' => 'Pickup Date & Time',
     'estimated_distance' => 'Estimated Distance',
+    'total_price' => 'Total Price',
     'calculating' => 'Calculating...',
     'booking' => 'Booking',
     'travel_booking_confirmed' => 'Your travel booking has been confirmed!',
     'amount' => 'Amount',
     'booked' => 'booked',
+
+    // Admin
     'total_packages' => 'Total Packages',
     'active_tours' => 'Active Tours',
     'no_tour_packages_yet' => 'No tour packages yet',
     'search_packages' => 'Search packages...',
     'all_packages' => 'All Packages',
+
+    // Pagination
     'previous' => 'Previous',
     'next' => 'Next',
     'showing' => 'Showing',
     'to' => 'to',
     'of' => 'of',
     'results' => 'results',
-    'back_to_destinations' => 'Back To Destinations',
-    'back_to_home' => 'Back To Home',
-    'back_to_tour' => 'Back To Tour',
-    'book_this_tour' => 'Book This Tour',
-    'booking_as' => 'Booking As',
-    'browse_more_tours' => 'Browse More Tours',
-    'browse_packages' => 'Browse Packages',
-    'check_back_soon_activities' => 'Check Back Soon Activities',
-    'create_account' => 'Create Account',
-    'create_account_benefits' => 'Create Account Benefits',
-    'enter_full_name' => 'Enter Full Name',
-    'enter_phone' => 'Enter Phone',
-    'enter_special_requests' => 'Enter Special Requests',
-    'i_agree_to' => 'I Agree To',
-    'no_activities_available' => 'No Activities Available',
-    'optional' => 'Optional',
-    'payment_info_desc' => 'Payment Info Desc',
-    'payment_successful' => 'Payment Successful',
-    'payment_successful_desc' => 'Payment Successful Desc',
-    'phone' => 'Phone',
-    'proceed_to_payment' => 'Proceed To Payment',
-    'special_requests' => 'Special Requests',
-    'terms_and_conditions' => 'Terms And Conditions',
-    'tour_activities_in' => 'Tour Activities In',
-    'tour_date' => 'Tour Date',
-    'tour_price' => 'Tour Price',
 
 ];
