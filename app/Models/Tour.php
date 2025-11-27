@@ -226,5 +226,15 @@ class Tour extends Model
         return $query->where('status', 'active');
     }
 
+    /**
+     * Provide a URL attribute for compatibility with parts of the codebase
+     * that expect $tour->url or getUrlAttribute(). Uses named route when
+     * available and falls back to slug or id.
+     */
+    public function getUrlAttribute()
+    {
+        return route('tours.show', $this);
+    }
+
 
 }

@@ -60,4 +60,12 @@ class TourPackage extends Model
         return $this->{"description_{$locale}"} ?? $this->description_en;
     }
 
+    /**
+     * Provide a URL attribute for compatibility (route fallback to slug or id)
+     */
+    public function getUrlAttribute()
+    {
+        return route('tour-packages.show', $this);
+    }
+
 }

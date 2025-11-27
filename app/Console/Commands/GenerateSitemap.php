@@ -61,9 +61,10 @@ class GenerateSitemap extends Command
         }
         $tourQuery->orderBy('updated_at', 'desc')->chunk(200, function ($tours) use (&$urls, $domain) {
             foreach ($tours as $tour) {
-                $path = $tour->getUrlAttribute() ?? ("tours/{$tour->id}");
+                // Use named route for tour URL
+                $loc = route('tours.show', $tour);
                 $urls[] = [
-                    'loc' => $domain . '/' . ltrim($path, '/'),
+                    'loc' => $loc,
                     'lastmod' => optional($tour->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
                 ];
             }
@@ -79,9 +80,10 @@ class GenerateSitemap extends Command
         }
         $pkgQuery->orderBy('updated_at', 'desc')->chunk(200, function ($packages) use (&$urls, $domain) {
             foreach ($packages as $pkg) {
-                $path = $pkg->getUrlAttribute() ?? ("packages/{$pkg->id}");
+                // Use named route for package URL
+                $loc = route('tour-packages.show', $pkg);
                 $urls[] = [
-                    'loc' => $domain . '/' . ltrim($path, '/'),
+                    'loc' => $loc,
                     'lastmod' => optional($pkg->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
                 ];
             }
