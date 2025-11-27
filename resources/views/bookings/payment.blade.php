@@ -76,17 +76,30 @@
                 </div>
             </div>
 
-            <!-- Payment Button or Success Message -->
+            <!-- Payment Methods -->
             @if($booking->payment_status !== 'paid')
                 @if(isset($snapToken) && $snapToken)
-                    <button id="pay-button" 
-                            class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                        {{ __('messages.pay_now') ?? 'Pay Now' }}
-                    </button>
-                    <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Midtrans Card -->
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_midtrans') ?? 'Pay with Midtrans (VA / e-wallets)' }}</h4>
+                            <p class="text-sm text-gray-600 mb-4">{{ __('messages.midtrans_desc') ?? 'Use local Indonesian payment methods (virtual accounts, e-wallets).' }}</p>
+                            <button id="pay-button" 
+                                    class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg font-bold">
+                                {{ __('messages.pay_now') ?? 'Pay Now' }}
+                            </button>
+                            <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_midtrans') ?? 'Secure payment powered by Midtrans' }}</p>
+                        </div>
+
+                        <!-- PayPal Card -->
+                        <div class="bg-white p-6 rounded-lg border">
+                            <h4 class="text-lg font-semibold mb-3">{{ __('messages.pay_with_paypal') ?? 'Pay with PayPal' }}</h4>
+                            <p class="text-sm text-gray-600 mb-4">{{ __('messages.paypal_desc') ?? 'Pay securely using PayPal (cards or PayPal balance).' }}</p>
+                            <div id="paypal-button-container" class="w-full"></div>
+                            <p class="text-center text-sm text-gray-500 mt-3">{{ __('messages.powered_by_paypal') ?? 'Secure payment powered by PayPal' }}</p>
+                        </div>
+                    </div>
+                    <div class="mt-4"></div>
                 @else
                     <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-lg mb-4">
                         <div class="flex items-start">
@@ -274,3 +287,77 @@
         onload="window.initializeMidtrans()"></script>
 @endpush
 @endif
+
+@push('scripts')
+@if(config('services.paypal.client_id'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const bookingId = {{ $booking->id }};
+        const currency = '{{ \App\Helpers\LanguageHelper::getCurrentCurrency() }}';
+        const clientId = '{{ config('services.paypal.client_id') }}';
+
+        // Load PayPal SDK dynamically to avoid race conditions / CSP timing issues
+        const paypalSrc = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}`;
+        const script = document.createElement('script');
+        script.src = paypalSrc;
+        script.async = true;
+
+        script.onload = function() {
+            if (typeof paypal === 'undefined') {
+                console.error('PayPal SDK loaded but `paypal` is undefined');
+                return;
+            }
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return fetch('/api/paypal/' + bookingId + '/create-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ currency: currency })
+                    }).then(function(res) {
+                        return res.json();
+                    }).then(function(orderData) {
+                        if (!orderData || !orderData.id) {
+                            throw new Error('Failed to create PayPal order');
+                        }
+                        return orderData.id;
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return fetch('/api/paypal/' + bookingId + '/capture-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ orderID: data.orderID })
+                    }).then(function(res) { return res.json(); })
+                    .then(function(captureData) {
+                        console.log('PayPal capture:', captureData);
+                        window.location.reload();
+                    }).catch(function(err) {
+                        console.error('Capture error', err);
+                        alert('Payment failed, please try again.');
+                    });
+                },
+                onError: function(err) {
+                    console.error('PayPal error', err);
+                    alert('Payment failed, please try again.');
+                }
+            }).render('#paypal-button-container');
+        };
+
+        script.onerror = function(e) {
+            console.error('Failed to load PayPal SDK', e);
+        };
+
+        document.head.appendChild(script);
+    });
+</script>
+@endif
+@endpush
