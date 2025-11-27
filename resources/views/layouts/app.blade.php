@@ -59,9 +59,20 @@
             }
         </script>
 
-    <!-- Fonts (gunakan font sistem untuk menghindari CSP external styles) -->
-    {{-- <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
+    <!-- Performance: preconnect & preload hints. Pages can push additional hints to the `preload` stack -->
+    @php
+        // Determine an asset host to preconnect to (ASSET_URL or APP_URL)
+        $assetUrl = config('app.asset_url') ?: env('ASSET_URL') ?: config('app.url');
+        $assetUrl = $assetUrl ? rtrim($assetUrl, '/') : null;
+    @endphp
+    @if($assetUrl)
+        <link rel="preconnect" href="{{ $assetUrl }}" crossorigin>
+    @endif
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    @stack('preload') {{-- allow pages to @push('preload') their critical assets (fonts/images) --}}
+    <!-- Fonts (prefer system fonts to avoid external CSS where possible) -->
 
         <!-- Alpine.js x-cloak fix -->
         <style>
