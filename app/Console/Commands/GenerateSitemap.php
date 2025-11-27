@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Tour;
 use App\Models\TourPackage;
 use Carbon\Carbon;
@@ -50,21 +51,37 @@ class GenerateSitemap extends Command
             'lastmod' => Carbon::now()->toAtomString(),
         ];
 
-        // Tours
-        Tour::where('is_published', true)->orderBy('updated_at', 'desc')->chunk(200, function ($tours) use (&$urls, $domain) {
+        // Tours - check if `is_published` column exists to avoid SQL errors on older schemas.
+        $tourTable = (new Tour)->getTable();
+        $tourQuery = Tour::query();
+        if (Schema::hasColumn($tourTable, 'is_published')) {
+            $tourQuery->where('is_published', true);
+        } elseif (Schema::hasColumn($tourTable, 'published')) {
+            $tourQuery->where('published', true);
+        }
+        $tourQuery->orderBy('updated_at', 'desc')->chunk(200, function ($tours) use (&$urls, $domain) {
             foreach ($tours as $tour) {
+                $path = $tour->getUrlAttribute() ?? ("tours/{$tour->id}");
                 $urls[] = [
-                    'loc' => $domain . '/' . ltrim($tour->getUrlAttribute() ?? ("tours/{$tour->id}"), '/'),
+                    'loc' => $domain . '/' . ltrim($path, '/'),
                     'lastmod' => optional($tour->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
                 ];
             }
         });
 
-        // TourPackages
-        TourPackage::where('is_published', true)->orderBy('updated_at', 'desc')->chunk(200, function ($packages) use (&$urls, $domain) {
+        // TourPackages - similar schema-safe check
+        $pkgTable = (new TourPackage)->getTable();
+        $pkgQuery = TourPackage::query();
+        if (Schema::hasColumn($pkgTable, 'is_published')) {
+            $pkgQuery->where('is_published', true);
+        } elseif (Schema::hasColumn($pkgTable, 'published')) {
+            $pkgQuery->where('published', true);
+        }
+        $pkgQuery->orderBy('updated_at', 'desc')->chunk(200, function ($packages) use (&$urls, $domain) {
             foreach ($packages as $pkg) {
+                $path = $pkg->getUrlAttribute() ?? ("packages/{$pkg->id}");
                 $urls[] = [
-                    'loc' => $domain . '/' . ltrim($pkg->getUrlAttribute() ?? ("packages/{$pkg->id}"), '/'),
+                    'loc' => $domain . '/' . ltrim($path, '/'),
                     'lastmod' => optional($pkg->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
                 ];
             }
