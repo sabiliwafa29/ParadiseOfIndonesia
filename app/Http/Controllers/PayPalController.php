@@ -35,8 +35,17 @@ class PayPalController extends Controller
 
         if (!$result) {
             $detail = $this->payPalService->getLastError();
+            $debugId = $this->payPalService->getLastDebugId();
+            $infoLink = $this->payPalService->getLastInfoLink();
             $safeDetail = $detail ? (is_string($detail) ? substr($detail, 0, 1000) : json_encode($detail)) : 'Unknown error from PayPal service';
-            return response()->json(['error' => 'Failed to create PayPal order', 'details' => $safeDetail], 500);
+            $payload = ['error' => 'Failed to create PayPal order', 'details' => $safeDetail];
+            if ($debugId) {
+                $payload['debug_id'] = $debugId;
+            }
+            if ($infoLink) {
+                $payload['info_link'] = $infoLink;
+            }
+            return response()->json($payload, 500);
         }
 
         return response()->json($result);
@@ -63,8 +72,17 @@ class PayPalController extends Controller
 
         if (!$capture) {
             $detail = $this->payPalService->getLastError();
+            $debugId = $this->payPalService->getLastDebugId();
+            $infoLink = $this->payPalService->getLastInfoLink();
             $safeDetail = $detail ? (is_string($detail) ? substr($detail, 0, 1000) : json_encode($detail)) : 'Unknown error from PayPal service';
-            return response()->json(['error' => 'Failed to capture PayPal order', 'details' => $safeDetail], 500);
+            $payload = ['error' => 'Failed to capture PayPal order', 'details' => $safeDetail];
+            if ($debugId) {
+                $payload['debug_id'] = $debugId;
+            }
+            if ($infoLink) {
+                $payload['info_link'] = $infoLink;
+            }
+            return response()->json($payload, 500);
         }
 
         // Update booking payment status - minimal: mark paid

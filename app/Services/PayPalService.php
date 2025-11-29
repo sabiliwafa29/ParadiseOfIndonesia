@@ -12,6 +12,8 @@ class PayPalService
     protected $isProduction;
     protected $baseUrl;
     protected $lastError;
+    protected $lastDebugId;
+    protected $lastInfoLink;
 
     public function __construct()
     {
@@ -47,8 +49,20 @@ class PayPalService
 
                 if (is_array($body)) {
                     $this->lastError = $body['error_description'] ?? $body['message'] ?? json_encode($body);
+                    $this->lastDebugId = $body['debug_id'] ?? null;
+                    // Extract info link if provided
+                    if (!empty($body['links']) && is_array($body['links'])) {
+                        foreach ($body['links'] as $link) {
+                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
+                                $this->lastInfoLink = $link['href'] ?? null;
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     $this->lastError = $response->body();
+                    $this->lastDebugId = null;
+                    $this->lastInfoLink = null;
                 }
 
                 return null;
@@ -108,8 +122,19 @@ class PayPalService
 
                 if (is_array($body)) {
                     $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
+                    $this->lastDebugId = $body['debug_id'] ?? null;
+                    if (!empty($body['links']) && is_array($body['links'])) {
+                        foreach ($body['links'] as $link) {
+                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
+                                $this->lastInfoLink = $link['href'] ?? null;
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     $this->lastError = $response->body();
+                    $this->lastDebugId = null;
+                    $this->lastInfoLink = null;
                 }
 
                 return null;
@@ -146,8 +171,19 @@ class PayPalService
 
                 if (is_array($body)) {
                     $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
+                    $this->lastDebugId = $body['debug_id'] ?? null;
+                    if (!empty($body['links']) && is_array($body['links'])) {
+                        foreach ($body['links'] as $link) {
+                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
+                                $this->lastInfoLink = $link['href'] ?? null;
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     $this->lastError = $response->body();
+                    $this->lastDebugId = null;
+                    $this->lastInfoLink = null;
                 }
 
                 return null;
@@ -158,6 +194,8 @@ class PayPalService
         } catch (\Exception $e) {
             Log::error('❌ [PAYPAL] Capture order exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $this->lastError = $e->getMessage();
+            $this->lastDebugId = null;
+            $this->lastInfoLink = null;
             return null;
         }
     }
@@ -170,5 +208,25 @@ class PayPalService
     public function getLastError()
     {
         return $this->lastError;
+    }
+
+    /**
+     * Get PayPal debug id returned from PayPal responses (if any)
+     *
+     * @return string|null
+     */
+    public function getLastDebugId()
+    {
+        return $this->lastDebugId;
+    }
+
+    /**
+     * Get PayPal information link from last response (if provided)
+     *
+     * @return string|null
+     */
+    public function getLastInfoLink()
+    {
+        return $this->lastInfoLink;
     }
 }
