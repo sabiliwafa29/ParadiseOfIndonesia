@@ -45,6 +45,8 @@ class SecurityHeaders
             'magnetometer=()',
             'gyroscope=()',
             'accelerometer=()',
+            // Allow unload only for same-origin (needed by some payment SDKs like PayPal)
+            'unload=(self)',
         ]));
 
         // Content-Security-Policy
