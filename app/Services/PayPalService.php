@@ -11,6 +11,7 @@ class PayPalService
     protected $secret;
     protected $isProduction;
     protected $baseUrl;
+    protected $lastError;
 
     public function __construct()
     {
@@ -36,12 +37,28 @@ class PayPalService
 
             if ($response->failed()) {
                 Log::error('❌ [PAYPAL] Token request failed', ['status' => $response->status(), 'body' => $response->body()]);
+                // Try to extract a friendly message from the response
+                $body = null;
+                try {
+                    $body = $response->json();
+                } catch (\Exception $e) {
+                    $body = null;
+                }
+
+                if (is_array($body)) {
+                    $this->lastError = $body['error_description'] ?? $body['message'] ?? json_encode($body);
+                } else {
+                    $this->lastError = $response->body();
+                }
+
                 return null;
             }
 
+            $this->lastError = null;
             return $response->json('access_token');
         } catch (\Exception $e) {
             Log::error('❌ [PAYPAL] Token exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            $this->lastError = $e->getMessage();
             return null;
         }
     }
@@ -81,12 +98,28 @@ class PayPalService
 
             if ($response->failed()) {
                 Log::error('❌ [PAYPAL] Create order failed', ['status' => $response->status(), 'body' => $response->body(), 'booking_id' => $booking->id]);
+
+                // Extract friendly error message
+                try {
+                    $body = $response->json();
+                } catch (\Exception $e) {
+                    $body = null;
+                }
+
+                if (is_array($body)) {
+                    $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
+                } else {
+                    $this->lastError = $response->body();
+                }
+
                 return null;
             }
 
+            $this->lastError = null;
             return $response->json();
         } catch (\Exception $e) {
             Log::error('❌ [PAYPAL] Create order exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            $this->lastError = $e->getMessage();
             return null;
         }
     }
@@ -104,13 +137,38 @@ class PayPalService
 
             if ($response->failed()) {
                 Log::error('❌ [PAYPAL] Capture order failed', ['status' => $response->status(), 'body' => $response->body(), 'order_id' => $orderId]);
+
+                try {
+                    $body = $response->json();
+                } catch (\Exception $e) {
+                    $body = null;
+                }
+
+                if (is_array($body)) {
+                    $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
+                } else {
+                    $this->lastError = $response->body();
+                }
+
                 return null;
             }
 
+            $this->lastError = null;
             return $response->json();
         } catch (\Exception $e) {
             Log::error('❌ [PAYPAL] Capture order exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            $this->lastError = $e->getMessage();
             return null;
         }
+    }
+
+    /**
+     * Get last friendly error message for debugging (do not expose secrets)
+     *
+     * @return string|null
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 }

@@ -34,7 +34,9 @@ class PayPalController extends Controller
         $result = $this->payPalService->createOrder($booking, $currency);
 
         if (!$result) {
-            return response()->json(['error' => 'Failed to create PayPal order'], 500);
+            $detail = $this->payPalService->getLastError();
+            $safeDetail = $detail ? (is_string($detail) ? substr($detail, 0, 1000) : json_encode($detail)) : 'Unknown error from PayPal service';
+            return response()->json(['error' => 'Failed to create PayPal order', 'details' => $safeDetail], 500);
         }
 
         return response()->json($result);
@@ -60,7 +62,9 @@ class PayPalController extends Controller
         $capture = $this->payPalService->captureOrder($orderId);
 
         if (!$capture) {
-            return response()->json(['error' => 'Failed to capture PayPal order'], 500);
+            $detail = $this->payPalService->getLastError();
+            $safeDetail = $detail ? (is_string($detail) ? substr($detail, 0, 1000) : json_encode($detail)) : 'Unknown error from PayPal service';
+            return response()->json(['error' => 'Failed to capture PayPal order', 'details' => $safeDetail], 500);
         }
 
         // Update booking payment status - minimal: mark paid

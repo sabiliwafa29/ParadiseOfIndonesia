@@ -311,6 +311,7 @@
                 createOrder: function(data, actions) {
                     return fetch('/api/paypal/' + bookingId + '/create-order', {
                         method: 'POST',
+                        credentials: 'same-origin',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
@@ -318,6 +319,16 @@
                         },
                         body: JSON.stringify({ currency: currency })
                     }).then(function(res) {
+                        // If server returned non-2xx, try to parse JSON error message
+                        if (!res.ok) {
+                            return res.json().then(function(err) {
+                                var message = (err && err.error) ? err.error : ('HTTP ' + res.status);
+                                throw new Error(message);
+                            }).catch(function() {
+                                throw new Error('Failed to create PayPal order');
+                            });
+                        }
+
                         return res.json();
                     }).then(function(orderData) {
                         if (!orderData || !orderData.id) {
@@ -329,19 +340,30 @@
                     onApprove: function(data, actions) {
                     return fetch('/api/paypal/' + bookingId + '/capture-order', {
                         method: 'POST',
+                        credentials: 'same-origin',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         },
                         body: JSON.stringify({ orderID: data.orderID })
-                    }).then(function(res) { return res.json(); })
+                    }).then(function(res) { 
+                        if (!res.ok) {
+                            return res.json().then(function(err) {
+                                throw new Error((err && err.error) ? err.error : ('HTTP ' + res.status));
+                            }).catch(function() {
+                                throw new Error('Failed to capture PayPal order');
+                            });
+                        }
+
+                        return res.json();
+                    })
                     .then(function(captureData) {
                         // Successful capture: refresh to show updated status
                         window.location.reload();
                     }).catch(function(err) {
                         // Notify user on failure
-                        alert('Payment failed, please try again.');
+                        alert('Payment failed: ' + (err && err.message ? err.message : 'please try again.'));
                     });
                 },
                 onError: function(err) {
