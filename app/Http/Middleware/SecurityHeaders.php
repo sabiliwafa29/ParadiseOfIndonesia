@@ -115,7 +115,7 @@ class SecurityHeaders
 
         // Add Midtrans domains for payment integration
         $scriptSrcs[] = 'https://app.midtrans.com';
-        $scriptSrcs[] = 'https://app.sandbox.midtrans.com';
+        $scriptSrcs[] = 'https://app.midtrans.com';
     // PayPal SDK and assets
     $scriptSrcs[] = 'https://www.paypal.com';
     $scriptSrcs[] = 'https://www.paypal.com/sdk/js';
@@ -123,12 +123,12 @@ class SecurityHeaders
         $connectSrcs[] = 'https://api.midtrans.com';
         $connectSrcs[] = 'https://api.sandbox.midtrans.com';
         $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
-        $connectSrcs[] = 'https://app.sandbox.midtrans.com'; // For source maps
+        $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
     // PayPal API endpoints
     $connectSrcs[] = 'https://api-m.paypal.com';
     $connectSrcs[] = 'https://api-m.sandbox.paypal.com';
         $formActions[] = 'https://app.midtrans.com';
-        $formActions[] = 'https://app.sandbox.midtrans.com';
+        $formActions[] = 'https://app.midtrans.com';
         $formActions[] = 'https://api.midtrans.com';
         
         // OSRM for routing
@@ -138,7 +138,7 @@ class SecurityHeaders
         $scriptSrcs[] = 'https://unpkg.com';
 
         // Ensure PayPal frame/connect domains are allowed (sandbox + production)
-        $frameSrcs = ["'self'", 'https://app.midtrans.com', 'https://app.sandbox.midtrans.com'];
+        $frameSrcs = ["'self'", 'https://app.midtrans.com', 'https://app.midtrans.com'];
         // PayPal frames (both www and non-www hosts, sandbox and prod)
         $frameSrcs[] = 'https://www.sandbox.paypal.com';
         $frameSrcs[] = 'https://sandbox.paypal.com';
@@ -155,6 +155,15 @@ class SecurityHeaders
         if (!in_array('https://www.paypal.com', $connectSrcs)) {
             $connectSrcs[] = 'https://www.paypal.com';
         }
+
+        // Deduplicate all source lists to avoid repeated hosts in the final CSP
+        $scriptSrcs = array_values(array_unique($scriptSrcs));
+        $styleSrcs = array_values(array_unique($styleSrcs));
+        $imgSrcs = array_values(array_unique($imgSrcs));
+        $fontSrcs = array_values(array_unique($fontSrcs));
+        $connectSrcs = array_values(array_unique($connectSrcs));
+        $formActions = array_values(array_unique($formActions));
+        $frameSrcs = array_values(array_unique($frameSrcs));
 
         return implode('; ', [
             'default-src ' . implode(' ', ["'self'"]),

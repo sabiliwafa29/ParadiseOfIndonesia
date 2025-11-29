@@ -276,7 +276,7 @@
 @if($booking->status === 'pending' && $snapToken)
 @push('scripts')
 <script type="text/javascript"
-        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        src="https://app.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
     const payButton = document.querySelector('#pay-button');

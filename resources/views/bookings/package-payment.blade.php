@@ -268,7 +268,7 @@
 
 <!-- Load Midtrans Snap.js -->
 <script type="text/javascript"
-        src="https://app.sandbox.midtrans.com/snap/snap.js"
+        src="https://app.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.client_key') }}"
         onload="window.initializeMidtrans()"></script>
     @endpush
