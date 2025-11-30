@@ -192,6 +192,7 @@
                             @endif
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Guide</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Transport</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Min Guests</th>
                             <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -306,6 +307,9 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="text-sm font-medium text-gray-800">{{ $package->min_guests ?? 1 }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('admin.tour-packages.edit', $package) }}" 
                                        class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors font-medium text-sm">
@@ -393,6 +397,12 @@
                                 <span class="text-lg font-bold text-blue-600">$ {{ number_format($package->price_usd, 2, '.', ',') }}</span>
                                 <span class="text-lg font-bold text-red-600">¥ {{ number_format($package->price_cny, 2, '.', ',') }}</span>
                             </div>
+                        </div>
+
+                        <!-- Minimal Guests (mobile card) -->
+                        <div class="flex items-center justify-between pt-2">
+                            <span class="text-sm text-gray-600">Minimal Guest</span>
+                            <span class="text-sm font-medium text-gray-800">{{ $package->min_guests ?? 1 }}</span>
                         </div>
 
                         <!-- Includes -->
