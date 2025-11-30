@@ -34,6 +34,7 @@ class Tour extends Model
         'target_market',
         'exchange_rate_idr',
         'exchange_rate_cny',
+        'min_guests',
     ];
 
     protected $casts = [
@@ -44,6 +45,7 @@ class Tour extends Model
         'price_usd' => 'decimal:2',
         'price_idr' => 'decimal:2',
         'price_cny' => 'decimal:2',
+        'min_guests' => 'integer',
         'image_derivatives' => 'json',
     ];
 

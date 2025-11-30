@@ -78,6 +78,7 @@ class TourController extends Controller
             'itinerary' => 'nullable|string',
             'includes' => 'nullable|string',
             'excludes' => 'nullable|string',
+            'min_guests' => 'nullable|integer|min:1',
             'featured' => 'nullable|boolean',
         ]);
 
@@ -91,6 +92,7 @@ class TourController extends Controller
         $data['target_market'] = 'both';
         $data['exchange_rate_idr'] = 15000;
         $data['exchange_rate_cny'] = 6.5;
+        $data['min_guests'] = (int) $request->input('min_guests', 1);
 
         // Convert text to array for itinerary, includes, excludes
         if (!empty($data['itinerary'])) {
@@ -175,12 +177,14 @@ class TourController extends Controller
             'price_cny' => 'nullable|numeric|min:0',
             'exchange_rate_idr' => 'nullable|numeric|min:0',
             'exchange_rate_cny' => 'nullable|numeric|min:0',
+            'min_guests' => 'nullable|integer|min:1',
         ]);
 
         // Set values
         $data['featured'] = $request->has('featured') ? true : false;
         $data['status'] = $request->input('status', 'active');
         $data['target_market'] = $request->input('target_market', 'both');
+        $data['min_guests'] = (int) $request->input('min_guests', $tour->min_guests ?? 1);
         
         // Keep existing exchange rates if not provided
         if (!isset($data['exchange_rate_idr'])) {

@@ -56,6 +56,7 @@ class TourPackageController extends Controller
             'itinerary.*.description_zh' => 'required|string',
             'tours' => 'nullable|array',
             'tours.*' => 'exists:tours,id',
+            'min_guests' => 'nullable|integer|min:1',
         ]);
 
         // Require at least one price field
@@ -66,6 +67,9 @@ class TourPackageController extends Controller
         // Handle checkbox
         $validated['includes_guide'] = $request->has('includes_guide');
         $validated['includes_transport'] = $request->has('includes_transport');
+
+        // Default min_guests
+        $validated['min_guests'] = (int) $request->input('min_guests', 1);
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -134,11 +138,15 @@ class TourPackageController extends Controller
             'itinerary.*.description_zh' => 'required|string',
             'tours' => 'nullable|array',
             'tours.*' => 'exists:tours,id',
+            'min_guests' => 'nullable|integer|min:1',
         ]);
 
         // Handle checkbox yang tidak dicentang (tidak ada di request)
         $validated['includes_guide'] = $request->has('includes_guide');
         $validated['includes_transport'] = $request->has('includes_transport');
+
+        // Default min_guests when updating
+        $validated['min_guests'] = (int) $request->input('min_guests', $tourPackage->min_guests ?? 1);
 
         // Handle image upload
         if ($request->hasFile('image')) {

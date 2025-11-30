@@ -27,6 +27,7 @@ class TourPackage extends Model
         'includes_guide',
         'includes_transport',
         'itinerary',
+        'min_guests',
     ];
 
     protected $casts = [
@@ -37,6 +38,7 @@ class TourPackage extends Model
         'price_cny' => 'decimal:2',
         'includes_guide' => 'boolean',
         'includes_transport' => 'boolean',
+        'min_guests' => 'integer',
     ];
 
     /**

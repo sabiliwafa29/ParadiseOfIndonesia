@@ -186,6 +186,30 @@
                 @enderror
             </div>
 
+            {{-- Minimal Guests --}}
+            <div class="form-group">
+                <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l4-10 4 10M12 3v4"/>
+                    </svg>
+                    Minimal Guest <span class="text-red-500">*</span>
+                </label>
+                <input type="number"
+                       name="min_guests"
+                       value="{{ old('min_guests', $tour->min_guests ?? 1) }}"
+                       class="block w-full px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('min_guests') border-red-500 bg-red-50 @else border-gray-300 @enderror"
+                       min="1"
+                       required>
+                @error('min_guests')
+                    <p class="mt-2 text-sm text-red-600 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
             {{-- Destination --}}
             <div class="form-group">
                 <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
