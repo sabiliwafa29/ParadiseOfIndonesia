@@ -40,12 +40,14 @@
             @endif
         </div>
 
-        <form action="{{ route('admin.destinations.update', $destination) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-3">
+                <form action="{{ route('admin.destinations.update', $destination) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-            {{-- Basic Information Section --}}
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+                    {{-- Basic Information Section --}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
                 <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4">
                     <h2 class="text-xl font-bold text-white flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,24 +323,39 @@
                 </div>
             </div>
 
-            {{-- Action Buttons --}}
-            <div class="flex items-center justify-between bg-white rounded-xl shadow-lg p-6">
-                <a href="{{ route('admin.destinations.index') }}" 
-                   class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                    Cancel
-                </a>
-                <button type="submit" 
-                        class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    Update Destination
-                </button>
+                    {{-- Action Buttons --}}
+                    <div class="flex items-center justify-between bg-white rounded-xl shadow-lg p-6">
+                        <a href="{{ route('admin.destinations.index') }}" class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Cancel
+                        </a>
+                        <button type="submit" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Update Destination
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+
+            <aside class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-4 bg-emerald-600 text-white">
+                        <h4 class="font-semibold">Quick Info</h4>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div class="flex items-center justify-between"><span class="text-sm text-gray-600">Created</span><span class="text-sm font-medium text-gray-800">{{ $destination->created_at ? $destination->created_at->format('M d, Y') : '-' }}</span></div>
+                        <div class="flex items-center justify-between"><span class="text-sm text-gray-600">Updated</span><span class="text-sm font-medium text-gray-800">{{ $destination->updated_at ? $destination->updated_at->format('M d, Y') : '-' }}</span></div>
+                        <div class="pt-2">
+                            <form action="{{ route('admin.destinations.destroy', $destination) }}" method="POST" onsubmit="return confirm('Delete this destination?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full px-4 py-2 bg-red-50 text-red-700 rounded-md">Delete Destination</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
     </div>
 </div>
 
