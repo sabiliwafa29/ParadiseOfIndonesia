@@ -208,6 +208,17 @@
                         @enderror
                     </div>
 
+                    <!-- Minimal Guests -->
+                    <div>
+                        <label for="min_guests" class="block text-sm font-semibold text-gray-700 mb-2">Minimal Guest <span class="text-red-500">*</span></label>
+                        <input type="number" name="min_guests" id="min_guests" value="{{ old('min_guests', 1) }}" required min="1"
+                               class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('min_guests') border-red-500 @enderror"
+                               placeholder="1">
+                        @error('min_guests')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Features -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Fasilitas Termasuk</label>

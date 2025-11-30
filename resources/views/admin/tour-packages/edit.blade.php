@@ -54,6 +54,17 @@
                             <div class="relative">
                                 <span class="absolute left-3 top-3 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">IDR</span>
                                 <input type="hidden" name="price_idr" id="price_idr" value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}">
+
+                    <!-- Minimal Guests -->
+                    <div>
+                        <label for="min_guests" class="block text-sm font-semibold text-gray-700 mb-2">Minimal Guest <span class="text-red-500">*</span></label>
+                        <input type="number" name="min_guests" id="min_guests" value="{{ old('min_guests', $tourPackage->min_guests ?? 1) }}" required min="1"
+                               class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('min_guests') border-red-500 @enderror"
+                               placeholder="1">
+                        @error('min_guests')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                                 <input type="text" id="price_idr_display" autocomplete="off"
                                        value="{{ old('price_idr', $tourPackage->price_idr ?? '') ? number_format(old('price_idr', $tourPackage->price_idr ?? 0), 0, ',', '.') : '' }}"
                                        class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent @error('price_idr') border-red-500 @enderror"
