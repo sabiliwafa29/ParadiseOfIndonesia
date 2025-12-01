@@ -428,5 +428,10 @@ return [
     'tour_activities_in' => 'Tour Activities In',
     'tour_date' => 'Tour Date',
     'tour_price' => 'Tour Price',
+    'tour_details' => 'Tour Details',
+    'min_guests' => 'Min. Guests',
+    'persons' => 'persons',
+    'min_guests_required' => 'Minimum :min guests required',
+    'contact' => 'WhatsApp / WeChat / Telegram',
 
 ];

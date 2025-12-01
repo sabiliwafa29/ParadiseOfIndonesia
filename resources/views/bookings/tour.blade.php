@@ -353,28 +353,6 @@
                             </div>
                         </div>
 
-                        <!-- Terms and Conditions -->
-                        <div class="pt-4">
-                            <label class="flex items-start cursor-pointer group">
-                                <input type="checkbox" 
-                                       name="terms" 
-                                       required
-                                       class="mt-1 w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 cursor-pointer">
-                                <span class="ml-3 text-sm text-gray-700 group-hover:text-gray-900 transition">
-                                    {{ __('messages.i_agree_to') ?? 'I agree to the' }} 
-                                    <a href="#" class="text-emerald-600 hover:text-emerald-700 font-semibold underline">{{ __('messages.terms_and_conditions') ?? 'Terms and Conditions' }}</a>
-                                </span>
-                            </label>
-                            @error('terms')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
                         <!-- Submit Buttons -->
                         <div class="flex flex-col sm:flex-row gap-4 pt-6">
                             <button type="button"
