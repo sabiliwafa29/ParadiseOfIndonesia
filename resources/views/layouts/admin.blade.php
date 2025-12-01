@@ -249,16 +249,12 @@
                 
                 if (sidebarOpen) {
                     // Show sidebar
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebar.classList.add('translate-x-0');
-                    mainContent.classList.add('ml-64');
-                    mainContent.classList.remove('ml-0');
+                    sidebar.style.transform = 'translateX(0)';
+                    mainContent.style.marginLeft = '16rem'; // 256px = w-64
                 } else {
                     // Hide sidebar completely
-                    sidebar.classList.add('-translate-x-full');
-                    sidebar.classList.remove('translate-x-0');
-                    mainContent.classList.remove('ml-64');
-                    mainContent.classList.add('ml-0');
+                    sidebar.style.transform = 'translateX(-100%)';
+                    mainContent.style.marginLeft = '0';
                 }
             }
             
