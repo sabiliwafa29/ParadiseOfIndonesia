@@ -147,6 +147,13 @@ Route::middleware('auth')->group(function () {
         
     // Tour Session Management
     Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
+    
+    // Settings Management
+    Route::get('settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::delete('settings/bookings', [App\Http\Controllers\Admin\SettingsController::class, 'deleteBookings'])->name('settings.delete-bookings');
+    Route::put('settings/display', [App\Http\Controllers\Admin\SettingsController::class, 'updateDisplay'])->name('settings.update-display');
+    Route::post('settings/clear-cache', [App\Http\Controllers\Admin\SettingsController::class, 'clearCache'])->name('settings.clear-cache');
+    Route::get('settings/bookings', [App\Http\Controllers\Admin\SettingsController::class, 'getBookings'])->name('settings.get-bookings');
     });
 });
 
