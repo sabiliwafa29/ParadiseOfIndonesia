@@ -12,8 +12,8 @@
                     <p class="text-gray-600 mt-1">Track and manage all customer bookings</p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" 
+                    <div class="relative" id="exportDropdownContainer">
+                        <button id="exportDropdownBtn"
                                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
                             <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -25,16 +25,8 @@
                         </button>
                         
                         {{-- Dropdown Menu --}}
-                        <div x-show="open" 
-                             @click.away="open = false"
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="transform opacity-0 scale-95"
-                             x-transition:enter-end="transform opacity-100 scale-100"
-                             x-transition:leave="transition ease-in duration-75"
-                             x-transition:leave-start="transform opacity-100 scale-100"
-                             x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
-                             x-cloak>
+                        <div id="exportDropdown"
+                             class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 hidden opacity-0 transition-all duration-200">
                             <div class="py-2">
                                 <div class="px-4 py-2 border-b border-gray-100">
                                     <p class="text-xs font-semibold text-gray-500 uppercase">Export Report</p>
@@ -390,3 +382,59 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Export Dropdown
+        const exportBtn = document.getElementById('exportDropdownBtn');
+        const exportDropdown = document.getElementById('exportDropdown');
+        const exportContainer = document.getElementById('exportDropdownContainer');
+        let exportOpen = false;
+
+        function toggleExportDropdown() {
+            exportOpen = !exportOpen;
+            if (exportOpen) {
+                exportDropdown.classList.remove('hidden', 'opacity-0');
+                exportDropdown.classList.add('opacity-100');
+            } else {
+                exportDropdown.classList.add('opacity-0');
+                setTimeout(() => {
+                    exportDropdown.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        function closeExportDropdown() {
+            if (exportOpen) {
+                exportOpen = false;
+                exportDropdown.classList.add('opacity-0');
+                setTimeout(() => {
+                    exportDropdown.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleExportDropdown();
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (exportContainer && !exportContainer.contains(e.target)) {
+                closeExportDropdown();
+            }
+        });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeExportDropdown();
+            }
+        });
+    });
+</script>
+@endpush
