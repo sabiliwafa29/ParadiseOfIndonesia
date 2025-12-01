@@ -20,7 +20,7 @@
         
         {{-- Sidebar --}}
         <aside id="sidebar"
-            class="bg-white shadow-lg fixed h-full overflow-y-auto transition-all duration-300 z-50 w-64">
+            class="bg-white shadow-lg fixed h-full overflow-y-auto transition-all duration-300 z-50 w-64 transform translate-x-0">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center space-x-3">
                     <div class="bg-emerald-600 rounded-lg p-2 flex-shrink-0">
@@ -250,11 +250,13 @@
                 if (sidebarOpen) {
                     // Show sidebar
                     sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
                     mainContent.classList.add('ml-64');
                     mainContent.classList.remove('ml-0');
                 } else {
                     // Hide sidebar completely
                     sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
                     mainContent.classList.remove('ml-64');
                     mainContent.classList.add('ml-0');
                 }

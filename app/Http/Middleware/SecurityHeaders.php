@@ -17,29 +17,35 @@ class SecurityHeaders
     {
         $response = $next($request);
 
+        // Skip adding security headers for StreamedResponse (file downloads, exports)
+        // StreamedResponse doesn't support the header() method the same way
+        if ($response instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
+            return $response;
+        }
+
         // HSTS (HTTP Strict-Transport-Security)
         // Instructs browsers to always use HTTPS for this domain
-        $response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+        $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
         // X-Content-Type-Options
         // Prevents MIME type sniffing attacks
-        $response->header('X-Content-Type-Options', 'nosniff');
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
 
         // X-Frame-Options
         // Prevents clickjacking attacks
-        $response->header('X-Frame-Options', 'SAMEORIGIN');
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
 
         // X-XSS-Protection
         // Legacy XSS protection header (modern browsers use CSP)
-        $response->header('X-XSS-Protection', '1; mode=block');
+        $response->headers->set('X-XSS-Protection', '1; mode=block');
 
         // Referrer-Policy
         // Controls how much referrer information is shared
-        $response->header('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
         // Permissions-Policy (formerly Feature-Policy)
         // Controls which browser features and APIs can be used
-        $response->header('Permissions-Policy', implode(', ', [
+        $response->headers->set('Permissions-Policy', implode(', ', [
             'geolocation=()' . (config('app.env') === 'production' ? '' : ', camera=(), microphone=()'),
             'usb=()',
             'magnetometer=()',
@@ -52,11 +58,11 @@ class SecurityHeaders
         // Content-Security-Policy
         // Comprehensive CSP to prevent XSS, injection, and other attacks
         $csp = $this->getContentSecurityPolicy($request);
-        $response->header('Content-Security-Policy', $csp);
+        $response->headers->set('Content-Security-Policy', $csp);
 
         // Additional hardening for API responses
-        $response->header('X-Powered-By', ''); // Remove server info disclosure
-        $response->header('Server', ''); // Remove server info disclosure
+        $response->headers->set('X-Powered-By', ''); // Remove server info disclosure
+        $response->headers->set('Server', ''); // Remove server info disclosure
 
         return $response;
     }
