@@ -237,16 +237,22 @@
                                     <label for="guests" class="block text-sm font-medium text-gray-700 mb-2">
                                         {{ __('messages.number_of_guests') ?? 'Number of Guests' }} <span class="text-red-500">*</span>
                                     </label>
+                                    @php
+                                        $minGuests = $package->min_guests ?? 1;
+                                    @endphp
                                     <select id="guests" 
                                             name="guests"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition @error('guests') border-red-500 @enderror"
                                             required>
-                                        @for($i = 1; $i <= 50; $i++)
-                                            <option value="{{ $i }}" {{ old('guests', 2) == $i ? 'selected' : '' }}>
+                                        @for($i = $minGuests; $i <= 50; $i++)
+                                            <option value="{{ $i }}" {{ old('guests', $minGuests) == $i ? 'selected' : '' }}>
                                                 {{ $i }} {{ $i == 1 ? __('messages.guest') : __('messages.guests') }}
                                             </option>
                                         @endfor
                                     </select>
+                                    @if($minGuests > 1)
+                                        <p class="mt-1 text-sm text-gray-500">{{ __('messages.min_guests_required', ['min' => $minGuests]) ?? 'Minimum ' . $minGuests . ' guests required for this package' }}</p>
+                                    @endif
                                     @error('guests')
                                         <p class="mt-2 text-sm text-red-600 flex items-center">
                                             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -337,14 +343,14 @@
                             </h3>
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center text-gray-700">
-                                    <span>{{ __('messages.base_price') ?? 'Base Price' }} <span class="text-gray-500">×</span> <span id="guest-count">2</span></span>
-                                    <span id="base-price" class="font-semibold">{{ format_price(get_price($package) * 2) }}</span>
+                                    <span>{{ __('messages.base_price') ?? 'Base Price' }} <span class="text-gray-500">×</span> <span id="guest-count">{{ $package->min_guests ?? 1 }}</span></span>
+                                    <span id="base-price" class="font-semibold">{{ format_price(get_price($package) * ($package->min_guests ?? 1)) }}</span>
                                 </div>
                                 <div class="border-t border-emerald-200 pt-3">
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-gray-900">{{ __('messages.total') ?? 'Total' }}</span>
                                         <span id="total-price" class="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                            {{ format_price(get_price($package) * 2) }}
+                                            {{ format_price(get_price($package) * ($package->min_guests ?? 1)) }}
                                         </span>
                                     </div>
                                 </div>
@@ -396,6 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const basePrice = {{ get_price($package) }};
     const currencySymbol = '{{ currency_symbol() }}';
     const locale = '{{ app()->getLocale() }}';
+    const minGuests = {{ $package->min_guests ?? 1 }};
 
     // Format number based on locale
     function formatPrice(amount) {
@@ -409,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePrice() {
-        const guests = parseInt(guestsSelect?.value) || 2;
+        const guests = parseInt(guestsSelect?.value) || minGuests;
         const total = basePrice * guests;
 
         if (guestCountSpan) {

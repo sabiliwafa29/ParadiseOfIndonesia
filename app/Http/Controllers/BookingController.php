@@ -93,15 +93,18 @@ class BookingController extends Controller
                 'request_data' => $request->all(),
             ]);
 
-            // Validasi input
+            // Validasi input - gunakan min_guests dari tour
+            $minGuests = $tour->min_guests ?? 1;
             $validated = $request->validate([
                 'name' => auth()->guest() ? 'required|string|max:255' : 'nullable',
                 'email' => auth()->guest() ? 'required|email' : 'nullable',
                 'phone' => auth()->guest() ? 'required|string|max:20' : 'nullable',
                 'date' => 'required|date|after:today',
-                'guests' => 'required|integer|min:1|max:50',
+                'guests' => "required|integer|min:{$minGuests}|max:50",
                 'special_requests' => 'nullable|string|max:500',
                 'terms' => 'accepted',
+            ], [
+                'guests.min' => "Minimal {$minGuests} tamu diperlukan untuk tour ini.",
             ]);
 
             \Illuminate\Support\Facades\Log::info('✅ [TOUR BOOKING] Validation passed', [

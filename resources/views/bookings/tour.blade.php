@@ -191,11 +191,14 @@
                             <input type="number" 
                                    id="guests" 
                                    name="guests" 
-                                   value="{{ old('guests', 1) }}" 
-                                   min="1" 
+                                   value="{{ old('guests', $tour->min_guests ?? 1) }}" 
+                                   min="{{ $tour->min_guests ?? 1 }}" 
                                    max="50"
                                    required
                                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition @error('guests') border-red-500 @enderror">
+                            @if(($tour->min_guests ?? 1) > 1)
+                                <p class="mt-1 text-sm text-gray-500">{{ __('messages.min_guests_required', ['min' => $tour->min_guests]) ?? 'Minimum ' . $tour->min_guests . ' guests required for this tour' }}</p>
+                            @endif
                             @error('guests')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

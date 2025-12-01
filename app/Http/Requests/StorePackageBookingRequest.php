@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\TourPackage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePackageBookingRequest extends FormRequest
@@ -14,6 +15,10 @@ class StorePackageBookingRequest extends FormRequest
 
     public function rules(): array
     {
+        // Get min_guests from the package
+        $package = $this->route('package');
+        $minGuests = $package instanceof TourPackage ? ($package->min_guests ?? 1) : 1;
+        
         return [
             'full_name'      => 'required|string|max:255',
             'contact_handle' => 'required|string|max:255',
@@ -22,9 +27,19 @@ class StorePackageBookingRequest extends FormRequest
             'route_option'   => 'required|in:ijen,tabuhan',
 
             'date'    => 'required|date|after_or_equal:today',
-            'guests'  => 'required|integer|min:2|max:50',
+            'guests'  => "required|integer|min:{$minGuests}|max:50",
             'guide'   => 'sometimes|boolean',
             'transport' => 'sometimes|boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        $package = $this->route('package');
+        $minGuests = $package instanceof TourPackage ? ($package->min_guests ?? 1) : 1;
+        
+        return [
+            'guests.min' => "Minimal {$minGuests} tamu diperlukan untuk paket ini.",
         ];
     }
 

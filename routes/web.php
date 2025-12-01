@@ -130,6 +130,8 @@ Route::middleware('auth')->group(function () {
         
     // Booking Management
     Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    Route::get('bookings-export', [App\Http\Controllers\Admin\BookingExportController::class, 'export'])->name('bookings.export');
+    Route::get('bookings-export-excel', [App\Http\Controllers\Admin\BookingExportController::class, 'exportExcel'])->name('bookings.export-excel');
         
     // User Management
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);

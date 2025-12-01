@@ -31,27 +31,16 @@
         <aside id="sidebar"
             class="bg-white shadow-lg fixed h-full overflow-y-auto transition-all duration-300 z-50 w-64">
             <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-emerald-600 rounded-lg p-2 flex-shrink-0">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div id="sidebarText" class="overflow-hidden transition-all duration-300">
-                            <h2 class="text-xl font-bold text-gray-800 whitespace-nowrap">Paradise</h2>
-                            <p class="text-xs text-gray-500 whitespace-nowrap">Admin Panel</p>
-                        </div>
-                    </div>
-                    <!-- Toggle Button -->
-                    <button id="toggleSidebar" 
-                            class="text-white bg-emerald-600 hover:bg-emerald-700 transition-all flex-shrink-0 p-2 rounded-lg shadow-md hover:shadow-lg"
-                            title="Toggle Sidebar">
-                        <!-- Chevron icon -->
-                        <svg id="chevronIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <div class="flex items-center space-x-3">
+                    <div class="bg-emerald-600 rounded-lg p-2 flex-shrink-0">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                    </button>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800 whitespace-nowrap">Paradise</h2>
+                        <p class="text-xs text-gray-500 whitespace-nowrap">Admin Panel</p>
+                    </div>
                 </div>
             </div>
 
@@ -261,58 +250,25 @@
             
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
-            const toggleBtn = document.getElementById('toggleSidebar');
             const toggleBtnHeader = document.getElementById('toggleSidebarHeader');
-            const chevronIcon = document.getElementById('chevronIcon');
-            const sidebarText = document.getElementById('sidebarText');
-            const sidebarLabels = document.querySelectorAll('.sidebar-text');
             
             function toggleSidebar() {
                 sidebarOpen = !sidebarOpen;
                 
                 if (sidebarOpen) {
-                    // Open sidebar
-                    sidebar.classList.remove('w-20');
-                    sidebar.classList.add('w-64');
-                    mainContent.classList.remove('ml-20');
+                    // Show sidebar
+                    sidebar.classList.remove('-translate-x-full');
                     mainContent.classList.add('ml-64');
-                    
-                    // Show text
-                    sidebarText.style.opacity = '1';
-                    sidebarText.style.visibility = 'visible';
-                    sidebarLabels.forEach(label => {
-                        label.style.opacity = '1';
-                        label.style.visibility = 'visible';
-                    });
-                    
-                    // Change chevron to left
-                    chevronIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>';
+                    mainContent.classList.remove('ml-0');
                 } else {
-                    // Close sidebar
-                    sidebar.classList.remove('w-64');
-                    sidebar.classList.add('w-20');
+                    // Hide sidebar completely
+                    sidebar.classList.add('-translate-x-full');
                     mainContent.classList.remove('ml-64');
-                    mainContent.classList.add('ml-20');
-                    
-                    // Hide text
-                    sidebarText.style.opacity = '0';
-                    sidebarText.style.visibility = 'hidden';
-                    sidebarLabels.forEach(label => {
-                        label.style.opacity = '0';
-                        label.style.visibility = 'hidden';
-                    });
-                    
-                    // Change chevron to right
-                    chevronIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>';
+                    mainContent.classList.add('ml-0');
                 }
-                
-                // Sidebar toggled (no debug log)
             }
             
-            // Add click event to both buttons
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', toggleSidebar);
-            }
+            // Add click event to hamburger menu button
             if (toggleBtnHeader) {
                 toggleBtnHeader.addEventListener('click', toggleSidebar);
             }
