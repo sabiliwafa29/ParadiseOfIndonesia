@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Services\LocationService;
 
 class Tour extends Model
 {
@@ -82,13 +83,8 @@ class Tour extends Model
      */
     public static function getUserMarket()
     {
-        $userCountry = self::detectUserCountry();
-        
-        if ($userCountry === 'ID') {
-            return 'domestic';
-        } else {
-            return 'international';
-        }
+        // Use LocationService for consistency
+        return \App\Services\LocationService::getUserMarket();
     }
 
     /**
@@ -96,25 +92,8 @@ class Tour extends Model
      */
     public static function detectUserCountry()
     {
-        // Method 1: Using GeoIP (recommended)
-        // if (class_exists('\Stevebauman\Location\Facades\Location')) {
-        //     try {
-        //         $position = \Stevebauman\Location\Facades\Location::get(request()->ip());
-        //         return $position ? $position->countryCode : 'US';
-        //     } catch (\Exception $e) {
-        //         return 'US';
-        //     }
-        // }
-
-        // Method 2: Using IP geolocation API (free)
-        try {
-            $response = \Illuminate\Support\Facades\Http::get('https://ipapi.co/' . request()->ip() . '/json/');
-            return $response->json('country_code') ?? 'US';
-        } catch (\Exception $e) {
-            return 'US';
-        }
-
-        return 'US'; // Default fallback
+        // Use LocationService for consistency
+        return \App\Services\LocationService::detectCountry();
     }
 
     /**
@@ -136,8 +115,24 @@ class Tour extends Model
      */
     public function isAvailableForUser(): bool
     {
+        // Jika target_market adalah 'both', tersedia untuk semua
+        if ($this->target_market === 'both') {
+            return true;
+        }
+        
         $userMarket = self::getUserMarket();
-        return $this->forMarket($userMarket)->where('id', $this->id)->exists();
+        
+        // Domestic user bisa akses tour domestic dan both
+        if ($userMarket === 'domestic') {
+            return in_array($this->target_market, ['domestic', 'both']);
+        }
+        
+        // International user bisa akses tour international dan both
+        if ($userMarket === 'international') {
+            return in_array($this->target_market, ['international', 'both']);
+        }
+        
+        return true;
     }
 
     // Relasi ke Bookings
