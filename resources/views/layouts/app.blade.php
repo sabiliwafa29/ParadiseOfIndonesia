@@ -173,5 +173,64 @@
         </script>
         @endif
 
+        <!-- Browser Geolocation Detection -->
+        <script>
+            (function() {
+                // Check if we already have location stored
+                const locationStored = localStorage.getItem('poi_location_stored');
+                const locationTimestamp = localStorage.getItem('poi_location_timestamp');
+                const oneDay = 24 * 60 * 60 * 1000; // 24 hours in ms
+                
+                // Only request location if not stored or older than 24 hours
+                if (!locationStored || !locationTimestamp || (Date.now() - parseInt(locationTimestamp)) > oneDay) {
+                    if ('geolocation' in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                // Success - send to server
+                                fetch('/api/user-location', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        latitude: position.coords.latitude,
+                                        longitude: position.coords.longitude
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        console.log('Location detected:', data.country_code, '(' + data.market + ')');
+                                        localStorage.setItem('poi_location_stored', data.country_code);
+                                        localStorage.setItem('poi_location_timestamp', Date.now().toString());
+                                        localStorage.setItem('poi_market', data.market);
+                                        
+                                        // Reload page if market changed to refresh tour list
+                                        const previousMarket = localStorage.getItem('poi_previous_market');
+                                        if (previousMarket && previousMarket !== data.market) {
+                                            window.location.reload();
+                                        }
+                                        localStorage.setItem('poi_previous_market', data.market);
+                                    }
+                                })
+                                .catch(error => console.log('Location API error:', error));
+                            },
+                            function(error) {
+                                // Error or denied - use IP-based fallback (handled server-side)
+                                console.log('Geolocation denied or unavailable, using IP detection');
+                            },
+                            {
+                                enableHighAccuracy: false,
+                                timeout: 10000,
+                                maximumAge: 86400000 // 24 hours cache
+                            }
+                        );
+                    }
+                }
+            })();
+        </script>
+
     </body>
 </html>

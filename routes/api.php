@@ -51,9 +51,15 @@ Route::middleware('throttle:60,60')->group(function () {
 
 // PayPal endpoints (used by client-side PayPal Buttons)
 use App\Http\Controllers\PayPalController;
+use App\Http\Controllers\Api\UserLocationController;
 
 // PayPal endpoints need session/web middleware for guest bookings (session-based access)
 Route::middleware('web')->group(function () {
     Route::post('/paypal/{booking}/create-order', [PayPalController::class, 'createOrder']);
     Route::post('/paypal/{booking}/capture-order', [PayPalController::class, 'captureOrder']);
+    
+    // User Location (browser geolocation)
+    Route::post('/user-location', [UserLocationController::class, 'store']);
+    Route::get('/user-location', [UserLocationController::class, 'show']);
+    Route::delete('/user-location', [UserLocationController::class, 'clear']);
 });

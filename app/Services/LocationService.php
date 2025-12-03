@@ -8,32 +8,55 @@ use Illuminate\Support\Facades\Cache;
 class LocationService
 {
     /**
-     * Detect country code from user IP
-     * Using multiple free APIs as fallback
+     * Detect country code from user
+     * Priority: 1. Session (from browser GPS), 2. Cache, 3. IP detection
      */
     public static function detectCountry(): string
     {
+        // Priority 1: Check session first (set by browser geolocation)
+        $sessionCountry = session('user_country');
+        if ($sessionCountry) {
+            \Log::debug("LocationService: Using session country: {$sessionCountry}");
+            return $sessionCountry;
+        }
+
         $ip = self::getClientIp();
         
-        // Check cache first
+        // Priority 2: Check cache
         $cacheKey = 'location_' . $ip;
         $cached = Cache::get($cacheKey);
         if ($cached) {
+            \Log::debug("LocationService: Using cached country for IP {$ip}: {$cached}");
             return $cached;
         }
 
-        // Skip detection for localhost/private IPs
+        // Skip detection for localhost/private IPs - default to Indonesia
         if (self::isPrivateIp($ip)) {
+            \Log::debug("LocationService: Private IP detected, defaulting to ID");
             return 'ID'; // Default to Indonesia for local testing
         }
 
+        // Priority 3: IP-based detection
+        $country = self::detectCountryFromIp($ip);
+        
+        // Cache the result
+        Cache::put($cacheKey, $country, now()->addDays(7));
+        
+        return $country;
+    }
+
+    /**
+     * Detect country from IP using multiple APIs
+     */
+    private static function detectCountryFromIp(string $ip): string
+    {
         // Method 1: Using ipapi.co (Free, no API key needed)
         try {
             $response = Http::timeout(3)->get("https://ipapi.co/{$ip}/json/");
             if ($response->successful()) {
                 $countryCode = $response->json('country_code');
                 if ($countryCode) {
-                    Cache::put($cacheKey, $countryCode, now()->addDays(7));
+                    \Log::debug("LocationService: ipapi.co detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
             }
@@ -43,11 +66,11 @@ class LocationService
 
         // Method 2: Using ip-api.com (Free tier, limited calls)
         try {
-            $response = Http::timeout(3)->get("http://ip-api.com/json/{$ip}?fields=countryCode");
+            $response = Http::timeout(3)->get("http://ip-api.com/json/{$ip}?fields=countryCode,status");
             if ($response->successful() && $response->json('status') === 'success') {
                 $countryCode = $response->json('countryCode');
                 if ($countryCode) {
-                    Cache::put($cacheKey, $countryCode, now()->addDays(7));
+                    \Log::debug("LocationService: ip-api.com detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
             }
@@ -61,7 +84,7 @@ class LocationService
             if ($response->successful()) {
                 $countryCode = $response->json('country_code');
                 if ($countryCode) {
-                    Cache::put($cacheKey, $countryCode, now()->addDays(7));
+                    \Log::debug("LocationService: geoip-db.com detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
             }
@@ -69,8 +92,9 @@ class LocationService
             \Log::warning("geoip-db.com failed: " . $e->getMessage());
         }
 
-        // Fallback
-        return 'US';
+        // Fallback to Indonesia (safer for local business)
+        \Log::warning("LocationService: All IP detection methods failed, defaulting to ID");
+        return 'ID';
     }
 
     /**
