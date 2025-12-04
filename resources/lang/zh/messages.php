@@ -184,7 +184,15 @@ return [
     'complete_your_booking' => '完成您的预订',
     'tour' => '旅游',
     'pay_now_with_midtrans' => '使用Midtrans立即付款',
-    'about_paradise' => '通过我们精心策划的旅行体验发现印度尼西亚之美。从原始海滩到古老寺庙，我们为您带来印度尼西亚文化和自然的精华。',
+    'about_paradise' => '印尼天堂（Paradise of Indonesia）是经印尼政府许可的官方旅行社。
+
+它由PT. Putra Nusantara Berkilau公司管理，许可证号为0501240062307。该公司拥有数千家合作伙伴，包括旅行社、酒店、餐厅、旅游景点、娱乐机构等等。
+
+愿景：一键开启，心中最美好的天堂
+
+使命：赋能印尼及全球旅游业参与者
+
+连接旅游业各领域及参与者。',
     'quick_links' => '快速链接',
     'about_us' => '关于我们',
     'contact' => '联系',

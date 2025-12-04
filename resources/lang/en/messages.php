@@ -184,7 +184,15 @@ return [
     'complete_your_booking' => 'Complete Your Booking',
     'tour' => 'Tour',
     'pay_now_with_midtrans' => 'Pay Now with Midtrans',
-    'about_paradise' => 'Discover the beauty of Indonesia with our curated travel experiences. From pristine beaches to ancient temples, we bring you the best of Indonesian culture and nature.',
+    'about_paradise' => 'Paradise of Indonesia is an official travel agency licensed by the Indonesian government.
+
+Managed by PT. Putra Nusantara Berkilau, licensed 0501240062307, it has thousands of partners, including travel agencies, hotels, restaurants, tourist attractions, entertainment agencies, and more.
+
+Vision: One click, the most paradise in your heart
+
+Mission: Empowering tourism players in Indonesia and globally
+
+Connecting tourism sectors and players',
     'quick_links' => 'Quick Links',
     'about_us' => 'About Us',
     'contact' => 'Contact',

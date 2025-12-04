@@ -184,7 +184,15 @@ return [
     'complete_your_booking' => 'Selesaikan Pemesanan Anda',
     'tour' => 'Tur',
     'pay_now_with_midtrans' => 'Bayar Sekarang dengan Midtrans',
-    'about_paradise' => 'Temukan keindahan Indonesia dengan pengalaman perjalanan kurasi kami. Dari pantai yang masih asli hingga candi kuno, kami menghadirkan yang terbaik dari budaya dan alam Indonesia.',
+    'about_paradise' => 'Paradise of Indonesia adalah agen perjalanan resmi berlisensi di Indonesia.
+
+Dikelola oleh PT. Putra Nusantara Berkilau, dengan nomor lisensi 0501240062307. Perusahaan ini memiliki ribuan mitra, termasuk agen perjalanan, hotel, restoran, objek wisata, tempat hiburan, dan banyak lagi.
+
+Visi: Akses sekali klik ke surga impian Anda.
+
+Misi: Memberdayakan pelaku industri pariwisata Indonesia dan global.
+
+Menghubungkan semua sektor dan pelaku industri pariwisata.',
     'quick_links' => 'Tautan Cepat',
     'about_us' => 'Tentang Kami',
     'contact' => 'Kontak',
