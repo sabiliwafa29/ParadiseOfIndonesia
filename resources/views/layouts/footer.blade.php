@@ -164,7 +164,7 @@
                     {{-- WeChat QR Code Placeholder --}}
                     <div class="w-full aspect-square bg-white rounded-lg flex items-center justify-center overflow-hidden">
                         
-                        <img src="{{ asset('images/wechat-qr.jpg') }}" alt="WeChat QR Code" class="w-full h-full object-contain"> 
+                        <img src="{{ asset('images/wechat-qr.jpeg') }}" alt="WeChat QR Code" class="w-full h-full object-contain"> 
                     
                     </div>
                     <p class="text-center text-gray-400 text-sm mt-3">{{ __('Scan to connect') }}</p>
