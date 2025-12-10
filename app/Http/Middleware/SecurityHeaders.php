@@ -53,8 +53,10 @@ class SecurityHeaders
             'magnetometer=()',
             'gyroscope=()',
             'accelerometer=()',
-            // Allow unload only for same-origin (needed by some payment SDKs like PayPal)
-            'unload=(self)',
+            // Note: the 'unload' feature is not a standardized Permissions-Policy directive
+            // and may cause console warnings in some browsers. Remove it to avoid "unload is not
+            // allowed in this document" messages. If a payment SDK requires unload, allow it
+            // per-integration (e.g., iframe attributes) rather than via this header.
         ]));
 
         // Content-Security-Policy
