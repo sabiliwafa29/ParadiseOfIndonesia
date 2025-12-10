@@ -171,3 +171,16 @@ Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
+
+// Development helpers: allow setting detected country via session for testing
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/dev/set-country/{code}', function ($code) {
+        session(['user_country' => strtoupper($code)]);
+        return redirect()->back();
+    })->name('dev.set-country');
+
+    Route::get('/dev/clear-country', function () {
+        session()->forget('user_country');
+        return redirect()->back();
+    })->name('dev.clear-country');
+}

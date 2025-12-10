@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Services\LocationService;
+
 class LanguageHelper
 {
     public static function getLanguages()
@@ -40,31 +42,44 @@ class LanguageHelper
 
     public static function getCurrentCurrency()
     {
-        $locale = app()->getLocale();
-        $languages = self::getLanguages();
-        return $languages[$locale]['currency'] ?? 'USD';
+        // Prefer geolocation-based currency. If session or locale override required,
+        // that can be implemented later. For now, choose by detected user location.
+        return LocationService::getUserCurrency() ?? 'USD';
     }
 
     public static function getCurrencySymbol($locale = null)
     {
-        $locale = $locale ?? app()->getLocale();
-        $languages = self::getLanguages();
-        return $languages[$locale]['currency_symbol'] ?? '$';
+        // Map currency code to symbol. Use provided locale only as fallback for legacy.
+        $currency = null;
+        if ($locale) {
+            $languages = self::getLanguages();
+            $currency = $languages[$locale]['currency'] ?? null;
+        }
+
+        $currency = $currency ?? self::getCurrentCurrency();
+
+        return match($currency) {
+            'IDR' => 'Rp',
+            'CNY' => '¥',
+            'USD' => '$',
+            default => '$',
+        };
     }
 
     public static function formatPrice($amount, $locale = null)
     {
-        $locale = $locale ?? app()->getLocale();
+        // Determine currency from geolocation
         $currency = self::getCurrentCurrency();
         $symbol = self::getCurrencySymbol($locale);
 
-        // Format based on locale
-        switch ($locale) {
-            case 'id':
+        // Format based on currency
+        switch ($currency) {
+            case 'IDR':
+                // No decimals for IDR, use dot as thousand separator
                 return $symbol . ' ' . number_format($amount, 0, ',', '.');
-            case 'zh':
+            case 'CNY':
                 return $symbol . number_format($amount, 2, '.', ',');
-            case 'en':
+            case 'USD':
             default:
                 return $symbol . number_format($amount, 2, '.', ',');
         }
@@ -109,10 +124,9 @@ class LanguageHelper
 
     public static function getPrice($model, $locale = null)
     {
-        $locale = $locale ?? app()->getLocale();
+        // Use detected user currency to pick correct price field
         $currency = self::getCurrentCurrency();
 
-        // Get price based on currency
         switch ($currency) {
             case 'IDR':
                 return $model->price_idr ?? $model->price ?? 0;
