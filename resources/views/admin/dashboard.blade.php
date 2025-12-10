@@ -61,7 +61,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">${{ number_format($totalRevenue, 0) }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ format_price_by_currency($totalRevenue ?? 0, current_currency()) }}</p>
                         <p class="text-xs text-green-600 mt-2 flex items-center">
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
@@ -86,7 +86,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm font-medium">Total Customers</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $totalCustomers }}</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">{{ format_price_by_currency($totalRevenue ?? 0, current_currency()) }}</p>
                         <p class="text-xs text-blue-600 mt-2 flex items-center">
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
@@ -131,7 +131,7 @@
                             <div class="relative w-full bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-lg hover:from-emerald-600 hover:to-emerald-500 transition-all duration-300 cursor-pointer" 
                                  style="height: {{ $height }}%">
                                 <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">
-                                    <div>${{ number_format($data->revenue) }}</div>
+                                    <div>{{ format_price_by_currency($data->revenue ?? 0, current_currency()) }}</div>
                                     <div class="mt-1 text-xs {{ $data->percent_positive ? 'text-green-300' : 'text-red-300' }}">
                                         {!! $data->percent_positive ? '&#9650;' : '&#9660;' !!} {{ $data->percent_change }}%
                                     </div>
@@ -222,7 +222,7 @@
                                             </svg>
                                             {{ $booking->created_at->format('M d, Y') }}
                                         </span>
-                                        <span class="text-emerald-600 font-bold">${{ number_format($booking->total_price) }}</span>
+                                        <span class="text-emerald-600 font-bold">{{ format_price_by_currency($booking->total_price ?? 0, $booking->currency ?? current_currency()) }}</span>
                                     </div>
                                 </div>
                                 <span class="text-xs px-2 py-1 rounded-full {{ 

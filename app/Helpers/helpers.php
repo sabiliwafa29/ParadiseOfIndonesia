@@ -41,3 +41,13 @@ if (!function_exists('current_currency')) {
         return LanguageHelper::getCurrentCurrency();
     }
 }
+
+if (!function_exists('format_price_by_currency')) {
+    /**
+     * Format amount using a specific currency code (safe for stored booking totals)
+     */
+    function format_price_by_currency($amount, $currency)
+    {
+        return \App\Helpers\LanguageHelper::formatPriceByCurrency($amount, $currency);
+    }
+}

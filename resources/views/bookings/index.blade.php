@@ -74,7 +74,7 @@
                             </div>
                             <div>
                                 <span class="text-xs md:text-sm text-gray-500 block mb-1">{{ __('messages.total_price') }}</span>
-                                <p class="text-sm md:text-base font-bold text-emerald-600">{{ format_price($booking->total_price) }}</p>
+                                <p class="text-sm md:text-base font-bold text-emerald-600">{{ format_price_by_currency($booking->total_price, $booking->currency ?? current_currency()) }}</p>
                             </div>
                             <div>
                                 <span class="text-xs md:text-sm text-gray-500 block mb-1">{{ __('messages.payment_method') }}</span>

@@ -82,9 +82,9 @@
                         <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
                         <p class="text-3xl font-bold text-gray-800 mt-1">
                             @if(($totalRevenue ?? 0) > 0)
-                                ${{ number_format($totalRevenue / 1000, 1) }}K
+                                {{ format_price_by_currency($totalRevenue ?? 0, current_currency()) }}
                             @else
-                                $0
+                                {{ format_price_by_currency(0, current_currency()) }}
                             @endif
                         </p>
                     </div>

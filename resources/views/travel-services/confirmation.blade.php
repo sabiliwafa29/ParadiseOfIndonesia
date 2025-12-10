@@ -30,8 +30,12 @@
                 @endif
                 
                 <p><strong>Total Price:</strong> 
-                    <span class="text-emerald-700 font-bold text-lg">
-                        {{ \App\Helpers\LanguageHelper::formatPrice( $booking->total_price ?? ($distance * \App\Helpers\LanguageHelper::getPrice($service)) ) }}
+                        <span class="text-emerald-700 font-bold text-lg">
+                        @if(isset($booking->total_price))
+                            {{ format_price_by_currency($booking->total_price, $booking->currency ?? current_currency()) }}
+                        @else
+                            {{ \App\Helpers\LanguageHelper::formatPrice( ($distance * \App\Helpers\LanguageHelper::getPrice($service)) ) }}
+                        @endif
                     </span>
                 </p>
             </div>

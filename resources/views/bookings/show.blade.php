@@ -116,7 +116,7 @@
                                     
                                     <div class="border-t pt-3 md:pt-4">
                                         <p class="text-xs md:text-sm text-gray-600">Total Price</p>
-                                        <p class="font-bold text-emerald-600 text-xl md:text-2xl">{{ format_price($booking->total_price) }}</p>
+                                        <p class="font-bold text-emerald-600 text-xl md:text-2xl">{{ format_price_by_currency($booking->total_price, $booking->currency ?? current_currency()) }}</p>
                                     </div>
 
                                     @if($booking->payment_status === 'paid')
@@ -251,7 +251,7 @@
                 <div class="text-sm text-gray-600 space-y-1">
                     <p><strong>Package:</strong> {{ $booking->package->name ?? $booking->tour->name }}</p>
                     <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</p>
-                    <p><strong>Total:</strong> {{ format_price($booking->total_price) }}</p>
+                    <p><strong>Total:</strong> {{ format_price_by_currency($booking->total_price ?? 0, $booking->currency ?? current_currency()) }}</p>
                 </div>
             </div>
 

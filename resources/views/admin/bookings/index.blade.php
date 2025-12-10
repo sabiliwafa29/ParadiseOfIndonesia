@@ -143,7 +143,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">${{ number_format($stats['total_revenue'], 0) }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ format_price_by_currency($stats['total_revenue'] ?? 0, current_currency()) }}</p>
                         <p class="text-xs text-purple-600 mt-2">From confirmed bookings</p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
@@ -336,7 +336,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500 mb-1">Total Price</p>
-                                        <p class="text-xl font-bold text-blue-600">${{ number_format($booking->total_price ?? 0, 2) }}</p>
+                                        <p class="text-xl font-bold text-blue-600">{{ format_price_by_currency($booking->total_price ?? 0, $booking->currency ?? current_currency()) }}</p>
                                     </div>
                                 </div>
 

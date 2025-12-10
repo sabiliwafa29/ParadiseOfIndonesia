@@ -71,7 +71,7 @@
                     </div>
                     <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg p-4 border-2 border-emerald-200">
                         <p class="text-xs text-emerald-600 uppercase tracking-wide mb-1 font-semibold">{{ __('messages.total_price') ?? 'Total Price' }}</p>
-                        <p class="font-bold text-emerald-600 text-2xl">{{ format_price($booking->total_price) }}</p>
+                        <p class="font-bold text-emerald-600 text-2xl">{{ format_price_by_currency($booking->total_price, $booking->currency ?? current_currency()) }}</p>
                     </div>
                 </div>
             </div>

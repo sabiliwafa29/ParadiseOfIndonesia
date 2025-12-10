@@ -262,16 +262,16 @@
                     <div class="p-6">
                         <div class="mb-4">
                             <p class="text-sm text-gray-600 mb-2">Total Amount</p>
-                            <p class="text-3xl font-bold text-gray-900">
-                                ${{ number_format($booking->total_price ?? 0, 2) }}
-                            </p>
+                                <p class="text-3xl font-bold text-gray-900">
+                                    {{ format_price_by_currency($booking->total_price ?? 0, $booking->currency ?? current_currency()) }}
+                                </p>
                         </div>
 
                         @if($booking->addon_cost)
                             <div class="mb-4 pb-4 border-b border-gray-200">
                                 <p class="text-sm text-gray-600">Additional Services Cost</p>
                                 <p class="text-lg font-semibold text-gray-700">
-                                    ${{ number_format($booking->addon_cost, 2) }}
+                                    {{ format_price_by_currency($booking->addon_cost ?? 0, $booking->currency ?? current_currency()) }}
                                 </p>
                             </div>
                         @endif

@@ -86,6 +86,35 @@ class LanguageHelper
     }
 
     /**
+     * Format price by explicit currency code (useful for stored booking totals)
+     *
+     * @param float|int $amount
+     * @param string $currencyCode e.g. 'IDR', 'USD', 'CNY'
+     * @return string
+     */
+    public static function formatPriceByCurrency($amount, string $currencyCode)
+    {
+        $currency = strtoupper($currencyCode ?? 'USD');
+
+        $symbol = match($currency) {
+            'IDR' => 'Rp',
+            'CNY' => '¥',
+            'USD' => '$',
+            default => '$',
+        };
+
+        switch ($currency) {
+            case 'IDR':
+                return $symbol . ' ' . number_format($amount, 0, ',', '.');
+            case 'CNY':
+                return $symbol . number_format($amount, 2, '.', ',');
+            case 'USD':
+            default:
+                return $symbol . number_format($amount, 2, '.', ',');
+        }
+    }
+
+    /**
      * Get multilingual field value based on current locale with fallback
      * 
      * @param object $model The model instance
