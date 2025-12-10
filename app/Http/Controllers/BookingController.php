@@ -102,7 +102,6 @@ class BookingController extends Controller
                 'date' => 'required|date|after:today',
                 'guests' => "required|integer|min:{$minGuests}|max:50",
                 'special_requests' => 'nullable|string|max:500',
-                'terms' => 'accepted',
             ], [
                 'guests.min' => "Minimal {$minGuests} tamu diperlukan untuk tour ini.",
             ]);

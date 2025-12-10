@@ -45,8 +45,10 @@ class SecurityHeaders
 
         // Permissions-Policy (formerly Feature-Policy)
         // Controls which browser features and APIs can be used
+        // Allow geolocation for same-origin pages so browser geolocation API works.
+        // If you want to restrict this later, change to 'geolocation=()' or control via config.
         $response->headers->set('Permissions-Policy', implode(', ', [
-            'geolocation=()' . (config('app.env') === 'production' ? '' : ', camera=(), microphone=()'),
+            'geolocation=(self)' . (config('app.env') === 'production' ? '' : ', camera=(), microphone=()'),
             'usb=()',
             'magnetometer=()',
             'gyroscope=()',
