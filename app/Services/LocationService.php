@@ -40,22 +40,80 @@ class LocationService
         $country = self::detectCountryFromIp($ip);
         
         // Cache the result
-        Cache::put($cacheKey, $country, now()->addDays(7));
+        Cache::put($cacheKey, $country, now()->addDays(config('services.geolocation.cache_ttl_days', 7)));
         
         return $country;
     }
 
     /**
-     * Detect country from IP using multiple APIs
+     * Check if IP is within rate limit for geolocation API calls
+     */
+    private static function checkRateLimit(string $ip): bool
+    {
+        $rateLimitKey = 'geolocation_rate_limit_' . $ip;
+        $calls = Cache::get($rateLimitKey, 0);
+        $maxCalls = config('services.geolocation.rate_limit_per_minute', 10);
+
+        if ($calls >= $maxCalls) {
+            return false;
+        }
+
+        // Increment counter
+        Cache::put($rateLimitKey, $calls + 1, now()->addMinute());
+        return true;
+    }
+
+    /**
+     * Record successful API call for monitoring
+     */
+    private static function recordApiCall(string $ip, string $service): void
+    {
+        $statsKey = 'geolocation_stats_' . date('Y-m-d');
+        $stats = Cache::get($statsKey, [
+            'total_calls' => 0,
+            'services' => [],
+            'ips' => []
+        ]);
+
+        $stats['total_calls']++;
+        $stats['services'][$service] = ($stats['services'][$service] ?? 0) + 1;
+        $stats['ips'][$ip] = ($stats['ips'][$ip] ?? 0) + 1;
+
+        Cache::put($statsKey, $stats, now()->addDay());
+    }
+
+    /**
+     * Get geolocation statistics (for monitoring)
+     */
+    public static function getStats(): array
+    {
+        $statsKey = 'geolocation_stats_' . date('Y-m-d');
+        return Cache::get($statsKey, [
+            'total_calls' => 0,
+            'services' => [],
+            'ips' => []
+        ]);
+    }
+
+    /**
+     * Detect country from IP using multiple APIs with rate limiting
      */
     private static function detectCountryFromIp(string $ip): string
     {
+        // Check rate limit before making API calls
+        if (!self::checkRateLimit($ip)) {
+            \Log::warning("LocationService: Rate limit exceeded for IP {$ip}, using fallback");
+            return config('services.geolocation.fallback_country', 'ID');
+        }
+
         // Method 1: Using ipapi.co (Free, no API key needed)
         try {
-            $response = Http::timeout(3)->get("https://ipapi.co/{$ip}/json/");
+            $response = Http::timeout(config('services.geolocation.timeout_seconds', 3))
+                ->get("https://ipapi.co/{$ip}/json/");
             if ($response->successful()) {
                 $countryCode = $response->json('country_code');
                 if ($countryCode) {
+                    self::recordApiCall($ip, 'ipapi');
                     \Log::debug("LocationService: ipapi.co detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
@@ -66,10 +124,12 @@ class LocationService
 
         // Method 2: Using ip-api.com (Free tier, limited calls)
         try {
-            $response = Http::timeout(3)->get("http://ip-api.com/json/{$ip}?fields=countryCode,status");
+            $response = Http::timeout(config('services.geolocation.timeout_seconds', 3))
+                ->get("http://ip-api.com/json/{$ip}?fields=countryCode,status");
             if ($response->successful() && $response->json('status') === 'success') {
                 $countryCode = $response->json('countryCode');
                 if ($countryCode) {
+                    self::recordApiCall($ip, 'ipapi');
                     \Log::debug("LocationService: ip-api.com detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
@@ -80,10 +140,12 @@ class LocationService
 
         // Method 3: Using geoip-db.com (Alternative)
         try {
-            $response = Http::timeout(3)->get("https://geoip-db.com/json/{$ip}");
+            $response = Http::timeout(config('services.geolocation.timeout_seconds', 3))
+                ->get("https://geoip-db.com/json/{$ip}");
             if ($response->successful()) {
                 $countryCode = $response->json('country_code');
                 if ($countryCode) {
+                    self::recordApiCall($ip, 'geoipdb');
                     \Log::debug("LocationService: geoip-db.com detected country: {$countryCode}");
                     return strtoupper($countryCode);
                 }
@@ -92,9 +154,10 @@ class LocationService
             \Log::warning("geoip-db.com failed: " . $e->getMessage());
         }
 
-        // Fallback to Indonesia (safer for local business)
-        \Log::warning("LocationService: All IP detection methods failed, defaulting to ID");
-        return 'ID';
+        // Fallback to configured default country
+        $fallback = config('services.geolocation.fallback_country', 'ID');
+        \Log::warning("LocationService: All IP detection methods failed, defaulting to {$fallback}");
+        return $fallback;
     }
 
     /**

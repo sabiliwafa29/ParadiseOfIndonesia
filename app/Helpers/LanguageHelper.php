@@ -166,4 +166,13 @@ class LanguageHelper
                 return $model->price_usd ?? $model->price ?? 0;
         }
     }
+
+    /**
+     * Get currency code from locale
+     */
+    private static function getCurrencyFromLocale(string $locale): string
+    {
+        $languages = self::getLanguages();
+        return $languages[$locale]['currency'] ?? 'USD';
+    }
 }

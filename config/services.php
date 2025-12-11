@@ -64,4 +64,11 @@ return [
         'profile' => env('OSRM_PROFILE', 'driving'),
     ],
 
+    'geolocation' => [
+        'cache_ttl_days' => env('GEOLOCATION_CACHE_TTL_DAYS', 7),
+        'rate_limit_per_minute' => env('GEOLOCATION_RATE_LIMIT_PER_MINUTE', 10),
+        'timeout_seconds' => env('GEOLOCATION_TIMEOUT_SECONDS', 3),
+        'fallback_country' => env('GEOLOCATION_FALLBACK_COUNTRY', 'ID'),
+    ],
+
 ];
