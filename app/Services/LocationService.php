@@ -234,7 +234,7 @@ class LocationService
         
         return match($country) {
             'ID' => 'IDR',
-            'CN' => 'CNY',
+            'CN', 'HK' => 'CNY',  // China and Hong Kong use CNY
             default => 'USD',
         };
     }
@@ -276,5 +276,21 @@ class LocationService
     public static function clearCache(): void
     {
         Cache::flush();
+    }
+
+    /**
+     * Clear location cache for specific IP
+     */
+    public static function clearLocationCache(string $ip = null): void
+    {
+        if ($ip) {
+            Cache::forget('location_' . $ip);
+        } else {
+            // Clear all location caches (keys starting with 'location_')
+            $cacheKeys = Cache::store('redis')->getRedis()->keys('location_*');
+            if ($cacheKeys) {
+                Cache::store('redis')->deleteMultiple($cacheKeys);
+            }
+        }
     }
 }

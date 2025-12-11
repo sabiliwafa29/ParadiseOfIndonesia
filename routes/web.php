@@ -183,4 +183,9 @@ if (app()->environment(['local', 'testing'])) {
         session()->forget('user_country');
         return redirect()->back();
     })->name('dev.clear-country');
+
+    Route::get('/dev/clear-location-cache', function () {
+        \App\Services\LocationService::clearLocationCache();
+        return redirect()->back()->with('success', 'Location cache cleared');
+    })->name('dev.clear-location-cache');
 }

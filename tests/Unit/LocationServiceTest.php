@@ -58,6 +58,27 @@ class LocationServiceTest extends TestCase
         $this->assertEquals('CNY', LocationService::getUserCurrency());
     }
 
+    public function test_detect_country_from_hong_kong_ip()
+    {
+        // Mock IP detection API response for Hong Kong IP
+        Http::fake([
+            'https://ipapi.co/192.168.1.2/json/' => Http::response([
+                'country_code' => 'HK',
+                'status' => 'success'
+            ], 200),
+        ]);
+
+        // Mock request with Hong Kong IP
+        $this->app['request']->server->set('REMOTE_ADDR', '192.168.1.2');
+
+        $country = LocationService::detectCountry();
+
+        $this->assertEquals('HK', $country);
+        $this->assertFalse(LocationService::isIndonesia());
+        $this->assertEquals('international', LocationService::getUserMarket());
+        $this->assertEquals('CNY', LocationService::getUserCurrency());
+    }
+
     public function test_detect_country_from_international_ip()
     {
         // Mock IP detection API response for US IP
