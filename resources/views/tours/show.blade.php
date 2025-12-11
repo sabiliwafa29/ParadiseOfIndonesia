@@ -93,7 +93,7 @@ use Illuminate\Support\Str;
 
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
-                        <p class="text-lg font-bold text-gray-900">{{ $tour->getFormattedPrice($userCurrency) }}</p>
+                        <p class="text-lg font-bold text-gray-900">{{ format_price(get_price($tour)) }}</p>
                     </div>
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.duration') }}</p>
