@@ -88,12 +88,12 @@ use Illuminate\Support\Str;
                     @php
                         use App\Services\LocationService;
                         $userMarket = LocationService::getUserMarket();
-                        $userCurrency = LocationService::isIndonesia() ? 'IDR' : 'CNY';
+                        $userCurrency = LocationService::getUserCurrency();
                     @endphp
 
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.price') }}</p>
-                        <p class="text-lg font-bold text-gray-900">{{ format_price(get_price($tour)) }}</p>
+                        <p class="text-lg font-bold text-gray-900">{{ $tour->getFormattedPrice($userCurrency) }}</p>
                     </div>
                     <div>
                         <p class="text-gray-600 text-sm">{{ __('messages.duration') }}</p>
