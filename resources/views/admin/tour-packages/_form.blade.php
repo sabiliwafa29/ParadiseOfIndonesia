@@ -198,69 +198,7 @@
             </div>
 
             <!-- Price CNY -->
-                        <!-- Price Special (IDR) -->
-                        <div>
-                            <label for="price_special_idr" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Harga Spesial (IDR)
-                            </label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-3 text-red-500 font-semibold">Rp*</span>
-                                <input type="number"
-                                       name="price_special_idr"
-                                       id="price_special_idr"
-                                       value="{{ old('price_special_idr', $tourPackage->price_special_idr ?? '') }}"
-                                       min="0"
-                                       step="0.01"
-                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_idr') border-red-500 @enderror"
-                                       placeholder="Harga spesial IDR (opsional)">
-                            </div>
-                            @error('price_special_idr')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Price Special (USD) -->
-                        <div>
-                            <label for="price_special_usd" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Harga Spesial (USD)
-                            </label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-3 text-red-500 font-semibold">$*</span>
-                                <input type="number"
-                                       name="price_special_usd"
-                                       id="price_special_usd"
-                                       value="{{ old('price_special_usd', $tourPackage->price_special_usd ?? '') }}"
-                                       min="0"
-                                       step="0.01"
-                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_usd') border-red-500 @enderror"
-                                       placeholder="Harga spesial USD (opsional)">
-                            </div>
-                            @error('price_special_usd')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Price Special (CNY) -->
-                        <div>
-                            <label for="price_special_cny" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Harga Spesial (CNY)
-                            </label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-3 text-red-500 font-semibold">¥*</span>
-                                <input type="number"
-                                       name="price_special_cny"
-                                       id="price_special_cny"
-                                       value="{{ old('price_special_cny', $tourPackage->price_special_cny ?? '') }}"
-                                       min="0"
-                                       step="0.01"
-                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_cny') border-red-500 @enderror"
-                                       placeholder="Harga spesial CNY (opsional)">
-                            </div>
-                            @error('price_special_cny')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-            <div>
+             <div>
                 <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">
                     Harga (CNY) <span class="text-red-500">*</span>
                 </label>
@@ -280,6 +218,70 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+            
+            <!-- Price Special (IDR) -->
+            <div>
+                <label for="price_special_idr" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Harga Spesial (IDR)
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-red-500 font-semibold">Rp*</span>
+                    <input type="number"
+                            name="price_special_idr"
+                            id="price_special_idr"
+                            value="{{ old('price_special_idr', $tourPackage->price_special_idr ?? '') }}"
+                            min="0"
+                            step="0.01"
+                            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_idr') border-red-500 @enderror"
+                            placeholder="Harga spesial IDR (opsional)">
+                </div>
+                @error('price_special_idr')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Price Special (USD) -->
+            <div>
+                <label for="price_special_usd" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Harga Spesial (USD)
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-red-500 font-semibold">$*</span>
+                    <input type="number"
+                            name="price_special_usd"
+                            id="price_special_usd"
+                            value="{{ old('price_special_usd', $tourPackage->price_special_usd ?? '') }}"
+                            min="0"
+                            step="0.01"
+                            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_usd') border-red-500 @enderror"
+                            placeholder="Harga spesial USD (opsional)">
+                </div>
+                @error('price_special_usd')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Price Special (CNY) -->
+            <div>
+                <label for="price_special_cny" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Harga Spesial (CNY)
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-3 text-red-500 font-semibold">¥*</span>
+                    <input type="number"
+                            name="price_special_cny"
+                            id="price_special_cny"
+                            value="{{ old('price_special_cny', $tourPackage->price_special_cny ?? '') }}"
+                            min="0"
+                            step="0.01"
+                            class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_cny') border-red-500 @enderror"
+                            placeholder="Harga spesial CNY (opsional)">
+                </div>
+                @error('price_special_cny')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+            
 
             <!-- Minimal Guests -->
             <div>
@@ -332,6 +334,66 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Itinerary Card -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            Itinerary (Jadwal Perjalanan)
+        </h2>
+
+        <div id="itinerary-container" class="space-y-6">
+            @php
+                $existingItinerary = old('itinerary', $tourPackage->itinerary ?? []);
+                if (is_string($existingItinerary)) {
+                    $decoded = json_decode($existingItinerary, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        $existingItinerary = $decoded;
+                    } else {
+                        $existingItinerary = [];
+                    }
+                }
+                if (!is_array($existingItinerary) || empty($existingItinerary)) {
+                    $existingItinerary = [[ 'title_id' => '', 'title_en' => '', 'title_zh' => '', 'description_id' => '', 'description_en' => '', 'description_zh' => '' ]];
+                }
+            @endphp
+
+            @foreach($existingItinerary as $index => $item)
+                @php
+                    $titleId = $item['title_id'] ?? '';
+                    $titleEn = $item['title_en'] ?? '';
+                    $titleZh = $item['title_zh'] ?? '';
+                    $descId = $item['description_id'] ?? '';
+                    $descEn = $item['description_en'] ?? '';
+                    $descZh = $item['description_zh'] ?? '';
+                @endphp
+                <div class="itinerary-item border-2 border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-bold text-gray-800 flex items-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 text-white text-sm font-bold mr-3">{{ $index + 1 }}</span>
+                            Day {{ $index + 1 }}
+                        </h4>
+                        <button type="button" class="remove-itinerary text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors {{ count($existingItinerary) <= 1 ? 'hidden' : '' }}" title="Hapus Item">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Judul (ID) *</label><input type="text" name="itinerary[{{ $index }}][title_id]" value="{{ $titleId }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div>
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Title (EN) *</label><input type="text" name="itinerary[{{ $index }}][title_en]" value="{{ $titleEn }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div>
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">标题 (ZH) *</label><input type="text" name="itinerary[{{ $index }}][title_zh]" value="{{ $titleZh }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg"></div>
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi (ID) *</label><textarea name="itinerary[{{ $index }}][description_id]" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">{{ $descId }}</textarea></div>
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">Description (EN) *</label><textarea name="itinerary[{{ $index }}][description_en]" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">{{ $descEn }}</textarea></div>
+                        <div><label class="block text-sm font-semibold text-gray-700 mb-2">描述 (ZH) *</label><textarea name="itinerary[{{ $index }}][description_zh]" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">{{ $descZh }}</textarea></div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mt-4"><button type="button" id="add-itinerary" class="w-full inline-flex items-center justify-center px-4 py-3 border-2 border-dashed border-emerald-300 text-emerald-600 font-semibold rounded-lg hover:bg-emerald-50 hover:border-emerald-400 transition-colors"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>Tambah Hari Berikutnya</button></div>
     </div>
 
     <!-- Image Section -->
