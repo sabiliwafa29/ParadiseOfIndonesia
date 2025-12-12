@@ -98,6 +98,13 @@ use Illuminate\Support\Str;
                             {{ __('messages.price') ?? 'Price' }}
                         </h2>
                         <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
+                            @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
+                                <div class="mb-3">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+                                        {{ __('messages.special_price') ?? 'Special Price' }}
+                                    </span>
+                                </div>
+                            @endif
                             <p class="text-sm text-gray-600 mb-2">{{ __('messages.starting_from') ?? 'Starting from' }}</p>
                             <p class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                                 @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
