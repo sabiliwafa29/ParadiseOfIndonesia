@@ -113,6 +113,7 @@ return [
     'subscribe' => 'Subscribe',
     'privacy_notice' => 'We respect your privacy. Unsubscribe at any time.',
     'best_seller' => 'Best Seller',
+    'special_price' => 'Special Price',
     'starting_from' => 'Starting from',
     'sold_out' => 'Sold Out',
     'explore_destination' => 'Explore Destination',

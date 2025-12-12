@@ -98,6 +98,13 @@ use Illuminate\Support\Str;
                             {{ __('messages.price') ?? 'Price' }}
                         </h2>
                         <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
+                            @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
+                                <div class="mb-3">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+                                        {{ __('messages.special_price') ?? 'Special Price' }}
+                                    </span>
+                                </div>
+                            @endif
                             <p class="text-sm text-gray-600 mb-2">{{ __('messages.starting_from') ?? 'Starting from' }}</p>
                             <p class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                                 @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
@@ -446,6 +453,11 @@ use Illuminate\Support\Str;
                                 <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
                                     {{ $relatedPackage->name }}
                                 </h3>
+                                @if(!empty($relatedPackage->price_special_idr) || !empty($relatedPackage->price_special_usd) || !empty($relatedPackage->price_special_cny))
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold mb-3">
+                                        {{ __('messages.special_price') }}
+                                    </span>
+                                @endif
                                 <p class="text-sm text-gray-600 mb-4 line-clamp-2">
                                     {{ Str::limit($relatedPackage->description, 80) }}
                                 </p>

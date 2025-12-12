@@ -113,6 +113,7 @@ return [
     'subscribe' => 'Berlangganan',
     'privacy_notice' => 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
     'best_seller' => 'Terlaris',
+    'special_price' => 'Harga Spesial',
     'starting_from' => 'Mulai dari',
     'sold_out' => 'Habis Terjual',
     'explore_destination' => 'Jelajahi Destinasi',

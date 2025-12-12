@@ -113,6 +113,7 @@ return [
     'subscribe' => '订阅',
     'privacy_notice' => '我们尊重您的隐私。您可以随时取消订阅。',
     'best_seller' => '畅销',
+    'special_price' => '特价',
     'starting_from' => '起价',
     'sold_out' => '售罄',
     'explore_destination' => '探索目的地',
