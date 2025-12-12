@@ -49,7 +49,7 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium">Expires At</label>
-                <input type="date" name="expires_at" value="{{ optional($link->expires_at)->format('Y-m-d') }}" class="w-full mt-1 p-2 border rounded">
+                <input type="date" name="expires_at" value="{{ $link->expires_at ? \Carbon\Carbon::parse($link->expires_at)->format('Y-m-d') : '' }}" class="w-full mt-1 p-2 border rounded">
             </div>
             <div>
                 <label class="block text-sm font-medium">Max Uses</label>

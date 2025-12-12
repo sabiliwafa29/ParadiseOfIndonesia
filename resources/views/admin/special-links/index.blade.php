@@ -29,7 +29,7 @@
                         <td class="p-3 font-mono text-sm">{{ $link->token }}</td>
                         <td class="p-3">{{ $link->package->name ?? '-' }}</td>
                         <td class="p-3">{{ $link->price_special_usd ?? '-' }} / {{ $link->price_special_idr ?? '-' }} / {{ $link->price_special_cny ?? '-' }}</td>
-                        <td class="p-3">{{ $link->expires_at ? $link->expires_at->format('Y-m-d') : '-' }}</td>
+                        <td class="p-3">{{ $link->expires_at ? \Carbon\Carbon::parse($link->expires_at)->format('Y-m-d') : '-' }}</td>
                         <td class="p-3">{{ $link->used_count }}{{ $link->max_uses ? ' / '.$link->max_uses : '' }}</td>
                         <td class="p-3">
                             <a href="{{ route('admin.special-links.edit', $link) }}" class="text-emerald-600 mr-2">Edit</a>

@@ -25,6 +25,15 @@ class SpecialLink extends Model
 
     protected $dates = ['expires_at'];
 
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'price_special_idr' => 'decimal:2',
+        'price_special_usd' => 'decimal:2',
+        'price_special_cny' => 'decimal:2',
+        'used_count' => 'integer',
+        'max_uses' => 'integer',
+    ];
+
     public function package()
     {
         return $this->belongsTo(TourPackage::class, 'tour_package_id');
