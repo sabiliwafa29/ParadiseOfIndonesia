@@ -18,7 +18,8 @@ class SpecialLinkController extends Controller
 
     public function create()
     {
-        $packages = TourPackage::orderBy('name')->get();
+        // Order by the English name column (database column exists)
+        $packages = TourPackage::orderBy('name_en')->get();
         return view('admin.special-links.create', compact('packages'));
     }
 
@@ -45,7 +46,8 @@ class SpecialLinkController extends Controller
 
     public function edit(SpecialLink $special_link)
     {
-        $packages = TourPackage::orderBy('name')->get();
+        // Order by the English name column (database column exists)
+        $packages = TourPackage::orderBy('name_en')->get();
         return view('admin.special-links.edit', ['link' => $special_link, 'packages' => $packages]);
     }
 
