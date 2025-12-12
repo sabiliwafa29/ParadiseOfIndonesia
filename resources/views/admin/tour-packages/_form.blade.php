@@ -1,5 +1,6 @@
 @php
     $isEdit = isset($tourPackage) && $tourPackage;
+    $tourPackage = $tourPackage ?? null;
 @endphp
 
 <form action="{{ $isEdit ? route('admin.tour-packages.update', $tourPackage) : route('admin.tour-packages.store') }}" 
@@ -31,7 +32,7 @@
                     <input type="text" 
                            name="name_id" 
                            id="name_id" 
-                           value="{{ old('name_id', $tourPackage->name_id ?? '') }}" 
+                           value="{{ old('name_id', optional($tourPackage)->name_id ?? '') }}" 
                            required 
                            class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_id') border-red-500 @enderror" 
                            placeholder="Nama dalam Bahasa Indonesia">
@@ -51,7 +52,7 @@
                     <input type="text" 
                            name="name_en" 
                            id="name_en" 
-                           value="{{ old('name_en', $tourPackage->name_en ?? '') }}" 
+                           value="{{ old('name_en', optional($tourPackage)->name_en ?? '') }}" 
                            required 
                            class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_en') border-red-500 @enderror" 
                            placeholder="Name in English">
@@ -71,7 +72,7 @@
                     <input type="text" 
                            name="name_zh" 
                            id="name_zh" 
-                           value="{{ old('name_zh', $tourPackage->name_zh ?? '') }}" 
+                           value="{{ old('name_zh', optional($tourPackage)->name_zh ?? '') }}" 
                            required 
                            class="w-full pl-14 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('name_zh') border-red-500 @enderror" 
                            placeholder="中文名称">
@@ -103,7 +104,7 @@
                           rows="4" 
                           required 
                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_id') border-red-500 @enderror" 
-                          placeholder="Deskripsi lengkap dalam Bahasa Indonesia">{{ old('description_id', $tourPackage->description_id ?? '') }}</textarea>
+                          placeholder="Deskripsi lengkap dalam Bahasa Indonesia">{{ old('description_id', optional($tourPackage)->description_id ?? '') }}</textarea>
                 @error('description_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -119,7 +120,7 @@
                           rows="4" 
                           required 
                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_en') border-red-500 @enderror" 
-                          placeholder="Full description in English">{{ old('description_en', $tourPackage->description_en ?? '') }}</textarea>
+                          placeholder="Full description in English">{{ old('description_en', optional($tourPackage)->description_en ?? '') }}</textarea>
                 @error('description_en')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -135,7 +136,7 @@
                           rows="4" 
                           required 
                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('description_zh') border-red-500 @enderror" 
-                          placeholder="完整的中文描述">{{ old('description_zh', $tourPackage->description_zh ?? '') }}</textarea>
+                          placeholder="完整的中文描述">{{ old('description_zh', optional($tourPackage)->description_zh ?? '') }}</textarea>
                 @error('description_zh')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -163,7 +164,7 @@
                     <input type="number" 
                            name="price_idr" 
                            id="price_idr" 
-                           value="{{ old('price_idr', $tourPackage->price_idr ?? '') }}" 
+                           value="{{ old('price_idr', optional($tourPackage)->price_idr ?? '') }}" 
                            required 
                            min="0" 
                            step="0.01" 
@@ -185,7 +186,7 @@
                     <input type="number" 
                            name="price_usd" 
                            id="price_usd" 
-                           value="{{ old('price_usd', $tourPackage->price_usd ?? '') }}" 
+                           value="{{ old('price_usd', optional($tourPackage)->price_usd ?? '') }}" 
                            required 
                            min="0" 
                            step="0.01" 
@@ -207,7 +208,7 @@
                     <input type="number" 
                            name="price_cny" 
                            id="price_cny" 
-                           value="{{ old('price_cny', $tourPackage->price_cny ?? '') }}" 
+                           value="{{ old('price_cny', optional($tourPackage)->price_cny ?? '') }}" 
                            required 
                            min="0" 
                            step="0.01" 
@@ -229,7 +230,7 @@
                     <input type="number"
                             name="price_special_idr"
                             id="price_special_idr"
-                            value="{{ old('price_special_idr', $tourPackage->price_special_idr ?? '') }}"
+                            value="{{ old('price_special_idr', optional($tourPackage)->price_special_idr ?? '') }}"
                             min="0"
                             step="0.01"
                             class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_idr') border-red-500 @enderror"
@@ -250,7 +251,7 @@
                     <input type="number"
                             name="price_special_usd"
                             id="price_special_usd"
-                            value="{{ old('price_special_usd', $tourPackage->price_special_usd ?? '') }}"
+                            value="{{ old('price_special_usd', optional($tourPackage)->price_special_usd ?? '') }}"
                             min="0"
                             step="0.01"
                             class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_usd') border-red-500 @enderror"
@@ -271,7 +272,7 @@
                     <input type="number"
                             name="price_special_cny"
                             id="price_special_cny"
-                            value="{{ old('price_special_cny', $tourPackage->price_special_cny ?? '') }}"
+                            value="{{ old('price_special_cny', optional($tourPackage)->price_special_cny ?? '') }}"
                             min="0"
                             step="0.01"
                             class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_cny') border-red-500 @enderror"
@@ -291,7 +292,7 @@
                 <input type="number"
                        name="min_guests"
                        id="min_guests"
-                       value="{{ old('min_guests', $tourPackage->min_guests ?? 1) }}"
+                       value="{{ old('min_guests', optional($tourPackage)->min_guests ?? 1) }}"
                        min="1"
                        required
                        class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 @error('min_guests') border-red-500 @enderror">
@@ -308,7 +309,7 @@
                         <input type="checkbox" 
                                name="includes_guide" 
                                value="1" 
-                               {{ old('includes_guide', $tourPackage->includes_guide ?? true) ? 'checked' : '' }} 
+                               {{ old('includes_guide', optional($tourPackage)->includes_guide ?? true) ? 'checked' : '' }} 
                                class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
                         <span class="ml-3 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,7 +323,7 @@
                         <input type="checkbox" 
                                name="includes_transport" 
                                value="1" 
-                               {{ old('includes_transport', $tourPackage->includes_transport ?? true) ? 'checked' : '' }} 
+                               {{ old('includes_transport', optional($tourPackage)->includes_transport ?? true) ? 'checked' : '' }} 
                                class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded">
                         <span class="ml-3 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +348,7 @@
 
         <div id="itinerary-container" class="space-y-6">
             @php
-                $existingItinerary = old('itinerary', $tourPackage->itinerary ?? []);
+                $existingItinerary = old('itinerary', optional($tourPackage)->itinerary ?? []);
                 if (is_string($existingItinerary)) {
                     $decoded = json_decode($existingItinerary, true);
                     if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
@@ -406,17 +407,17 @@
         </h2>
 
         <div class="space-y-4">
-            @if($isEdit && $tourPackage->image)
+            @if($isEdit && optional($tourPackage)->image)
                 <div class="relative inline-block">
-                    @if(isset($tourPackage->image_derivatives))
+                    @if(isset(optional($tourPackage)->image_derivatives))
                         @include('components.responsive-image', [
-                            'path' => $tourPackage->image, 
+                            'path' => optional($tourPackage)->image, 
                             'alt' => 'Current Package Image', 
                             'class' => 'max-h-64 rounded-lg shadow-md border-2 border-gray-200', 
-                            'derivatives' => $tourPackage->image_derivatives
+                            'derivatives' => optional($tourPackage)->image_derivatives
                         ])
                     @else
-                        <img src="{{ Storage::url($tourPackage->image) }}" 
+                        <img src="{{ Storage::url(optional($tourPackage)->image) }}" 
                              alt="Current Package Image" 
                              class="max-h-64 rounded-lg shadow-md border-2 border-gray-200">
                     @endif
@@ -459,7 +460,7 @@
                     size="5">
                 @foreach($tours as $tour)
                     <option value="{{ $tour->id }}" 
-                            @if(collect(old('tours', $tourPackage->tours->pluck('id') ?? []))->contains($tour->id)) selected @endif
+                            @if(collect(old('tours', optional(optional($tourPackage)->tours)->pluck('id') ?? []))->contains($tour->id)) selected @endif
                             class="py-2">
                         {{ $tour->name_id ?? $tour->name }} / {{ $tour->name_en ?? '' }}
                     </option>
