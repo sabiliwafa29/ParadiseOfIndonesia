@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             TravelServiceSeeder::class,
             PickupSeeder::class,
             PickoffDestinationSeeder::class,
+            SpecialLinkSeeder::class,
         ]);
     }
 }
