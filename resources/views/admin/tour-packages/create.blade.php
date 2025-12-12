@@ -32,72 +32,13 @@
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                    <!-- Form -->
-                    @include('admin.tour-packages._form', ['tours' => \App\Models\Tour::all()])
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                                Preview
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        @endif
 
-            <!-- Tours Selection (if applicable) -->
-            @if(\App\Models\Tour::count() > 0)
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                    Tours Terkait
-                </h2>
-
-                <div>
-                    <label for="tours" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Pilih Tours <span class="text-gray-500 font-normal">(Multiple Select - Opsional)</span>
-                    </label>
-                    <select name="tours[]" 
-                            id="tours" 
-                            multiple 
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('tours') border-red-500 @enderror"
-                            size="5">
-                        @foreach(\App\Models\Tour::all() as $tour)
-                            <option value="{{ $tour->id }}" 
-                                    {{ in_array($tour->id, old('tours', [])) ? 'selected' : '' }}
-                                    class="py-2">
-                                {{ $tour->name ?? $tour->title ?? 'Tour #' . $tour->id }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <p class="mt-2 text-sm text-gray-500">Tekan Ctrl (Cmd di Mac) untuk memilih beberapa tours</p>
-                    @error('tours')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            @endif
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                <button type="submit" 
-                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Buat Package
-                </button>
-                <a href="{{ route('admin.tour-packages.index') }}" 
-                   class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300 transition-colors">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                    Batal
-                </a>
-            </div>
-        </form>
+        @include('admin.tour-packages._form', ['tours' => \App\Models\Tour::all()])
     </div>
 </div>
 
