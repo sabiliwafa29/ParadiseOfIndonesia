@@ -107,7 +107,26 @@ use Illuminate\Support\Str;
                             @endif
                             <p class="text-sm text-gray-600 mb-2">{{ __('messages.starting_from') ?? 'Starting from' }}</p>
                             <p class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
+                                @if(isset($specialPrice) && $specialPrice)
+                                    @php
+                                        // Determine which base price and currency label to use for display
+                                        $detected = $detectedCurrency ?? null;
+                                        if ($detected === 'IDR') {
+                                            $original = $package->price_idr;
+                                            $label = 'IDR';
+                                        } elseif ($detected === 'CNY') {
+                                            $original = $package->price_cny;
+                                            $label = 'CNY';
+                                        } else {
+                                            $original = $package->price_usd;
+                                            $label = 'USD';
+                                        }
+                                    @endphp
+                                    <span class="block">
+                                        <span class="line-through text-gray-400 mr-2">{{ format_price($original, $label) }}</span>
+                                        <span class="text-red-600">{{ format_price($specialPrice, $label) }}</span>
+                                    </span>
+                                @elseif(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
                                     @if($specialPrices['idr'])
                                         <span class="block">
                                             <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_idr, 'IDR') }}</span>
