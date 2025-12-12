@@ -48,9 +48,10 @@
                     <div class="p-6">
                         <!-- Price -->
                         <div class="mb-6">
+                            @php $basePrice = $basePrice ?? get_price($package); @endphp
                             <p class="text-sm text-gray-600 mb-1">{{ __('messages.package_price') ?? 'Package Price' }}</p>
                             <p class="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                {{ format_price(get_price($package)) }}
+                                {{ format_price($basePrice) }}
                             </p>
                             <p class="text-xs text-gray-500 mt-1">{{ __('messages.per_person') ?? 'per person' }}</p>
                         </div>
@@ -170,6 +171,9 @@
                     <!-- Booking Form -->
                     <form action="{{ route('bookings.store-package', $package) }}" method="POST" class="space-y-6" id="booking-form">
                         @csrf
+                        @if(!empty($specialLink) && !empty($specialLink->token))
+                            <input type="hidden" name="special_link_token" value="{{ $specialLink->token }}">
+                        @endif
 
                         <!-- Personal Information Section -->
                         <div class="space-y-6">
@@ -453,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const guestCountSpan = document.getElementById('guest-count');
     
     // Get price based on current locale/currency
-    const basePrice = {{ get_price($package) }};
+    const basePrice = {{ $basePrice ?? '0' }};
     const currencySymbol = '{{ currency_symbol() }}';
     const locale = '{{ app()->getLocale() }}';
     const minGuests = {{ $package->min_guests ?? 1 }};

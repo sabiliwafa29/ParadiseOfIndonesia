@@ -37,17 +37,9 @@ Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index
 Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
 Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->name('tour-packages.show');
 
-// Special route to clone tour-packages/1
-Route::get('/tour-packages/special/1', function() {
-    $package = \App\Models\TourPackage::findOrFail(1);
-    $package->load('tours.destination');
-    $specialPrices = [
-        'idr' => $package->price_special_idr,
-        'usd' => $package->price_special_usd,
-        'cny' => $package->price_special_cny,
-    ];
-    return view('tour-packages.show', ['package' => $package, 'specialPrices' => $specialPrices]);
-})->name('tour-packages.special.show');
+// Special package link (private token-based)
+Route::get('/tour-packages/special/{token}', [App\Http\Controllers\SpecialPackageController::class, 'show'])
+    ->name('tour-packages.special.show');
 
 // Booking package (bisa tanpa login)
 Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
@@ -156,6 +148,8 @@ Route::middleware('auth')->group(function () {
         
     // Tour Package Management
     Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+        // Special Links Management (private/custom links)
+        Route::resource('special-links', App\Http\Controllers\Admin\SpecialLinkController::class);
         
     // Tour Session Management
     Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);

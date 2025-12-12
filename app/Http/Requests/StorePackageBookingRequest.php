@@ -30,6 +30,7 @@ class StorePackageBookingRequest extends FormRequest
             'guests'  => "required|integer|min:{$minGuests}|max:50",
             'guide'   => 'sometimes|boolean',
             'transport' => 'sometimes|boolean',
+            'special_link_token' => 'sometimes|nullable|string|exists:special_links,token',
         ];
     }
 

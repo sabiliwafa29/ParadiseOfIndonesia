@@ -74,7 +74,24 @@ class BookingController extends Controller
 
     public function package(TourPackage $package)
     {
-        return view('bookings.package', compact('package'));
+        $specialLink = null;
+        $basePrice = get_price($package);
+
+        if (request()->has('special')) {
+            $token = request()->get('special');
+            $specialLink = \App\Models\SpecialLink::where('token', $token)->first();
+            if ($specialLink && $specialLink->isValid()) {
+                $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+                $specialPrice = $specialLink->priceForCurrency($currency);
+                if ($specialPrice) {
+                    $basePrice = $specialPrice;
+                }
+            } else {
+                $specialLink = null;
+            }
+        }
+
+        return view('bookings.package', compact('package', 'specialLink', 'basePrice'));
     }
 
     public function tour(Tour $tour)
@@ -311,7 +328,20 @@ class BookingController extends Controller
             $transportPrice = !empty($validated['transport']) ? $transportPricePerGuest * $validated['guests'] : 0;
             $addonCost      = $guidePrice + $transportPrice;
 
-            $basePrice  = get_price($package) * $validated['guests'];
+            $pricePerPerson = get_price($package);
+            // If booking from a special link, override price per person
+            if (!empty($validated['special_link_token'] ?? null)) {
+                $link = \App\Models\SpecialLink::where('token', $validated['special_link_token'])->first();
+                if ($link && $link->isValid()) {
+                    $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+                    $specialPrice = $link->priceForCurrency($currency);
+                    if ($specialPrice) {
+                        $pricePerPerson = $specialPrice;
+                    }
+                }
+            }
+
+            $basePrice  = $pricePerPerson * $validated['guests'];
             $totalPrice = $basePrice + $addonCost;
 
             // Generate order ID
@@ -348,6 +378,18 @@ class BookingController extends Controller
                 'booking_id' => $booking->id,
                 'order_id' => $booking->order_id,
             ]);
+
+            // If this booking used a special link, increment its usage counter
+            if (!empty($validated['special_link_token'] ?? null)) {
+                try {
+                    $link = \App\Models\SpecialLink::where('token', $validated['special_link_token'])->first();
+                    if ($link) {
+                        $link->increment('used_count');
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning('Unable to increment special link usage: ' . $e->getMessage());
+                }
+            }
 
             // Ambil Snap token Midtrans
             \Illuminate\Support\Facades\Log::info('🎫 [DEBUG] Generating Midtrans snap token...');

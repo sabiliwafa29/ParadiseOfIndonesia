@@ -400,7 +400,13 @@ use Illuminate\Support\Str;
 
                 <!-- Book Now Button -->
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center sm:justify-end gap-4 mb-8 sm:mb-12">
-                    <a href="{{ route('bookings.package', $package) }}"
+                    @php
+                        $bookingUrl = route('bookings.package', $package);
+                        if (!empty($specialLink) && !empty($specialLink->token)) {
+                            $bookingUrl .= '?special=' . urlencode($specialLink->token);
+                        }
+                    @endphp
+                    <a href="{{ $bookingUrl }}"
                        class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-base sm:text-lg font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
