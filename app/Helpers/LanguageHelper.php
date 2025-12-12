@@ -159,20 +159,14 @@ class LanguageHelper
         switch ($currency) {
             case 'IDR':
                 // Prefer special price when available
-                if (isset($model->price_special_idr) && $model->price_special_idr !== null && $model->price_special_idr !== '') {
-                    return $model->price_special_idr;
-                }
+                
                 return $model->price_idr ?? $model->price ?? 0;
             case 'CNY':
-                if (isset($model->price_special_cny) && $model->price_special_cny !== null && $model->price_special_cny !== '') {
-                    return $model->price_special_cny;
-                }
+                
                 return $model->price_cny ?? $model->price ?? 0;
             case 'USD':
             default:
-                if (isset($model->price_special_usd) && $model->price_special_usd !== null && $model->price_special_usd !== '') {
-                    return $model->price_special_usd;
-                }
+                
                 return $model->price_usd ?? $model->price ?? 0;
         }
     }
