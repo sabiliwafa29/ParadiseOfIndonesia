@@ -100,7 +100,28 @@ use Illuminate\Support\Str;
                         <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
                             <p class="text-sm text-gray-600 mb-2">{{ __('messages.starting_from') ?? 'Starting from' }}</p>
                             <p class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                {{ format_price(get_price($package)) }}
+                                @if(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
+                                    @if($specialPrices['idr'])
+                                        <span class="block">
+                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_idr, 'IDR') }}</span>
+                                            <span class="text-red-600">{{ format_price($specialPrices['idr'], 'IDR') }}</span>
+                                        </span>
+                                    @endif
+                                    @if($specialPrices['usd'])
+                                        <span class="block">
+                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_usd, 'USD') }}</span>
+                                            <span class="text-red-600">{{ format_price($specialPrices['usd'], 'USD') }}</span>
+                                        </span>
+                                    @endif
+                                    @if($specialPrices['cny'])
+                                        <span class="block">
+                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_cny, 'CNY') }}</span>
+                                            <span class="text-red-600">{{ format_price($specialPrices['cny'], 'CNY') }}</span>
+                                        </span>
+                                    @endif
+                                @else
+                                    {{ format_price(get_price($package)) }}
+                                @endif
                             </p>
                             <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
                         </div>

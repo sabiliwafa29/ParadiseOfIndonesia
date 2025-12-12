@@ -198,6 +198,68 @@
             </div>
 
             <!-- Price CNY -->
+                        <!-- Price Special (IDR) -->
+                        <div>
+                            <label for="price_special_idr" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Harga Spesial (IDR)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-red-500 font-semibold">Rp*</span>
+                                <input type="number"
+                                       name="price_special_idr"
+                                       id="price_special_idr"
+                                       value="{{ old('price_special_idr', $tourPackage->price_special_idr ?? '') }}"
+                                       min="0"
+                                       step="0.01"
+                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_idr') border-red-500 @enderror"
+                                       placeholder="Harga spesial IDR (opsional)">
+                            </div>
+                            @error('price_special_idr')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Price Special (USD) -->
+                        <div>
+                            <label for="price_special_usd" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Harga Spesial (USD)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-red-500 font-semibold">$*</span>
+                                <input type="number"
+                                       name="price_special_usd"
+                                       id="price_special_usd"
+                                       value="{{ old('price_special_usd', $tourPackage->price_special_usd ?? '') }}"
+                                       min="0"
+                                       step="0.01"
+                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_usd') border-red-500 @enderror"
+                                       placeholder="Harga spesial USD (opsional)">
+                            </div>
+                            @error('price_special_usd')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Price Special (CNY) -->
+                        <div>
+                            <label for="price_special_cny" class="block text-sm font-semibold text-gray-700 mb-2">
+                                Harga Spesial (CNY)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-red-500 font-semibold">¥*</span>
+                                <input type="number"
+                                       name="price_special_cny"
+                                       id="price_special_cny"
+                                       value="{{ old('price_special_cny', $tourPackage->price_special_cny ?? '') }}"
+                                       min="0"
+                                       step="0.01"
+                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_special_cny') border-red-500 @enderror"
+                                       placeholder="Harga spesial CNY (opsional)">
+                            </div>
+                            @error('price_special_cny')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
             <div>
                 <label for="price_cny" class="block text-sm font-semibold text-gray-700 mb-2">
                     Harga (CNY) <span class="text-red-500">*</span>

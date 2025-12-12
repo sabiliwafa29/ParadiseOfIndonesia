@@ -37,6 +37,18 @@ Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index
 Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
 Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->name('tour-packages.show');
 
+// Special route to clone tour-packages/1
+Route::get('/tour-packages/special/1', function() {
+    $package = \App\Models\TourPackage::findOrFail(1);
+    $package->load('tours.destination');
+    $specialPrices = [
+        'idr' => $package->price_special_idr,
+        'usd' => $package->price_special_usd,
+        'cny' => $package->price_special_cny,
+    ];
+    return view('tour-packages.show', ['package' => $package, 'specialPrices' => $specialPrices]);
+})->name('tour-packages.special.show');
+
 // Booking package (bisa tanpa login)
 Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
 Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
