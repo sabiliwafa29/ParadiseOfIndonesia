@@ -63,6 +63,15 @@
                     <span class="sidebar-text font-medium">Tour Packages</span>
                 </a>
 
+                <a href="{{ route('admin.special-links.index') }}"
+                   class="flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.special-links.*') ? 'bg-emerald-50 text-emerald-700' : 'text-gray-700 hover:bg-gray-100' }} transition"
+                   title="Special Links">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7"/>
+                    </svg>
+                    <span class="sidebar-text font-medium">Special Links</span>
+                </a>
+
                 <a href="{{ route('admin.bookings.index') }}" 
                    class="flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.bookings.*') ? 'bg-emerald-50 text-emerald-700' : 'text-gray-700 hover:bg-gray-100' }} transition"
                    title="Bookings">

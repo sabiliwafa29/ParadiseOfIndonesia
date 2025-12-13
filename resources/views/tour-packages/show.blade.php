@@ -129,44 +129,7 @@ use Illuminate\Support\Str;
                                     {{ format_price(get_price($package)) }}
                                 @endif
                             </p>
-                            @if(empty($specialLink) || empty($specialLink->token))
-                                <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
-                            @endif
-
-                            @if(!empty($specialLink) && !empty($specialLink->token))
-                                @php
-                                    $minGuests = $package->min_guests ?? 1;
-                                    $preGuests = $preselectedGuests ?? $minGuests;
-                                    $maxGuests = $specialLink->max_guests ?? 50;
-                                    $maxGuests = $maxGuests > 0 ? min(50, $maxGuests) : 50;
-                                @endphp
-                                <div class="mt-4 text-sm text-gray-700">
-                                    <span class="block mb-1 font-medium">{{ __('messages.number_of_guests') ?? 'Number of Guests' }}</span>
-                                    @php
-                                        // Display guest info as text only. If admin set a fixed range, show range.
-                                        $guestLabel = '';
-                                        if (!empty($specialLink->min_guests) && !empty($specialLink->max_guests)) {
-                                            if ($specialLink->min_guests == $specialLink->max_guests) {
-                                                $guestLabel = $specialLink->min_guests . ' ' . (($specialLink->min_guests == 1) ? __('messages.guest') : __('messages.guests'));
-                                            } else {
-                                                $guestLabel = $specialLink->min_guests . ' - ' . $specialLink->max_guests . ' ' . __('messages.guests');
-                                            }
-                                        } elseif (!empty($specialLink->min_guests)) {
-                                            $guestLabel = __('messages.from_min_guests', ['min' => $specialLink->min_guests]) ?? ('From ' . $specialLink->min_guests . ' ' . __('messages.guests'));
-                                        } elseif (!empty($specialLink->max_guests)) {
-                                            $guestLabel = __('messages.up_to_max_guests', ['max' => $specialLink->max_guests]) ?? ('Up to ' . $specialLink->max_guests . ' ' . __('messages.guests'));
-                                        } else {
-                                            $guestLabel = ($preGuests ?? $minGuests) . ' ' . ((($preGuests ?? $minGuests) == 1) ? __('messages.guest') : __('messages.guests'));
-                                        }
-                                    @endphp
-                                    <div class="inline-block px-3 py-2 bg-gray-100 rounded">{{ $guestLabel }}</div>
-
-                                    <div class="mt-3">
-                                        <span class="font-medium">{{ __('messages.total_for_guests') ?? 'Total for guests' }}:</span>
-                                        <span id="special-total" class="ml-2 text-lg font-semibold text-red-600">{{ format_price(($specialPrice ?? 0) * ($preGuests ?? $minGuests), $detectedCurrency ?? null) }}</span>
-                                    </div>
-                                </div>
-                            @endif
+                            <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
                         </div>
                     </div>
                 </div>
@@ -553,44 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Special link guest selector: update total and Book Now URL
-    const specialGuests = document.getElementById('special-guests');
-    const specialTotal = document.getElementById('special-total');
-    const bookNowLink = document.querySelector('a[href*="bookings/package"]') || document.querySelector('a[href*="bookings.package"]') || document.querySelector('.inline-flex.items-center.justify-center');
-    try {
-        const specialPerPerson = parseFloat({{ $specialPrice ?? '0' }});
-        const detectedCurrency = '{{ $detectedCurrency ?? '' }}';
-        const currencySymbol = '{{ currency_symbol() }}';
-
-        function formatAmount(amount) {
-            try {
-                if ('{{ app()->getLocale() }}' === 'id') {
-                    return currencySymbol + ' ' + Math.round(amount).toLocaleString('id-ID');
-                } else {
-                    return currencySymbol + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }
-            } catch (e) {
-                return amount;
-            }
-        }
-
-        if (specialGuests && specialTotal) {
-            specialGuests.addEventListener('change', function() {
-                const guests = parseInt(this.value) || 1;
-                const total = specialPerPerson * guests;
-                specialTotal.textContent = formatAmount(total);
-
-                // Update Book Now link to include guests param
-                if (bookNowLink && bookNowLink.href) {
-                    const url = new URL(bookNowLink.href);
-                    url.searchParams.set('guests', guests);
-                    bookNowLink.href = url.toString();
-                }
-            });
-        }
-    } catch (e) {
-        // ignore formatting errors
-    }
+    // No special guest mutation needed on this page; booking page handles guest input.
 });
 </script>
 @endsection

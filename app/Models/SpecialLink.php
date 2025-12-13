@@ -19,6 +19,7 @@ class SpecialLink extends Model
         'expires_at',
         'min_guests',
         'max_guests',
+        'fixed_guests',
         'max_uses',
         'used_count',
         'note',
@@ -34,6 +35,7 @@ class SpecialLink extends Model
         'price_special_cny' => 'decimal:2',
         'min_guests' => 'integer',
         'max_guests' => 'integer',
+        'fixed_guests' => 'integer',
         'used_count' => 'integer',
         'max_uses' => 'integer',
     ];
@@ -77,6 +79,10 @@ class SpecialLink extends Model
      */
     public function appliesToGuests(int $guests): bool
     {
+        // If fixed_guests is set, only that exact number applies
+        if ($this->fixed_guests !== null) {
+            return $guests === (int) $this->fixed_guests;
+        }
         if ($this->min_guests !== null && $guests < $this->min_guests) {
             return false;
         }

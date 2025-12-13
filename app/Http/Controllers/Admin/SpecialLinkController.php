@@ -34,11 +34,17 @@ class SpecialLinkController extends Controller
             'max_uses' => 'nullable|integer|min:1',
             'min_guests' => 'nullable|integer|min:1',
             'max_guests' => 'nullable|integer|min:1',
+            'fixed_guests' => 'nullable|integer|min:1',
             'note' => 'nullable|string|max:1000',
         ]);
         // Ensure max_guests >= min_guests when both provided
         if (!empty($data['min_guests']) && !empty($data['max_guests']) && $data['max_guests'] < $data['min_guests']) {
             return redirect()->back()->withInput()->withErrors(['max_guests' => 'Max guests must be greater than or equal to min guests.']);
+        }
+        // If fixed_guests provided, set min/max to fixed for consistency
+        if (!empty($data['fixed_guests'])) {
+            $data['min_guests'] = $data['fixed_guests'];
+            $data['max_guests'] = $data['fixed_guests'];
         }
         $data['token'] = Str::lower(Str::random(12));
         $data['created_by'] = auth()->id();
@@ -67,11 +73,18 @@ class SpecialLinkController extends Controller
             'max_uses' => 'nullable|integer|min:1',
             'min_guests' => 'nullable|integer|min:1',
             'max_guests' => 'nullable|integer|min:1',
+            'fixed_guests' => 'nullable|integer|min:1',
             'note' => 'nullable|string|max:1000',
         ]);
 
         if (!empty($data['min_guests']) && !empty($data['max_guests']) && $data['max_guests'] < $data['min_guests']) {
             return redirect()->back()->withInput()->withErrors(['max_guests' => 'Max guests must be greater than or equal to min guests.']);
+        }
+
+        // If fixed_guests provided, set min/max to fixed for consistency
+        if (!empty($data['fixed_guests'])) {
+            $data['min_guests'] = $data['fixed_guests'];
+            $data['max_guests'] = $data['fixed_guests'];
         }
 
         $special_link->update($data);

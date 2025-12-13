@@ -90,6 +90,11 @@
                         <input type="number" name="max_guests" min="1" value="{{ $link->max_guests ?? '' }}" class="w-full mt-1 p-2 border rounded">
                     </div>
                 </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium">Fixed Guests (optional)</label>
+                    <p class="text-xs text-gray-500">If set, the special price applies only for this exact guest count.</p>
+                    <input type="number" name="fixed_guests" min="1" value="{{ $link->fixed_guests ?? '' }}" class="w-40 mt-1 p-2 border rounded">
+                </div>
 
                 <div>
                     <label class="block text-sm font-medium">Note</label>
