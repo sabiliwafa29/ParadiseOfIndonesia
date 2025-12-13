@@ -150,6 +150,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
         // Special Links Management (private/custom links)
         Route::resource('special-links', App\Http\Controllers\Admin\SpecialLinkController::class);
+        // Debug: expose the last N lines of laravel.log to admin (use ?limit=200)
+        Route::get('debug/laravel-log', [App\Http\Controllers\Admin\DebugController::class, 'laravelLog'])->name('admin.debug.laravel_log');
         
     // Tour Session Management
     Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);

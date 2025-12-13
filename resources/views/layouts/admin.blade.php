@@ -72,6 +72,32 @@
                     <span class="sidebar-text font-medium">Special Links</span>
                 </a>
 
+                {{-- Admin Debug: fetch laravel log and print to console when ?showLogs=1 is present --}}
+                <script>
+                    (function(){
+                        try {
+                            const params = new URLSearchParams(window.location.search);
+                            if (!params.has('showLogs')) return;
+                            const limit = params.get('limit') || 200;
+                            fetch('/admin/debug/laravel-log?limit=' + encodeURIComponent(limit), {
+                                credentials: 'same-origin',
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                            .then(resp => resp.json())
+                            .then(data => {
+                                if (data && Array.isArray(data.lines)) {
+                                    console.group('Laravel Log (last ' + data.lines.length + ' lines)');
+                                    data.lines.forEach(line => console.log(line));
+                                    console.groupEnd();
+                                } else if (data && data.error) {
+                                    console.error('Failed to fetch laravel log:', data.error);
+                                }
+                            })
+                            .catch(err => console.error('Error fetching laravel log:', err));
+                        } catch (e) { console.warn('Log fetch skipped:', e); }
+                    })();
+                </script>
+
                 <a href="{{ route('admin.bookings.index') }}" 
                    class="flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.bookings.*') ? 'bg-emerald-50 text-emerald-700' : 'text-gray-700 hover:bg-gray-100' }} transition"
                    title="Bookings">
