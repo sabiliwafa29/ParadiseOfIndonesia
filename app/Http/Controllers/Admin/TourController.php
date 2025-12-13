@@ -71,7 +71,7 @@ class TourController extends Controller
             'description_id' => 'required|string',
             'description_en' => 'required|string',
             'description_zh' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price_usd' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'destination_id' => 'required|exists:destinations,id',
             'image' => 'nullable|image|max:4096',
@@ -82,9 +82,7 @@ class TourController extends Controller
             'featured' => 'nullable|boolean',
         ]);
 
-        // Set price_usd from price field
-        $data['price_usd'] = $data['price'];
-        unset($data['price']);
+        // Ensure min_guests is integer (already validated)
 
         // Set default values
         $data['featured'] = $request->has('featured') ? true : false;

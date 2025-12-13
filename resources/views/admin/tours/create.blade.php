@@ -134,11 +134,11 @@
             {{-- Price & Duration --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD) *</label>
-                    <input type="number" name="price" id="price" value="{{ old('price') }}" required min="0" step="0.01"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price') border-red-500 @enderror"
+                    <label for="price_usd" class="block text-sm font-semibold text-gray-700 mb-2">Price (USD) *</label>
+                    <input type="number" name="price_usd" id="price_usd" value="{{ old('price_usd') }}" required min="0" step="0.01"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent @error('price_usd') border-red-500 @enderror"
                         placeholder="0.00">
-                    @error('price')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+                    @error('price_usd')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
                 </div>
                 <div>
                     <label for="duration" class="block text-sm font-semibold text-gray-700 mb-2">Duration (Days) *</label>
