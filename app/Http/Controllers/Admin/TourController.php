@@ -229,6 +229,18 @@ class TourController extends Controller
         // Update tour with all data including image
         $tour->update($data);
 
+        // DEBUG: Log updated data to help diagnose edit/sync issues
+        try {
+            \Log::info('Admin Tour updated', [
+                'tour_id' => $tour->id,
+                'updated_data' => $data,
+                'tour_after' => $tour->fresh()->toArray(),
+            ]);
+        } catch (\Exception $e) {
+            // avoid breaking flow if logging fails
+            \Log::warning('Failed to log tour update debug info: ' . $e->getMessage());
+        }
+
         // Auto-convert prices if price_usd was updated
         if (isset($data['price_usd'])) {
             $tour->autoConvertPrices();
