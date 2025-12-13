@@ -129,7 +129,9 @@ use Illuminate\Support\Str;
                                     {{ format_price(get_price($package)) }}
                                 @endif
                             </p>
-                            <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
+                            @if(empty($specialLink) || empty($specialLink->token))
+                                <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
+                            @endif
 
                             @if(!empty($specialLink) && !empty($specialLink->token))
                                 @php
@@ -138,18 +140,31 @@ use Illuminate\Support\Str;
                                     $maxGuests = $specialLink->max_guests ?? 50;
                                     $maxGuests = $maxGuests > 0 ? min(50, $maxGuests) : 50;
                                 @endphp
-                                <div class="mt-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.number_of_guests') ?? 'Number of Guests' }}</label>
-                                    <select id="special-guests" class="w-40 px-3 py-2 border rounded">
-                                        @for($i = $minGuests; $i <= $maxGuests; $i++)
-                                            <option value="{{ $i }}" {{ $i == $preGuests ? 'selected' : '' }}>{{ $i }} {{ $i == 1 ? __('messages.guest') : __('messages.guests') }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-
                                 <div class="mt-4 text-sm text-gray-700">
-                                    <span class="font-medium">{{ __('messages.total_for_guests') ?? 'Total for guests' }}:</span>
-                                    <span id="special-total" class="ml-2 text-lg font-semibold text-red-600">{{ format_price(($specialPrice ?? 0) * $preGuests, $detectedCurrency ?? null) }}</span>
+                                    <span class="block mb-1 font-medium">{{ __('messages.number_of_guests') ?? 'Number of Guests' }}</span>
+                                    @php
+                                        // Display guest info as text only. If admin set a fixed range, show range.
+                                        $guestLabel = '';
+                                        if (!empty($specialLink->min_guests) && !empty($specialLink->max_guests)) {
+                                            if ($specialLink->min_guests == $specialLink->max_guests) {
+                                                $guestLabel = $specialLink->min_guests . ' ' . (($specialLink->min_guests == 1) ? __('messages.guest') : __('messages.guests'));
+                                            } else {
+                                                $guestLabel = $specialLink->min_guests . ' - ' . $specialLink->max_guests . ' ' . __('messages.guests');
+                                            }
+                                        } elseif (!empty($specialLink->min_guests)) {
+                                            $guestLabel = __('messages.from_min_guests', ['min' => $specialLink->min_guests]) ?? ('From ' . $specialLink->min_guests . ' ' . __('messages.guests'));
+                                        } elseif (!empty($specialLink->max_guests)) {
+                                            $guestLabel = __('messages.up_to_max_guests', ['max' => $specialLink->max_guests]) ?? ('Up to ' . $specialLink->max_guests . ' ' . __('messages.guests'));
+                                        } else {
+                                            $guestLabel = ($preGuests ?? $minGuests) . ' ' . ((($preGuests ?? $minGuests) == 1) ? __('messages.guest') : __('messages.guests'));
+                                        }
+                                    @endphp
+                                    <div class="inline-block px-3 py-2 bg-gray-100 rounded">{{ $guestLabel }}</div>
+
+                                    <div class="mt-3">
+                                        <span class="font-medium">{{ __('messages.total_for_guests') ?? 'Total for guests' }}:</span>
+                                        <span id="special-total" class="ml-2 text-lg font-semibold text-red-600">{{ format_price(($specialPrice ?? 0) * ($preGuests ?? $minGuests), $detectedCurrency ?? null) }}</span>
+                                    </div>
                                 </div>
                             @endif
                         </div>
