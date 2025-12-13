@@ -195,6 +195,29 @@ class BookingController extends Controller
 
             // Calculate price
             $pricePerPerson = get_price($tour);
+
+            // If booking with a special link token, validate and possibly override price
+            $specialToken = $request->input('special_link_token');
+            if (!empty($specialToken)) {
+                $link = \App\Models\SpecialLink::where('token', $specialToken)->first();
+                if ($link && $link->isValid()) {
+                    // If the link has specific tours defined, ensure this tour is one of them
+                    if (!empty($link->tours) && is_array($link->tours) && !in_array($tour->id, $link->tours)) {
+                        return redirect()->back()->withInput()->with('error', 'The provided special link does not apply to this tour.');
+                    }
+
+                    // Enforce guest constraints if present on the special link
+                    if (isset($validated['guests']) && !$link->appliesToGuests(intval($validated['guests']))) {
+                        return redirect()->back()->withInput()->with('error', 'The selected number of guests is not eligible for this special price.');
+                    }
+
+                    $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+                    $specialPrice = $link->priceForCurrency($currency);
+                    if ($specialPrice) {
+                        $pricePerPerson = $specialPrice;
+                    }
+                }
+            }
             $totalPrice = $pricePerPerson * $validated['guests'];
 
             // Generate order ID

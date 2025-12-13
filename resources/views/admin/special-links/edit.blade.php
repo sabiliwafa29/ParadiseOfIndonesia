@@ -46,24 +46,35 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium">Package</label>
-                    <select name="tour_package_id" class="w-full mt-1 p-2 border rounded">
-                        @foreach($packages as $p)
-                            <option value="{{ $p->id }}" {{ $p->id == $link->tour_package_id ? 'selected' : '' }}>{{ $p->name }}</option>
-                        @endforeach
+                    <label class="block text-sm font-medium">Apply To (choose package or one/more tours)</label>
+                    <p class="text-xs text-gray-500">Select a package to apply the special link to the whole package, or select one or more tours to apply the special link only to those tours. Do not mix package + tours selections.</p>
+                    <select id="target-selection" name="target_selection[]" multiple class="w-full mt-1 p-2 border rounded h-44">
+                        <optgroup label="Packages">
+                            @foreach($packages as $p)
+                                @php
+                                    $pkgSelected = old('tour_package_id') ? (old('tour_package_id') == $p->id) : ($link->tour_package_id == $p->id);
+                                @endphp
+                                <option value="pkg:{{ $p->id }}" {{ $pkgSelected ? 'selected' : '' }}>Package: {{ $p->name }}</option>
+                            @endforeach
+                        </optgroup>
+                        <optgroup label="Tours">
+                            @foreach($tours as $t)
+                                @php $selectedTours = old('tours', $link->tours ?? []); @endphp
+                                <option value="tour:{{ $t->id }}" @if(in_array($t->id, $selectedTours)) selected @endif>Tour: {{ $t->name }}</option>
+                            @endforeach
+                        </optgroup>
                     </select>
+
+                    <input type="hidden" name="tour_package_id" id="tour_package_id" value="{{ old('tour_package_id', $link->tour_package_id ?? '') }}">
+                    <div id="tours-hidden-inputs">
+                        @foreach(old('tours', $link->tours ?? []) as $oldTourId)
+                            <input type="hidden" name="tours[]" value="{{ $oldTourId }}">
+                        @endforeach
+                    </div>
+                    <p id="target-error" class="text-sm text-red-600 mt-2 hidden">Please select either package or tours, not both.</p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium">Apply To Tours (optional)</label>
-                        <p class="text-xs text-gray-500">Select specific tours that this special link should apply to. Leave empty to apply to the package only.</p>
-                        <select name="tours[]" multiple class="w-full mt-1 p-2 border rounded h-40">
-                            @foreach($tours as $t)
-                                <option value="{{ $t->id }}" @if(in_array($t->id, $link->tours ?? [])) selected @endif>{{ $t->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div>
                         <label class="block text-sm font-medium">Price USD</label>
                         <input type="number" step="0.01" name="price_special_usd" value="{{ $link->price_special_usd }}" class="w-full mt-1 p-2 border rounded">
@@ -136,6 +147,54 @@
             });
         }
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('target-selection');
+    const hiddenPackage = document.getElementById('tour_package_id');
+    const hiddenContainer = document.getElementById('tours-hidden-inputs');
+    const errorEl = document.getElementById('target-error');
+    const form = select ? select.closest('form') : null;
+
+    function syncHiddenInputs() {
+        hiddenContainer.innerHTML = '';
+        let hasPkg = false;
+        let pkgId = null;
+        let hasTour = false;
+        const selected = Array.from(select.selectedOptions).map(o => o.value);
+
+        selected.forEach(val => {
+            if (val.startsWith('pkg:')) {
+                hasPkg = true;
+                if (!pkgId) pkgId = val.split(':')[1];
+            } else if (val.startsWith('tour:')) {
+                hasTour = true;
+                const id = val.split(':')[1];
+                const inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'tours[]';
+                inp.value = id;
+                hiddenContainer.appendChild(inp);
+            }
+        });
+
+        if (hasPkg && hasTour) {
+            errorEl.classList.remove('hidden');
+            if (form) form.querySelector('button[type="submit"], button').disabled = true;
+        } else {
+            errorEl.classList.add('hidden');
+            if (form) form.querySelector('button[type="submit"], button').disabled = false;
+        }
+
+        hiddenPackage.value = pkgId || '';
+    }
+
+    if (select) {
+        select.addEventListener('change', syncHiddenInputs);
+        syncHiddenInputs();
+    }
+});
 </script>
 
 @endsection

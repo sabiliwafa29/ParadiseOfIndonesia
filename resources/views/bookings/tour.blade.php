@@ -17,6 +17,22 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             <!-- Left Column - Tour Info -->
             <div class="lg:col-span-1">
+                    @php
+                        $specialToken = request()->get('special') ?? request()->get('special_link_token');
+                        $specialLink = null;
+                        $specialPriceValue = null;
+                        if ($specialToken) {
+                            $specialLink = \App\Models\SpecialLink::where('token', $specialToken)->first();
+                            if ($specialLink && $specialLink->isValid()) {
+                                // If the special link targets specific tours, ensure this tour is included
+                                if (empty($specialLink->tours) || (is_array($specialLink->tours) && in_array($tour->id, $specialLink->tours))) {
+                                    $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+                                    $specialPriceValue = $specialLink->priceForCurrency($currency);
+                                }
+                            }
+                        }
+                        $priceForJs = $specialPriceValue ?? get_price($tour);
+                    @endphp
                 <!-- Tour Card -->
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden sticky top-6">
                     <div class="relative h-48">
@@ -45,9 +61,17 @@
                         <!-- Price -->
                         <div class="mb-6">
                             <p class="text-sm text-gray-600 mb-1">{{ __('messages.tour_price') ?? 'Tour Price' }}</p>
-                            <p class="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                                {{ format_price(get_price($tour)) }}
-                            </p>
+                            @if(!empty($specialPriceValue))
+                                <div class="flex items-baseline gap-3">
+                                    <p class="text-xl text-gray-500 line-through">{{ format_price(get_price($tour)) }}</p>
+                                    <p class="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{{ format_price($specialPriceValue) }}</p>
+                                    <span class="inline-block ml-2 px-2 py-1 text-xs bg-emerald-100 text-emerald-700 rounded">Special Price</span>
+                                </div>
+                            @else
+                                <p class="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                                    {{ format_price(get_price($tour)) }}
+                                </p>
+                            @endif
                             <p class="text-xs text-gray-500 mt-1">{{ __('messages.per_person') ?? 'per person' }}</p>
                         </div>
 
@@ -148,6 +172,7 @@
                     <!-- Booking Form -->
                     <form action="{{ route('bookings.store-tour', $tour) }}" method="POST" class="space-y-6" id="booking-form">
                         @csrf
+                        <input type="hidden" name="special_link_token" value="{{ request()->get('special') ?? request()->get('special_link_token') ?? '' }}">
 
                         <!-- Personal Information Section -->
                         <div class="space-y-6">
@@ -394,8 +419,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const buttonLoading = document.getElementById('button-loading');
     const guestCountSpan = document.getElementById('guest-count');
     
-    // Get price based on current locale/currency
-    const basePrice = {{ get_price($tour) }};
+    // Get price based on current locale/currency (may be overridden by special link)
+    const basePrice = {{ $priceForJs }};
     const currencySymbol = '{{ currency_symbol() }}';
     const locale = '{{ app()->getLocale() }}';
     const minGuests = {{ $tour->min_guests ?? 1 }};
