@@ -40,18 +40,33 @@
                 <div>
                     <label class="block text-sm font-medium">Apply To (choose package or one/more tours)</label>
                     <p class="text-xs text-gray-500">Select a package to apply the special link to the whole package, or select one or more tours to apply the special link only to those tours. Do not mix package + tours selections.</p>
-                    <select id="target-selection" name="target_selection[]" multiple class="w-full mt-1 p-2 border rounded h-44">
-                        <optgroup label="Packages">
-                            @foreach($packages as $p)
-                                <option value="pkg:{{ $p->id }}" @if(old('tour_package_id') == $p->id) selected @endif>Package: {{ $p->name }}</option>
-                            @endforeach
-                        </optgroup>
-                        <optgroup label="Tours">
-                            @foreach($tours as $t)
-                                <option value="tour:{{ $t->id }}" @if(in_array($t->id, old('tours', []))) selected @endif>Tour: {{ $t->name }}</option>
-                            @endforeach
-                        </optgroup>
-                    </select>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium">Packages</label>
+                            <p class="text-xs text-gray-500">Select one package to apply the special link for the entire package.</p>
+                            <div class="mt-2 p-2 border rounded max-h-56 overflow-auto">
+                                @foreach($packages as $p)
+                                    <label class="flex items-center gap-2 p-1 rounded hover:bg-gray-50">
+                                        <input type="radio" name="package_choice" value="pkg:{{ $p->id }}" class="package-choice" {{ old('tour_package_id') == $p->id ? 'checked' : '' }}>
+                                        <span class="text-sm">{{ $p->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium">Tours</label>
+                            <p class="text-xs text-gray-500">Or choose one or more tours to apply the special link only to those tours.</p>
+                            <div class="mt-2 p-2 border rounded max-h-56 overflow-auto">
+                                @foreach($tours as $t)
+                                    <label class="flex items-center gap-2 p-1 rounded hover:bg-gray-50">
+                                        <input type="checkbox" name="tour_choice[]" value="{{ $t->id }}" class="tour-choice" {{ in_array($t->id, old('tours', [])) ? 'checked' : '' }}>
+                                        <span class="text-sm">{{ $t->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
 
                     <input type="hidden" name="tour_package_id" id="tour_package_id" value="{{ old('tour_package_id', '') }}">
                     <div id="tours-hidden-inputs">
@@ -59,7 +74,7 @@
                             <input type="hidden" name="tours[]" value="{{ $oldTourId }}">
                         @endforeach
                     </div>
-                    <p id="target-error" class="text-sm text-red-600 mt-2 hidden">Please select either package or tours, not both.</p>
+                    <p id="target-error" class="text-sm text-red-600 mt-2 hidden">Please select either a package or one or more tours — not both.</p>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
@@ -134,26 +149,27 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasPkg = false;
         let pkgId = null;
         let hasTour = false;
-        const selected = Array.from(select.selectedOptions).map(o => o.value);
 
-        selected.forEach(val => {
-            if (val.startsWith('pkg:')) {
-                hasPkg = true;
-                if (!pkgId) pkgId = val.split(':')[1];
-            } else if (val.startsWith('tour:')) {
-                hasTour = true;
-                const id = val.split(':')[1];
-                const inp = document.createElement('input');
-                inp.type = 'hidden';
-                inp.name = 'tours[]';
-                inp.value = id;
-                hiddenContainer.appendChild(inp);
-            }
+        const selectedPkg = document.querySelector('input[name="package_choice"]:checked');
+        const selectedTours = Array.from(document.querySelectorAll('input[name="tour_choice[]"]:checked'));
+
+        if (selectedPkg) {
+            hasPkg = true;
+            pkgId = selectedPkg.value.split(':')[1];
+        }
+
+        selectedTours.forEach(cb => {
+            hasTour = true;
+            const id = cb.value;
+            const inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = 'tours[]';
+            inp.value = id;
+            hiddenContainer.appendChild(inp);
         });
 
         if (hasPkg && hasTour) {
             errorEl.classList.remove('hidden');
-            // disable submit
             if (form) form.querySelector('button[type="submit"], button').disabled = true;
         } else {
             errorEl.classList.add('hidden');
@@ -164,7 +180,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (select) {
-        select.addEventListener('change', syncHiddenInputs);
+        // wire package radios and tour checkboxes
+        document.querySelectorAll('input[name="package_choice"]').forEach(r => r.addEventListener('change', function() {
+            // if a package is chosen, uncheck tours
+            if (this.checked) {
+                document.querySelectorAll('input[name="tour_choice[]"]').forEach(cb => cb.checked = false);
+            }
+            syncHiddenInputs();
+        }));
+
+        document.querySelectorAll('input[name="tour_choice[]"]').forEach(cb => cb.addEventListener('change', function() {
+            // if any tour is checked, clear package radio
+            if (this.checked) {
+                document.querySelectorAll('input[name="package_choice"]').forEach(r => r.checked = false);
+            }
+            syncHiddenInputs();
+        }));
+
         // initial sync
         syncHiddenInputs();
     }
