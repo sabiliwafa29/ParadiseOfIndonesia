@@ -30,7 +30,7 @@
                             <div class="flex items-center gap-2">
                                 <span class="token-text">{{ $link->token }}</span>
                                 <button type="button" data-token="{{ $link->token }}" class="copy-token inline-flex items-center px-2 py-1 border rounded text-xs bg-gray-50 hover:bg-gray-100">Copy</button>
-                                <a href="{{ url('/tour-package/special/'.$link->token) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 border rounded text-xs bg-white hover:bg-gray-100 text-emerald-600" title="Open special link in new tab">
+                                <a href="{{ url('/tour-packages/special/'.$link->token) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 border rounded text-xs bg-white hover:bg-gray-100 text-emerald-600" title="Open special link in new tab">
                                     Open
                                 </a>
                             </div>
