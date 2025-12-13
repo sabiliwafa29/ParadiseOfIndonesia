@@ -110,9 +110,12 @@ class TourController extends Controller
 
         $tour = Tour::create($data);
 
-        // Auto-convert prices
-        $tour->autoConvertPrices();
-        $tour->save();
+        // Auto-convert prices only when the admin did not provide explicit IDR/CNY values.
+        // This preserves manual multi-currency edits when present.
+        if (empty($data['price_idr']) && empty($data['price_cny'])) {
+            $tour->autoConvertPrices();
+            $tour->save();
+        }
 
         // Dispatch derivative processing job if image was uploaded
         if ($request->hasFile('image') && isset($data['image'])) {
@@ -239,8 +242,8 @@ class TourController extends Controller
             \Log::warning('Failed to log tour update debug info: ' . $e->getMessage());
         }
 
-        // Auto-convert prices if price_usd was updated
-        if (isset($data['price_usd'])) {
+        // Auto-convert prices if price_usd was updated AND admin did not submit manual IDR/CNY values
+        if (isset($data['price_usd']) && empty($data['price_idr']) && empty($data['price_cny'])) {
             $tour->autoConvertPrices();
             $tour->save();
         }
