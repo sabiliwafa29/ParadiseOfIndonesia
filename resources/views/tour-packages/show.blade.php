@@ -109,47 +109,49 @@ use Illuminate\Support\Str;
                             <p class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                                 @if(isset($specialPrice) && $specialPrice)
                                     @php
-                                        // Determine which base price and currency label to use for display
                                         $detected = $detectedCurrency ?? null;
-                                        if ($detected === 'IDR') {
-                                            $original = $package->price_idr;
-                                            $label = 'IDR';
-                                        } elseif ($detected === 'CNY') {
-                                            $original = $package->price_cny;
-                                            $label = 'CNY';
-                                        } else {
-                                            $original = $package->price_usd;
-                                            $label = 'USD';
-                                        }
+                                        $label = $detected === 'IDR' ? 'IDR' : ($detected === 'CNY' ? 'CNY' : 'USD');
                                     @endphp
                                     <span class="block">
-                                        <span class="line-through text-gray-400 mr-2">{{ format_price($original, $label) }}</span>
                                         <span class="text-red-600">{{ format_price($specialPrice, $label) }}</span>
                                     </span>
                                 @elseif(isset($specialPrices) && (isset($specialPrices['idr']) || isset($specialPrices['usd']) || isset($specialPrices['cny'])))
-                                    @if($specialPrices['idr'])
-                                        <span class="block">
-                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_idr, 'IDR') }}</span>
-                                            <span class="text-red-600">{{ format_price($specialPrices['idr'], 'IDR') }}</span>
-                                        </span>
+                                    @if(!empty($specialPrices['idr']))
+                                        <span class="block text-red-600">{{ format_price($specialPrices['idr'], 'IDR') }}</span>
                                     @endif
-                                    @if($specialPrices['usd'])
-                                        <span class="block">
-                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_usd, 'USD') }}</span>
-                                            <span class="text-red-600">{{ format_price($specialPrices['usd'], 'USD') }}</span>
-                                        </span>
+                                    @if(!empty($specialPrices['usd']))
+                                        <span class="block text-red-600">{{ format_price($specialPrices['usd'], 'USD') }}</span>
                                     @endif
-                                    @if($specialPrices['cny'])
-                                        <span class="block">
-                                            <span class="line-through text-gray-400 mr-2">{{ format_price($package->price_cny, 'CNY') }}</span>
-                                            <span class="text-red-600">{{ format_price($specialPrices['cny'], 'CNY') }}</span>
-                                        </span>
+                                    @if(!empty($specialPrices['cny']))
+                                        <span class="block text-red-600">{{ format_price($specialPrices['cny'], 'CNY') }}</span>
                                     @endif
                                 @else
                                     {{ format_price(get_price($package)) }}
                                 @endif
                             </p>
                             <p class="text-xs text-gray-500 mt-2">{{ __('messages.per_person') ?? 'per person' }}</p>
+
+                            @if(!empty($specialLink) && !empty($specialLink->token))
+                                @php
+                                    $minGuests = $package->min_guests ?? 1;
+                                    $preGuests = $preselectedGuests ?? $minGuests;
+                                    $maxGuests = $specialLink->max_guests ?? 50;
+                                    $maxGuests = $maxGuests > 0 ? min(50, $maxGuests) : 50;
+                                @endphp
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('messages.number_of_guests') ?? 'Number of Guests' }}</label>
+                                    <select id="special-guests" class="w-40 px-3 py-2 border rounded">
+                                        @for($i = $minGuests; $i <= $maxGuests; $i++)
+                                            <option value="{{ $i }}" {{ $i == $preGuests ? 'selected' : '' }}>{{ $i }} {{ $i == 1 ? __('messages.guest') : __('messages.guests') }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+
+                                <div class="mt-4 text-sm text-gray-700">
+                                    <span class="font-medium">{{ __('messages.total_for_guests') ?? 'Total for guests' }}:</span>
+                                    <span id="special-total" class="ml-2 text-lg font-semibold text-red-600">{{ format_price(($specialPrice ?? 0) * $preGuests, $detectedCurrency ?? null) }}</span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -534,6 +536,45 @@ document.addEventListener('DOMContentLoaded', function() {
         if (firstButton) {
             toggleDay(firstButton);
         }
+    }
+    
+    // Special link guest selector: update total and Book Now URL
+    const specialGuests = document.getElementById('special-guests');
+    const specialTotal = document.getElementById('special-total');
+    const bookNowLink = document.querySelector('a[href*="bookings/package"]') || document.querySelector('a[href*="bookings.package"]') || document.querySelector('.inline-flex.items-center.justify-center');
+    try {
+        const specialPerPerson = parseFloat({{ $specialPrice ?? '0' }});
+        const detectedCurrency = '{{ $detectedCurrency ?? '' }}';
+        const currencySymbol = '{{ currency_symbol() }}';
+
+        function formatAmount(amount) {
+            try {
+                if ('{{ app()->getLocale() }}' === 'id') {
+                    return currencySymbol + ' ' + Math.round(amount).toLocaleString('id-ID');
+                } else {
+                    return currencySymbol + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+            } catch (e) {
+                return amount;
+            }
+        }
+
+        if (specialGuests && specialTotal) {
+            specialGuests.addEventListener('change', function() {
+                const guests = parseInt(this.value) || 1;
+                const total = specialPerPerson * guests;
+                specialTotal.textContent = formatAmount(total);
+
+                // Update Book Now link to include guests param
+                if (bookNowLink && bookNowLink.href) {
+                    const url = new URL(bookNowLink.href);
+                    url.searchParams.set('guests', guests);
+                    bookNowLink.href = url.toString();
+                }
+            });
+        }
+    } catch (e) {
+        // ignore formatting errors
     }
 });
 </script>

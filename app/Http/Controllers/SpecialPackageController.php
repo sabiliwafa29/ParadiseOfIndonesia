@@ -37,12 +37,16 @@ class SpecialPackageController extends Controller
 
         $selectedSpecialPrice = $specialPrices[$currencyKey] ?? null;
 
+        // Default preselected guests to package min_guests
+        $preselectedGuests = request()->get('guests') ? intval(request()->get('guests')) : ($package->min_guests ?? 1);
+
         return view('tour-packages.show', [
             'package' => $package,
             'specialPrices' => $specialPrices,
             'specialPrice' => $selectedSpecialPrice,
             'detectedCurrency' => $userCurrency,
             'specialLink' => $link,
+            'preselectedGuests' => $preselectedGuests,
         ]);
     }
 }

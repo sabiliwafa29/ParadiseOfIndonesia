@@ -295,8 +295,9 @@
                                             name="guests"
                                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition @error('guests') border-red-500 @enderror"
                                             required>
+                                        @php $selectedGuests = old('guests', $preselectedGuests ?? $minGuests); @endphp
                                         @for($i = $minGuests; $i <= 50; $i++)
-                                            <option value="{{ $i }}" {{ old('guests', $minGuests) == $i ? 'selected' : '' }}>
+                                            <option value="{{ $i }}" {{ $selectedGuests == $i ? 'selected' : '' }}>
                                                 {{ $i }} {{ $i == 1 ? __('messages.guest') : __('messages.guests') }}
                                             </option>
                                         @endfor

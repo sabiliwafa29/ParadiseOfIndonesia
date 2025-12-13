@@ -17,6 +17,8 @@ class SpecialLink extends Model
         'price_special_usd',
         'price_special_cny',
         'expires_at',
+        'min_guests',
+        'max_guests',
         'max_uses',
         'used_count',
         'note',
@@ -30,6 +32,8 @@ class SpecialLink extends Model
         'price_special_idr' => 'decimal:2',
         'price_special_usd' => 'decimal:2',
         'price_special_cny' => 'decimal:2',
+        'min_guests' => 'integer',
+        'max_guests' => 'integer',
         'used_count' => 'integer',
         'max_uses' => 'integer',
     ];
@@ -66,5 +70,19 @@ class SpecialLink extends Model
             default:
                 return $this->price_special_usd ?? $this->price_special_idr ?? $this->price_special_cny ?? null;
         }
+    }
+
+    /**
+     * Check whether this special link applies to the given guest count.
+     */
+    public function appliesToGuests(int $guests): bool
+    {
+        if ($this->min_guests !== null && $guests < $this->min_guests) {
+            return false;
+        }
+        if ($this->max_guests !== null && $guests > $this->max_guests) {
+            return false;
+        }
+        return true;
     }
 }

@@ -76,6 +76,7 @@ class BookingController extends Controller
     {
         $specialLink = null;
         $basePrice = get_price($package);
+        $preselectedGuests = null;
 
         if (request()->has('special')) {
             $token = request()->get('special');
@@ -86,12 +87,16 @@ class BookingController extends Controller
                 if ($specialPrice) {
                     $basePrice = $specialPrice;
                 }
+                // Respect guests param from querystring (preselect on booking form)
+                if (request()->has('guests')) {
+                    $preselectedGuests = intval(request()->get('guests')) ?: null;
+                }
             } else {
                 $specialLink = null;
             }
         }
 
-        return view('bookings.package', compact('package', 'specialLink', 'basePrice'));
+        return view('bookings.package', compact('package', 'specialLink', 'basePrice', 'preselectedGuests'));
     }
 
     public function tour(Tour $tour)
@@ -337,6 +342,10 @@ class BookingController extends Controller
                     $specialPrice = $link->priceForCurrency($currency);
                     if ($specialPrice) {
                         $pricePerPerson = $specialPrice;
+                    }
+                    // Enforce guest constraints if present on the special link
+                    if (isset($validated['guests']) && !$link->appliesToGuests(intval($validated['guests']))) {
+                        return redirect()->back()->withInput()->with('error', 'The selected number of guests is not eligible for this special price.');
                     }
                 }
             }

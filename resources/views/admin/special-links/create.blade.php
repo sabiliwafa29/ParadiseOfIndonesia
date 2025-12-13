@@ -72,6 +72,17 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium">Min Guests (special price applies from)</label>
+                        <input type="number" name="min_guests" min="1" class="w-full mt-1 p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Max Guests (special price up to)</label>
+                        <input type="number" name="max_guests" min="1" class="w-full mt-1 p-2 border rounded">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-sm font-medium">Note</label>
                     <textarea name="note" rows="3" class="w-full mt-1 p-2 border rounded"></textarea>
