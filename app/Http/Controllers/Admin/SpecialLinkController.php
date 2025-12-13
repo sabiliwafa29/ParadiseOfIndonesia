@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SpecialLink;
 use App\Models\TourPackage;
+use App\Models\Tour;
 use Illuminate\Support\Str;
 
 class SpecialLinkController extends Controller
@@ -20,13 +21,16 @@ class SpecialLinkController extends Controller
     {
         // Order by the English name column (database column exists)
         $packages = TourPackage::orderBy('name_en')->get();
-        return view('admin.special-links.create', compact('packages'));
+        $tours = Tour::orderBy('name_en')->get();
+        return view('admin.special-links.create', compact('packages', 'tours'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'tour_package_id' => 'required|exists:tour_packages,id',
+            'tours' => 'nullable|array',
+            'tours.*' => 'exists:tours,id',
             'price_special_idr' => 'nullable|numeric|min:0',
             'price_special_usd' => 'nullable|numeric|min:0',
             'price_special_cny' => 'nullable|numeric|min:0',
@@ -51,6 +55,12 @@ class SpecialLinkController extends Controller
 
         $link = SpecialLink::create($data);
 
+        // Save tours (array of ids) if provided
+        if (!empty($data['tours'])) {
+            $link->tours = array_values($data['tours']);
+            $link->save();
+        }
+
         return redirect()->route('admin.special-links.index')
             ->with('success', 'Special link created: ' . $link->token);
     }
@@ -59,13 +69,16 @@ class SpecialLinkController extends Controller
     {
         // Order by the English name column (database column exists)
         $packages = TourPackage::orderBy('name_en')->get();
-        return view('admin.special-links.edit', ['link' => $special_link, 'packages' => $packages]);
+        $tours = Tour::orderBy('name_en')->get();
+        return view('admin.special-links.edit', ['link' => $special_link, 'packages' => $packages, 'tours' => $tours]);
     }
 
     public function update(Request $request, SpecialLink $special_link)
     {
         $data = $request->validate([
             'tour_package_id' => 'required|exists:tour_packages,id',
+            'tours' => 'nullable|array',
+            'tours.*' => 'exists:tours,id',
             'price_special_idr' => 'nullable|numeric|min:0',
             'price_special_usd' => 'nullable|numeric|min:0',
             'price_special_cny' => 'nullable|numeric|min:0',
@@ -88,6 +101,12 @@ class SpecialLinkController extends Controller
         }
 
         $special_link->update($data);
+
+        // update tours if provided (allow clearing)
+        if (array_key_exists('tours', $data)) {
+            $special_link->tours = $data['tours'] ?? [];
+            $special_link->save();
+        }
 
         return redirect()->route('admin.special-links.index')
             ->with('success', 'Special link updated');

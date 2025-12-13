@@ -46,6 +46,16 @@
                     </select>
                 </div>
 
+                <div class="mt-4">
+                    <label class="block text-sm font-medium">Apply To Tours (optional)</label>
+                    <p class="text-xs text-gray-500">Select specific tours that this special link should apply to. Leave empty to apply to the package only.</p>
+                    <select name="tours[]" multiple class="w-full mt-1 p-2 border rounded h-40">
+                        @foreach($tours as $t)
+                            <option value="{{ $t->id }}">{{ $t->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium">Price USD</label>

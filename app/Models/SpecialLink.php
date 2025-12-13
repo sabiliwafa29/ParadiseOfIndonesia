@@ -13,6 +13,7 @@ class SpecialLink extends Model
     protected $fillable = [
         'token',
         'tour_package_id',
+        'tours',
         'price_special_idr',
         'price_special_usd',
         'price_special_cny',
@@ -33,6 +34,7 @@ class SpecialLink extends Model
         'price_special_idr' => 'decimal:2',
         'price_special_usd' => 'decimal:2',
         'price_special_cny' => 'decimal:2',
+        'tours' => 'array',
         'min_guests' => 'integer',
         'max_guests' => 'integer',
         'fixed_guests' => 'integer',

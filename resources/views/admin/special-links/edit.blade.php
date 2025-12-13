@@ -55,6 +55,15 @@
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium">Apply To Tours (optional)</label>
+                        <p class="text-xs text-gray-500">Select specific tours that this special link should apply to. Leave empty to apply to the package only.</p>
+                        <select name="tours[]" multiple class="w-full mt-1 p-2 border rounded h-40">
+                            @foreach($tours as $t)
+                                <option value="{{ $t->id }}" @if(in_array($t->id, $link->tours ?? [])) selected @endif>{{ $t->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-sm font-medium">Price USD</label>
                         <input type="number" step="0.01" name="price_special_usd" value="{{ $link->price_special_usd }}" class="w-full mt-1 p-2 border rounded">
