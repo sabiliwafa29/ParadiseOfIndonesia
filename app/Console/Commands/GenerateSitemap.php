@@ -1,0 +1,163 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
+use App\Models\Tour;
+use App\Models\TourPackage;
+use Carbon\Carbon;
+
+class GenerateSitemap extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'sitemap:generate {--output=public/sitemap.xml}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Generate sitemap.xml from Tour and TourPackage models';
+
+    /** @var Filesystem */
+    protected $files;
+
+    public function __construct(Filesystem $files)
+    {
+        parent::__construct();
+        $this->files = $files;
+    }
+
+    public function handle()
+    {
+        $output = $this->option('output') ?: 'public/sitemap.xml';
+
+        $this->info("Generating sitemap to {$output}...");
+
+        $domain = config('app.url') ?: env('APP_URL', 'http://localhost');
+        $domain = rtrim($domain, '/');
+
+        $urls = [];
+
+        // Home page
+        $urls[] = [
+            'loc' => $domain . '/',
+            'lastmod' => Carbon::now()->toAtomString(),
+        ];
+
+        // Tours - check if `is_published` column exists to avoid SQL errors on older schemas.
+        $tourTable = (new Tour)->getTable();
+        $tourQuery = Tour::query();
+        if (Schema::hasColumn($tourTable, 'is_published')) {
+            $tourQuery->where('is_published', true);
+        } elseif (Schema::hasColumn($tourTable, 'published')) {
+            $tourQuery->where('published', true);
+        }
+        $tourQuery->orderBy('updated_at', 'desc')->chunk(200, function ($tours) use (&$urls, $domain) {
+            foreach ($tours as $tour) {
+                // Use named route for tour URL
+                $loc = route('tours.show', $tour);
+                $urls[] = [
+                    'loc' => $loc,
+                    'lastmod' => optional($tour->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
+                ];
+            }
+        });
+
+        // TourPackages - similar schema-safe check
+        $pkgTable = (new TourPackage)->getTable();
+        $pkgQuery = TourPackage::query();
+        if (Schema::hasColumn($pkgTable, 'is_published')) {
+            $pkgQuery->where('is_published', true);
+        } elseif (Schema::hasColumn($pkgTable, 'published')) {
+            $pkgQuery->where('published', true);
+        }
+        $pkgQuery->orderBy('updated_at', 'desc')->chunk(200, function ($packages) use (&$urls, $domain) {
+            foreach ($packages as $pkg) {
+                // Use named route for package URL
+                $loc = route('tour-packages.show', $pkg);
+                $urls[] = [
+                    'loc' => $loc,
+                    'lastmod' => optional($pkg->updated_at)->toAtomString() ?: Carbon::now()->toAtomString(),
+                ];
+            }
+        });
+
+        // Build XML
+        $xml = $this->buildXml($urls);
+
+        // Prefer writing to the storage disk 'public' to avoid public/ permission issues in some environments.
+        $written = false;
+        if ($output === 'public/sitemap.xml') {
+            try {
+                Storage::disk('public')->put('sitemap.xml', $xml);
+                $this->info("Sitemap written to storage disk 'public' at storage/app/public/sitemap.xml (urls: " . count($urls) . ")");
+                $this->info("If you want it at /sitemap.xml, ensure a symlinked storage (php artisan storage:link) or copy the file to public/ by deployment scripts.");
+                $written = true;
+            } catch (\Exception $e) {
+                // Fall back to writing directly to the requested output path below
+                $this->warn('Failed to write to storage disk public: ' . $e->getMessage());
+            }
+        }
+
+        if (! $written) {
+            $dir = dirname($output);
+            if (! $this->files->exists($dir)) {
+                try {
+                    $this->files->makeDirectory($dir, 0755, true);
+                } catch (\Exception $e) {
+                    $this->error("Unable to create directory {$dir}: " . $e->getMessage());
+                    $this->error('Permission denied writing sitemap. On many servers you should allow the web user or deploy user to write to the target directory.');
+                    return 1;
+                }
+            }
+
+            try {
+                $this->files->put($output, $xml);
+                $this->info("Sitemap written to {$output} (urls: " . count($urls) . ")");
+            } catch (\Exception $e) {
+                $this->error('Failed to write sitemap to ' . $output . ': ' . $e->getMessage());
+                $this->error('Common fixes: ensure ownership/permissions for the web/deploy user, or use storage disk public and run `php artisan storage:link`.');
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    protected function buildXml(array $urls)
+    {
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom->formatOutput = true;
+
+        $urlset = $dom->createElement('urlset');
+        $urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+
+        foreach ($urls as $u) {
+            $url = $dom->createElement('url');
+
+            $loc = $dom->createElement('loc', htmlspecialchars($u['loc']));
+            $url->appendChild($loc);
+
+            if (! empty($u['lastmod'])) {
+                $lastmod = $dom->createElement('lastmod', $u['lastmod']);
+                $url->appendChild($lastmod);
+            }
+
+            // Optional fields (changefreq, priority) may be added later by the user
+
+            $urlset->appendChild($url);
+        }
+
+        $dom->appendChild($urlset);
+
+        return $dom->saveXML();
+    }
+}

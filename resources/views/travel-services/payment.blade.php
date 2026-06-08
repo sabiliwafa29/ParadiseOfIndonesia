@@ -8,7 +8,7 @@
 
         <div class="bg-gray-100 p-4 rounded-md mb-6">
             <p><strong>Order ID:</strong> {{ $orderId }}</p>
-            <p><strong>Amount:</strong> Rp {{ number_format($service->price, 0, ',', '.') }}</p>
+            <p><strong>Amount:</strong> {{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($service) ) }}</p>
         </div>
 
         <button id="pay-button" 
@@ -23,27 +23,22 @@
 {{-- 🧾 MIDTRANS SNAP JS --}}
 @push('scripts')
 <script type="text/javascript" 
-        src="https://app.sandbox.midtrans.com/snap/snap.js" 
+        src="https://app.midtrans.com/snap/snap.js" 
         data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
     document.getElementById('pay-button').addEventListener('click', function () {
         window.snap.pay('{{ $snapToken }}', {
             onSuccess: function (result) {
-                console.log(result);
-                alert('Payment successful!');
                 window.location.href = "{{ route('travel-services.payment.success') }}";
             },
             onPending: function (result) {
-                console.log(result);
-                alert('Payment pending.');
                 window.location.href = "{{ route('travel-services.payment.success') }}";
             },
             onError: function (result) {
-                console.error(result);
-                alert('Payment failed. Please try again.');
+                // Handle error silently; show server-side message on reload if needed
             },
             onClose: function () {
-                alert('You closed the payment window without completing the payment.');
+                // User closed the payment window
             }
         });
     });

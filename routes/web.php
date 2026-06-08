@@ -12,6 +12,7 @@ use App\Http\Controllers\TourSessionController;
 use App\Http\Controllers\TravelServiceController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,15 +30,31 @@ Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
 Route::get('/tours/{tour}', [TourController::class, 'show'])->name('tours.show');
 
 Route::get('/tour-activities', [TourActivityController::class, 'index'])->name('tour-activities.index');
-Route::get('/tour-activities/{tourActivity}', [TourActivityController::class, 'show'])->name('tour-activities.show');
+Route::get('/tour-activities/{activity}', [TourActivityController::class, 'show'])->name('tour-activities.show');
 
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery.index');
 
 Route::get('/tour-packages', [TourPackageController::class, 'index'])->name('tour-packages.index');
-Route::get('/tour-packages/{tourPackage}', [TourPackageController::class, 'show'])->name('tour-packages.show');
+Route::get('/tour-packages/{package}', [TourPackageController::class, 'show'])->name('tour-packages.show');
 
+// Special package link (private token-based)
+Route::get('/tour-packages/special/{token}', [App\Http\Controllers\SpecialPackageController::class, 'show'])
+    ->name('tour-packages.special.show');
+
+// Booking package (bisa tanpa login)
+Route::get('/bookings/package/{package}', [BookingController::class, 'package'])->name('bookings.package');
+Route::post('/bookings/package/{package}', [BookingController::class, 'storePackage'])->name('bookings.store-package');
+
+// Booking tour (bisa tanpa login)
+Route::get('/bookings/tour/{tour}', [BookingController::class, 'tour'])->name('bookings.tour');
+Route::post('/bookings/tour/{tour}', [BookingController::class, 'storeTour'])->name('bookings.store-tour');
+
+Route::get('/bookings/{booking}/payment', [BookingController::class, 'showPayment'])->name('bookings.payment');
+
+// Tour Sessions - Commented out (use admin panel for management)
 Route::get('/tour-sessions', [TourSessionController::class, 'index'])->name('tour-sessions.index');
-Route::get('/tour-sessions/{tourSession}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
+Route::get('/tour-sessions/{session}', [TourSessionController::class, 'show'])->name('tour-sessions.show');
+Route::get('/bookings/session/{session}', [BookingController::class, 'createFromSession'])->name('bookings.session');
 
 Route::get('/travel-services', [TravelServiceController::class, 'index'])->name('travel-services.index');
 Route::get('/travel-services/{service}', [TravelServiceController::class, 'show'])->name('travel-services.show');
@@ -47,6 +64,7 @@ Route::get('/travel-map', [App\Http\Controllers\TravelMapController::class, 'ind
 
 Route::post('/language/switch', [App\Http\Controllers\LanguageController::class, 'switch'])
     ->name('language.switch');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +83,9 @@ Route::middleware('auth')->group(function () {
         
         // Dashboard User
         Route::get('/dashboard', function () {
-            return view('dashboard');
+            return redirect()->route('home')
+                ->with('login_success', true)
+                ->with('user_name', auth()->user()->name);
         })->name('dashboard');
         
         // Profile Management
@@ -81,10 +101,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/payment/success', [TravelServiceController::class, 'paymentSuccess'])->name('payment.success');
         });
         
-        // My Bookings
+        // My Bookings (khusus user login)
         Route::get('/my-bookings', [BookingController::class, 'index'])->name('my-bookings');
         Route::post('/bookings/{tour}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+            Route::get('/bookings/{booking}/reschedule', [BookingController::class, 'reschedule'])->name('bookings.reschedule');
+    Route::post('/bookings/{booking}/reschedule', [BookingController::class, 'updateReschedule'])->name('bookings.update-reschedule');
     });
     
     /*
@@ -95,34 +118,50 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         
         // Admin Dashboard
+        Route::get('/', function () {
+            return redirect()->route('admin.dashboard');
+        });
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         
         // Tour Management
-        Route::resource('tours', App\Http\Controllers\Admin\TourController::class);
+        Route::resource('/tours', App\Http\Controllers\Admin\TourController::class);
         
         // Destination Management (jika ada controller admin)
-        // Route::resource('destinations', App\Http\Controllers\Admin\DestinationController::class);
+        Route::resource('/destinations', App\Http\Controllers\Admin\DestinationController::class);
         
-        // Travel Service Management (jika ada controller admin)
-        // Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
+    // Travel Service Management
+    Route::resource('travel-services', App\Http\Controllers\Admin\TravelServiceController::class);
         
-        // Booking Management (jika ada controller admin)
-        // Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    // Booking Management
+    Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    Route::get('bookings-export', [App\Http\Controllers\Admin\BookingExportController::class, 'export'])->name('bookings.export');
+    Route::get('bookings-export-excel', [App\Http\Controllers\Admin\BookingExportController::class, 'exportExcel'])->name('bookings.export-excel');
         
-        // User Management (jika ada controller admin)
-        // Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    // User Management
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
         
-        // Gallery Management (jika ada controller admin)
-        // Route::resource('gallery', App\Http\Controllers\Admin\GalleryController::class);
+    // Gallery Management
+    Route::resource('gallery', App\Http\Controllers\Admin\GalleryController::class);
         
-        // Tour Activity Management (jika ada controller admin)
-        // Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
+    // Tour Activity Management
+    Route::resource('tour-activities', App\Http\Controllers\Admin\TourActivityController::class);
         
-        // Tour Package Management (jika ada controller admin)
-        // Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+    // Tour Package Management
+    Route::resource('tour-packages', App\Http\Controllers\Admin\TourPackageController::class);
+        // Special Links Management (private/custom links)
+        Route::resource('special-links', App\Http\Controllers\Admin\SpecialLinkController::class);
+        // Debug: expose the last N lines of laravel.log to admin (use ?limit=200)
+        Route::get('debug/laravel-log', [App\Http\Controllers\Admin\DebugController::class, 'laravelLog'])->name('admin.debug.laravel_log');
         
-        // Tour Session Management (jika ada controller admin)
-        // Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
+    // Tour Session Management
+    Route::resource('tour-sessions', App\Http\Controllers\Admin\TourSessionController::class);
+    
+    // Settings Management
+    Route::get('settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::delete('settings/bookings', [App\Http\Controllers\Admin\SettingsController::class, 'deleteBookings'])->name('settings.delete-bookings');
+    Route::put('settings/display', [App\Http\Controllers\Admin\SettingsController::class, 'updateDisplay'])->name('settings.update-display');
+    Route::post('settings/clear-cache', [App\Http\Controllers\Admin\SettingsController::class, 'clearCache'])->name('settings.clear-cache');
+    Route::get('settings/bookings', [App\Http\Controllers\Admin\SettingsController::class, 'getBookings'])->name('settings.get-bookings');
     });
 });
 
@@ -131,8 +170,8 @@ Route::middleware('auth')->group(function () {
 | Google Authentication Routes
 |--------------------------------------------------------------------------
 */
-Route::get('auth/google', [App\Http\Controllers\Auth\GoogleController::class, 'redirect'])->name('google.login');
-Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::class, 'callback']);
+Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 
 /*
 |--------------------------------------------------------------------------
@@ -140,3 +179,21 @@ Route::get('auth/google/callback', [App\Http\Controllers\Auth\GoogleController::
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
+
+// Development helpers: allow setting detected country via session for testing
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/dev/set-country/{code}', function ($code) {
+        session(['user_country' => strtoupper($code)]);
+        return redirect()->back();
+    })->name('dev.set-country');
+
+    Route::get('/dev/clear-country', function () {
+        session()->forget('user_country');
+        return redirect()->back();
+    })->name('dev.clear-country');
+
+    Route::get('/dev/clear-location-cache', function () {
+        \App\Services\LocationService::clearLocationCache();
+        return redirect()->back()->with('success', 'Location cache cleared');
+    })->name('dev.clear-location-cache');
+}

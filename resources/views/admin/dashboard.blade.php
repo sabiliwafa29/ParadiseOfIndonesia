@@ -61,12 +61,16 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm font-medium">Total Revenue</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">${{ number_format($totalRevenue, 0) }}</p>
+                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ format_price_by_currency($totalRevenue ?? 0, current_currency()) }}</p>
                         <p class="text-xs text-green-600 mt-2 flex items-center">
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
                             </svg>
-                            <span class="font-semibold">+12.5%</span> from last month
+                            @php
+                                $sign = $revenueChangePercent >= 0 ? '+' : '';
+                                $colorClass = $revenueChangePositive ? 'text-green-600' : 'text-red-600';
+                            @endphp
+                            <span class="font-semibold {{ $colorClass }}">{{ $sign }}{{ $revenueChangePercent }}%</span> from last month
                         </p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
@@ -82,7 +86,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-600 text-sm font-medium">Total Customers</p>
-                        <p class="text-3xl font-bold text-gray-800 mt-1">{{ $totalCustomers }}</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">{{ format_price_by_currency($totalRevenue ?? 0, current_currency()) }}</p>
                         <p class="text-xs text-blue-600 mt-2 flex items-center">
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
@@ -126,8 +130,11 @@
                         <div class="flex-1 flex flex-col items-center group">
                             <div class="relative w-full bg-gradient-to-t from-emerald-500 to-emerald-400 rounded-t-lg hover:from-emerald-600 hover:to-emerald-500 transition-all duration-300 cursor-pointer" 
                                  style="height: {{ $height }}%">
-                                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                    ${{ number_format($data->revenue) }}
+                                <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-center">
+                                    <div>{{ format_price_by_currency($data->revenue ?? 0, current_currency()) }}</div>
+                                    <div class="mt-1 text-xs {{ $data->percent_positive ? 'text-green-300' : 'text-red-300' }}">
+                                        {!! $data->percent_positive ? '&#9650;' : '&#9660;' !!} {{ $data->percent_change }}%
+                                    </div>
                                 </div>
                             </div>
                             <p class="text-xs text-gray-600 mt-2">{{ $monthName }}</p>
@@ -183,12 +190,29 @@
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2">
+                                        @php
+                                            $userName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+                                            $userInitial = substr($userName, 0, 1);
+                                        @endphp
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold">
-                                            {{ substr($booking->user->name, 0, 1) }}
+                                            {{ $userInitial }}
                                         </div>
                                         <div>
-                                            <h3 class="font-semibold text-gray-800">{{ $booking->user->name }}</h3>
-                                            <p class="text-sm text-gray-600">{{ $booking->tour->name }}</p>
+                                            <h3 class="font-semibold text-gray-800">{{ $userName }}</h3>
+                                            @if($booking->tour)
+                                                <p class="text-sm text-gray-600">{{ \App\Helpers\LanguageHelper::get($booking->tour, 'name') }}</p>
+                                            @elseif($booking->package)
+                                                <p class="text-sm text-gray-600">
+                                                    <span class="inline-flex items-center text-purple-600">
+                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                                        </svg>
+                                                        {{ \App\Helpers\LanguageHelper::get($booking->package, 'name') }}
+                                                    </span>
+                                                </p>
+                                            @else
+                                                <p class="text-sm text-gray-600">-</p>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
@@ -198,7 +222,7 @@
                                             </svg>
                                             {{ $booking->created_at->format('M d, Y') }}
                                         </span>
-                                        <span class="text-emerald-600 font-bold">${{ number_format($booking->total_price) }}</span>
+                                        <span class="text-emerald-600 font-bold">{{ format_price_by_currency($booking->total_price ?? 0, $booking->currency ?? current_currency()) }}</span>
                                     </div>
                                 </div>
                                 <span class="text-xs px-2 py-1 rounded-full {{ 
@@ -239,7 +263,9 @@
                             <div class="flex items-center space-x-3">
                                 <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 overflow-hidden">
                                     @if($tour->image)
-                                        <img src="{{ asset('storage/' . $tour->image) }}" alt="{{ $tour->name }}" class="w-full h-full object-cover">
+                                        @if($tour->image)
+                                            @include('components.responsive-image', ['path' => $tour->image, 'alt' => \App\Helpers\LanguageHelper::get($tour, 'name') ?? '', 'class' => 'w-full h-full object-cover', 'derivatives' => $tour->image_derivatives])
+                                        @endif
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">
                                             <svg class="w-8 h-8 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -249,15 +275,15 @@
                                     @endif
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-semibold text-gray-800">{{ $tour->name }}</h3>
+                                    <h3 class="font-semibold text-gray-800">{{ \App\Helpers\LanguageHelper::get($tour, 'name') }}</h3>
                                     <div class="flex items-center space-x-3 mt-1">
                                         <span class="text-sm text-gray-600 flex items-center">
                                             <svg class="w-4 h-4 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                                             </svg>
-                                            {{ $tour->bookings_count }} bookings
+                                            {{ $tour->bookings_count ?? 0 }} bookings
                                         </span>
-                                        <span class="text-sm font-bold text-emerald-600">${{ number_format($tour->price) }}</span>
+                                        <span class="text-sm font-bold text-emerald-600">{{ \App\Helpers\LanguageHelper::formatPrice( \App\Helpers\LanguageHelper::getPrice($tour) ) }}</span>
                                     </div>
                                 </div>
                             </div>

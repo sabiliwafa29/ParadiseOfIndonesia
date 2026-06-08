@@ -109,7 +109,7 @@
         <!-- Right Side - Login Form -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 relative z-10">
             <div class="w-full max-w-md">
-                <!-- Session Status -->
+    <!-- Session Status -->
                 @if (session('status'))
                     <div class="mb-4 p-4 rounded-lg bg-green-100 border border-green-400 text-green-700">
                         {{ session('status') }}
@@ -130,10 +130,10 @@
                         <p class="text-gray-600">Sign in to your account</p>
                     </div>
 
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
 
-                        <!-- Email Address -->
+        <!-- Email Address -->
                         <div class="mb-5">
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                                 Email Address
@@ -152,17 +152,17 @@
                             @error('email')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                        </div>
+        </div>
 
-                        <!-- Password -->
+        <!-- Password -->
                         <div class="mb-5">
                             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                                 Password
                             </label>
                             <input 
                                 id="password" 
-                                type="password" 
-                                name="password" 
+                            type="password"
+                            name="password"
                                 required 
                                 autocomplete="current-password"
                                 class="tropical-input w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -171,11 +171,11 @@
                             @error('password')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                        </div>
+        </div>
 
                         <!-- Remember Me & Forgot Password -->
                         <div class="flex items-center justify-between mb-6">
-                            <label for="remember_me" class="inline-flex items-center">
+            <label for="remember_me" class="inline-flex items-center">
                                 <input 
                                     id="remember_me" 
                                     type="checkbox" 
@@ -183,14 +183,14 @@
                                     class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500"
                                 />
                                 <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                            </label>
+            </label>
 
-                            @if (Route::has('password.request'))
+            @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="text-sm text-emerald-600 hover:text-emerald-800 font-medium">
                                     Forgot password?
-                                </a>
-                            @endif
-                        </div>
+                </a>
+            @endif
+        </div>
 
                         <!-- Sign In Button -->
                         <button 
@@ -199,18 +199,18 @@
                         >
                             Sign In
                         </button>
-                    </form>
+    </form>
 
                     <!-- Social Login Divider -->
                     <div class="mt-8">
-                        <div class="relative">
-                            <div class="absolute inset-0 flex items-center">
-                                <div class="w-full border-t border-gray-300"></div>
-                            </div>
-                            <div class="relative flex justify-center text-sm">
+        <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
                                 <span class="px-4 bg-white text-gray-500">Or continue with</span>
-                            </div>
-                        </div>
+            </div>
+        </div>
 
                         <!-- Social Login Icons -->
                         <div class="mt-6 flex justify-center space-x-4">
@@ -221,8 +221,8 @@
                                 title="Sign in with Google"
                             >
                                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064 5.963 5.963 0 014.116 1.62l2.867-2.867A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748l-9.426-.013z"/>
-                                </svg>
+                    <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064 5.963 5.963 0 014.116 1.62l2.867-2.867A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748l-9.426-.013z"/>
+                </svg>
                             </a>
 
                             <!-- Facebook -->

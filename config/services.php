@@ -38,10 +38,37 @@ return [
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
+    'paypal' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'is_production' => env('PAYPAL_IS_PRODUCTION', false),
+    ],
+
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
+    // Verification tokens for Search Consoles (use env variables)
+    'search_console' => [
+        // Google site verification meta tag content (set in .env as GOOGLE_VERIFICATION)
+        'google_verification' => env('GOOGLE_VERIFICATION', ''),
+        // Baidu site verification meta tag content (set in .env as BAIDU_VERIFICATION)
+        'baidu_verification' => env('BAIDU_VERIFICATION', ''),
+    ],
+
+    'osrm' => [
+        'base_url' => env('OSRM_BASE_URL', 'https://router.project-osrm.org'),
+        'timeout' => env('OSRM_TIMEOUT', 10),
+        'profile' => env('OSRM_PROFILE', 'driving'),
+    ],
+
+    'geolocation' => [
+        'cache_ttl_days' => env('GEOLOCATION_CACHE_TTL_DAYS', 7),
+        'rate_limit_per_minute' => env('GEOLOCATION_RATE_LIMIT_PER_MINUTE', 10),
+        'timeout_seconds' => env('GEOLOCATION_TIMEOUT_SECONDS', 3),
+        'fallback_country' => env('GEOLOCATION_FALLBACK_COUNTRY', 'ID'),
     ],
 
 ];

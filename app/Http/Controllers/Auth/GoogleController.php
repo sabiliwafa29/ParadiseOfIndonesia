@@ -17,45 +17,67 @@ class GoogleController extends Controller
             session(['url.intended' => $request->return_to]);
         }
 
+        // Gunakan stateless untuk menghindari masalah session
         return Socialite::driver('google')
-                                ->with(['prompt' => 'select_account'])
-                                ->redirect();
+                        ->stateless()
+                        ->redirect();
     }
 
     public function callback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            // Get user dari Google dengan stateless mode
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
+            // Cari user berdasarkan email
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
-            
-            $user->update([
-                'google_id' => $googleUser->getId(),
-                'name' => $googleUser->getName(), 
-            ]);
+                // Update existing user
+                $user->update([
+                    'google_id' => $googleUser->getId(),
+                    'name' => $googleUser->getName(),
+                    'email_verified_at' => $user->email_verified_at ?? now(),
+                ]);
 
             } else {
-                
+                // Create new user
                 $user = User::create([
                     'name' => $googleUser->getName(),
                     'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
-                    'password' => bcrypt(Str::random(16)) // Buat password acak
+                    'password' => bcrypt(Str::random(16)),
+                    'role' => 'user', // Default role
+                    'email_verified_at' => now(),
                 ]);
             }
 
-            Auth::login($user);
+            // Login user
+            Auth::login($user, true); // true = remember me
 
-            // Redirect admin to admin panel
+            // Redirect based on role
             if ($user->role === 'admin') {
-                return redirect()->intended(route('admin.tours.index'));
+                return redirect()->route('admin.dashboard')
+                    ->with('login_success', true)
+                    ->with('user_name', $user->name);
             }
 
-            return redirect()->intended(route('dashboard'));
+            // ⭐ LANGSUNG KE HOME, BUKAN KE DASHBOARD
+            return redirect()->route('home')
+                ->with('login_success', true)
+                ->with('user_name', $user->name);
+            
+        } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+            return redirect()->route('login')
+                ->with('error', 'Session expired. Please try again.');
+                
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return redirect()->route('login')
+                ->with('error', 'Google authentication failed. Please try again.');
+                
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Google authentication failed.');
+            return redirect()->route('login')
+                ->with('error', 'An error occurred during authentication. Please try again.');
         }
     }
 }

@@ -48,6 +48,18 @@ class User extends Authenticatable
         return $this->hasMany(Booking::class);
     }
 
+    /**
+     * Get all bookings for this user including those made before registration (by email)
+     */
+    public function allBookings()
+    {
+        return Booking::where('user_id', $this->id)
+            ->orWhere('email', $this->email)
+            ->with(['tour.destination', 'package'])
+            ->latest()
+            ->get();
+    }
+
     public function travelServiceBookings()
     {
         return $this->hasMany(TravelServiceBooking::class);

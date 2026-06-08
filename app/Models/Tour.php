@@ -4,30 +4,135 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Services\LocationService;
 
 class Tour extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'name_id',
+        'name_en',
+        'name_zh',
         'slug',
-        'description',
-        'price',
+        'description_id',
+        'description_en',
+        'description_zh',
+        'price_usd',
+        'price_idr',
+        'price_cny',
         'duration',
         'destination_id',
         'image',
+        'image_derivatives',
         'itinerary',
         'includes',
         'excludes',
         'featured',
-        'status', // Tambahkan ini jika sudah ada kolom status
+        'status',
+        'target_market',
+        'exchange_rate_idr',
+        'exchange_rate_cny',
+        'min_guests',
     ];
 
-    // Relasi ke Destination
-    public function destination()
+    protected $casts = [
+        'featured' => 'boolean',
+        'itinerary' => 'json',
+        'includes' => 'json',
+        'excludes' => 'json',
+        'price_usd' => 'decimal:2',
+        'price_idr' => 'decimal:2',
+        'price_cny' => 'decimal:2',
+        'min_guests' => 'integer',
+        'image_derivatives' => 'json',
+    ];
+
+    public function destination(): BelongsTo
     {
         return $this->belongsTo(Destination::class);
+    }
+
+    public function tourActivities()
+    {
+        return $this->hasMany(TourActivity::class);
+    }
+
+    public function tourPackages(): BelongsToMany
+    {
+        return $this->belongsToMany(TourPackage::class, 'tour_tour_package', 'tour_id', 'tour_package_id');
+    }
+
+    /**
+     * Scope: Filter by target market
+     */
+    public function scopeForMarket($query, $market = 'both')
+    {
+        if ($market === 'domestic') {
+            return $query->whereIn('target_market', ['domestic', 'both']);
+        } elseif ($market === 'international') {
+            return $query->whereIn('target_market', ['international', 'both']);
+        }
+        return $query; // both
+    }
+
+    /**
+     * Get user's market based on location
+     */
+    public static function getUserMarket()
+    {
+        // Use LocationService for consistency
+        return \App\Services\LocationService::getUserMarket();
+    }
+
+    /**
+     * Detect user country
+     */
+    public static function detectUserCountry()
+    {
+        // Use LocationService for consistency
+        return \App\Services\LocationService::detectCountry();
+    }
+
+    /**
+     * Get tour price for user based on location
+     */
+    public function getPriceForUser(): string
+    {
+        try {
+            $currency = LocationService::getUserCurrency();
+            return $this->getFormattedPrice($currency);
+        } catch (\Exception $e) {
+            \Log::warning("Tour price lookup failed: " . $e->getMessage());
+            return $this->getFormattedPrice('USD');
+        }
+    }
+
+    /**
+     * Check if tour is available for user
+     */
+    public function isAvailableForUser(): bool
+    {
+        // Jika target_market adalah 'both', tersedia untuk semua
+        if ($this->target_market === 'both') {
+            return true;
+        }
+        
+        $userMarket = self::getUserMarket();
+        
+        // Domestic user bisa akses tour domestic dan both
+        if ($userMarket === 'domestic') {
+            return in_array($this->target_market, ['domestic', 'both']);
+        }
+        
+        // International user bisa akses tour international dan both
+        if ($userMarket === 'international') {
+            return in_array($this->target_market, ['international', 'both']);
+        }
+        
+        return true;
     }
 
     // Relasi ke Bookings
@@ -64,4 +169,69 @@ class Tour extends Model
         // Hitung bookings
         return $this->bookings()->count();
     }
+
+    /**
+     * Get price by currency
+     */
+    public function getPriceByCurrency(string $currency = 'USD'): float
+    {
+        return match($currency) {
+            'IDR' => (float) $this->price_idr,
+            'CNY' => (float) $this->price_cny,
+            'USD' => (float) $this->price_usd,
+            default => (float) $this->price_usd,
+        };
+    }
+
+    /**
+     * Format price with currency symbol
+     */
+    public function getFormattedPrice(string $currency = 'USD'): string
+    {
+        $price = $this->getPriceByCurrency($currency);
+        
+        return match($currency) {
+            'IDR' => 'Rp ' . number_format($price, 0, ',', '.'),
+            'CNY' => '¥ ' . number_format($price, 2, '.', ','),
+            'USD' => '$ ' . number_format($price, 2, '.', ','),
+            default => '$ ' . number_format($price, 2, '.', ','),
+        };
+    }
+
+    /**
+     * Auto-convert USD to other currencies
+     */
+    public function autoConvertPrices(): void
+    {
+        if ($this->price_usd) {
+            $this->price_idr = $this->price_usd * $this->exchange_rate_idr;
+            $this->price_cny = $this->price_usd * $this->exchange_rate_cny;
+        }
+    }
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"name_{$locale}"} ?? $this->name_en;
+    }
+    public function getDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{"description_{$locale}"} ?? $this->description_en;
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Provide a URL attribute for compatibility with parts of the codebase
+     * that expect $tour->url or getUrlAttribute(). Uses named route when
+     * available and falls back to slug or id.
+     */
+    public function getUrlAttribute()
+    {
+        return route('tours.show', $this);
+    }
+
+
 }

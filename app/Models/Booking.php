@@ -12,12 +12,20 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'tour_id',
+        'package_id',
+
+        'full_name',
+        'contact_handle',
+        'email',
+        'route_option',
+
         'date',
         'guests',
         'guide_service',
         'transport_service',
         'addon_cost',
         'total_price',
+        'currency',
         'status',
         'payment_id',
         'payment_status',
@@ -37,5 +45,10 @@ class Booking extends Model
     public function tour()
     {
         return $this->belongsTo(Tour::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(\App\Models\TourPackage::class, 'package_id');
     }
 }

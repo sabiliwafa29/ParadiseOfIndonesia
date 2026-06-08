@@ -6,30 +6,104 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
 
-        <title>{{ config('app.name', 'Paradise Of Indonesia') }}</title>
+        <title>@yield('title', config('app.name', 'Paradise Of Indonesia'))</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        {{-- Primary SEO meta (per-page overrides available via @section) --}}
+        <meta name="description" content="@yield('meta_description', 'Explore tours, packages and travel services in Indonesia. Find curated experiences across Bali, Bromo, and beyond with Paradise Of Indonesia.')">
+        <meta name="keywords" content="@yield('meta_keywords', 'Indonesia tour, Bali tour, Bromo, travel, tour packages')">
+        <meta name="robots" content="@yield('meta_robots', 'index,follow')">
+        <link rel="canonical" href="@yield('canonical', url()->current())">
+
+        {{-- Hreflang / locale hints (adjust per-site routing if you have localized URLs) --}}
+        <link rel="alternate" hreflang="en" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="id" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="zh" href="{{ url('/') }}">
+        <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
+
+        {{-- OpenGraph / Twitter Card defaults (per-page overrides via sections) --}}
+        @php
+            $ogTitle = trim($__env->yieldContent('og_title') ?: $__env->yieldContent('title') ?: config('app.name','Paradise Of Indonesia'));
+            $metaDescription = trim($__env->yieldContent('og_description') ?: $__env->yieldContent('meta_description') ?: 'Explore tours, packages and travel services in Indonesia.');
+            $ogUrl = trim($__env->yieldContent('og_url') ?: url()->current());
+            $ogImage = trim($__env->yieldContent('og_image') ?: asset('images/og-default.jpg'));
+            $twitterTitle = trim($__env->yieldContent('twitter_title') ?: $ogTitle);
+            $twitterDesc = trim($__env->yieldContent('twitter_description') ?: $metaDescription);
+            $twitterImage = trim($__env->yieldContent('twitter_image') ?: $ogImage);
+        @endphp
+
+        <meta property="og:site_name" content="{{ config('app.name', 'Paradise Of Indonesia') }}">
+        <meta property="og:title" content="{{ $ogTitle }}">
+        <meta property="og:description" content="{{ $metaDescription }}">
+        <meta property="og:type" content="@yield('og_type', 'website')">
+        <meta property="og:url" content="{{ $ogUrl }}">
+        <meta property="og:image" content="{{ $ogImage }}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $twitterTitle }}">
+        <meta name="twitter:description" content="{{ $twitterDesc }}">
+        <meta name="twitter:image" content="{{ $twitterImage }}">
+
+    {{-- Search console verifications (set via config/services.php -> search_console) --}}
+    <meta name="google-site-verification" content="{{ config('services.search_console.google_verification', '') }}">
+    <meta name="baidu-site-verification" content="{{ config('services.search_console.baidu_verification', '') ?: $__env->yieldContent('baidu_site_verification') }}">
+        <meta name="renderer" content="webkit">
+
+        {{-- JSON-LD structured data: Organization + WebSite (basic) --}}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "{{ config('app.name', 'Paradise Of Indonesia') }}",
+                "url": "{{ url('/') }}",
+                "logo": "{{ asset('logo-paradise.ico') }}",
+                "sameAs": []
+            }
+        </script>
+
+    <!-- Performance: preconnect & preload hints. Pages can push additional hints to the `preload` stack -->
+    @php
+        // Determine an asset host to preconnect to (ASSET_URL or APP_URL)
+        $assetUrl = config('app.asset_url') ?: env('ASSET_URL') ?: config('app.url');
+        $assetUrl = $assetUrl ? rtrim($assetUrl, '/') : null;
+    @endphp
+    @if($assetUrl)
+        <link rel="preconnect" href="{{ $assetUrl }}" crossorigin>
+    @endif
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    @stack('preload') {{-- allow pages to @push('preload') their critical assets (fonts/images) --}}
+    <!-- Fonts (prefer system fonts to avoid external CSS where possible) -->
+
+        <!-- Alpine.js x-cloak fix -->
+        <style>
+            [x-cloak] { 
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+            }
+        </style>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+        
+    <!-- SweetAlert2 CSS (self-hosted to comply with CSP) -->
+    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2.min.css') }}">
     </head>
+    
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
             <!-- Hero (optional) -->
             @hasSection('hero')
-                <section>
+                <section class="pt-20">
                     @yield('hero')
                 </section>
             @endif
 
             <!-- Page Heading (optional) -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-white shadow mt-20">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -37,7 +111,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="pt-20">
                 {{-- support both sections used across the project --}}
                 @yield('content')
                 @yield('main')
@@ -59,5 +133,104 @@
 
             @stack('scripts')
         </div>
+        
+        <!-- Loading Overlay -->
+        <x-loading-overlay />
+        
+        <!-- Login Success Popup -->
+        <x-login-success-popup />
+
+    <!-- SweetAlert2 JS (self-hosted to comply with CSP) -->
+    <script src="{{ asset('vendor/sweetalert2.all.min.js') }}"></script>
+
+        <!-- Notifikasi Script - PINDAHKAN KE SINI -->
+        @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+        @endif
+
+        @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    confirmButtonColor: '#10b981',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            });
+        </script>
+        @endif
+
+        <!-- Browser Geolocation Detection -->
+        <script>
+            (function() {
+                // Check if we already have location stored
+                const locationStored = localStorage.getItem('poi_location_stored');
+                const locationTimestamp = localStorage.getItem('poi_location_timestamp');
+                const oneDay = 24 * 60 * 60 * 1000; // 24 hours in ms
+                
+                // Only request location if not stored or older than 24 hours
+                if (!locationStored || !locationTimestamp || (Date.now() - parseInt(locationTimestamp)) > oneDay) {
+                    if ('geolocation' in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                // Success - send to server
+                                fetch('/api/user-location', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                        'Accept': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        latitude: position.coords.latitude,
+                                        longitude: position.coords.longitude
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        console.log('Location detected:', data.country_code, '(' + data.market + ')');
+                                        localStorage.setItem('poi_location_stored', data.country_code);
+                                        localStorage.setItem('poi_location_timestamp', Date.now().toString());
+                                        localStorage.setItem('poi_market', data.market);
+                                        
+                                        // Reload page if market changed to refresh tour list
+                                        const previousMarket = localStorage.getItem('poi_previous_market');
+                                        if (previousMarket && previousMarket !== data.market) {
+                                            window.location.reload();
+                                        }
+                                        localStorage.setItem('poi_previous_market', data.market);
+                                    }
+                                })
+                                .catch(error => console.log('Location API error:', error));
+                            },
+                            function(error) {
+                                // Error or denied - use IP-based fallback (handled server-side)
+                                console.log('Geolocation denied or unavailable, using IP detection');
+                            },
+                            {
+                                enableHighAccuracy: false,
+                                timeout: 10000,
+                                maximumAge: 86400000 // 24 hours cache
+                            }
+                        );
+                    }
+                }
+            })();
+        </script>
+
     </body>
 </html>

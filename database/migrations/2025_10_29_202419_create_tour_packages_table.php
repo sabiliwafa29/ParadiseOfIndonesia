@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('tour_packages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
+            $table->string('name_id');
+            $table->string('name_en');
+            $table->string('name_zh');
+            $table->text('description_id');
+            $table->text('description_en');
+            $table->text('description_zh');
             $table->decimal('price', 10, 2);
-            $table->string('image');
-            $table->boolean('includes_guide')->default(true);
-            $table->boolean('includes_transport')->default(true);
+            $table->string('image')->nullable();
+            $table->json('image_derivatives')->nullable();
+            $table->boolean('includes_guide')->default(false);
+            $table->boolean('includes_transport')->default(false);
+            $table->json('itinerary')->nullable(); // Harus JSON
             $table->timestamps();
         });
     }

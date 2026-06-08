@@ -12,6 +12,11 @@ class TourSession extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+    ];
+
     /**
      * Get the tourPackage that owns the TourSession
      *

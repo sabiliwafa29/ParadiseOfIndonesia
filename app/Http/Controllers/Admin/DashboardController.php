@@ -25,20 +25,43 @@ class DashboardController extends Controller
         $totalTours = Tour::count();
         $activeTours = $hasStatusColumn ? Tour::where('status', 'active')->count() : $totalTours;
         $totalBookings = $hasBookingModel ? Booking::count() : 247;
-        $totalRevenue = $hasBookingModel ? Booking::where('status', 'completed')->sum('total_price') : 42500;
+
+        // Calculate total revenue: support multiple possible success status values
+        if ($hasBookingModel) {
+            // Common completed/paid statuses used across systems
+            $successfulStatuses = config('bookings.success_statuses', ['confirmed', 'completed']);
+            $totalRevenue = Booking::whereIn('status', $successfulStatuses)->sum('total_price');
+
+            // If sum is zero, try summing all bookings as a last resort (in case status values differ)
+            if (empty($totalRevenue)) {
+                $totalRevenue = Booking::sum('total_price');
+            }
+        } else {
+            $totalRevenue = 42500;
+        }
         
         // Cek apakah kolom role ada di tabel users
         $hasRoleColumn = \Schema::hasColumn('users', 'role');
-        $totalCustomers = $hasRoleColumn ? User::where('role', 'customer')->count() : User::count();
+        if ($hasRoleColumn) {
+            $customersByRole = User::where('role', 'customer')->count();
+            // If there are no users with role 'customer', fallback to total users
+            $totalCustomers = $customersByRole > 0 ? $customersByRole : User::count();
+        } else {
+            $totalCustomers = User::count();
+        }
         
         $pendingBookings = $hasBookingModel ? Booking::where('status', 'pending')->count() : 12;
 
         // Recent Bookings (Last 5)
         if ($hasBookingModel) {
-            $recentBookings = Booking::with(['user', 'tour'])
+            $recentBookings = Booking::with(['user', 'tour', 'package'])
                 ->latest()
                 ->take(5)
-                ->get();
+                ->get()
+                ->filter(function($booking) {
+                    // Only show bookings that have user and (tour or package)
+                    return $booking->user && ($booking->tour || $booking->package);
+                });
         } else {
             $recentBookings = collect([]);
         }
@@ -103,6 +126,57 @@ class DashboardController extends Controller
             ]);
         }
 
+        // Calculate month-over-month revenue change (percentage for overall comparison)
+        $revenueChangePercent = 0;
+        $revenueChangePositive = true;
+        $values = $monthlyRevenue->values();
+        $count = $values->count();
+        if ($count > 0) {
+            $lastRevenue = $values[$count - 1]->revenue ?? 0;
+            $prevRevenue = $count > 1 ? ($values[$count - 2]->revenue ?? 0) : 0;
+
+            if ($prevRevenue == 0) {
+                $revenueChangePercent = $lastRevenue == 0 ? 0 : 100;
+            } else {
+                $revenueChangePercent = (($lastRevenue - $prevRevenue) / $prevRevenue) * 100;
+            }
+
+            $revenueChangePercent = round($revenueChangePercent, 1);
+            $revenueChangePositive = $revenueChangePercent >= 0;
+        }
+
+        // Compute percent change for each month relative to previous month
+        $monthlyRevenue = $monthlyRevenue->values();
+        $processed = collect();
+        $prevRev = null;
+        foreach ($monthlyRevenue as $m) {
+            $rev = $m->revenue ?? 0;
+            if ($prevRev === null) {
+                $pct = 0;
+                $pos = true;
+            } else {
+                if ($prevRev == 0) {
+                    $pct = $rev == 0 ? 0 : 100;
+                } else {
+                    $pct = (($rev - $prevRev) / $prevRev) * 100;
+                }
+                $pos = $pct >= 0;
+            }
+
+            $processed->push((object)[
+                'month' => $m->month,
+                'year' => $m->year,
+                'revenue' => $rev,
+                'percent_change' => round($pct, 1),
+                'percent_positive' => $pos,
+            ]);
+
+            $prevRev = $rev;
+        }
+
+        // Replace monthlyRevenue with processed collection for the view
+        $monthlyRevenue = $processed;
+
         // Booking Status Distribution
         if ($hasBookingModel) {
             $bookingsByStatus = Booking::select('status', DB::raw('count(*) as count'))
@@ -123,9 +197,10 @@ class DashboardController extends Controller
         
         // Get recent tours
         $recentTours = Tour::latest()->take(3)->get()->map(function($tour) {
+            $tourName = \App\Helpers\LanguageHelper::get($tour, 'name');
             return [
                 'type' => 'tour',
-                'message' => "New tour package '{$tour->name}' was created",
+                'message' => "New tour package '{$tourName}' was created",
                 'created_at' => $tour->created_at,
                 'icon' => 'tour'
             ];
@@ -133,14 +208,33 @@ class DashboardController extends Controller
 
         // Get recent bookings
         if ($hasBookingModel) {
-            $recentBookingActivities = Booking::with('user', 'tour')
+            $recentBookingActivities = Booking::with(['user', 'tour', 'package'])
                 ->latest()
                 ->take(7)
                 ->get()
+                ->filter(function($booking) {
+                    // Filter out bookings without user or without tour/package
+                    return $booking->user && ($booking->tour || $booking->package);
+                })
                 ->map(function($booking) {
+                    // Get user name (from user or booking data)
+                    $userName = $booking->user->name ?? $booking->full_name ?? 'Guest';
+                    
+                    // Get tour/package name
+                    if ($booking->tour) {
+                        $itemName = \App\Helpers\LanguageHelper::get($booking->tour, 'name');
+                        $itemType = 'tour';
+                    } elseif ($booking->package) {
+                        $itemName = \App\Helpers\LanguageHelper::get($booking->package, 'name');
+                        $itemType = 'package';
+                    } else {
+                        $itemName = 'Unknown';
+                        $itemType = 'booking';
+                    }
+                    
                     return [
                         'type' => 'booking',
-                        'message' => "{$booking->user->name} booked '{$booking->tour->name}'",
+                        'message' => "{$userName} booked {$itemType} '{$itemName}'",
                         'created_at' => $booking->created_at,
                         'icon' => 'booking'
                     ];
@@ -183,6 +277,9 @@ class DashboardController extends Controller
             'bookingsByStatus',
             'recentActivities',
             'topDestinations'
-        ));
+        ))->with([
+            'revenueChangePercent' => $revenueChangePercent,
+            'revenueChangePositive' => $revenueChangePositive,
+        ]);
     }
 }

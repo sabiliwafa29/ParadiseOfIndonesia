@@ -35,14 +35,14 @@ class TravelServiceSeeder extends Seeder
                 'description' => 'Mobil keluarga dengan kapasitas 6 penumpang, cocok untuk city tour.',
                 'price' => 700000,
                 'type' => 'mpv',
-                'image' => 'images/services/avanza.jpg',
+                'image' => 'images/services/avanza.png',
             ],
             [
                 'name' => 'Suzuki APV Arena',
                 'description' => 'Pilihan ekonomis untuk perjalanan dalam kota dengan kapasitas 7 orang.',
                 'price' => 650000,
                 'type' => 'mpv',
-                'image' => 'images/services/apv_arena.jpg',
+                'image' => 'images/services/apv_arena.png',
             ],
             [
                 'name' => 'Daihatsu Luxio',

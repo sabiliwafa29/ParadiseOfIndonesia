@@ -1,2 +1,14 @@
+# robots.txt for Paradise Of Indonesia
+# Allow all by default; update Host and add absolute sitemap URL if you have a production domain.
 User-agent: *
-Disallow:
+Allow: /
+
+# Baidu-specific entry
+User-agent: Baiduspider
+Allow: /
+
+# Sitemap location (relative path)
+Sitemap: /sitemap.xml
+
+# Optional: set Host if you know your canonical domain
+# Host: example.com
