@@ -11,6 +11,7 @@ use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\TourSessionController;
 use App\Http\Controllers\TravelServiceController;
 use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
 
@@ -19,6 +20,19 @@ use App\Http\Controllers\Auth\GoogleController;
 | Public Routes (No Authentication Required)
 |--------------------------------------------------------------------------
 */
+
+Route::get('/__health', function () {
+    return response()->json(['status' => 'ok', 'laravel' => app()->version()]);
+});
+
+Route::get('/__migrate', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json(['status' => 'migrated', 'output' => Artisan::output()]);
+    } catch (\Throwable $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

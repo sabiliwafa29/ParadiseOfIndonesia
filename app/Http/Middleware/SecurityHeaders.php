@@ -97,6 +97,20 @@ class SecurityHeaders
         $imgSrcs = ["'self'", 'data:', 'https:'];
         $fontSrcs = ["'self'", 'https:'];
         $connectSrcs = ["'self'"];
+
+        // Add Vite dev server to CSP in non-production environments
+        if (config('app.env') !== 'production') {
+            $viteOrigin = 'http://127.0.0.1:5173';
+            $viteOrigin2 = 'http://127.0.0.1:5174';
+            $scriptSrcs[] = $viteOrigin;
+            $scriptSrcs[] = $viteOrigin2;
+            $styleSrcs[] = $viteOrigin;
+            $styleSrcs[] = $viteOrigin2;
+            $connectSrcs[] = $viteOrigin;
+            $connectSrcs[] = $viteOrigin2;
+            $connectSrcs[] = 'ws://127.0.0.1:5173';
+            $connectSrcs[] = 'ws://127.0.0.1:5174';
+        }
         $formActions = ["'self'"];
         
         // Add app URL explicitly to form-action (untuk workaround CSP 'self' issue)
@@ -180,6 +194,7 @@ class SecurityHeaders
         return implode('; ', [
             'default-src ' . implode(' ', ["'self'"]),
             'script-src ' . implode(' ', $scriptSrcs),
+            'style-src-elem ' . implode(' ', $styleSrcs),
             'style-src ' . implode(' ', $styleSrcs),
             'img-src ' . implode(' ', $imgSrcs),
             'font-src ' . implode(' ', $fontSrcs),
