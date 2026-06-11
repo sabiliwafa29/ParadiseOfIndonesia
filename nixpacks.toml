@@ -1,0 +1,6 @@
+[php]
+documentRoot = "public"
+
+[deploy]
+# Nixpacks auto-detects PHP and uses PHP-FPM + Nginx by default
+# This just ensures the document root is correct for Laravel
