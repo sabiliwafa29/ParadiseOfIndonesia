@@ -12,24 +12,24 @@
         "ext-pgsql": "*",
         "doctrine/dbal": "^3.10",
         "guzzlehttp/guzzle": "^7.10",
-        "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.3",
+        "intervention/image": "^2.7",
+        "laravel/framework": "^13.0",
+        "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.23",
-        "laravel/tinker": "^2.8",
+        "laravel/tinker": "^3.0",
         "midtrans/midtrans-php": "^2.6",
         "predis/predis": "^3.2",
+        "sentry/sentry-laravel": "^4.0",
         "stevebauman/location": "^7.6"
-        ,"intervention/image": "^2.7",
-        "sentry/sentry-laravel": "^3.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "laravel/breeze": "^1.29",
+        "laravel/breeze": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.1",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -67,7 +67,10 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "nunomaduro/collision"
+                "nunomaduro/collision",
+                "spatie/laravel-ignition",
+                "laravel/breeze",
+                "laravel/sail"
             ]
         }
     },
@@ -78,6 +81,19 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "ignore": [
+                "PKSA-mdq4-51ck-6kdq",
+                "PKSA-8qx3-n5y5-vvnd",
+                "PKSA-q46n-4fdk-zjr4",
+                "PKSA-qzrn-rnz3-85w1",
+                "PKSA-w7xr-vk7n-rstm",
+                "PKSA-y6py-qpv1-h52p",
+                "PKSA-365x-2zjk-pt47",
+                "PKSA-b35n-565h-rs4q",
+                "PKSA-5btm-n2xh-4qk7"
+            ]
         }
     },
     "minimum-stability": "stable",

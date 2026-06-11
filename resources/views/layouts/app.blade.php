@@ -50,8 +50,8 @@
         {{-- JSON-LD structured data: Organization + WebSite (basic) --}}
         <script type="application/ld+json">
             {
-                "@context": "https://schema.org",
-                "@type": "Organization",
+                "@@context": "https://schema.org",
+                "@@type": "Organization",
                 "name": "{{ config('app.name', 'Paradise Of Indonesia') }}",
                 "url": "{{ url('/') }}",
                 "logo": "{{ asset('logo-paradise.ico') }}",

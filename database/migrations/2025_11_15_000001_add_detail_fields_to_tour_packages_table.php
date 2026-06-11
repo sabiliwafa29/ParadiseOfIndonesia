@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tour_packages', function (Blueprint $table) {
-            // Mirror detail fields from tours table
-            $table->longText('itinerary')->nullable()->after('image');
-            $table->text('includes')->nullable()->after('itinerary');
+            // Mirror detail fields from tours table (itinerary already exists as JSON)
+            $table->text('includes')->nullable()->after('image');
             $table->text('excludes')->nullable()->after('includes');
         });
     }
@@ -25,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tour_packages', function (Blueprint $table) {
-            $table->dropColumn(['itinerary', 'includes', 'excludes']);
+            $table->dropColumn(['includes', 'excludes']);
         });
     }
 };
