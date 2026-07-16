@@ -442,5 +442,11 @@ Connecting tourism sectors and players',
     'persons' => 'persons',
     'min_guests_required' => 'Minimum :min guests required',
     'contact' => 'WhatsApp / WeChat / Telegram',
+    'search' => 'Search',
+    'search_results' => 'Search results for tours, packages and destinations',
+    'enter_search_query' => 'Type something in the search box to find tours, packages and destinations.',
+    'found_results' => ':count results found',
+    'no_results' => 'No results found',
+    'try_different_keyword' => 'Try a different keyword or browse our tours and destinations.',
 
 ];
