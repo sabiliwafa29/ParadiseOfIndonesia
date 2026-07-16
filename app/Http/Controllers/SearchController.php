@@ -23,42 +23,37 @@ class SearchController extends Controller
         $destinations = collect();
 
         if ($query !== '') {
-            $like = '%' . $query . '%';
+            $term = mb_strtolower($query);
+            $match = function ($q) use ($term) {
+                $cols = [
+                    'name_id', 'name_en', 'name_zh',
+                    'description_id', 'description_en', 'description_zh',
+                ];
+                foreach ($cols as $i => $col) {
+                    $clause = 'LOWER(' . $col . ') LIKE ?';
+                    $bind = ['%' . $term . '%'];
+                    if ($i === 0) {
+                        $q->whereRaw($clause, $bind);
+                    } else {
+                        $q->orWhereRaw($clause, $bind);
+                    }
+                }
+                return $q;
+            };
 
             $tours = Tour::forMarket($userMarket)
                 ->where('status', 'active')
-                ->where(function ($q) use ($like) {
-                    $q->where('name_id', 'like', $like)
-                        ->orWhere('name_en', 'like', $like)
-                        ->orWhere('name_zh', 'like', $like)
-                        ->orWhere('description_id', 'like', $like)
-                        ->orWhere('description_en', 'like', $like)
-                        ->orWhere('description_zh', 'like', $like);
-                })
+                ->where($match)
                 ->latest()
                 ->paginate(12)
                 ->withQueryString();
 
-            $packages = TourPackage::where(function ($q) use ($like) {
-                    $q->where('name_id', 'like', $like)
-                        ->orWhere('name_en', 'like', $like)
-                        ->orWhere('name_zh', 'like', $like)
-                        ->orWhere('description_id', 'like', $like)
-                        ->orWhere('description_en', 'like', $like)
-                        ->orWhere('description_zh', 'like', $like);
-                })
+            $packages = TourPackage::where($match)
                 ->latest()
                 ->paginate(12)
                 ->withQueryString();
 
-            $destinations = Destination::where(function ($q) use ($like) {
-                    $q->where('name_id', 'like', $like)
-                        ->orWhere('name_en', 'like', $like)
-                        ->orWhere('name_zh', 'like', $like)
-                        ->orWhere('description_id', 'like', $like)
-                        ->orWhere('description_en', 'like', $like)
-                        ->orWhere('description_zh', 'like', $like);
-                })
+            $destinations = Destination::where($match)
                 ->latest()
                 ->paginate(12)
                 ->withQueryString();
