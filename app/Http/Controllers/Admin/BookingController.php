@@ -22,20 +22,20 @@ class BookingController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->whereHas('user', function($q) use ($search) {
-                    $q->where('name', 'ILIKE', "%{$search}%");
+                    $q->where('name', 'like', "%{$search}%");
                 })
                 ->orWhereHas('tour', function($q) use ($search) {
-                    $q->where('name_id', 'ILIKE', "%{$search}%")
-                      ->orWhere('name_en', 'ILIKE', "%{$search}%")
-                      ->orWhere('name_zh', 'ILIKE', "%{$search}%");
+                    $q->where('name_id', 'like', "%{$search}%")
+                      ->orWhere('name_en', 'like', "%{$search}%")
+                      ->orWhere('name_zh', 'like', "%{$search}%");
                 })
                 ->orWhereHas('package', function($q) use ($search) {
-                    $q->where('name_id', 'ILIKE', "%{$search}%")
-                      ->orWhere('name_en', 'ILIKE', "%{$search}%")
-                      ->orWhere('name_zh', 'ILIKE', "%{$search}%");
+                    $q->where('name_id', 'like', "%{$search}%")
+                      ->orWhere('name_en', 'like', "%{$search}%")
+                      ->orWhere('name_zh', 'like', "%{$search}%");
                 })
-                ->orWhere('full_name', 'ILIKE', "%{$search}%")
-                ->orWhere('email', 'ILIKE', "%{$search}%");
+                ->orWhere('full_name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
             });
         }
         

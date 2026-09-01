@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tour_packages', function (Blueprint $table) {
-            $table->decimal('price_special_idr', 10, 2)->nullable()->after('price_idr');
-            $table->decimal('price_special_usd', 10, 2)->nullable()->after('price_usd');
-            $table->decimal('price_special_cny', 10, 2)->nullable()->after('price_cny');
+            $table->decimal('price_special_idr', 10, 2)->nullable();
+            $table->decimal('price_special_usd', 10, 2)->nullable();
+            $table->decimal('price_special_cny', 10, 2)->nullable();
             $table->dropColumn('price_special');
         });
     }

@@ -303,10 +303,65 @@
     <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="5"></button>
     <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="6"></button>
     <button class="w-12 h-1.5 rounded-full transition-all duration-300 bg-white/40 hover:bg-white/60" data-hero-dot="7"></button>
-    </div>
-</div>
+     </div>
+ </div>
 
-<!-- Why Choose Section - Mobile Optimized: 2 rows x 3 columns -->
+ <!-- Paradise Destinations -->
+ <div class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <div class="text-center mb-12 md:mb-16">
+             <span class="inline-block px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-semibold mb-4">{{ strtoupper(__('messages.destinations')) }}</span>
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.paradise_destinations') }}</h2>
+             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.discover_paradise') }}</p>
+         </div>
+
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+             @foreach($destinations as $destination)
+             <div class="group relative bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                 <div class="relative h-60 overflow-hidden">
+                     @if($destination->image)
+                         @include('components.responsive-image', [
+                             'path' => $destination->image,
+                             'alt' => $destination->name ?? '',
+                             'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700',
+                             'derivatives' => $destination->image_derivatives ?? null
+                         ])
+                     @else
+                         <div class="w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                             <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                             </svg>
+                         </div>
+                     @endif
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                     <div class="absolute bottom-4 left-4 right-4">
+                         <h3 class="text-xl md:text-2xl font-bold text-white">{{ $destination->name }}</h3>
+                         <p class="text-white/80 text-sm flex items-center">
+                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                             </svg>
+                             {{ $destination->location }}
+                         </p>
+                     </div>
+                 </div>
+                 <div class="p-6">
+                     <p class="text-gray-600 line-clamp-2 leading-relaxed">{{ $destination->description }}</p>
+                     <a href="{{ route('destinations.show', $destination) }}" class="mt-4 inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transform hover:scale-105 transition-all duration-300">
+                         {{ __('messages.explore_now') }}
+                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                         </svg>
+                     </a>
+                 </div>
+             </div>
+             @endforeach
+         </div>
+     </div>
+ </div>
+
+ <!-- Why Choose Section - Mobile Optimized: 2 rows x 3 columns -->
 <div class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">
@@ -460,10 +515,66 @@
             </div>
             @endforeach
         </div>
-    </div>
-</div>
+     </div>
+ </div>
 
-<!-- Featured Tours - Card Grid with Enhanced Design -->
+ <!-- Travel Services -->
+ <div class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <div class="text-center mb-12 md:mb-16">
+             <span class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">{{ strtoupper(__('messages.travel_services')) }}</span>
+             <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4">{{ __('messages.our_travel_services') }}</h2>
+             <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-600">{{ __('messages.travel_services_desc') }}</p>
+         </div>
+
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+             @foreach($travelServices as $service)
+             <div class="group relative bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col">
+                 <div class="relative h-56 overflow-hidden">
+                     @if($service->image)
+                         @include('components.responsive-image', [
+                             'path' => $service->image,
+                             'alt' => $service->name ?? '',
+                             'class' => 'w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700',
+                             'derivatives' => $service->image_derivatives ?? null
+                         ])
+                     @else
+                         <div class="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
+                             <svg class="w-20 h-20 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                             </svg>
+                         </div>
+                     @endif
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                     <div class="absolute top-4 right-4">
+                         <span class="inline-block px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">{{ $service->type }}</span>
+                     </div>
+                 </div>
+                 <div class="flex-1 p-6 md:p-8 flex flex-col">
+                     <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight">{{ $service->name }}</h3>
+                     <p class="text-gray-600 leading-relaxed line-clamp-3 mb-4">{{ Str::limit($service->description, 120) }}</p>
+                     <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-100">
+                         <div>
+                             <span class="text-sm text-gray-500 block">{{ __('messages.starting_from') }}</span>
+                             <span class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                 {{ format_price($service->price) }}
+                             </span>
+                         </div>
+                     </div>
+                     <a href="{{ route('travel-services.show', $service) }}" class="mt-4 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-blue-500/50 transform hover:scale-105 transition-all duration-300">
+                         {{ __('messages.view_details') }}
+                         <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                         </svg>
+                     </a>
+                 </div>
+             </div>
+             @endforeach
+         </div>
+     </div>
+ </div>
+
+ <!-- Featured Tours - Card Grid with Enhanced Design -->
 <div class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 md:mb-16">

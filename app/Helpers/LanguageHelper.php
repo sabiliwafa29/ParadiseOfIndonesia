@@ -6,123 +6,101 @@ use App\Services\LocationService;
 
 class LanguageHelper
 {
-    public static function getLanguages()
+    public const LOCALE_EN = 'en';
+    public const LOCALE_ID = 'id';
+    public const LOCALE_ZH = 'zh';
+
+    protected const CURRENCIES = [
+        'ID' => 'IDR',
+        'CN' => 'CNY',
+        'HK' => 'CNY',
+    ];
+
+    protected const CURRENCY_SYMBOLS = [
+        'IDR' => 'Rp',
+        'CNY' => '¥',
+        'USD' => '$',
+    ];
+
+    protected const DECIMAL_CONFIGS = [
+        'IDR' => ['decimals' => 0, 'thousands_sep' => '.', 'decimal_sep' => ','],
+        'CNY' => ['decimals' => 2, 'thousands_sep' => ',', 'decimal_sep' => '.'],
+        'USD' => ['decimals' => 2, 'thousands_sep' => ',', 'decimal_sep' => '.'],
+    ];
+
+    public static function getLanguages(): array
     {
         return [
-            'en' => [
+            self::LOCALE_EN => [
                 'name' => 'English',
                 'flag' => '🇬🇧',
                 'native' => 'English',
                 'currency' => 'USD',
-                'currency_symbol' => '$'
+                'currency_symbol' => '$',
             ],
-            'id' => [
+            self::LOCALE_ID => [
                 'name' => 'Indonesian',
                 'flag' => '🇮🇩',
                 'native' => 'Indonesia',
                 'currency' => 'IDR',
-                'currency_symbol' => 'Rp'
+                'currency_symbol' => 'Rp',
             ],
-            'zh' => [
+            self::LOCALE_ZH => [
                 'name' => 'Chinese',
                 'flag' => '🇨🇳',
                 'native' => '中文',
                 'currency' => 'CNY',
-                'currency_symbol' => '¥'
+                'currency_symbol' => '¥',
             ],
         ];
     }
-    
-    public static function getCurrentLanguage()
+
+    public static function getCurrentLanguage(): array
     {
         $locale = app()->getLocale();
         $languages = self::getLanguages();
-        return $languages[$locale] ?? $languages['en'];
+
+        return $languages[$locale] ?? $languages[self::LOCALE_EN];
     }
 
-    public static function getCurrentCurrency()
+    public static function getCurrentCurrency(): string
     {
-        // Prefer geolocation-based currency. If session or locale override required,
-        // that can be implemented later. For now, choose by detected user location.
         return LocationService::getUserCurrency() ?? 'USD';
     }
 
-    public static function getCurrencySymbol($locale = null)
+    public static function getCurrencySymbol(?string $locale = null): string
     {
-        // Map currency code to symbol. Use provided locale only as fallback for legacy.
-        $currency = null;
-        if ($locale) {
-            $languages = self::getLanguages();
-            $currency = $languages[$locale]['currency'] ?? null;
-        }
+        $currency = $locale ? self::resolveCurrencyFromLocale($locale) : self::getCurrentCurrency();
 
-        $currency = $currency ?? self::getCurrentCurrency();
-
-        return match($currency) {
-            'IDR' => 'Rp',
-            'CNY' => '¥',
-            'USD' => '$',
-            default => '$',
-        };
+        return self::CURRENCY_SYMBOLS[$currency] ?? '$';
     }
 
-    public static function formatPrice($amount, $locale = null)
+    protected static function resolveCurrencyFromLocale(string $locale): string
     {
-        // Determine currency from geolocation
+        $languages = self::getLanguages();
+
+        return $languages[$locale]['currency'] ?? 'USD';
+    }
+
+    public static function formatPrice(float|int $amount, ?string $locale = null): string
+    {
         $currency = self::getCurrentCurrency();
         $symbol = self::getCurrencySymbol($locale);
+        $config = self::DECIMAL_CONFIGS[$currency] ?? self::DECIMAL_CONFIGS['USD'];
 
-        // Format based on currency
-        switch ($currency) {
-            case 'IDR':
-                // No decimals for IDR, use dot as thousand separator
-                return $symbol . ' ' . number_format($amount, 0, ',', '.');
-            case 'CNY':
-                return $symbol . number_format($amount, 2, '.', ',');
-            case 'USD':
-            default:
-                return $symbol . number_format($amount, 2, '.', ',');
-        }
+        return $symbol . ' ' . number_format($amount, $config['decimals'], $config['decimal_sep'], $config['thousands_sep']);
     }
 
-    /**
-     * Format price by explicit currency code (useful for stored booking totals)
-     *
-     * @param float|int $amount
-     * @param string $currencyCode e.g. 'IDR', 'USD', 'CNY'
-     * @return string
-     */
-    public static function formatPriceByCurrency($amount, string $currencyCode)
+    public static function formatPriceByCurrency(float|int $amount, string $currencyCode): string
     {
         $currency = strtoupper($currencyCode ?? 'USD');
+        $symbol = self::CURRENCY_SYMBOLS[$currency] ?? '$';
+        $config = self::DECIMAL_CONFIGS[$currency] ?? self::DECIMAL_CONFIGS['USD'];
 
-        $symbol = match($currency) {
-            'IDR' => 'Rp',
-            'CNY' => '¥',
-            'USD' => '$',
-            default => '$',
-        };
-
-        switch ($currency) {
-            case 'IDR':
-                return $symbol . ' ' . number_format($amount, 0, ',', '.');
-            case 'CNY':
-                return $symbol . number_format($amount, 2, '.', ',');
-            case 'USD':
-            default:
-                return $symbol . number_format($amount, 2, '.', ',');
-        }
+        return $symbol . ' ' . number_format($amount, $config['decimals'], $config['decimal_sep'], $config['thousands_sep']);
     }
 
-    /**
-     * Get multilingual field value based on current locale with fallback
-     * 
-     * @param object $model The model instance
-     * @param string $field The field name (without locale suffix)
-     * @param string|null $locale Override locale (optional)
-     * @return string|null
-     */
-    public static function get($model, $field, $locale = null)
+    public static function get($model, string $field, ?string $locale = null): ?string
     {
         if (!$model) {
             return null;
@@ -131,52 +109,44 @@ class LanguageHelper
         $locale = $locale ?? app()->getLocale();
         $fieldWithLocale = $field . '_' . $locale;
 
-        // Try to get the field with current locale
         if (isset($model->$fieldWithLocale) && !empty($model->$fieldWithLocale)) {
             return $model->$fieldWithLocale;
         }
 
-        // Fallback chain: id -> en -> zh -> original field
-        $fallbackLocales = ['id', 'en', 'zh'];
+        $fallbackLocales = [self::LOCALE_ID, self::LOCALE_EN, self::LOCALE_ZH];
         foreach ($fallbackLocales as $fallbackLocale) {
-            if ($fallbackLocale === $locale) continue; // Skip already tried locale
-            
+            if ($fallbackLocale === $locale) {
+                continue;
+            }
+
             $fallbackField = $field . '_' . $fallbackLocale;
             if (isset($model->$fallbackField) && !empty($model->$fallbackField)) {
                 return $model->$fallbackField;
             }
         }
 
-        // Last resort: try field without locale suffix
         return $model->$field ?? null;
     }
 
-    public static function getPrice($model, $locale = null)
+    public static function getPrice(object $model, ?string $locale = null): float
     {
-        // Use detected user currency to pick correct price field
         $currency = self::getCurrentCurrency();
 
-        switch ($currency) {
-            case 'IDR':
-                // Prefer special price when available
-                
-                return $model->price_idr ?? $model->price ?? 0;
-            case 'CNY':
-                
-                return $model->price_cny ?? $model->price ?? 0;
-            case 'USD':
-            default:
-                
-                return $model->price_usd ?? $model->price ?? 0;
-        }
+        return match($currency) {
+            'IDR' => $model->price_idr ?? $model->price ?? 0,
+            'CNY' => $model->price_cny ?? $model->price ?? 0,
+            'USD' => $model->price_usd ?? $model->price ?? 0,
+            default => $model->price_usd ?? $model->price ?? 0,
+        };
     }
 
-    /**
-     * Get currency code from locale
-     */
-    private static function getCurrencyFromLocale(string $locale): string
+    public static function getPriceByCurrency(object $model, string $currency): float
     {
-        $languages = self::getLanguages();
-        return $languages[$locale]['currency'] ?? 'USD';
+        return match(strtoupper($currency)) {
+            'IDR' => $model->price_idr ?? $model->price ?? 0,
+            'CNY' => $model->price_cny ?? $model->price ?? 0,
+            'USD' => $model->price_usd ?? $model->price ?? 0,
+            default => $model->price_usd ?? $model->price ?? 0,
+        };
     }
 }

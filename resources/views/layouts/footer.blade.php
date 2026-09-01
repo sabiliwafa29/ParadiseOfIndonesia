@@ -4,7 +4,7 @@
             <!-- About Section -->
             <div class="col-span-1">
                 <div class="flex items-center space-x-3 mb-4">
-                    <img src="{{ asset('images/logo-paradise.jpg') }}" alt="Paradise Of Indonesia" class="h-10 w-auto rounded-lg">
+                    <img src="{{ asset('logo-pnbtravel.jpeg') }}" alt="Paradise Of Indonesia" class="h-10 w-auto rounded-lg">
                     <h3 class="text-xl font-semibold">{{ config('app.name') }}</h3>
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">{{ __('messages.about_paradise') }}</p>

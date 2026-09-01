@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('bookings', function (Blueprint $table) {
             if (!Schema::hasColumn('bookings', 'route_option')) {
-                $table->string('route_option', 50)->nullable()->after('email');
+                $table->string('route_option', 50)->nullable();
             }
         });
     }

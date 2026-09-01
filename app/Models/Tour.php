@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Services\LocationService;
 
 class Tour extends Model
 {
@@ -65,117 +64,45 @@ class Tour extends Model
         return $this->belongsToMany(TourPackage::class, 'tour_tour_package', 'tour_id', 'tour_package_id');
     }
 
-    /**
-     * Scope: Filter by target market
-     */
-    public function scopeForMarket($query, $market = 'both')
-    {
-        if ($market === 'domestic') {
-            return $query->whereIn('target_market', ['domestic', 'both']);
-        } elseif ($market === 'international') {
-            return $query->whereIn('target_market', ['international', 'both']);
-        }
-        return $query; // both
-    }
-
-    /**
-     * Get user's market based on location
-     */
-    public static function getUserMarket()
-    {
-        // Use LocationService for consistency
-        return \App\Services\LocationService::getUserMarket();
-    }
-
-    /**
-     * Detect user country
-     */
-    public static function detectUserCountry()
-    {
-        // Use LocationService for consistency
-        return \App\Services\LocationService::detectCountry();
-    }
-
-    /**
-     * Get tour price for user based on location
-     */
-    public function getPriceForUser(): string
-    {
-        try {
-            $currency = LocationService::getUserCurrency();
-            return $this->getFormattedPrice($currency);
-        } catch (\Exception $e) {
-            \Log::warning("Tour price lookup failed: " . $e->getMessage());
-            return $this->getFormattedPrice('USD');
-        }
-    }
-
-    /**
-     * Check if tour is available for user
-     */
-    public function isAvailableForUser(): bool
-    {
-        // Jika target_market adalah 'both', tersedia untuk semua
-        if ($this->target_market === 'both') {
-            return true;
-        }
-        
-        $userMarket = self::getUserMarket();
-        
-        // Domestic user bisa akses tour domestic dan both
-        if ($userMarket === 'domestic') {
-            return in_array($this->target_market, ['domestic', 'both']);
-        }
-        
-        // International user bisa akses tour international dan both
-        if ($userMarket === 'international') {
-            return in_array($this->target_market, ['international', 'both']);
-        }
-        
-        return true;
-    }
-
-    // Relasi ke Bookings
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
 
-    // Accessor untuk status jika belum ada kolom status di database
-    public function getStatusAttribute($value)
+    public function scopeForMarket($query, $market = 'both')
     {
-        // Jika kolom status ada di database, return value asli
-        if (isset($this->attributes['status'])) {
-            return $value;
-        }
-        
-        // Jika tidak ada, return 'active' sebagai default
-        return 'active';
+        return match($market) {
+            'domestic' => $query->whereIn('target_market', ['domestic', 'both']),
+            'international' => $query->whereIn('target_market', ['international', 'both']),
+            default => $query,
+        };
     }
 
-    // Accessor untuk bookings_count (opsional, untuk fallback)
-    public function getBookingsCountAttribute()
+    public function scopeActive($query)
     {
-        // Cek apakah sudah ada attribut bookings_count dari withCount
-        if (array_key_exists('bookings_count', $this->attributes)) {
-            return $this->attributes['bookings_count'];
-        }
-        
-        // Jika model Booking tidak ada, return 0
-        if (!class_exists('App\Models\Booking')) {
-            return 0;
-        }
-        
-        // Hitung bookings
-        return $this->bookings()->count();
+        return $query->where('status', 'active');
     }
 
-    /**
-     * Get price by currency
-     */
+    public function getNameAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return $this->{"name_{$locale}"} ?? $this->name_en;
+    }
+
+    public function getDescriptionAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return $this->{"description_{$locale}"} ?? $this->description_en;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('tours.show', $this);
+    }
+
     public function getPriceByCurrency(string $currency = 'USD'): float
     {
-        return match($currency) {
+        return match(strtoupper($currency)) {
             'IDR' => (float) $this->price_idr,
             'CNY' => (float) $this->price_cny,
             'USD' => (float) $this->price_usd,
@@ -183,14 +110,10 @@ class Tour extends Model
         };
     }
 
-    /**
-     * Format price with currency symbol
-     */
     public function getFormattedPrice(string $currency = 'USD'): string
     {
         $price = $this->getPriceByCurrency($currency);
-        
-        return match($currency) {
+        return match(strtoupper($currency)) {
             'IDR' => 'Rp ' . number_format($price, 0, ',', '.'),
             'CNY' => '¥ ' . number_format($price, 2, '.', ','),
             'USD' => '$ ' . number_format($price, 2, '.', ','),
@@ -198,40 +121,32 @@ class Tour extends Model
         };
     }
 
-    /**
-     * Auto-convert USD to other currencies
-     */
     public function autoConvertPrices(): void
     {
         if ($this->price_usd) {
-            $this->price_idr = $this->price_usd * $this->exchange_rate_idr;
-            $this->price_cny = $this->price_usd * $this->exchange_rate_cny;
+            $this->price_idr = $this->price_usd * ($this->exchange_rate_idr ?? 15000);
+            $this->price_cny = $this->price_usd * ($this->exchange_rate_cny ?? 6.5);
         }
     }
-    public function getNameAttribute()
+
+    public function isAvailableForUser(): bool
     {
-        $locale = app()->getLocale();
-        return $this->{"name_{$locale}"} ?? $this->name_en;
-    }
-    public function getDescriptionAttribute()
-    {
-        $locale = app()->getLocale();
-        return $this->{"description_{$locale}"} ?? $this->description_en;
-    }
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
+        $userMarket = \App\Models\Tour::getUserMarket();
+
+        return match($userMarket) {
+            'domestic' => in_array($this->target_market, ['domestic', 'both']),
+            'international' => in_array($this->target_market, ['international', 'both']),
+            default => true,
+        };
     }
 
-    /**
-     * Provide a URL attribute for compatibility with parts of the codebase
-     * that expect $tour->url or getUrlAttribute(). Uses named route when
-     * available and falls back to slug or id.
-     */
-    public function getUrlAttribute()
+    public static function getUserMarket(): string
     {
-        return route('tours.show', $this);
+        return \App\Services\LocationService::getUserMarket();
     }
 
-
+    public static function detectUserCountry(): string
+    {
+        return \App\Services\LocationService::detectCountry();
+    }
 }

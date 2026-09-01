@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TourPackage;
 
 class SpecialLink extends Model
 {
@@ -47,50 +46,57 @@ class SpecialLink extends Model
         return $this->belongsTo(TourPackage::class, 'tour_package_id');
     }
 
-    public function isValid()
+    public function isValid(float $usedCount = null, int $guestCount = null): bool
     {
+        $used = $usedCount ?? $this->used_count;
+        $max = $this->max_uses;
+
         if ($this->expires_at && $this->expires_at->isPast()) {
             return false;
         }
-        if ($this->max_uses !== null && $this->used_count >= $this->max_uses) {
+
+        if ($max !== null && $used >= $max) {
             return false;
         }
+
+        if ($guestCount !== null && !$this->appliesToGuests($guestCount)) {
+            return false;
+        }
+
         return true;
     }
 
-    public function priceForCurrency($currency)
+    public function priceForCurrency(string $currency): ?float
     {
         $currency = strtoupper($currency);
-        switch ($currency) {
-            case 'IDR':
-            case 'idr':
-                return $this->price_special_idr ?? null;
-            case 'USD':
-            case 'usd':
-                return $this->price_special_usd ?? null;
-            case 'CNY':
-            case 'cny':
-                return $this->price_special_cny ?? null;
-            default:
-                return $this->price_special_usd ?? $this->price_special_idr ?? $this->price_special_cny ?? null;
-        }
+
+        return match($currency) {
+            'IDR' => $this->price_special_idr ?? null,
+            'USD' => $this->price_special_usd ?? null,
+            'CNY' => $this->price_special_cny ?? null,
+            default => $this->price_special_usd ?? $this->price_special_idr ?? $this->price_special_cny ?? null,
+        };
     }
 
-    /**
-     * Check whether this special link applies to the given guest count.
-     */
     public function appliesToGuests(int $guests): bool
     {
-        // If fixed_guests is set, only that exact number applies
         if ($this->fixed_guests !== null) {
             return $guests === (int) $this->fixed_guests;
         }
+
         if ($this->min_guests !== null && $guests < $this->min_guests) {
             return false;
         }
+
         if ($this->max_guests !== null && $guests > $this->max_guests) {
             return false;
         }
+
         return true;
+    }
+
+    public function token(): string
+    {
+        return $this->token;
     }
 }

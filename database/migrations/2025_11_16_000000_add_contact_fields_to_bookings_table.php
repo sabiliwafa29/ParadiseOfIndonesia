@@ -15,15 +15,15 @@ return new class extends Migration
         Schema::table('bookings', function (Blueprint $table) {
             // Tambah kolom contact info untuk booking paket / tour
             if (!Schema::hasColumn('bookings', 'full_name')) {
-                $table->string('full_name')->nullable()->after('package_id');
+                $table->string('full_name')->nullable();
             }
 
             if (!Schema::hasColumn('bookings', 'contact_handle')) {
-                $table->string('contact_handle')->nullable()->after('full_name');
+                $table->string('contact_handle')->nullable();
             }
 
             if (!Schema::hasColumn('bookings', 'email')) {
-                $table->string('email')->nullable()->after('contact_handle');
+                $table->string('email')->nullable();
             }
         });
     }

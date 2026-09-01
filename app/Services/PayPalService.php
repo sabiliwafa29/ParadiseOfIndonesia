@@ -7,73 +7,75 @@ use Illuminate\Support\Facades\Http;
 
 class PayPalService
 {
-    protected $clientId;
-    protected $secret;
-    protected $isProduction;
-    protected $baseUrl;
-    protected $lastError;
-    protected $lastDebugId;
-    protected $lastInfoLink;
+    protected string $clientId;
+    protected string $secret;
+    protected bool $isProduction;
+    protected string $baseUrl;
+    protected ?string $lastError = null;
+    protected ?string $lastDebugId = null;
+    protected ?string $lastInfoLink = null;
 
     public function __construct()
     {
         $this->clientId = config('services.paypal.client_id');
         $this->secret = config('services.paypal.secret');
         $this->isProduction = config('services.paypal.is_production', false);
-        $this->baseUrl = $this->isProduction ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
+        $this->baseUrl = $this->isProduction
+            ? 'https://api-m.paypal.com'
+            : 'https://api-m.sandbox.paypal.com';
 
-        Log::info('🔧 [PAYPAL] PayPalService initialized', [
+        Log::info('PayPalService initialized', [
             'client_id_set' => !empty($this->clientId),
             'is_production' => $this->isProduction,
-            'base_url' => $this->baseUrl,
         ]);
     }
 
-    protected function getAccessToken()
+    protected function getAccessToken(): ?string
     {
         try {
-            $response = Http::asForm()->withBasicAuth($this->clientId, $this->secret)
-                ->post($this->baseUrl . '/v1/oauth2/token', [
-                    'grant_type' => 'client_credentials'
-                ]);
+            $response = Http::asForm()
+                ->withBasicAuth($this->clientId, $this->secret)
+                ->post($this->baseUrl . '/v1/oauth2/token', ['grant_type' => 'client_credentials']);
 
             if ($response->failed()) {
-                Log::error('❌ [PAYPAL] Token request failed', ['status' => $response->status(), 'body' => $response->body()]);
-                // Try to extract a friendly message from the response
-                $body = null;
-                try {
-                    $body = $response->json();
-                } catch (\Exception $e) {
-                    $body = null;
-                }
-
-                if (is_array($body)) {
-                    $this->lastError = $body['error_description'] ?? $body['message'] ?? json_encode($body);
-                    $this->lastDebugId = $body['debug_id'] ?? null;
-                    // Extract info link if provided
-                    if (!empty($body['links']) && is_array($body['links'])) {
-                        foreach ($body['links'] as $link) {
-                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
-                                $this->lastInfoLink = $link['href'] ?? null;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    $this->lastError = $response->body();
-                    $this->lastDebugId = null;
-                    $this->lastInfoLink = null;
-                }
-
+                Log::error('PayPal token request failed', ['status' => $response->status()]);
                 return null;
             }
 
             $this->lastError = null;
             return $response->json('access_token');
         } catch (\Exception $e) {
-            Log::error('❌ [PAYPAL] Token exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('PayPal token exception: ' . $e->getMessage());
             $this->lastError = $e->getMessage();
             return null;
+        }
+    }
+
+    protected function parseErrorResponse($response): void
+    {
+        $body = null;
+        try {
+            $body = $response->json();
+        } catch (\Exception $e) {
+            $body = null;
+        }
+
+        if (is_array($body)) {
+            $this->lastError = $body['error_description'] ?? $body['message'] ?? json_encode($body);
+            $this->lastDebugId = $body['debug_id'] ?? null;
+
+            if (!empty($body['links']) && is_array($body['links'])) {
+                foreach ($body['links'] as $link) {
+                    if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
+                        $this->lastInfoLink = $link['href'] ?? null;
+                        break;
+                    }
+                }
+            }
+        } else {
+            $this->lastError = $response->body();
+            $this->lastDebugId = null;
+            $this->lastInfoLink = null;
         }
     }
 
@@ -111,39 +113,15 @@ class PayPalService
                 ->post($this->baseUrl . '/v2/checkout/orders', $payload);
 
             if ($response->failed()) {
-                Log::error('❌ [PAYPAL] Create order failed', ['status' => $response->status(), 'body' => $response->body(), 'booking_id' => $booking->id]);
-
-                // Extract friendly error message
-                try {
-                    $body = $response->json();
-                } catch (\Exception $e) {
-                    $body = null;
-                }
-
-                if (is_array($body)) {
-                    $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
-                    $this->lastDebugId = $body['debug_id'] ?? null;
-                    if (!empty($body['links']) && is_array($body['links'])) {
-                        foreach ($body['links'] as $link) {
-                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
-                                $this->lastInfoLink = $link['href'] ?? null;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    $this->lastError = $response->body();
-                    $this->lastDebugId = null;
-                    $this->lastInfoLink = null;
-                }
-
+                Log::error('PayPal create order failed', ['status' => $response->status()]);
+                $this->parseErrorResponse($response);
                 return null;
             }
 
             $this->lastError = null;
             return $response->json();
         } catch (\Exception $e) {
-            Log::error('❌ [PAYPAL] Create order exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('PayPal create order exception: ' . $e->getMessage());
             $this->lastError = $e->getMessage();
             return null;
         }
@@ -161,71 +139,31 @@ class PayPalService
                 ->post($this->baseUrl . '/v2/checkout/orders/' . $orderId . '/capture');
 
             if ($response->failed()) {
-                Log::error('❌ [PAYPAL] Capture order failed', ['status' => $response->status(), 'body' => $response->body(), 'order_id' => $orderId]);
-
-                try {
-                    $body = $response->json();
-                } catch (\Exception $e) {
-                    $body = null;
-                }
-
-                if (is_array($body)) {
-                    $this->lastError = $body['message'] ?? ($body['details'][0]['description'] ?? json_encode($body));
-                    $this->lastDebugId = $body['debug_id'] ?? null;
-                    if (!empty($body['links']) && is_array($body['links'])) {
-                        foreach ($body['links'] as $link) {
-                            if (!empty($link['rel']) && strtolower($link['rel']) === 'information_link') {
-                                $this->lastInfoLink = $link['href'] ?? null;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    $this->lastError = $response->body();
-                    $this->lastDebugId = null;
-                    $this->lastInfoLink = null;
-                }
-
+                Log::error('PayPal capture order failed', ['status' => $response->status()]);
+                $this->parseErrorResponse($response);
                 return null;
             }
 
             $this->lastError = null;
             return $response->json();
         } catch (\Exception $e) {
-            Log::error('❌ [PAYPAL] Capture order exception: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('PayPal capture order exception: ' . $e->getMessage());
             $this->lastError = $e->getMessage();
-            $this->lastDebugId = null;
-            $this->lastInfoLink = null;
             return null;
         }
     }
 
-    /**
-     * Get last friendly error message for debugging (do not expose secrets)
-     *
-     * @return string|null
-     */
-    public function getLastError()
+    public function getLastError(): ?string
     {
         return $this->lastError;
     }
 
-    /**
-     * Get PayPal debug id returned from PayPal responses (if any)
-     *
-     * @return string|null
-     */
-    public function getLastDebugId()
+    public function getLastDebugId(): ?string
     {
         return $this->lastDebugId;
     }
 
-    /**
-     * Get PayPal information link from last response (if provided)
-     *
-     * @return string|null
-     */
-    public function getLastInfoLink()
+    public function getLastInfoLink(): ?string
     {
         return $this->lastInfoLink;
     }

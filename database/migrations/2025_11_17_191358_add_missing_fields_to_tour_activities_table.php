@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::table('tour_activities', function (Blueprint $table) {
             // Add missing fields for tour activities detail page
-            $table->text('description')->nullable()->after('photo');
-            $table->json('highlights')->nullable()->after('description');
-            $table->json('what_to_bring')->nullable()->after('highlights');
-            $table->text('notes')->nullable()->after('what_to_bring');
+            $table->text('description')->nullable();
+            $table->json('highlights')->nullable();
+            $table->json('what_to_bring')->nullable();
+            $table->text('notes')->nullable();
             
             // Make tour_id nullable since activities are standalone
             $table->foreignId('tour_id')->nullable()->change();

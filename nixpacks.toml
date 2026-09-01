@@ -1,6 +1,21 @@
 [php]
 documentRoot = "public"
+extensions = [
+  "pgsql",
+  "pdo_pgsql",
+  "bcmath",
+  "ctype",
+  "curl",
+  "fileinfo",
+  "gd",
+  "json",
+  "mbstring",
+  "openssl",
+  "pdo",
+  "tokenizer",
+  "xml"
+]
 
 [deploy]
-# Nixpacks auto-detects PHP and uses PHP-FPM + Nginx by default
-# This just ensures the document root is correct for Laravel
+# Use PHP-FPM + Nginx (Nixpacks default for PHP)
+# No custom start command needed

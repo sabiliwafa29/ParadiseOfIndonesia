@@ -29,9 +29,6 @@ class TourActivity extends Model
         'photo_derivatives' => 'array',
     ];
 
-    /**
-     * Boot the model.
-     */
     protected static function boot()
     {
         parent::boot();
@@ -49,34 +46,23 @@ class TourActivity extends Model
         });
     }
 
-    /**
-     * Get the tour that owns the activity.
-     */
     public function tour()
     {
         return $this->belongsTo(Tour::class);
     }
 
-    /**
-     * Get the destination through tour.
-     */
     public function destination()
     {
-        return $this->hasOneThrough(
-            Destination::class,
-            Tour::class,
-            'id', // Foreign key on tours table
-            'id', // Foreign key on destinations table
-            'tour_id', // Local key on tour_activities table
-            'destination_id' // Local key on tours table
-        );
+        return $this->hasOneThrough(Destination::class, Tour::class);
     }
 
-    /**
-     * Get destination directly via tour relationship.
-     */
-    public function getDestinationAttribute()
+    public function getDestinationAttribute(): ?Destination
     {
-        return $this->tour ? $this->tour->destination : null;
+        return $this->tour?->destination;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('tour-activities.show', $this);
     }
 }

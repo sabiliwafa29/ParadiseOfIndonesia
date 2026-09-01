@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Use raw SQL untuk PostgreSQL karena Schema::table()->change() kadang tidak bekerja
-        DB::statement('ALTER TABLE bookings ALTER COLUMN tour_id DROP NOT NULL');
+        // Make tour_id nullable (works on both PostgreSQL and MySQL)
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->unsignedBigInteger('tour_id')->nullable()->change();
+        });
     }
 
     /**
@@ -21,7 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revert back to NOT NULL (hati-hati, bisa error jika ada data dengan tour_id NULL)
-        DB::statement('ALTER TABLE bookings ALTER COLUMN tour_id SET NOT NULL');
+        // Revert back to NOT NULL (can error if null data exists)
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->unsignedBigInteger('tour_id')->nullable(false)->change();
+        });
     }
 };

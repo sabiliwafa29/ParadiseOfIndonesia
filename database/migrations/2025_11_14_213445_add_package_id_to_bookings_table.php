@@ -18,7 +18,7 @@ return new class extends Migration
                     ->nullable()
                     ->constrained('tour_packages')
                     ->onDelete('cascade')
-                    ->after('tour_id');
+                    ;
             }
         });
     }

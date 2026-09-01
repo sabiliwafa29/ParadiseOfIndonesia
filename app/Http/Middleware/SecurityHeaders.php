@@ -8,78 +8,64 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeaders
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
+    protected const SECURITY_HEADERS = [
+        'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains; preload',
+        'X-Content-Type-Options' => 'nosniff',
+        'X-Frame-Options' => 'SAMEORIGIN',
+        'X-XSS-Protection' => '1; mode=block',
+        'Referrer-Policy' => 'strict-origin-when-cross-origin',
+    ];
+
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
 
-        // Skip adding security headers for StreamedResponse (file downloads, exports)
-        // StreamedResponse doesn't support the header() method the same way
         if ($response instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
             return $response;
         }
 
-        // HSTS (HTTP Strict-Transport-Security)
-        // Instructs browsers to always use HTTPS for this domain
-        $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-
-        // X-Content-Type-Options
-        // Prevents MIME type sniffing attacks
-        $response->headers->set('X-Content-Type-Options', 'nosniff');
-
-        // X-Frame-Options
-        // Prevents clickjacking attacks
-        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-
-        // X-XSS-Protection
-        // Legacy XSS protection header (modern browsers use CSP)
-        $response->headers->set('X-XSS-Protection', '1; mode=block');
-
-        // Referrer-Policy
-        // Controls how much referrer information is shared
-        $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-        // Permissions-Policy (formerly Feature-Policy)
-        // Controls which browser features and APIs can be used
-        // Allow geolocation for same-origin pages so browser geolocation API works.
-        // If you want to restrict this later, change to 'geolocation=()' or control via config.
-        $response->headers->set('Permissions-Policy', implode(', ', [
-            'geolocation=(self)' . (config('app.env') === 'production' ? '' : ', camera=(), microphone=()'),
-            'usb=()',
-            'magnetometer=()',
-            'gyroscope=()',
-            'accelerometer=()',
-            // Note: the 'unload' feature is not a standardized Permissions-Policy directive
-            // and may cause console warnings in some browsers. Remove it to avoid "unload is not
-            // allowed in this document" messages. If a payment SDK requires unload, allow it
-            // per-integration (e.g., iframe attributes) rather than via this header.
-        ]));
-
-        // Content-Security-Policy
-        // Comprehensive CSP to prevent XSS, injection, and other attacks
-        $csp = $this->getContentSecurityPolicy($request);
-        $response->headers->set('Content-Security-Policy', $csp);
-
-        // Additional hardening for API responses
-        $response->headers->set('X-Powered-By', ''); // Remove server info disclosure
-        $response->headers->set('Server', ''); // Remove server info disclosure
+        $this->applySecurityHeaders($response);
+        $this->applyPermissionsPolicy($response);
+        $this->applyContentSecurityPolicy($response, $request);
 
         return $response;
     }
 
-    /**
-     * Generate Content-Security-Policy header value
-     */
-    private function getContentSecurityPolicy(Request $request): string
+    protected function applySecurityHeaders($response): void
     {
-        $isApi = $request->is('api/*');
+        foreach (self::SECURITY_HEADERS as $header => $value) {
+            $response->headers->set($header, $value);
+        }
 
-        if ($isApi) {
-            // Strict CSP for API endpoints
+        $response->headers->set('X-Powered-By', '');
+        $response->headers->set('Server', '');
+    }
+
+    protected function applyPermissionsPolicy($response): void
+    {
+        $isProduction = config('app.env') === 'production';
+        $cameraMicrophone = $isProduction ? '' : ', camera=(), microphone=()';
+
+        $permissionsPolicy = implode(', ', [
+            'geolocation=(self)' . $cameraMicrophone,
+            'usb=()',
+            'magnetometer=()',
+            'gyroscope=()',
+            'accelerometer=()',
+        ]);
+
+        $response->headers->set('Permissions-Policy', $permissionsPolicy);
+    }
+
+    protected function applyContentSecurityPolicy($response, Request $request): void
+    {
+        $csp = $this->buildContentSecurityPolicy($request);
+        $response->headers->set('Content-Security-Policy', $csp);
+    }
+
+    protected function buildContentSecurityPolicy(Request $request): string
+    {
+        if ($request->is('api/*')) {
             return implode('; ', [
                 "default-src 'none'",
                 "frame-ancestors 'none'",
@@ -88,124 +74,152 @@ class SecurityHeaders
             ]);
         }
 
-        // More relaxed CSP for web application
-        $cdnUrl = config('app.cdn_url') ? parse_url(config('app.cdn_url'), PHP_URL_HOST) : '';
-        $appUrl = parse_url(config('app.url'), PHP_URL_HOST);
+        return $this->buildWebCsp($request);
+    }
 
-        $scriptSrcs = ["'self'", "'unsafe-inline'", "'unsafe-eval'"]; // unsafe-eval needed for Alpine.js
-        $styleSrcs = ["'self'", "'unsafe-inline'"];
-        $imgSrcs = ["'self'", 'data:', 'https:'];
-        $fontSrcs = ["'self'", 'https:'];
-        $connectSrcs = ["'self'"];
-
-        // Add Vite dev server to CSP in non-production environments
-        if (config('app.env') !== 'production') {
-            $viteOrigin = 'http://127.0.0.1:5173';
-            $viteOrigin2 = 'http://127.0.0.1:5174';
-            $scriptSrcs[] = $viteOrigin;
-            $scriptSrcs[] = $viteOrigin2;
-            $styleSrcs[] = $viteOrigin;
-            $styleSrcs[] = $viteOrigin2;
-            $connectSrcs[] = $viteOrigin;
-            $connectSrcs[] = $viteOrigin2;
-            $connectSrcs[] = 'ws://127.0.0.1:5173';
-            $connectSrcs[] = 'ws://127.0.0.1:5174';
-        }
-        $formActions = ["'self'"];
-        
-        // Add app URL explicitly to form-action (untuk workaround CSP 'self' issue)
-        if ($appUrl) {
-            $formActions[] = "https://{$appUrl}";
-            $formActions[] = "http://{$appUrl}"; // fallback untuk development
-        }
-        
-        // Tambahkan domain paradiseofindonesia.com secara explicit
-        if (!in_array('https://paradiseofindonesia.com', $formActions)) {
-            $formActions[] = 'https://paradiseofindonesia.com';
-        }
-        if (!in_array('http://paradiseofindonesia.com', $formActions)) {
-            $formActions[] = 'http://paradiseofindonesia.com';
-        }
-        
-        // Add Bunny Fonts
-        $styleSrcs[] = 'https://fonts.bunny.net';
-        $fontSrcs[] = 'https://fonts.bunny.net';
-
-        // Add CDN if configured
-        if ($cdnUrl) {
-            $scriptSrcs[] = "https://{$cdnUrl}";
-            $styleSrcs[] = "https://{$cdnUrl}";
-            $imgSrcs[] = "https://{$cdnUrl}";
-            $connectSrcs[] = "https://{$cdnUrl}";
-        }
-
-        // Add Midtrans domains for payment integration
-        $scriptSrcs[] = 'https://app.midtrans.com';
-        $scriptSrcs[] = 'https://app.midtrans.com';
-    // PayPal SDK and assets
-    $scriptSrcs[] = 'https://www.paypal.com';
-    $scriptSrcs[] = 'https://www.paypal.com/sdk/js';
-    $scriptSrcs[] = 'https://www.paypalobjects.com';
-        $connectSrcs[] = 'https://api.midtrans.com';
-        $connectSrcs[] = 'https://api.sandbox.midtrans.com';
-        $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
-        $connectSrcs[] = 'https://app.midtrans.com'; // For source maps
-    // PayPal API endpoints
-    $connectSrcs[] = 'https://api-m.paypal.com';
-    $connectSrcs[] = 'https://api-m.sandbox.paypal.com';
-        $formActions[] = 'https://app.midtrans.com';
-        $formActions[] = 'https://app.midtrans.com';
-        $formActions[] = 'https://api.midtrans.com';
-        
-        // OSRM for routing
-        $connectSrcs[] = 'https://router.project-osrm.org';
-        
-        // Add unpkg CDN for Alpine.js and other libraries
-        $scriptSrcs[] = 'https://unpkg.com';
-
-        // Ensure PayPal frame/connect domains are allowed (sandbox + production)
-        $frameSrcs = ["'self'", 'https://app.midtrans.com', 'https://app.midtrans.com'];
-        // PayPal frames (both www and non-www hosts, sandbox and prod)
-        $frameSrcs[] = 'https://www.sandbox.paypal.com';
-        $frameSrcs[] = 'https://sandbox.paypal.com';
-        $frameSrcs[] = 'https://www.paypal.com';
-        $frameSrcs[] = 'https://paypal.com';
-
-        // Add PayPal logger/connect host (www.sandbox.paypal.com) to connect-src if not present
-        if (!in_array('https://www.sandbox.paypal.com', $connectSrcs)) {
-            $connectSrcs[] = 'https://www.sandbox.paypal.com';
-        }
-        if (!in_array('https://sandbox.paypal.com', $connectSrcs)) {
-            $connectSrcs[] = 'https://sandbox.paypal.com';
-        }
-        if (!in_array('https://www.paypal.com', $connectSrcs)) {
-            $connectSrcs[] = 'https://www.paypal.com';
-        }
-
-        // Deduplicate all source lists to avoid repeated hosts in the final CSP
-        $scriptSrcs = array_values(array_unique($scriptSrcs));
-        $styleSrcs = array_values(array_unique($styleSrcs));
-        $imgSrcs = array_values(array_unique($imgSrcs));
-        $fontSrcs = array_values(array_unique($fontSrcs));
-        $connectSrcs = array_values(array_unique($connectSrcs));
-        $formActions = array_values(array_unique($formActions));
-        $frameSrcs = array_values(array_unique($frameSrcs));
+    protected function buildWebCsp(Request $request): string
+    {
+        $sources = $this->resolveCspSources($request);
 
         return implode('; ', [
-            'default-src ' . implode(' ', ["'self'"]),
-            'script-src ' . implode(' ', $scriptSrcs),
-            'style-src-elem ' . implode(' ', $styleSrcs),
-            'style-src ' . implode(' ', $styleSrcs),
-            'img-src ' . implode(' ', $imgSrcs),
-            'font-src ' . implode(' ', $fontSrcs),
-            'connect-src ' . implode(' ', $connectSrcs),
-            'media-src ' . implode(' ', ["'self'", 'https:']),
-            'object-src ' . implode(' ', ["'none'"]),
-            'frame-src ' . implode(' ', $frameSrcs),
-            'base-uri ' . implode(' ', ["'self'"]),
-            'form-action ' . implode(' ', $formActions),
-            // Only upgrade insecure requests in production
+            'default-src ' . implode(' ', $sources['self']),
+            'script-src ' . implode(' ', $sources['script']),
+            'style-src-elem ' . implode(' ', $sources['style']),
+            'style-src ' . implode(' ', $sources['style']),
+            'img-src ' . implode(' ', $sources['img']),
+            'font-src ' . implode(' ', $sources['font']),
+            'connect-src ' . implode(' ', $sources['connect']),
+            'media-src ' . implode(' ', $sources['media']),
+            'object-src ' . implode(' ', $sources['object']),
+            'frame-src ' . implode(' ', $sources['frame']),
+            'base-uri ' . implode(' ', $sources['self']),
+            'form-action ' . implode(' ', $sources['form']),
             config('app.env') === 'production' ? "upgrade-insecure-requests" : "",
         ]);
+    }
+
+    protected function resolveCspSources(Request $request): array
+    {
+        $script = ["'self'", "'unsafe-inline'", "'unsafe-eval'"];
+        $style = ["'self'", "'unsafe-inline'"];
+        $img = ["'self'", 'data:', 'https:'];
+        $font = ["'self'", 'https:'];
+        $connect = ["'self'"];
+        $media = ["'self'", 'https:'];
+        $object = ["'none'"];
+        $frame = [];
+        $form = ["'self'"];
+
+        $isProduction = config('app.env') === 'production';
+        $appUrl = parse_url((string) config('app.url'), PHP_URL_HOST);
+        $cdnUrl = parse_url((string) config('app.cdn_url'), PHP_URL_HOST);
+
+        if (!$isProduction) {
+            $viteOrigins = ['http://127.0.0.1:5173', 'http://127.0.0.1:5174'];
+            $wsOrigins = ['ws://127.0.0.1:5173', 'ws://127.0.0.1:5174'];
+
+            foreach ($viteOrigins as $origin) {
+                $script[] = $origin;
+                $style[] = $origin;
+                $connect[] = $origin;
+            }
+            foreach ($wsOrigins as $origin) {
+                $connect[] = $origin;
+            }
+        }
+
+        if ($appUrl) {
+            $form[] = "https://{$appUrl}";
+            $form[] = "http://{$appUrl}";
+            $form[] = 'https://paradiseofindonesia.com';
+            $form[] = 'http://paradiseofindonesia.com';
+        }
+
+        $style[] = 'https://fonts.bunny.net';
+        $font[] = 'https://fonts.bunny.net';
+
+        if ($cdnUrl) {
+            $script[] = "https://{$cdnUrl}";
+            $style[] = "https://{$cdnUrl}";
+            $img[] = "https://{$cdnUrl}";
+            $connect[] = "https://{$cdnUrl}";
+        }
+
+        $this->addMidtransSources($script, $connect, $form, $frame);
+        $this->addPaypalSources($script, $connect);
+        $this->addOsrmSource($connect);
+        $this->addUnpkgSource($script);
+
+        $script = array_values(array_unique($script));
+        $style = array_values(array_unique($style));
+        $img = array_values(array_unique($img));
+        $font = array_values(array_unique($font));
+        $connect = array_values(array_unique($connect));
+        $form = array_values(array_unique($form));
+        $frame = array_values(array_unique($frame));
+
+        return [
+            'self' => ["'self'"],
+            'script' => $script,
+            'style' => $style,
+            'img' => $img,
+            'font' => $font,
+            'connect' => $connect,
+            'media' => $media,
+            'object' => $object,
+            'frame' => $frame,
+            'form' => $form,
+        ];
+    }
+
+    protected function addMidtransSources(array &$script, array &$connect, array &$form, array &$frame): void
+    {
+        $script[] = 'https://app.midtrans.com';
+        $script[] = 'https://app.sandbox.midtrans.com';
+        $connect[] = 'https://api.midtrans.com';
+        $connect[] = 'https://api.sandbox.midtrans.com';
+        $connect[] = 'https://app.midtrans.com';
+        $connect[] = 'https://app.sandbox.midtrans.com';
+        $form[] = 'https://app.midtrans.com';
+        $form[] = 'https://app.sandbox.midtrans.com';
+        $form[] = 'https://api.midtrans.com';
+        $form[] = 'https://api.sandbox.midtrans.com';
+        $frame[] = "'self'";
+        $frame[] = 'https://app.midtrans.com';
+        $frame[] = 'https://app.sandbox.midtrans.com';
+    }
+
+    protected function addPaypalSources(array &$script, array &$connect): void
+    {
+        $script[] = 'https://www.paypal.com';
+        $script[] = 'https://www.paypal.com/sdk/js';
+        $script[] = 'https://www.paypalobjects.com';
+        $connect[] = 'https://api-m.paypal.com';
+        $connect[] = 'https://api-m.sandbox.paypal.com';
+
+        if (!in_array('https://www.sandbox.paypal.com', $connect)) {
+            $connect[] = 'https://www.sandbox.paypal.com';
+        }
+        if (!in_array('https://sandbox.paypal.com', $connect)) {
+            $connect[] = 'https://sandbox.paypal.com';
+        }
+        if (!in_array('https://www.paypal.com', $connect)) {
+            $connect[] = 'https://www.paypal.com';
+        }
+
+        $script[] = 'https://www.sandbox.paypal.com';
+        $script[] = 'https://sandbox.paypal.com';
+        $script[] = 'https://www.paypal.com';
+        $script[] = 'https://paypal.com';
+    }
+
+    protected function addOsrmSource(array &$connect): void
+    {
+        $connect[] = 'https://router.project-osrm.org';
+    }
+
+    protected function addUnpkgSource(array &$script): void
+    {
+        $script[] = 'https://unpkg.com';
     }
 }

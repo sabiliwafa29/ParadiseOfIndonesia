@@ -22,8 +22,15 @@
 
 {{-- 🧾 MIDTRANS SNAP JS --}}
 @push('scripts')
-<script type="text/javascript" 
-        src="https://app.midtrans.com/snap/snap.js" 
+@php
+    $isMidtransProduction = config('services.midtrans.is_production', false);
+    $midtransSnapUrl = $isMidtransProduction
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+@endphp
+
+<script type="text/javascript"
+        src="{{ $midtransSnapUrl }}"
         data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 <script type="text/javascript">
     document.getElementById('pay-button').addEventListener('click', function () {

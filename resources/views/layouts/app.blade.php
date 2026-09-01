@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('logo-pnbtravel.jpeg') }}">
 
         <title>@yield('title', config('app.name', 'Paradise Of Indonesia'))</title>
 
@@ -54,7 +54,7 @@
                 "@@type": "Organization",
                 "name": "{{ config('app.name', 'Paradise Of Indonesia') }}",
                 "url": "{{ url('/') }}",
-                "logo": "{{ asset('logo-paradise.ico') }}",
+                "logo": "{{ asset('logo-pnbtravel.jpeg') }}",
                 "sameAs": []
             }
         </script>

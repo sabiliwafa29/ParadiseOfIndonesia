@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('special_links', function (Blueprint $table) {
-            $table->unsignedInteger('min_guests')->nullable()->after('used_count');
-            $table->unsignedInteger('max_guests')->nullable()->after('min_guests');
+            $table->unsignedInteger('min_guests')->nullable();
+            $table->unsignedInteger('max_guests')->nullable();
         });
     }
 

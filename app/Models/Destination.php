@@ -15,10 +15,11 @@ class Destination extends Model
         'description',
         'location',
         'image',
-        'featured'
+        'featured',
     ];
 
     protected $casts = [
+        'featured' => 'boolean',
         'image_derivatives' => 'json',
     ];
 
@@ -31,15 +32,23 @@ class Destination extends Model
     {
         return $this->hasManyThrough(TourActivity::class, Tour::class);
     }
-    
-    public function getNameAttribute()
+
+    public function getNameAttribute(): string
     {
         $locale = app()->getLocale();
+
         return $this->{"name_{$locale}"} ?? $this->name_en;
     }
-    public function getDescriptionAttribute()
+
+    public function getDescriptionAttribute(): string
     {
         $locale = app()->getLocale();
+
         return $this->{"description_{$locale}"} ?? $this->description_en;
+    }
+
+    public function getUrlAttribute(): string
+    {
+        return route('destinations.show', $this);
     }
 }

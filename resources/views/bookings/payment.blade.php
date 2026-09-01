@@ -280,9 +280,16 @@
     });
 </script>
 
-<!-- Load Midtrans Snap.js -->
+@php
+    $isMidtransProduction = config('services.midtrans.is_production', false);
+    $midtransSnapUrl = $isMidtransProduction
+        ? 'https://app.midtrans.com/snap/snap.js'
+        : 'https://app.sandbox.midtrans.com/snap/snap.js';
+@endphp
+
+<!-- Load Midtrans Snap.js ({{ $isMidtransProduction ? 'PRODUCTION' : 'SANDBOX' }}) -->
 <script type="text/javascript"
-        src="https://app.midtrans.com/snap/snap.js"
+        src="{{ $midtransSnapUrl }}"
         data-client-key="{{ config('services.midtrans.client_key') }}"
         onload="window.initializeMidtrans()"></script>
 @endpush

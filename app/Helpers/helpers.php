@@ -3,51 +3,36 @@
 use App\Helpers\LanguageHelper;
 
 if (!function_exists('format_price')) {
-    /**
-     * Format price based on current locale
-     */
-    function format_price($amount, $locale = null)
+    function format_price(float|int $amount, ?string $locale = null): string
     {
         return LanguageHelper::formatPrice($amount, $locale);
     }
 }
 
 if (!function_exists('get_price')) {
-    /**
-     * Get price from model based on current currency
-     */
-    function get_price($model, $locale = null)
+    function get_price(object $model, ?string $locale = null): float
     {
         return LanguageHelper::getPrice($model, $locale);
     }
 }
 
 if (!function_exists('currency_symbol')) {
-    /**
-     * Get currency symbol for current locale
-     */
-    function currency_symbol($locale = null)
+    function currency_symbol(?string $locale = null): string
     {
         return LanguageHelper::getCurrencySymbol($locale);
     }
 }
 
 if (!function_exists('current_currency')) {
-    /**
-     * Get current currency code
-     */
-    function current_currency()
+    function current_currency(): string
     {
         return LanguageHelper::getCurrentCurrency();
     }
 }
 
 if (!function_exists('format_price_by_currency')) {
-    /**
-     * Format amount using a specific currency code (safe for stored booking totals)
-     */
-    function format_price_by_currency($amount, $currency)
+    function format_price_by_currency(float|int $amount, string $currency): string
     {
-        return \App\Helpers\LanguageHelper::formatPriceByCurrency($amount, $currency);
+        return LanguageHelper::formatPriceByCurrency($amount, $currency);
     }
 }

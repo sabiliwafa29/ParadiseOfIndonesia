@@ -15,13 +15,13 @@ return new class extends Migration
         // Add new currency columns if they don't exist
         Schema::table('tour_packages', function (Blueprint $table) {
             if (! Schema::hasColumn('tour_packages', 'price_idr')) {
-                $table->decimal('price_idr', 15, 2)->nullable()->after('price')->comment('Price in Indonesian Rupiah');
+                $table->decimal('price_idr', 15, 2)->nullable()->comment('Price in Indonesian Rupiah');
             }
             if (! Schema::hasColumn('tour_packages', 'price_usd')) {
-                $table->decimal('price_usd', 15, 2)->nullable()->after('price_idr')->comment('Price in US Dollars');
+                $table->decimal('price_usd', 15, 2)->nullable()->comment('Price in US Dollars');
             }
             if (! Schema::hasColumn('tour_packages', 'price_cny')) {
-                $table->decimal('price_cny', 15, 2)->nullable()->after('price_usd')->comment('Price in Chinese Yuan (CNY)');
+                $table->decimal('price_cny', 15, 2)->nullable()->comment('Price in Chinese Yuan (CNY)');
             }
         });
 

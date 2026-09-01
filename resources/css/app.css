@@ -2,63 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Alpine.js x-cloak - Hide elements until Alpine.js is loaded */
-/* Use !important to override any conflicting styles */
-[x-cloak] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
-
-/* Mobile-optimized typography */
 @layer base {
-    /* Base font sizes are smaller on mobile */
-    html {
-        @apply text-sm md:text-base;
-    }
-    
-    /* Responsive headings */
-    h1 {
-        @apply text-2xl md:text-3xl lg:text-4xl;
-    }
-    
-    h2 {
-        @apply text-xl md:text-2xl lg:text-3xl;
-    }
-    
-    h3 {
-        @apply text-lg md:text-xl lg:text-2xl;
-    }
-    
-    h4 {
-        @apply text-base md:text-lg lg:text-xl;
-    }
-    
-    /* Paragraphs */
-    p {
-        @apply text-sm md:text-base;
-    }
-}
-
-/* Mobile-friendly components */
-@layer components {
-    .mobile-compact {
-        @apply text-xs md:text-sm lg:text-base;
-    }
-    
-    .mobile-heading {
-        @apply text-lg md:text-2xl lg:text-3xl;
-    }
-    
-    .mobile-subheading {
-        @apply text-base md:text-xl lg:text-2xl;
-    }
-    
-    .mobile-body {
-        @apply text-sm md:text-base lg:text-lg;
-    }
-    
-    .mobile-small {
-        @apply text-xs md:text-sm;
-    }
+  :root {
+    --background: 0 0% 100;
+    --foreground: 222.2 4.5 4.9;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 4.5 4.9;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 4.5 4.9;
+    --primary: 221.2 83.2 53.3;
+    --primary-foreground: 222.2 47.2 91.2;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.2 91.2;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16.6 46.9;
+    --accent: 221.2 83.2 53.3;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2 60.2;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8 85.8%;
+    --input: 214.3 31.8 85.8%;
+    --ring: 221.2 83.2 53.3%;
+    --radius: 0.5rem;
+  }
 }

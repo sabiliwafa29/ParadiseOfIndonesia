@@ -10,10 +10,10 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('home') }}" aria-label="Paradise Of Indonesia - Home">
-                        <img src="{{ asset('images/logo-paradise.jpg') }}" 
-                             alt="Paradise Of Indonesia Logo" 
-                             class="h-10 w-auto"
-                             loading="eager">
+                         <img src="{{ asset('logo-pnbtravel.jpeg') }}" 
+                              alt="Paradise Of Indonesia Logo" 
+                              class="h-10 w-auto"
+                              loading="eager">
                     </a>
                 </div>
 

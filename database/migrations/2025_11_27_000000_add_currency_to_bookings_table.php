@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->string('currency', 3)->default('IDR')->after('total_price');
+            $table->string('currency', 3)->default('IDR');
         });
     }
 

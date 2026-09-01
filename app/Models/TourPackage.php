@@ -14,7 +14,7 @@ class TourPackage extends Model
 
     protected $fillable = [
         'name_id',
-        'name_en', 
+        'name_en',
         'name_zh',
         'description_id',
         'description_en',
@@ -49,33 +49,43 @@ class TourPackage extends Model
         'min_guests' => 'integer',
     ];
 
-    /**
-     * The tours that belong to the TourPackage
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function tours(): BelongsToMany
     {
         return $this->belongsToMany(Tour::class, 'tour_tour_package', 'tour_package_id', 'tour_id');
     }
-    
-    public function getNameAttribute()
+
+    public function getNameAttribute(): string
     {
         $locale = app()->getLocale();
         return $this->{"name_{$locale}"} ?? $this->name_en;
     }
-    public function getDescriptionAttribute()
+
+    public function getDescriptionAttribute(): string
     {
         $locale = app()->getLocale();
         return $this->{"description_{$locale}"} ?? $this->description_en;
     }
 
-    /**
-     * Provide a URL attribute for compatibility (route fallback to slug or id)
-     */
-    public function getUrlAttribute()
+    public function getUrlAttribute(): string
     {
         return route('tour-packages.show', $this);
     }
 
+    public function getPrice(): float
+    {
+        return (float) ($this->price ?? 0);
+    }
+
+    public function getFormattedPrice(): string
+    {
+        $currency = \App\Helpers\LanguageHelper::getCurrentCurrency();
+        $price = $this->getPrice();
+
+        return match($currency) {
+            'IDR' => 'Rp ' . number_format($price, 0, ',', '.'),
+            'CNY' => '¥ ' . number_format($price, 2, '.', ','),
+            'USD' => '$ ' . number_format($price, 2, '.', ','),
+            default => '$ ' . number_format($price, 2, '.', ','),
+        };
+    }
 }

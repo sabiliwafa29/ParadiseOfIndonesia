@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::table('tours', function (Blueprint $table) {
             if (!Schema::hasColumn('tours', 'min_guests')) {
-                $table->integer('min_guests')->unsigned()->default(1)->after('duration');
+                $table->integer('min_guests')->unsigned()->default(1);
             }
         });
 
         Schema::table('tour_packages', function (Blueprint $table) {
             if (!Schema::hasColumn('tour_packages', 'min_guests')) {
-                $table->integer('min_guests')->unsigned()->default(1)->after('price_cny');
+                $table->integer('min_guests')->unsigned()->default(1);
             }
         });
     }

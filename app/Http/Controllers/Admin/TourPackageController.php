@@ -20,7 +20,7 @@ class TourPackageController extends Controller
         $query = TourPackage::query();
 
         if ($search) {
-            $query->where($nameColumn, 'ILIKE', '%' . $search . '%'); 
+            $query->where($nameColumn, 'like', '%' . $search . '%'); 
         }
 
         $packages = $query->paginate(10);

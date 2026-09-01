@@ -8,66 +8,36 @@ use Illuminate\Auth\Access\Response;
 
 class BookingPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        return true; // Atau sesuaikan dengan logika Anda
+        return true;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, Booking $booking): bool
     {
-        // User dapat view booking jika:
-        // 1. Booking milik user (user_id match)
-        // 2. Booking dibuat dengan email yang sama (guest booking)
         return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Booking $booking): bool
     {
-        // User dapat update booking jika:
-        // 1. Booking milik user (user_id match)
-        // 2. Booking dibuat dengan email yang sama (guest booking)
         return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, Booking $booking): bool
     {
-        // User dapat delete booking jika:
-        // 1. Booking milik user (user_id match)
-        // 2. Booking dibuat dengan email yang sama (guest booking)
         return $user->id === $booking->user_id || $user->email === $booking->email;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, Booking $booking): bool
     {
         return $user->id === $booking->user_id;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
     public function forceDelete(User $user, Booking $booking): bool
     {
         return $user->id === $booking->user_id;

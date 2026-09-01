@@ -9,10 +9,10 @@ use App\Models\Pickup;
 
 echo "Total pickups: " . Pickup::count() . PHP_EOL;
 
-$stations = Pickup::where('name', 'ILIKE', '%stasiun%')
-    ->orWhere('name', 'ILIKE', '%station%')
-    ->orWhere('description', 'ILIKE', '%stasiun%')
-    ->orWhere('description', 'ILIKE', '%station%')
+$stations = Pickup::where('name', 'like', '%stasiun%')
+    ->orWhere('name', 'like', '%station%')
+    ->orWhere('description', 'like', '%stasiun%')
+    ->orWhere('description', 'like', '%station%')
     ->get(['name', 'description']);
 
 echo "Stations found: " . $stations->count() . PHP_EOL;

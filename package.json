@@ -16,5 +16,14 @@
         "prettier": "3.6.2",
         "tailwindcss": "^3.1.0",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "@inertiajs/react": "^1.3.0",
+        "@keelcode-ai/keelcode": "^0.1.16",
+        "@vitejs/plugin-react": "^4.7.0",
+        "clsx": "^2.1.1",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "tailwind-merge": "^3.6.0"
     }
 }

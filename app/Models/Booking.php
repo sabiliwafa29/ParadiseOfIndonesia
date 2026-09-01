@@ -13,12 +13,10 @@ class Booking extends Model
         'user_id',
         'tour_id',
         'package_id',
-
         'full_name',
         'contact_handle',
         'email',
         'route_option',
-
         'date',
         'guests',
         'guide_service',
@@ -34,7 +32,11 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'date' => 'date'
+        'date' => 'date',
+        'guide_service' => 'boolean',
+        'transport_service' => 'boolean',
+        'addon_cost' => 'decimal:2',
+        'total_price' => 'decimal:2',
     ];
 
     public function user()
@@ -49,6 +51,26 @@ class Booking extends Model
 
     public function package()
     {
-        return $this->belongsTo(\App\Models\TourPackage::class, 'package_id');
+        return $this->belongsTo(TourPackage::class, 'package_id');
+    }
+
+    public function getStatusAttribute(): string
+    {
+        return $this->attributes['status'] ?? 'active';
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->payment_status === 'paid' || $this->status === 'confirmed';
+    }
+
+    public function canBeCancelled(): bool
+    {
+        return $this->status === 'pending' && $this->payment_status !== 'paid';
+    }
+
+    public function getFormattedTotalPrice(): string
+    {
+        return \App\Helpers\LanguageHelper::formatPriceByCurrency($this->total_price, $this->currency);
     }
 }

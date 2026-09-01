@@ -15,7 +15,14 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+// On Hostinger the web root is the sibling "public_html" directory, not "public".
+$hostingerPublic = dirname(dirname(__DIR__)) . '/public_html';
+if (is_dir($hostingerPublic)) {
+    $app->usePublicPath($hostingerPublic);
+}
+
 /*
+
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
 |--------------------------------------------------------------------------

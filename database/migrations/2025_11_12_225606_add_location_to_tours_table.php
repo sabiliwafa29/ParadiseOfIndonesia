@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::table('tours', function (Blueprint $table) {
             $table->enum('target_market', ['domestic', 'international', 'both'])
                 ->default('both')
-                ->after('status')
+                
                 ->comment('domestic=Indonesia only, international=Foreign only, both=All');
         });
     }

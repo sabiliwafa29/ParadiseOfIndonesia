@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('tour_packages', function (Blueprint $table) {
             // Mirror detail fields from tours table (itinerary already exists as JSON)
-            $table->text('includes')->nullable()->after('image');
-            $table->text('excludes')->nullable()->after('includes');
+            $table->text('includes')->nullable();
+            $table->text('excludes')->nullable();
         });
     }
 
