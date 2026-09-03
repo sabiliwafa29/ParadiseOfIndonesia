@@ -3,14 +3,14 @@
 
 <!-- ═══════════════════════════════════════════════════════════
      HERO SECTION — Cinematic Split-Glass Slideshow
-     Design: Ken Burns zoom · Glassmorphism card · Thumbnail strip
+     Design: Ken Burns zoom · Luminous Foreground Glass Card · Indonesian Fleet
      ═══════════════════════════════════════════════════════════ -->
-<section class="relative w-full overflow-hidden bg-black" id="hero-section" style="height:100svh;min-height:580px;max-height:900px;">
+<section class="relative w-full overflow-hidden bg-slate-950" id="hero-section" style="height:100svh;min-height:580px;max-height:920px;">
 
     {{-- ── SLIDESHOW BACKGROUND ─────────────────────────────── --}}
     <div class="absolute inset-0" id="heroSlideshow" aria-hidden="true">
 
-        {{-- Each slide: full-bleed image with Ken Burns zoom --}}
+        {{-- Authentic Indonesian Fleet Slides --}}
         @php
         $heroSlides = [
             ['img' => '/images/hero/slideshow/hiace.jpg',     'key' => 'hero_slide_hiace'],
@@ -32,22 +32,22 @@
         @endforeach
     </div>
 
-    {{-- ── LAYERED OVERLAYS ─────────────────────────────────── --}}
-    {{-- cinematic letterbox vignette --}}
+    {{-- ── LAYERED OVERLAYS (Soft & Vibrant, Not Dimmed) ──────── --}}
+    {{-- Soft cinematic gradient for optimal text contrast without muting car vibrancy --}}
     <div class="absolute inset-0 z-10 pointer-events-none"
-         style="background:linear-gradient(to right,rgba(0,0,0,.72) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.15) 100%),
-                            linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 40%)">
+         style="background:linear-gradient(to right, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 55%, rgba(0,0,0,.08) 100%),
+                            linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 35%)">
     </div>
 
-    {{-- ambient amber glow (brand colour) --}}
+    {{-- Ambient warm gold glow --}}
     <div class="absolute z-10 pointer-events-none"
-         style="width:520px;height:380px;top:10%;left:-80px;
-                background:radial-gradient(ellipse,rgba(245,158,11,.18) 0%,transparent 70%);
-                filter:blur(40px)"></div>
+         style="width:550px;height:400px;top:8%;left:-60px;
+                background:radial-gradient(ellipse, rgba(245,158,11,.16) 0%, transparent 70%);
+                filter:blur(45px)"></div>
 
-    {{-- ── GLASS CONTENT CARD ───────────────────────────────── --}}
-    <div class="absolute inset-0 z-20 flex items-center">
-        <div class="w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+    {{-- ── LUMINOUS FOREGROUND GLASS CARD ───────────────────── --}}
+    <div class="absolute inset-0 z-30 flex items-center">
+        <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16">
             <div class="hero-glass-card" id="heroCard">
 
                 {{-- slide counter --}}
@@ -91,19 +91,19 @@
                 {{-- trust pills --}}
                 <div class="hero-trust-row" id="heroTrust">
                     <div class="hero-trust-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                         <span>Licensed & Official</span>
                     </div>
                     <div class="hero-trust-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>24/7 Support</span>
                     </div>
                     <div class="hero-trust-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         <span>1000+ Partners</span>
                     </div>
                     <div class="hero-trust-pill">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>All Indonesia</span>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
 </section>
 
 {{-- ════════════════════════════════════════════════════════════
-     HERO STYLES
+     HERO STYLES — Ultra-Luminous Foreground Glass
      ════════════════════════════════════════════════════════════ --}}
 <style>
 /* ── Slide images ───────────────────────────────────────────── */
@@ -161,7 +161,7 @@
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity .9s cubic-bezier(.4,0,.2,1);
+    transition: opacity 1.0s cubic-bezier(.4,0,.2,1);
     will-change: opacity;
 }
 .hero-slide.is-active { opacity: 1; }
@@ -170,182 +170,178 @@
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center;
+    background-position: center 55%;
     background-repeat: no-repeat;
-    transform: scale(1.06);
+    transform: scale(1.05);
     transition: transform 6s ease-out;
     will-change: transform;
 }
 .hero-slide.is-active .hero-slide-img {
-    transform: scale(1.0);   /* Ken Burns: zoom out slowly */
+    transform: scale(1.0);   /* Ken Burns: subtle zoom out */
 }
 
-/* ── Glass content card ─────────────────────────────────────── */
+/* ── Luminous Foreground Glass Card ─────────────────────────── */
 .hero-glass-card {
     position: relative;
-    max-width: 560px;
-    padding: 2.5rem 2.5rem 1.75rem;
-    background: rgba(10, 14, 28, 0.52);
-    backdrop-filter: blur(22px) saturate(1.4);
-    -webkit-backdrop-filter: blur(22px) saturate(1.4);
-    border: 1px solid rgba(255,255,255,.10);
-    border-radius: 24px;
-    box-shadow: 0 8px 64px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+    max-width: 590px;
+    padding: 2.75rem 2.75rem 2rem;
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 26px;
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.75),
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                inset 0 1px 2px rgba(255, 255, 255, 0.35);
     overflow: hidden;
+    z-index: 30;
 }
 @media (max-width: 767px) {
     .hero-glass-card {
         max-width: 100%;
-        padding: 1.75rem 1.5rem 1.25rem;
-        border-radius: 18px;
-        margin: 0 0 120px;
+        padding: 1.85rem 1.5rem 1.35rem;
+        border-radius: 20px;
+        margin: 0 0 110px;
+        background: rgba(15, 23, 42, 0.82);
     }
 }
 
 /* ── Slide counter ──────────────────────────────────────────── */
 .hero-counter {
     position: absolute;
-    top: 1.5rem;
-    right: 1.75rem;
+    top: 1.6rem;
+    right: 1.85rem;
     display: flex;
     align-items: baseline;
     gap: 4px;
-    font-size: .75rem;
+    font-size: .78rem;
     font-weight: 700;
     letter-spacing: .1em;
-    color: rgba(255,255,255,.5);
+    color: rgba(255,255,255,.65);
     font-variant-numeric: tabular-nums;
 }
 .hero-counter #heroCounterCurrent {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: #F59E0B;
-    font-weight: 800;
+    font-weight: 900;
 }
-.hero-counter-sep { font-size: .65rem; margin: 0 1px; }
+.hero-counter-sep { font-size: .7rem; margin: 0 1px; color: rgba(255,255,255,.4); }
 
 /* ── Brand chip ─────────────────────────────────────────────── */
 .hero-brand-chip {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 5px 14px 5px 10px;
-    background: rgba(245,158,11,.15);
-    border: 1px solid rgba(245,158,11,.3);
+    gap: 8px;
+    padding: 6px 15px 6px 12px;
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.45);
     border-radius: 999px;
-    font-size: .7rem;
+    font-size: .75rem;
     font-weight: 800;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: #FCD34D;
-    margin-bottom: 1.1rem;
-    animation: hero-fadein .5s ease both;
+    color: #FDE68A;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
 }
 
 /* ── Headline ───────────────────────────────────────────────── */
 .hero-headline {
-    font-size: clamp(1.9rem, 4.5vw, 3.25rem);
+    font-size: clamp(2rem, 4.6vw, 3.4rem);
     font-weight: 900;
-    line-height: 1.07;
+    line-height: 1.08;
     letter-spacing: -.02em;
-    color: #fff;
-    margin-bottom: .9rem;
-    animation: hero-slidein .55s .06s ease both;
-}
-.hero-headline em {
-    font-style: normal;
-    background: linear-gradient(90deg,#F59E0B,#FBBF24);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FFFFFF;
+    margin-bottom: 1.05rem;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
 /* ── Description ────────────────────────────────────────────── */
 .hero-desc {
-    font-size: clamp(.82rem, 1.6vw, .96rem);
-    line-height: 1.7;
-    color: rgba(255,255,255,.7);
-    margin-bottom: 1.8rem;
-    font-weight: 300;
-    animation: hero-slidein .55s .12s ease both;
+    font-size: clamp(.88rem, 1.65vw, 1.02rem);
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.92);
+    margin-bottom: 1.85rem;
+    font-weight: 400;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
 
 /* ── CTA buttons ────────────────────────────────────────────── */
 .hero-cta-row {
     display: flex;
     flex-wrap: wrap;
-    gap: .75rem;
-    margin-bottom: 1.4rem;
-    animation: hero-fadein .5s .2s ease both;
+    gap: .85rem;
+    margin-bottom: 1.5rem;
 }
 .hero-btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: .75rem 1.6rem;
-    background: linear-gradient(135deg,#F59E0B,#D97706);
-    color: #1a0a00;
+    padding: .8rem 1.75rem;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #0f172a;
     font-weight: 800;
-    font-size: .85rem;
+    font-size: .88rem;
     letter-spacing: .02em;
     border-radius: 999px;
     text-decoration: none;
     transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
-    box-shadow: 0 4px 24px rgba(245,158,11,.35);
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.4);
 }
 .hero-btn-primary:hover {
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 32px rgba(245,158,11,.5);
+    box-shadow: 0 8px 32px rgba(245, 158, 11, 0.55);
     filter: brightness(1.08);
 }
 .hero-btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: .73rem 1.4rem;
-    background: rgba(255,255,255,.07);
-    color: rgba(255,255,255,.85);
+    padding: .78rem 1.5rem;
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
     font-weight: 700;
-    font-size: .85rem;
-    border: 1px solid rgba(255,255,255,.2);
+    font-size: .88rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 999px;
     text-decoration: none;
     transition: background .2s ease, transform .2s ease, border-color .2s ease;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
 }
 .hero-btn-ghost:hover {
-    background: rgba(255,255,255,.14);
-    border-color: rgba(255,255,255,.4);
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.55);
     transform: translateY(-2px);
-    color: #fff;
+    color: #FFFFFF;
 }
 
 /* ── Trust pills ────────────────────────────────────────────── */
 .hero-trust-row {
     display: flex;
     flex-wrap: wrap;
-    gap: .5rem;
-    margin-bottom: 1.2rem;
-    animation: hero-fadein .5s .28s ease both;
+    gap: .55rem;
+    margin-bottom: 1.3rem;
 }
 .hero-trust-pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.1);
+    gap: 6px;
+    padding: 5px 13px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
-    font-size: .7rem;
-    font-weight: 500;
-    color: rgba(255,255,255,.6);
+    font-size: .72rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
     white-space: nowrap;
 }
-.hero-trust-pill svg { flex-shrink: 0; }
+.hero-trust-pill svg { flex-shrink: 0; color: #FCD34D; }
 
 /* ── Progress bar ───────────────────────────────────────────── */
 .hero-progress-track {
-    height: 2px;
-    background: rgba(255,255,255,.12);
+    height: 3px;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 999px;
     overflow: hidden;
     margin: 0 -.5rem;
@@ -353,7 +349,7 @@
 .hero-progress-bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg,#F59E0B,#FBBF24);
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
     border-radius: 999px;
     transition: width linear;
 }
@@ -366,25 +362,26 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 30;
-    width: 44px;
-    height: 44px;
+    z-index: 40;
+    width: 46px;
+    height: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
-    color: rgba(255,255,255,.8);
+    color: #FFFFFF;
     cursor: pointer;
     transition: background .2s ease, transform .2s ease, border-color .2s ease;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 .hero-arrow:hover {
-    background: rgba(255,255,255,.2);
-    border-color: rgba(255,255,255,.4);
-    color: #fff;
-    transform: translateY(-50%) scale(1.08);
+    background: rgba(245, 158, 11, 0.85);
+    border-color: #F59E0B;
+    color: #0f172a;
+    transform: translateY(-50%) scale(1.1);
 }
 .hero-arrow-prev { left: 1.25rem; }
 .hero-arrow-next { right: 1.25rem; }
@@ -398,18 +395,18 @@
     gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
-    background: rgba(0,0,0,.55);
+    background: rgba(10, 15, 30, 0.75);
     backdrop-filter: blur(16px);
-    border-top: 1px solid rgba(255,255,255,.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 .hero-thumb-strip::-webkit-scrollbar { display: none; }
 
 .hero-thumb {
     position: relative;
     flex: 1 1 0;
-    min-width: 80px;
-    max-width: 180px;
-    height: 72px;
+    min-width: 85px;
+    max-width: 200px;
+    height: 74px;
     overflow: hidden;
     cursor: pointer;
     border: none;
@@ -418,20 +415,20 @@
     transition: flex .3s ease;
 }
 @media (max-width: 640px) {
-    .hero-thumb { height: 56px; min-width: 64px; }
+    .hero-thumb { height: 58px; min-width: 68px; }
 }
-.hero-thumb.is-active { flex: 1.6 1 0; }
+.hero-thumb.is-active { flex: 1.7 1 0; }
 
 .hero-thumb-img {
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
-    opacity: .45;
+    opacity: .5;
     transition: opacity .3s ease;
 }
 .hero-thumb:hover .hero-thumb-img,
-.hero-thumb.is-active .hero-thumb-img { opacity: .75; }
+.hero-thumb.is-active .hero-thumb-img { opacity: .85; }
 
 .hero-thumb-label {
     position: absolute;
@@ -439,11 +436,11 @@
     left: 0;
     right: 0;
     padding: 4px 8px;
-    font-size: .6rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    color: rgba(255,255,255,.0);
-    background: linear-gradient(to top,rgba(0,0,0,.7),transparent);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -452,7 +449,7 @@
 }
 .hero-thumb.is-active .hero-thumb-label,
 .hero-thumb:hover .hero-thumb-label {
-    color: rgba(255,255,255,.85);
+    color: #FFFFFF;
 }
 
 /* amber accent line on active thumb */
@@ -462,7 +459,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: #F59E0B;
     transform: scaleX(0);
     transition: transform .3s ease;
@@ -473,83 +470,47 @@
 /* ── Scroll cue ─────────────────────────────────────────────── */
 .hero-scroll-cue {
     position: absolute;
-    bottom: 88px;
-    right: 2rem;
-    z-index: 25;
+    bottom: 90px;
+    right: 2.25rem;
+    z-index: 35;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    color: rgba(255,255,255,.35);
-    font-size: .6rem;
-    font-weight: 600;
-    letter-spacing: .14em;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .16em;
     text-transform: uppercase;
     pointer-events: none;
 }
 .hero-scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent);
+    width: 2px;
+    height: 42px;
+    background: linear-gradient(to bottom, rgba(245, 158, 11, 0.8), transparent);
     animation: hero-scroll-pulse 1.8s ease-in-out infinite;
 }
 @keyframes hero-scroll-pulse {
-    0%,100% { opacity:.3; transform:scaleY(1); }
-    50% { opacity:.8; transform:scaleY(.6); transform-origin:top; }
+    0%,100% { opacity:.4; transform:scaleY(1); }
+    50% { opacity:1; transform:scaleY(.6); transform-origin:top; }
 }
 @media (max-width: 640px) {
     .hero-scroll-cue { display: none; }
 }
-
-/* ── Entrance animations ────────────────────────────────────── */
-@keyframes hero-fadein {
-    from { opacity:0; } to { opacity:1; }
-}
-@keyframes hero-slidein {
-    from { opacity:0; transform:translateY(14px); }
-    to   { opacity:1; transform:translateY(0); }
-}
-
-/* ── Re-animate on slide change ─────────────────────────────── */
-.hero-glass-card.is-transitioning .hero-brand-chip,
-.hero-glass-card.is-transitioning .hero-headline,
-.hero-glass-card.is-transitioning .hero-desc,
-.hero-glass-card.is-transitioning .hero-cta-row,
-.hero-glass-card.is-transitioning .hero-trust-row {
-    animation: none;
-    opacity: 0;
-    transform: translateY(10px);
-}
-.hero-glass-card.is-settling .hero-brand-chip {
-    animation: hero-fadein .45s .00s ease both;
-}
-.hero-glass-card.is-settling .hero-headline {
-    animation: hero-slidein .5s .06s ease both;
-}
-.hero-glass-card.is-settling .hero-desc {
-    animation: hero-slidein .5s .12s ease both;
-}
-.hero-glass-card.is-settling .hero-cta-row {
-    animation: hero-fadein .45s .19s ease both;
-}
-.hero-glass-card.is-settling .hero-trust-row {
-    animation: hero-fadein .45s .26s ease both;
-}
 </style>
 
 {{-- ════════════════════════════════════════════════════════════
-     HERO SCRIPT
+     HERO SCRIPT — Smooth, Stable Transitions
      ════════════════════════════════════════════════════════════ --}}
 <script>
 (function () {
     'use strict';
 
     const SLIDE_DURATION = 5000;   // ms between auto-advances
-    const TRANSITION_MS  = 900;    // must match CSS opacity transition
+    const TRANSITION_MS  = 1000;   // matches CSS opacity transition
 
     const slides   = Array.from(document.querySelectorAll('.hero-slide'));
     const thumbs   = Array.from(document.querySelectorAll('.hero-thumb'));
-    const card     = document.getElementById('heroCard');
     const counter  = document.getElementById('heroCounterCurrent');
     const bar      = document.getElementById('heroProgressBar');
     const prevBtn  = document.getElementById('heroPrev');
@@ -572,15 +533,14 @@
         // force reflow
         void bar.offsetWidth;
         bar.style.transition = 'width ' + durationMs + 'ms linear';
-        // tiny delay so CSS picks up the transition
         barTimer = setTimeout(function () {
             bar.classList.add('is-running');
             bar.style.width = '100%';
         }, 30);
     }
 
-    function goTo(index, skipAnimation) {
-        if (index === current && !skipAnimation) return;
+    function goTo(index) {
+        if (index === current) return;
         const prev = current;
         current = ((index % total) + total) % total;
 
@@ -593,24 +553,14 @@
         thumbs[current].classList.add('is-active');
 
         /* update counter */
-        counter.textContent = pad(current + 1);
-
-        /* stagger card text */
-        if (!skipAnimation && card) {
-            card.classList.remove('is-settling');
-            card.classList.add('is-transitioning');
-            setTimeout(function () {
-                card.classList.remove('is-transitioning');
-                card.classList.add('is-settling');
-            }, TRANSITION_MS / 2);
-        }
+        if (counter) counter.textContent = pad(current + 1);
 
         /* restart progress bar */
         resetProgress(SLIDE_DURATION);
     }
 
-    function next() { goTo(current + 1, false); }
-    function prev() { goTo(current - 1, false); }
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
 
     function startAutoplay() {
         clearInterval(timer);
@@ -625,7 +575,7 @@
     /* ── events ──────────────────────────────────────────────── */
     thumbs.forEach(function (thumb) {
         thumb.addEventListener('click', function () {
-            goTo(parseInt(this.dataset.index, 10), false);
+            goTo(parseInt(this.dataset.index, 10));
             resetAutoplay();
         });
     });
@@ -663,9 +613,7 @@
     }
 
     /* ── init ────────────────────────────────────────────────── */
-    // Trigger Ken Burns on slide 0 immediately
     slides[0].classList.add('is-active');
-    card && card.classList.add('is-settling');
     resetProgress(SLIDE_DURATION);
     startAutoplay();
 })();

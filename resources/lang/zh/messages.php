@@ -476,10 +476,10 @@ return [
     'hero_brand' => 'PNB旅游',
     'hero_welcome' => '欢迎来到印度尼西亚',
     'hero_description' => 'PT. Putra Nusantara Berkilau 全心全意为您服务，让您的旅途之旅充满舒适、宁静与快乐，在印度尼西亚的每一刻都令您幸福满满。',
-    'hero_slide_hiace' => '丰田海狮 – 尊贵旅行体验',
-    'hero_slide_xenia' => '大发Xenia – 舒适家庭旅行',
-    'hero_slide_avanza' => '丰田Avanza – 可靠旅行伴侣',
-    'hero_slide_bus' => '现代旅游巴士 – 团体探险',
-    'hero_slide_van' => '私人旅行厢式车 – 个性化服务',
+    'hero_slide_hiace' => '丰田HiAce Premio – 豪华商务旅游车',
+    'hero_slide_xenia' => '大发Xenia – 实用舒适家庭车',
+    'hero_slide_avanza' => '丰田Avanza – 值得信赖的出行伙伴',
+    'hero_slide_bus' => '豪华旅游大巴Jetbus – 专属团队畅游',
+    'hero_slide_van' => '丰田Innova Zenix – 尊享品质商务座驾',
 
 ];
