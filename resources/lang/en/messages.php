@@ -453,4 +453,20 @@ Connecting tourism sectors and players',
     'no_results' => 'No results found',
     'try_different_keyword' => 'Try a different keyword or browse our tours and destinations.',
 
+    // B2B Travel Focus
+    'b2b_travel_partner' => 'Your B2B Travel Partner',
+    'our_services' => 'Our Services',
+    'explore_destinations' => 'Explore Destinations',
+    'view_all' => 'View All',
+
+    // PNB Travel Hero Section
+    'hero_brand' => 'PNB Travel',
+    'hero_welcome' => 'Welcome to Indonesia',
+    'hero_description' => 'PT. Putra Nusantara Berkilau serves your travel journey wholeheartedly. A comfortable, peaceful, and joyful journey throughout your stay in Indonesia.',
+    'hero_slide_hiace' => 'Toyota Hiace – Premium Travel Experience',
+    'hero_slide_xenia' => 'Daihatsu Xenia – Comfortable Family Travel',
+    'hero_slide_avanza' => 'Toyota Avanza – Reliable Journey Partner',
+    'hero_slide_bus' => 'Modern Travel Bus – Group Adventure',
+    'hero_slide_van' => 'Private Travel Van – Personalized Service',
+
 ];

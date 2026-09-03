@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(python3 /tmp/fix_css.py)",
+      "Shell(python3 /tmp/check_css.py)",
+      "Shell(python3 /tmp/fix_css2.py)",
+      "Shell( curl:*)",
+      "Shell(python3 /tmp/deploy_services.py)",
+      "Shell(python3 /tmp/verify_images.py)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

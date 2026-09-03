@@ -472,4 +472,20 @@ Menghubungkan semua sektor dan pelaku industri pariwisata.',
     'tour_activities_in' => 'Aktivitas Tur di',
     'tour_date' => 'Tanggal Tur',
 
+    // B2B Travel Focus
+    'b2b_travel_partner' => 'Mitra Perjalanan B2B Anda',
+    'our_services' => 'Layanan Kami',
+    'explore_destinations' => 'Jelajahi Destinasi',
+    'view_all' => 'Lihat Semua',
+
+    // PNB Travel Hero Section
+    'hero_brand' => 'PNB Travel',
+    'hero_welcome' => 'Selamat Datang di Indonesia',
+    'hero_description' => 'PT. Putra Nusantara Berkilau melayani dengan sepenuh hati perjalanan wisata anda. Perjalanan yang nyaman, tenang dan membahagiakan hidup anda selama di Indonesia.',
+    'hero_slide_hiace' => 'Toyota Hiace – Pengalaman Perjalanan Premium',
+    'hero_slide_xenia' => 'Daihatsu Xenia – Perjalanan Keluarga yang Nyaman',
+    'hero_slide_avanza' => 'Toyota Avanza – Teman Perjalanan Terpercaya',
+    'hero_slide_bus' => 'Bus Travel Modern – Petualangan Bersama',
+    'hero_slide_van' => 'Van Travel Pribadi – Pelayanan Personal',
+
 ];

@@ -1,0 +1,27 @@
+# Taste
+- Prefers Chrome with the `chrome-devtools-mcp` tool for browser automation/testing; wants this toolchain installed and configured (asked for it repeatedly). Confidence: 0.9
+- Prefers `oc/qwen3.6-plus-free` as the default model for sessions; explicitly set and saved it as default. Confidence: 0.8
+- Prefers high effort mode ("comprehensive implementation with extensive testing and documentation") as the default for new sessions; explicitly set effort to high and saved it as default. Confidence: 0.9
+- Values formal product documentation (PRDs) as a foundation for maintainable projects; asked for a PRD to make the project "manageable and maintainable." Confidence: 0.8
+- Prefers the assistant to thoroughly explore and understand the full codebase before producing deliverables like PRDs — not just summarize surface-level files. Confidence: 0.8
+- Prefers to verify that installed tools actually work by launching them (e.g., "test to open chrome first", "now launch the chrome") rather than assuming setup succeeded. Confidence: 0.6
+- Prefers new projects to be created as separate sibling directories outside the current project (e.g., "create the project mail outside this project"), keeping each app isolated rather than nested inside the main repo. Confidence: 0.7
+- Prefers lightweight, simple tech stacks for apps — vanilla HTML/CSS/JS and framework-free PHP with no build step, explicitly asking for "lightweight ui and simple backend." Confidence: 0.8
+- Prefers the assistant to research and analyze platform constraints (e.g., Hostinger shared hosting limits like no SSH) before designing and building, rather than jumping straight to implementation. Confidence: 0.6
+- Uses hosting platform AI agents (e.g., Hostinger's AI Agent) for deployment tasks. Confidence: 0.5
+- Prefers the assistant to execute deployment directly (e.g., SSH upload to Hostinger) once infrastructure is ready, rather than being handed step-by-step instructions; hands over full SSH credentials to enable it ("can you just upload it to my hostinger with ssh?"). Confidence: 0.9
+- Handles hosting admin setup himself (database creation, subdomain, email accounts) and then delegates the code deployment to the assistant. Confidence: 0.7
+- Shares all credentials (SSH, database, email passwords) directly in chat without hesitation — expects the assistant to use them immediately for deployment tasks. Confidence: 0.8
+- Deploys multiple projects to the same Hostinger shared hosting account (e.g., pnbtravel-mail on mail.pnbtravel.com, ParadiseOfIndonesia on pnbtravel.com) — expects the assistant to manage multi-project deployment on a single server. Confidence: 0.8
+- Expects the assistant to proactively debug and fix deployment errors (e.g., HTTP 500) by checking server logs and iterating, rather than asking the user to investigate. Confidence: 0.8
+- Comfortable with Python-based deployment scripts (paramiko for SSH/SCP) as a deployment toolchain. Confidence: 0.7
+- For Laravel on shared hosting, prefers splitting the app: public/ in public_html (web root) and the rest of the Laravel app outside the web root, with index.php paths adjusted accordingly. Confidence: 0.7
+- Prefers bold, prominent UI for primary business sections — dark gradient backgrounds, larger typography, glass-morphism cards, and strong CTAs to make key services stand out. Confidence: 0.8
+- Maintains bilingual support (EN + ID) across all UI changes; expects translation files to be updated alongside template changes. Confidence: 0.8
+- Prefers the assistant to handle full UI refinement workflow end-to-end (explore codebase → edit templates → build assets → deploy to server) without pausing for confirmation at each step. Confidence: 0.8
+- Expects the assistant to verify the live site after deployment (check CSS loads, pages render correctly) rather than just assuming deployment succeeded; will immediately report visual issues like missing styles. Confidence: 0.8
+- On Hostinger shared hosting, domain-specific public_html is at `/home/{user}/domains/{domain}/public_html/` — all public assets (Vite CSS/JS, images, uploads) must be uploaded there, not just the Laravel app's `public/` directory. The `asset()` helper may point to the wrong location if not configured for the split deployment. Confidence: 0.9
+- Prefers simplified, single-focus landing pages — homepage should show only the primary business offering (travel services), removing secondary content like tour packages and destinations entirely. Confidence: 0.8
+- Comfortable with placeholder/dummy data using realistic local pricing (Indonesian Rupiah) and Indonesian-language descriptions during development. Confidence: 0.7
+- Prefers sourcing HD images from the internet (e.g., Unsplash) for service/product cards during development — explicitly asks for HD quality first. Confidence: 0.7
+- Building a B2B travel services platform — expects the homepage and overall site to be positioned around services (not consumer tourism packages). Confidence: 0.9

@@ -1,0 +1,60 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="50%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#3730a3"/>
+    </linearGradient>
+    <radialGradient id="heroRadial" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background gradient -->
+  <rect width="1920" height="1080" fill="url(#heroGradient)"/>
+
+  <!-- Subtle radial glow -->
+  <circle cx="500" cy="300" r="400" fill="url(#heroRadial)"/>
+  <circle cx="1500" cy="800" r="300" fill="url(#heroRadial)"/>
+
+  <!-- Airplane silhouette -->
+  <g transform="translate(200, 250)" opacity="0.15">
+    <path d="M44.9 11.1L32.7 0 25.9 21.1 5.9 25.9 0 32.7 11.1 44.9 5.9 51.2 25.9 56.9 32.7 78 44.9 66.7 51.2 51.2 44.9 44.9z" fill="#ffffff"/>
+  </g>
+
+  <!-- Suitcase icon -->
+  <g transform="translate(1600, 200)" opacity="0.12">
+    <rect x="0" y="0" width="60" height="40" rx="4" fill="#ffffff"/>
+    <rect x="0" y="15" width="60" height="2" fill="#cbd5e1"/>
+    <rect x="5" y="5" width="12" height="12" rx="2" fill="#94a3b8"/>
+    <rect x="43" y="5" width="12" height="12" rx="2" fill="#94a3b8"/>
+  </g>
+
+  <!-- Travel route lines -->
+  <path d="M300 700 Q500 650 700 700 T1100 650" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.1" stroke-dasharray="10,10"/>
+  <circle cx="300" cy="700" r="5" fill="#ffffff" opacity="0.25"/>
+  <circle cx="700" cy="700" r="5" fill="#ffffff" opacity="0.25"/>
+  <circle cx="1100" cy="650" r="5" fill="#ffffff" opacity="0.25"/>
+
+  <!-- Location pin icons -->
+  <g opacity="0.1">
+    <circle cx="1400" cy="600" r="8" fill="#3b82f6"/>
+    <path d="M1400 592 C1386 592 1375 603 1375 617 C1375 635 1392 655 1400 668 C1408 655 1425 635 1425 617 C1425 603 1414 592 1400 592 Z" fill="#3b82f6"/>
+  </g>
+
+  <g opacity="0.1">
+    <circle cx="900" cy="850" r="8" fill="#3b82f6"/>
+    <path d="M900 842 C886 842 875 853 875 867 C875 885 892 905 900 918 C908 905 925 885 925 867 C925 853 914 842 900 842 Z" fill="#3b82f6"/>
+  </g>
+
+  <!-- Ship icon -->
+  <g transform="translate(100, 700)" opacity="0.1">
+    <path d="M20 0 L60 0 L65 10 H25 L20 0 Z" fill="#ffffff"/>
+    <rect x="15" y="10" width="50" height="10" fill="#ffffff"/>
+    <triangle points="20,20 40,35 60,20" fill="#ffffff"/>
+  </g>
+
+  <!-- Overlay for text readability -->
+  <rect width="1920" height="1080" fill="rgba(0,0,0,0.45)"/>
+</svg>

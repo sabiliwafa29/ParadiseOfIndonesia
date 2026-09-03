@@ -472,4 +472,14 @@ return [
     'tour_activities_in' => '旅游活动在',
     'tour_date' => '旅游日期',
 
+    // PNB Travel Hero Section
+    'hero_brand' => 'PNB旅游',
+    'hero_welcome' => '欢迎来到印度尼西亚',
+    'hero_description' => 'PT. Putra Nusantara Berkilau 全心全意为您服务，让您的旅途之旅充满舒适、宁静与快乐，在印度尼西亚的每一刻都令您幸福满满。',
+    'hero_slide_hiace' => '丰田海狮 – 尊贵旅行体验',
+    'hero_slide_xenia' => '大发Xenia – 舒适家庭旅行',
+    'hero_slide_avanza' => '丰田Avanza – 可靠旅行伴侣',
+    'hero_slide_bus' => '现代旅游巴士 – 团体探险',
+    'hero_slide_van' => '私人旅行厢式车 – 个性化服务',
+
 ];
