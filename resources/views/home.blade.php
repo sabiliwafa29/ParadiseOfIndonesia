@@ -1,245 +1,675 @@
 @extends('layouts.app')
 @section('content')
 
-<!-- Hero Section - PNB Travel Slideshow -->
-<section class="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden" id="hero-section">
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION — Cinematic Split-Glass Slideshow
+     Design: Ken Burns zoom · Glassmorphism card · Thumbnail strip
+     ═══════════════════════════════════════════════════════════ -->
+<section class="relative w-full overflow-hidden bg-black" id="hero-section" style="height:100svh;min-height:580px;max-height:900px;">
 
-    <!-- Slideshow Background -->
-    <div class="absolute inset-0 hero-slideshow" id="heroSlideshow">
-        <!-- Slide 1: Hiace -->
-        <div class="hero-slide active" style="background-image: url('/images/hero/slideshow/hiace.jpg');">
-            <div class="slide-caption">{{ __('messages.hero_slide_hiace') }}</div>
+    {{-- ── SLIDESHOW BACKGROUND ─────────────────────────────── --}}
+    <div class="absolute inset-0" id="heroSlideshow" aria-hidden="true">
+
+        {{-- Each slide: full-bleed image with Ken Burns zoom --}}
+        @php
+        $heroSlides = [
+            ['img' => '/images/hero/slideshow/hiace.jpg',     'key' => 'hero_slide_hiace'],
+            ['img' => '/images/hero/slideshow/xenia.jpg',     'key' => 'hero_slide_xenia'],
+            ['img' => '/images/hero/slideshow/avanza.jpg',    'key' => 'hero_slide_avanza'],
+            ['img' => '/images/hero/slideshow/bus.jpg',       'key' => 'hero_slide_bus'],
+            ['img' => '/images/hero/slideshow/travel-van.jpg','key' => 'hero_slide_van'],
+        ];
+        @endphp
+
+        @foreach($heroSlides as $i => $slide)
+        <div class="hero-slide{{ $i === 0 ? ' is-active' : '' }}"
+             data-index="{{ $i }}"
+             role="img"
+             aria-label="{{ __('messages.' . $slide['key']) }}">
+            <div class="hero-slide-img"
+                 style="background-image:url('{{ $slide['img'] }}')"></div>
         </div>
-        <!-- Slide 2: Xenia -->
-        <div class="hero-slide" style="background-image: url('/images/hero/slideshow/xenia.jpg');">
-            <div class="slide-caption">{{ __('messages.hero_slide_xenia') }}</div>
-        </div>
-        <!-- Slide 3: Avanza -->
-        <div class="hero-slide" style="background-image: url('/images/hero/slideshow/avanza.jpg');">
-            <div class="slide-caption">{{ __('messages.hero_slide_avanza') }}</div>
-        </div>
-        <!-- Slide 4: Bus -->
-        <div class="hero-slide" style="background-image: url('/images/hero/slideshow/bus.jpg');">
-            <div class="slide-caption">{{ __('messages.hero_slide_bus') }}</div>
-        </div>
-        <!-- Slide 5: Travel Van -->
-        <div class="hero-slide" style="background-image: url('/images/hero/slideshow/travel-van.jpg');">
-            <div class="slide-caption">{{ __('messages.hero_slide_van') }}</div>
+        @endforeach
+    </div>
+
+    {{-- ── LAYERED OVERLAYS ─────────────────────────────────── --}}
+    {{-- cinematic letterbox vignette --}}
+    <div class="absolute inset-0 z-10 pointer-events-none"
+         style="background:linear-gradient(to right,rgba(0,0,0,.72) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.15) 100%),
+                            linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 40%)">
+    </div>
+
+    {{-- ambient amber glow (brand colour) --}}
+    <div class="absolute z-10 pointer-events-none"
+         style="width:520px;height:380px;top:10%;left:-80px;
+                background:radial-gradient(ellipse,rgba(245,158,11,.18) 0%,transparent 70%);
+                filter:blur(40px)"></div>
+
+    {{-- ── GLASS CONTENT CARD ───────────────────────────────── --}}
+    <div class="absolute inset-0 z-20 flex items-center">
+        <div class="w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+            <div class="hero-glass-card" id="heroCard">
+
+                {{-- slide counter --}}
+                <div class="hero-counter" id="heroCounter">
+                    <span id="heroCounterCurrent">01</span>
+                    <span class="hero-counter-sep">/</span>
+                    <span>05</span>
+                </div>
+
+                {{-- brand chip --}}
+                <div class="hero-brand-chip" id="heroChip">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#F59E0B">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>{{ __('messages.hero_brand') }}</span>
+                </div>
+
+                {{-- headline --}}
+                <h1 class="hero-headline" id="heroHeadline">
+                    {{ __('messages.hero_welcome') }}
+                </h1>
+
+                {{-- description --}}
+                <p class="hero-desc" id="heroDesc">
+                    {{ __('messages.hero_description') }}
+                </p>
+
+                {{-- CTA row --}}
+                <div class="hero-cta-row" id="heroCtas">
+                    <a href="#services" class="hero-btn-primary">
+                        <span>{{ __('messages.view_all') }} {{ __('messages.travel_services') }}</span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                    <a href="https://wa.me/6281585333325?text=Halo,%20saya%20tertarik%20dengan%20layanan%20PNB%20Travel"
+                       target="_blank" rel="noopener" class="hero-btn-ghost">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <span>{{ __('messages.contact_us') }}</span>
+                    </a>
+                </div>
+
+                {{-- trust pills --}}
+                <div class="hero-trust-row" id="heroTrust">
+                    <div class="hero-trust-pill">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <span>Licensed & Official</span>
+                    </div>
+                    <div class="hero-trust-pill">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>24/7 Support</span>
+                    </div>
+                    <div class="hero-trust-pill">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <span>1000+ Partners</span>
+                    </div>
+                    <div class="hero-trust-pill">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>All Indonesia</span>
+                    </div>
+                </div>
+
+                {{-- animated progress bar --}}
+                <div class="hero-progress-track">
+                    <div class="hero-progress-bar" id="heroProgressBar"></div>
+                </div>
+
+            </div>{{-- /glass card --}}
         </div>
     </div>
 
-    <!-- Dark Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10"></div>
-
-    <!-- Subtle blue light effect -->
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-blue-500/15 rounded-full blur-3xl z-10"></div>
-
-    <!-- Main Content -->
-    <div class="relative z-20 max-w-5xl mx-auto px-4 text-center">
-        <!-- Brand Badge -->
-        <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6">
-            <svg class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-            <span class="text-yellow-200 font-bold text-sm tracking-widest uppercase">{{ __('messages.hero_brand') }}</span>
-        </div>
-
-        <!-- Main Heading -->
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 leading-tight drop-shadow-2xl">
-            {{ __('messages.hero_welcome') }}
-        </h1>
-
-        <!-- Description Text -->
-        <p class="text-base md:text-lg lg:text-xl text-white/85 max-w-3xl mx-auto mb-10 leading-relaxed drop-shadow-lg font-light">
-            {{ __('messages.hero_description') }}
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#services" class="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-900 font-bold rounded-full shadow-2xl hover:shadow-white/20 transform hover:scale-105 transition-all duration-300 text-lg">
-                {{ __('messages.view_all') }} {{ __('messages.travel_services') }}
-                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </a>
-            <a href="https://wa.me/6281585333325?text=Halo,%20saya%20tertarik%20dengan%20layanan%20PNB%20Travel" target="_blank" class="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white/30 text-white font-bold rounded-full hover:bg-white/10 transform hover:scale-105 transition-all duration-300 text-lg">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                {{ __('messages.contact_us') }}
-            </a>
-        </div>
-
-        <!-- Trust Badges -->
-        <div class="mt-14 flex flex-wrap justify-center gap-8 text-blue-200/60">
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                <span class="text-sm font-medium">Licensed & Official</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="text-sm font-medium">24/7 Support</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                <span class="text-sm font-medium">1000+ Partners</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="text-sm font-medium">All Indonesia</span>
-            </div>
+    {{-- ── THUMBNAIL STRIP ──────────────────────────────────── --}}
+    <div class="absolute bottom-0 left-0 right-0 z-30" id="heroThumbStrip">
+        <div class="hero-thumb-strip">
+            @foreach($heroSlides as $i => $slide)
+            <button class="hero-thumb{{ $i === 0 ? ' is-active' : '' }}"
+                    data-index="{{ $i }}"
+                    aria-label="Go to slide {{ $i + 1 }}: {{ __('messages.' . $slide['key']) }}">
+                <div class="hero-thumb-img"
+                     style="background-image:url('{{ $slide['img'] }}')"></div>
+                <div class="hero-thumb-label">{{ __('messages.' . $slide['key']) }}</div>
+            </button>
+            @endforeach
         </div>
     </div>
 
-    <!-- Slide Indicators (Dots) -->
-    <div class="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-20 flex gap-2" id="slideIndicators">
-        <button class="slide-dot active" data-index="0" aria-label="Slide 1"></button>
-        <button class="slide-dot" data-index="1" aria-label="Slide 2"></button>
-        <button class="slide-dot" data-index="2" aria-label="Slide 3"></button>
-        <button class="slide-dot" data-index="3" aria-label="Slide 4"></button>
-        <button class="slide-dot" data-index="4" aria-label="Slide 5"></button>
-    </div>
-
-    <!-- Navigation Arrows -->
-    <button class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-200 border border-white/20" id="heroPrev" aria-label="Previous slide">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    {{-- ── NAV ARROWS ───────────────────────────────────────── --}}
+    <button class="hero-arrow hero-arrow-prev" id="heroPrev" aria-label="Previous slide">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
     </button>
-    <button class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-200 border border-white/20" id="heroNext" aria-label="Next slide">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    <button class="hero-arrow hero-arrow-next" id="heroNext" aria-label="Next slide">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
         </svg>
     </button>
 
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
-        <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-        </svg>
+    {{-- ── SCROLL CUE ───────────────────────────────────────── --}}
+    <div class="hero-scroll-cue" aria-hidden="true">
+        <span>Scroll</span>
+        <div class="hero-scroll-line"></div>
     </div>
+
 </section>
 
+{{-- ════════════════════════════════════════════════════════════
+     HERO STYLES
+     ════════════════════════════════════════════════════════════ --}}
 <style>
-/* Hero Slideshow Styles */
-.hero-slideshow {
+/* ── Slide images ───────────────────────────────────────────── */
+.hero-slide {
     position: absolute;
     inset: 0;
-    z-index: 0;
+    opacity: 0;
+    transition: opacity .9s cubic-bezier(.4,0,.2,1);
+    will-change: opacity;
 }
-.hero-slide {
+.hero-slide.is-active { opacity: 1; }
+
+.hero-slide-img {
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
+    transform: scale(1.06);
+    transition: transform 6s ease-out;
+    will-change: transform;
 }
-.hero-slide.active {
-    opacity: 1;
+.hero-slide.is-active .hero-slide-img {
+    transform: scale(1.0);   /* Ken Burns: zoom out slowly */
 }
-.slide-caption {
+
+/* ── Glass content card ─────────────────────────────────────── */
+.hero-glass-card {
+    position: relative;
+    max-width: 560px;
+    padding: 2.5rem 2.5rem 1.75rem;
+    background: rgba(10, 14, 28, 0.52);
+    backdrop-filter: blur(22px) saturate(1.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 24px;
+    box-shadow: 0 8px 64px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+    overflow: hidden;
+}
+@media (max-width: 767px) {
+    .hero-glass-card {
+        max-width: 100%;
+        padding: 1.75rem 1.5rem 1.25rem;
+        border-radius: 18px;
+        margin: 0 0 120px;
+    }
+}
+
+/* ── Slide counter ──────────────────────────────────────────── */
+.hero-counter {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(0,0,0,0.4);
+    top: 1.5rem;
+    right: 1.75rem;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: rgba(255,255,255,.5);
+    font-variant-numeric: tabular-nums;
+}
+.hero-counter #heroCounterCurrent {
+    font-size: 1.1rem;
+    color: #F59E0B;
+    font-weight: 800;
+}
+.hero-counter-sep { font-size: .65rem; margin: 0 1px; }
+
+/* ── Brand chip ─────────────────────────────────────────────── */
+.hero-brand-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px 5px 10px;
+    background: rgba(245,158,11,.15);
+    border: 1px solid rgba(245,158,11,.3);
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #FCD34D;
+    margin-bottom: 1.1rem;
+    animation: hero-fadein .5s ease both;
+}
+
+/* ── Headline ───────────────────────────────────────────────── */
+.hero-headline {
+    font-size: clamp(1.9rem, 4.5vw, 3.25rem);
+    font-weight: 900;
+    line-height: 1.07;
+    letter-spacing: -.02em;
+    color: #fff;
+    margin-bottom: .9rem;
+    animation: hero-slidein .55s .06s ease both;
+}
+.hero-headline em {
+    font-style: normal;
+    background: linear-gradient(90deg,#F59E0B,#FBBF24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ── Description ────────────────────────────────────────────── */
+.hero-desc {
+    font-size: clamp(.82rem, 1.6vw, .96rem);
+    line-height: 1.7;
+    color: rgba(255,255,255,.7);
+    margin-bottom: 1.8rem;
+    font-weight: 300;
+    animation: hero-slidein .55s .12s ease both;
+}
+
+/* ── CTA buttons ────────────────────────────────────────────── */
+.hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 1.4rem;
+    animation: hero-fadein .5s .2s ease both;
+}
+.hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: .75rem 1.6rem;
+    background: linear-gradient(135deg,#F59E0B,#D97706);
+    color: #1a0a00;
+    font-weight: 800;
+    font-size: .85rem;
+    letter-spacing: .02em;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow: 0 4px 24px rgba(245,158,11,.35);
+}
+.hero-btn-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 32px rgba(245,158,11,.5);
+    filter: brightness(1.08);
+}
+.hero-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: .73rem 1.4rem;
+    background: rgba(255,255,255,.07);
+    color: rgba(255,255,255,.85);
+    font-weight: 700;
+    font-size: .85rem;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease, border-color .2s ease;
     backdrop-filter: blur(8px);
-    color: rgba(255,255,255,0.85);
-    font-size: 0.75rem;
+}
+.hero-btn-ghost:hover {
+    background: rgba(255,255,255,.14);
+    border-color: rgba(255,255,255,.4);
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+/* ── Trust pills ────────────────────────────────────────────── */
+.hero-trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 1.2rem;
+    animation: hero-fadein .5s .28s ease both;
+}
+.hero-trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 999px;
+    font-size: .7rem;
     font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.15);
-    letter-spacing: 0.03em;
-    z-index: 5;
+    color: rgba(255,255,255,.6);
+    white-space: nowrap;
 }
-.slide-dot {
-    width: 10px;
-    height: 10px;
+.hero-trust-pill svg { flex-shrink: 0; }
+
+/* ── Progress bar ───────────────────────────────────────────── */
+.hero-progress-track {
+    height: 2px;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0 -.5rem;
+}
+.hero-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg,#F59E0B,#FBBF24);
+    border-radius: 999px;
+    transition: width linear;
+}
+.hero-progress-bar.is-running {
+    width: 100%;
+}
+
+/* ── Navigation arrows ──────────────────────────────────────── */
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
     border-radius: 50%;
-    background: rgba(255,255,255,0.4);
-    border: none;
+    color: rgba(255,255,255,.8);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background .2s ease, transform .2s ease, border-color .2s ease;
+    backdrop-filter: blur(10px);
+}
+.hero-arrow:hover {
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.4);
+    color: #fff;
+    transform: translateY(-50%) scale(1.08);
+}
+.hero-arrow-prev { left: 1.25rem; }
+.hero-arrow-next { right: 1.25rem; }
+@media (max-width: 640px) {
+    .hero-arrow { display: none; }
+}
+
+/* ── Thumbnail strip ────────────────────────────────────────── */
+.hero-thumb-strip {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+.hero-thumb-strip::-webkit-scrollbar { display: none; }
+
+.hero-thumb {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 80px;
+    max-width: 180px;
+    height: 72px;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    background: none;
     padding: 0;
+    transition: flex .3s ease;
 }
-.slide-dot.active {
-    background: white;
-    transform: scale(1.3);
+@media (max-width: 640px) {
+    .hero-thumb { height: 56px; min-width: 64px; }
 }
-.slide-dot:hover {
-    background: rgba(255,255,255,0.7);
+.hero-thumb.is-active { flex: 1.6 1 0; }
+
+.hero-thumb-img {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: .45;
+    transition: opacity .3s ease;
+}
+.hero-thumb:hover .hero-thumb-img,
+.hero-thumb.is-active .hero-thumb-img { opacity: .75; }
+
+.hero-thumb-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4px 8px;
+    font-size: .6rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: rgba(255,255,255,.0);
+    background: linear-gradient(to top,rgba(0,0,0,.7),transparent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color .3s ease;
+    text-align: left;
+}
+.hero-thumb.is-active .hero-thumb-label,
+.hero-thumb:hover .hero-thumb-label {
+    color: rgba(255,255,255,.85);
+}
+
+/* amber accent line on active thumb */
+.hero-thumb::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #F59E0B;
+    transform: scaleX(0);
+    transition: transform .3s ease;
+    transform-origin: left;
+}
+.hero-thumb.is-active::after { transform: scaleX(1); }
+
+/* ── Scroll cue ─────────────────────────────────────────────── */
+.hero-scroll-cue {
+    position: absolute;
+    bottom: 88px;
+    right: 2rem;
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,.35);
+    font-size: .6rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+.hero-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent);
+    animation: hero-scroll-pulse 1.8s ease-in-out infinite;
+}
+@keyframes hero-scroll-pulse {
+    0%,100% { opacity:.3; transform:scaleY(1); }
+    50% { opacity:.8; transform:scaleY(.6); transform-origin:top; }
+}
+@media (max-width: 640px) {
+    .hero-scroll-cue { display: none; }
+}
+
+/* ── Entrance animations ────────────────────────────────────── */
+@keyframes hero-fadein {
+    from { opacity:0; } to { opacity:1; }
+}
+@keyframes hero-slidein {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── Re-animate on slide change ─────────────────────────────── */
+.hero-glass-card.is-transitioning .hero-brand-chip,
+.hero-glass-card.is-transitioning .hero-headline,
+.hero-glass-card.is-transitioning .hero-desc,
+.hero-glass-card.is-transitioning .hero-cta-row,
+.hero-glass-card.is-transitioning .hero-trust-row {
+    animation: none;
+    opacity: 0;
+    transform: translateY(10px);
+}
+.hero-glass-card.is-settling .hero-brand-chip {
+    animation: hero-fadein .45s .00s ease both;
+}
+.hero-glass-card.is-settling .hero-headline {
+    animation: hero-slidein .5s .06s ease both;
+}
+.hero-glass-card.is-settling .hero-desc {
+    animation: hero-slidein .5s .12s ease both;
+}
+.hero-glass-card.is-settling .hero-cta-row {
+    animation: hero-fadein .45s .19s ease both;
+}
+.hero-glass-card.is-settling .hero-trust-row {
+    animation: hero-fadein .45s .26s ease both;
 }
 </style>
 
+{{-- ════════════════════════════════════════════════════════════
+     HERO SCRIPT
+     ════════════════════════════════════════════════════════════ --}}
 <script>
-(function() {
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.slide-dot');
-    let currentIndex = 0;
-    let autoplayInterval;
+(function () {
+    'use strict';
 
-    function goToSlide(index) {
-        slides[currentIndex].classList.remove('active');
-        dots[currentIndex].classList.remove('active');
-        currentIndex = (index + slides.length) % slides.length;
-        slides[currentIndex].classList.add('active');
-        dots[currentIndex].classList.add('active');
+    const SLIDE_DURATION = 5000;   // ms between auto-advances
+    const TRANSITION_MS  = 900;    // must match CSS opacity transition
+
+    const slides   = Array.from(document.querySelectorAll('.hero-slide'));
+    const thumbs   = Array.from(document.querySelectorAll('.hero-thumb'));
+    const card     = document.getElementById('heroCard');
+    const counter  = document.getElementById('heroCounterCurrent');
+    const bar      = document.getElementById('heroProgressBar');
+    const prevBtn  = document.getElementById('heroPrev');
+    const nextBtn  = document.getElementById('heroNext');
+    const section  = document.getElementById('hero-section');
+
+    let current  = 0;
+    let timer    = null;
+    let barTimer = null;
+    const total  = slides.length;
+
+    /* ── helpers ─────────────────────────────────────────────── */
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function resetProgress(durationMs) {
+        clearTimeout(barTimer);
+        bar.style.transition = 'none';
+        bar.classList.remove('is-running');
+        bar.style.width = '0%';
+        // force reflow
+        void bar.offsetWidth;
+        bar.style.transition = 'width ' + durationMs + 'ms linear';
+        // tiny delay so CSS picks up the transition
+        barTimer = setTimeout(function () {
+            bar.classList.add('is-running');
+            bar.style.width = '100%';
+        }, 30);
     }
 
-    function nextSlide() {
-        goToSlide(currentIndex + 1);
+    function goTo(index, skipAnimation) {
+        if (index === current && !skipAnimation) return;
+        const prev = current;
+        current = ((index % total) + total) % total;
+
+        /* update slide visibility */
+        slides[prev].classList.remove('is-active');
+        slides[current].classList.add('is-active');
+
+        /* update thumbnails */
+        thumbs[prev].classList.remove('is-active');
+        thumbs[current].classList.add('is-active');
+
+        /* update counter */
+        counter.textContent = pad(current + 1);
+
+        /* stagger card text */
+        if (!skipAnimation && card) {
+            card.classList.remove('is-settling');
+            card.classList.add('is-transitioning');
+            setTimeout(function () {
+                card.classList.remove('is-transitioning');
+                card.classList.add('is-settling');
+            }, TRANSITION_MS / 2);
+        }
+
+        /* restart progress bar */
+        resetProgress(SLIDE_DURATION);
     }
 
-    function prevSlide() {
-        goToSlide(currentIndex - 1);
-    }
+    function next() { goTo(current + 1, false); }
+    function prev() { goTo(current - 1, false); }
 
     function startAutoplay() {
-        autoplayInterval = setInterval(nextSlide, 2000);
+        clearInterval(timer);
+        timer = setInterval(next, SLIDE_DURATION);
     }
 
     function resetAutoplay() {
-        clearInterval(autoplayInterval);
+        clearInterval(timer);
         startAutoplay();
     }
 
-    // Dot click handlers
-    dots.forEach(function(dot) {
-        dot.addEventListener('click', function() {
-            goToSlide(parseInt(this.dataset.index));
+    /* ── events ──────────────────────────────────────────────── */
+    thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            goTo(parseInt(this.dataset.index, 10), false);
             resetAutoplay();
         });
     });
 
-    // Arrow click handlers
-    var prevBtn = document.getElementById('heroPrev');
-    var nextBtn = document.getElementById('heroNext');
-    if (prevBtn) prevBtn.addEventListener('click', function() { prevSlide(); resetAutoplay(); });
-    if (nextBtn) nextBtn.addEventListener('click', function() { nextSlide(); resetAutoplay(); });
+    if (prevBtn) prevBtn.addEventListener('click', function () { prev(); resetAutoplay(); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { next(); resetAutoplay(); });
 
-    // Pause on hover
-    var heroSection = document.getElementById('hero-section');
-    if (heroSection) {
-        heroSection.addEventListener('mouseenter', function() { clearInterval(autoplayInterval); });
-        heroSection.addEventListener('mouseleave', function() { startAutoplay(); });
+    /* pause on hover / focus-within */
+    if (section) {
+        section.addEventListener('mouseenter', function () { clearInterval(timer); });
+        section.addEventListener('mouseleave', function () { startAutoplay(); });
+        section.addEventListener('focusin',    function () { clearInterval(timer); });
+        section.addEventListener('focusout',   function () { startAutoplay(); });
     }
 
-    // Start autoplay
+    /* keyboard navigation */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft')  { prev(); resetAutoplay(); }
+        if (e.key === 'ArrowRight') { next(); resetAutoplay(); }
+    });
+
+    /* touch / swipe support */
+    var touchStartX = 0;
+    if (section) {
+        section.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        section.addEventListener('touchend', function (e) {
+            var dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 40) {
+                if (dx < 0) next(); else prev();
+                resetAutoplay();
+            }
+        }, { passive: true });
+    }
+
+    /* ── init ────────────────────────────────────────────────── */
+    // Trigger Ken Burns on slide 0 immediately
+    slides[0].classList.add('is-active');
+    card && card.classList.add('is-settling');
+    resetProgress(SLIDE_DURATION);
     startAutoplay();
 })();
 </script>
-
-
 <!-- Travel Services Section - Main Content -->
 <section id="services" class="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
