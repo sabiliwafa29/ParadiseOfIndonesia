@@ -481,5 +481,6 @@ return [
     'hero_slide_avanza' => '丰田Avanza – 值得信赖的出行伙伴',
     'hero_slide_bus' => '豪华旅游大巴Jetbus – 专属团队畅游',
     'hero_slide_van' => '丰田Innova Zenix – 尊享品质商务座驾',
+    'hero_slide_jeep' => '4x4越野吉普车 – 婆罗摩火山探险之旅',
 
 ];

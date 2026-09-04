@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PickupSeeder::class,
             PickoffDestinationSeeder::class,
             SpecialLinkSeeder::class,
+            TestUserSeeder::class,
         ]);
     }
 }

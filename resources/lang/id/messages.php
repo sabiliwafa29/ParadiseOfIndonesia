@@ -487,5 +487,6 @@ Menghubungkan semua sektor dan pelaku industri pariwisata.',
     'hero_slide_avanza' => 'Toyota Avanza – Teman Perjalanan Terpercaya',
     'hero_slide_bus' => 'Bus Pariwisata Jetbus – Perjalanan Rombongan Eksklusif',
     'hero_slide_van' => 'Toyota Innova Zenix – Kenyamanan Kelas Premium',
+    'hero_slide_jeep' => 'Jeep 4x4 Bromo & Adventure – Petualangan Seru Tanpa Batas',
 
 ];

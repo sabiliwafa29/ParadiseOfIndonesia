@@ -468,5 +468,6 @@ Connecting tourism sectors and players',
     'hero_slide_avanza' => 'Toyota Avanza – Reliable Travel Partner',
     'hero_slide_bus' => 'Jetbus Tourism Bus – Exclusive Group Journey',
     'hero_slide_van' => 'Toyota Innova Zenix – Premium Executive Ride',
+    'hero_slide_jeep' => '4x4 Adventure Jeep – Bromo & Volcano Expeditions',
 
 ];

@@ -13,11 +13,11 @@
         {{-- Authentic Indonesian Fleet Slides --}}
         @php
         $heroSlides = [
-            ['img' => '/images/hero/slideshow/hiace.jpg',     'key' => 'hero_slide_hiace'],
-            ['img' => '/images/hero/slideshow/xenia.jpg',     'key' => 'hero_slide_xenia'],
-            ['img' => '/images/hero/slideshow/avanza.jpg',    'key' => 'hero_slide_avanza'],
-            ['img' => '/images/hero/slideshow/bus.jpg',       'key' => 'hero_slide_bus'],
-            ['img' => '/images/hero/slideshow/travel-van.jpg','key' => 'hero_slide_van'],
+            ['img' => '/images/new-slider/Hiace.png',   'key' => 'hero_slide_hiace'],
+            ['img' => '/images/new-slider/Xenia.png',   'key' => 'hero_slide_xenia'],
+            ['img' => '/images/new-slider/Avanza.png',  'key' => 'hero_slide_avanza'],
+            ['img' => '/images/new-slider/Bus.png',     'key' => 'hero_slide_bus'],
+            ['img' => '/images/new-slider/Jeep.png',    'key' => 'hero_slide_jeep'],
         ];
         @endphp
 

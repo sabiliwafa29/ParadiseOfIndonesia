@@ -359,30 +359,27 @@ class TourPackageSeeder extends Seeder
             ]),
         ];
 
-        $package1 = TourPackage::create($packageData);
+        $package1 = TourPackage::firstOrCreate(
+            ['name_en' => $packageData['name_en']],
+            $packageData
+        );
 
-        // Get Tours
-        $tourNamesEn = [
-            'Tumpak Sewu',
-            'Bromo Tour',
-            'Kawah Ijen Blue Fire Carter',
-            'Snorkeling Pulau Tabuhan',
-            'Dolpin Dance Lovina Beach',
-            'Tegalalang, the natural beauty of Ubud',
-            'Kelingking Beach',
-        ];
-
-        // Ambil tour berdasarkan name_en (karena multilanguage)
-        $selectedTours = Tour::whereIn('name_en', $tourNamesEn)->pluck('id');
+        // Get Tours by slug, name_en, or fallback to all available tours
+        $selectedTours = Tour::whereIn('slug', [
+            'explore-bromo',
+            'adventure-bromo',
+            'bali-adventure-tour',
+            'surabaya-city-tour',
+            'yogyakarta-cultural-tour'
+        ])->pluck('id');
 
         if ($selectedTours->isEmpty()) {
-            $this->command->warn('⚠️ Tidak ada tour yang cocok ditemukan!');
-            return;
+            $selectedTours = Tour::pluck('id');
         }
 
-        // Attach Tours to Package
-        $package1->tours()->attach($selectedTours);
-
-        $this->command->info("✅ Paket '{$package1->name_en}' berhasil dibuat dengan {$selectedTours->count()} tour.");
+        if ($selectedTours->isNotEmpty()) {
+            $package1->tours()->syncWithoutDetaching($selectedTours);
+            $this->command->info("✅ Paket '{$package1->name_en}' berhasil dibuat/diperbarui dengan {$selectedTours->count()} tour.");
+        }
     }
 }
