@@ -45,10 +45,10 @@
                 background:radial-gradient(ellipse, rgba(245,158,11,.16) 0%, transparent 70%);
                 filter:blur(45px)"></div>
 
-    {{-- ── LUMINOUS FOREGROUND GLASS CARD ───────────────────── --}}
-    <div class="absolute inset-0 z-30 flex items-center">
-        <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16">
-            <div class="hero-glass-card" id="heroCard">
+    {{-- ── LUMINOUS FOREGROUND GLASS CARD (Left Aligned) ─────── --}}
+    <div class="absolute inset-0 z-30 flex items-center pointer-events-none">
+        <div class="w-full max-w-[1680px] mx-auto px-4 sm:px-8 md:px-12 lg:pl-16 xl:pl-24 lg:pr-8">
+            <div class="hero-glass-card pointer-events-auto" id="heroCard">
 
                 {{-- slide counter --}}
                 <div class="hero-counter" id="heroCounter">
@@ -183,9 +183,11 @@
 /* ── Luminous Foreground Glass Card ─────────────────────────── */
 .hero-glass-card {
     position: relative;
-    max-width: 590px;
+    max-width: 580px;
+    margin-left: 0;
+    margin-right: auto;
     padding: 2.75rem 2.75rem 2rem;
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(20px) saturate(1.6);
     -webkit-backdrop-filter: blur(20px) saturate(1.6);
     border: 1px solid rgba(255, 255, 255, 0.22);
@@ -203,7 +205,7 @@
         padding: 1.85rem 1.5rem 1.35rem;
         border-radius: 20px;
         margin: 0 0 110px;
-        background: rgba(15, 23, 42, 0.82);
+        background: rgba(15, 23, 42, 0.85);
     }
 }
 
