@@ -51,7 +51,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Paradise of Indonesia - Deployment Successful*\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}"
+                    "text": "*PNB Travel - Deployment Successful*\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}"
                   }
                 }
               ]
@@ -72,7 +72,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Paradise of Indonesia - Deployment Failed*\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    "text": "*PNB Travel - Deployment Failed*\nBranch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                   }
                 }
               ]

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
-    <title>Login - {{ config('app.name', 'Paradise Of Indonesia') }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo-pnbtravel.jpeg') }}">
+    <title>Login - {{ config('app.name', 'PNB Travel') }}</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -88,7 +88,7 @@
                     Let's Get Started
                 </h1>
                 <p class="text-lg text-white/90 leading-relaxed mb-8">
-                    Welcome to Paradise of Indonesia! Sign in to explore breathtaking destinations, 
+                    Welcome to PNB Travel! Sign in to explore breathtaking destinations, 
                     discover amazing tours, and create unforgettable memories across the beautiful 
                     archipelago. Your journey of a lifetime awaits.
                 </p>
@@ -99,7 +99,7 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="font-semibold">Paradise of Indonesia</p>
+                        <p class="font-semibold">PNB Travel</p>
                         <p class="text-sm text-white/80">Your Journey Starts Here</p>
                     </div>
                 </div>

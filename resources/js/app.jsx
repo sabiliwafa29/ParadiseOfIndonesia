@@ -5,7 +5,7 @@ import { ZiggyRoutes } from 'laravel-vite-plugin/vue3'
 import { Ziggy } from './ Ziggy'
 
 createInertiaApp({
-  title: (title) => `${title} | Paradise Of Indonesia`,
+  title: (title) => `${title} | PNB Travel`,
   resolve: (name) => `../Pages/${name}`,
   setup: ({ el, App, props }) => {
     return React.createElement(App, props)

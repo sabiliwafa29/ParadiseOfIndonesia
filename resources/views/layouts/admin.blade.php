@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('logo-paradise.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo-pnbtravel.jpeg') }}">
 
-    <title>Admin - {{ config('app.name', 'Paradise Of Indonesia') }}</title>
+    <title>Admin - {{ config('app.name', 'PNB Travel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,7 +29,7 @@
                         </svg>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-gray-800 whitespace-nowrap">Paradise</h2>
+                        <h2 class="text-xl font-bold text-gray-800 whitespace-nowrap">PNB Travel</h2>
                         <p class="text-xs text-gray-500 whitespace-nowrap">Admin Panel</p>
                     </div>
                 </div>

@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Basic sitemap - expand/generate dynamically for production with all tour/package pages -->
   <url>
-    <loc>https://paradiseofindonesia.com</loc>
+    <loc>https://pnbtravel.com</loc>
     <priority>1.00</priority>
     <changefreq>daily</changefreq>
     <lastmod>2025-11-27</lastmod>
   </url>
   <url>
-    <loc>https://paradiseofindonesia.com/tours</loc>
+    <loc>https://pnbtravel.com/tours</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2025-11-27</lastmod>
   </url>
   <url>
-    <loc>https://paradiseofindonesia.com/tour-packages</loc>
+    <loc>https://pnbtravel.com/tour-packages</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
     <lastmod>2025-11-27</lastmod>

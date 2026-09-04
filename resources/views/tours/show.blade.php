@@ -4,7 +4,7 @@ use App\Helpers\ItineraryHelper;
 use Illuminate\Support\Str;
 @endphp
 
-@section('title', $tour->name . ' — ' . config('app.name', 'Paradise Of Indonesia'))
+@section('title', $tour->name . ' — ' . config('app.name', 'PNB Travel'))
 @section('meta_description', Str::limit(strip_tags($tour->description ?? ''), 160))
 @section('og_title', $tour->name)
 @section('og_description', Str::limit(strip_tags($tour->description ?? ''), 200))

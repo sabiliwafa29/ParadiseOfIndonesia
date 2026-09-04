@@ -9,9 +9,9 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}" aria-label="Paradise Of Indonesia - Home">
+                    <a href="{{ route('home') }}" aria-label="PNB Travel - Home">
                          <img src="{{ asset('logo-pnbtravel.jpeg') }}" 
-                              alt="Paradise Of Indonesia Logo" 
+                              alt="PNB Travel Logo" 
                               class="h-10 w-auto"
                               loading="eager">
                     </a>

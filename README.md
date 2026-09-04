@@ -1,4 +1,4 @@
-# Paradise Of Indonesia
+# PNB Travel
 
 A production-ready Laravel 10.x travel booking platform featuring automated image optimization, comprehensive security hardening, real-time monitoring, and CI/CD automation.
 

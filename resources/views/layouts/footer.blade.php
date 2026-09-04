@@ -4,8 +4,8 @@
             <!-- About Section -->
             <div class="col-span-1">
                 <div class="flex items-center space-x-3 mb-4">
-                    <img src="{{ asset('logo-pnbtravel.jpeg') }}" alt="Paradise Of Indonesia" class="h-10 w-auto rounded-lg">
-                    <h3 class="text-xl font-semibold">{{ config('app.name') }}</h3>
+                    <img src="{{ asset('logo-pnbtravel.jpeg') }}" alt="PNB Travel" class="h-10 w-auto rounded-lg">
+                    <h3 class="text-xl font-semibold">{{ config('app.name', 'PNB Travel') }}</h3>
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">{{ __('messages.about_paradise') }}</p>
                 
@@ -26,7 +26,7 @@
                             <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
                         </svg>
                     </a>
-                    <a href="https://www.tiktok.com/@paradiseofindonesia" target="_blank" class="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-full flex items-center justify-center transition-colors">
+                    <a href="https://www.tiktok.com/@pnbtravel" target="_blank" class="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-full flex items-center justify-center transition-colors">
                         <svg class="w-5 h-5 text-gray-400 hover:text-white" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
                         </svg>
@@ -121,7 +121,7 @@
                     
                     {{-- Email --}}
                     <li>
-                        <a href="mailto:cs@paradiseofindonesia.com" class="flex items-start text-gray-400 hover:text-emerald-400 transition-colors group">
+                        <a href="mailto:cs@pnbtravel.com" class="flex items-start text-gray-400 hover:text-emerald-400 transition-colors group">
                             <div class="w-10 h-10 bg-gray-800 group-hover:bg-red-600 rounded-lg flex items-center justify-center mr-3 flex-shrink-0 transition-colors">
                                 <svg class="w-5 h-5 text-red-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -129,7 +129,7 @@
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-white">Email</p>
-                                <p class="text-sm">cs@paradiseofindonesia.com</p>
+                                <p class="text-sm">cs@pnbtravel.com</p>
                             </div>
                         </a>
                     </li>
@@ -174,7 +174,7 @@
         
         <div class="mt-12 pt-8 border-t border-gray-800">
             <div class="flex flex-col md:flex-row items-center justify-between">
-                <p class="text-gray-400 text-sm">&copy; {{ date('Y') }} Paradise Of Indonesia {{ __('messages.by_company') }}. {{ __('messages.all_rights_reserved') }}.</p>
+                <p class="text-gray-400 text-sm">&copy; {{ date('Y') }} PNB Travel {{ __('messages.by_company') }}. {{ __('messages.all_rights_reserved') }}.</p>
                 <div class="flex items-center space-x-6 mt-4 md:mt-0">
                     <a href="#" class="text-gray-400 hover:text-emerald-400 text-sm transition-colors">Privacy Policy</a>
                     <a href="#" class="text-gray-400 hover:text-emerald-400 text-sm transition-colors">Terms of Service</a>

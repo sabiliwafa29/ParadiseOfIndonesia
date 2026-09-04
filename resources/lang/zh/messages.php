@@ -42,7 +42,7 @@ return [
     'volcanic_landscape' => '火山景观',
     'cultural_experience' => '文化体验',
     'living_heritage' => '活的遗产',
-    'why_choose' => '为什么选择印尼天堂？',
+    'why_choose' => '为什么选择 PNB Travel？',
     'tagline' => '一键点击，天堂在您手中',
     'comfort' => '舒适',
     'comfort_desc' => '优质服务和最佳设施，让您的旅行舒适无忧',
@@ -189,7 +189,7 @@ return [
     'complete_your_booking' => '完成您的预订',
     'tour' => '旅游',
     'pay_now_with_midtrans' => '使用Midtrans立即付款',
-    'about_paradise' => '印尼天堂（Paradise of Indonesia）是经印尼政府许可的官方旅行社。
+    'about_paradise' => 'PNB Travel（PT. Putra Nusantara Berkilau）是经印尼政府许可的官方旅行社。
 
 它由PT. Putra Nusantara Berkilau公司管理，许可证号为0501240062307。该公司拥有数千家合作伙伴，包括旅行社、酒店、餐厅、旅游景点、娱乐机构等等。
 

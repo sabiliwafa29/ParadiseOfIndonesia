@@ -1,4 +1,4 @@
-# robots.txt for Paradise Of Indonesia
+# robots.txt for PNB Travel
 # Allow all by default; update Host and add absolute sitemap URL if you have a production domain.
 User-agent: *
 Allow: /

@@ -42,7 +42,7 @@ return [
     'volcanic_landscape' => 'Volcanic Landscape',
     'cultural_experience' => 'Cultural Experience',
     'living_heritage' => 'Living Heritage',
-    'why_choose' => 'Why Choose Paradise Of Indonesia?',
+    'why_choose' => 'Why Choose PNB Travel?',
     'tagline' => 'One Click, Heaven in Your Hands',
     'comfort' => 'Comfort',
     'comfort_desc' => 'Premium service and best facilities for your travel comfort',
@@ -189,7 +189,7 @@ return [
     'complete_your_booking' => 'Complete Your Booking',
     'tour' => 'Tour',
     'pay_now_with_midtrans' => 'Pay Now with Midtrans',
-    'about_paradise' => 'Paradise of Indonesia is an official travel agency licensed by the Indonesian government.
+    'about_paradise' => 'PNB Travel is an official travel agency licensed by the Indonesian government.
 
 Managed by PT. Putra Nusantara Berkilau, licensed 0501240062307, it has thousands of partners, including travel agencies, hotels, restaurants, tourist attractions, entertainment agencies, and more.
 

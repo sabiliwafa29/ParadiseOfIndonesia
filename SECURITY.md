@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document covers the security improvements implemented for the Paradise of Indonesia API and web application, including:
+This document covers the security improvements implemented for the PNB Travel API and web application, including:
 
 1. Security headers (HSTS, CSP, X-Frame-Options, etc.)
 2. API rate limiting (per endpoint, per user, per IP)

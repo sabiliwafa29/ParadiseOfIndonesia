@@ -6,11 +6,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('logo-pnbtravel.jpeg') }}">
 
-        <title>@yield('title', config('app.name', 'Paradise Of Indonesia'))</title>
+        <title>@yield('title', config('app.name', 'PNB Travel'))</title>
 
         {{-- Primary SEO meta (per-page overrides available via @section) --}}
-        <meta name="description" content="@yield('meta_description', 'Explore tours, packages and travel services in Indonesia. Find curated experiences across Bali, Bromo, and beyond with Paradise Of Indonesia.')">
-        <meta name="keywords" content="@yield('meta_keywords', 'Indonesia tour, Bali tour, Bromo, travel, tour packages')">
+        <meta name="description" content="@yield('meta_description', 'Explore tours, packages and travel services in Indonesia. Find curated experiences across Bali, Bromo, and beyond with PNB Travel.')">
+        <meta name="keywords" content="@yield('meta_keywords', 'Indonesia tour, Bali tour, Bromo, travel, tour packages, PNB Travel')">
         <meta name="robots" content="@yield('meta_robots', 'index,follow')">
         <link rel="canonical" href="@yield('canonical', url()->current())">
 
@@ -22,8 +22,8 @@
 
         {{-- OpenGraph / Twitter Card defaults (per-page overrides via sections) --}}
         @php
-            $ogTitle = trim($__env->yieldContent('og_title') ?: $__env->yieldContent('title') ?: config('app.name','Paradise Of Indonesia'));
-            $metaDescription = trim($__env->yieldContent('og_description') ?: $__env->yieldContent('meta_description') ?: 'Explore tours, packages and travel services in Indonesia.');
+            $ogTitle = trim($__env->yieldContent('og_title') ?: $__env->yieldContent('title') ?: config('app.name','PNB Travel'));
+            $metaDescription = trim($__env->yieldContent('og_description') ?: $__env->yieldContent('meta_description') ?: 'Explore tours, packages and travel services in Indonesia with PNB Travel.');
             $ogUrl = trim($__env->yieldContent('og_url') ?: url()->current());
             $ogImage = trim($__env->yieldContent('og_image') ?: asset('images/og-default.jpg'));
             $twitterTitle = trim($__env->yieldContent('twitter_title') ?: $ogTitle);
@@ -31,7 +31,7 @@
             $twitterImage = trim($__env->yieldContent('twitter_image') ?: $ogImage);
         @endphp
 
-        <meta property="og:site_name" content="{{ config('app.name', 'Paradise Of Indonesia') }}">
+        <meta property="og:site_name" content="{{ config('app.name', 'PNB Travel') }}">
         <meta property="og:title" content="{{ $ogTitle }}">
         <meta property="og:description" content="{{ $metaDescription }}">
         <meta property="og:type" content="@yield('og_type', 'website')">
@@ -52,7 +52,7 @@
             {
                 "@@context": "https://schema.org",
                 "@@type": "Organization",
-                "name": "{{ config('app.name', 'Paradise Of Indonesia') }}",
+                "name": "{{ config('app.name', 'PNB Travel') }}",
                 "url": "{{ url('/') }}",
                 "logo": "{{ asset('logo-pnbtravel.jpeg') }}",
                 "sameAs": []
@@ -121,7 +121,7 @@
             @include('layouts.footer')
             
             <!-- WhatsApp Button -->
-            <a href="https://wa.me/6281585333325?text=Halo,%20saya%20tertarik%20dengan%20paket%20wisata%20di%20Paradise%20Of%20Indonesia"
+            <a href="https://wa.me/6281585333325?text=Halo,%20saya%20tertarik%20dengan%20paket%20wisata%20di%20PNB%20Travel"
                 target="_blank"
                 class="fixed bottom-6 right-6 bg-[#25D366] text-white rounded-full p-4 flex items-center gap-2 shadow-lg hover:bg-[#128C7E] transition-all duration-300 group z-50">
                 <!-- WhatsApp Icon -->

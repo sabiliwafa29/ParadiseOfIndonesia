@@ -29,7 +29,7 @@ class HealthController extends Controller
         return response()->json([
             'status' => 'healthy',
             'timestamp' => now()->toISOString(),
-            'service' => 'Paradise of Indonesia API',
+            'service' => 'PNB Travel API',
             'version' => config('app.version', '1.0.0')
         ]);
     }
@@ -51,7 +51,7 @@ class HealthController extends Controller
         $response = [
             'status' => $overallStatus,
             'timestamp' => now()->toISOString(),
-            'service' => 'Paradise of Indonesia API',
+            'service' => 'PNB Travel API',
             'version' => config('app.version', '1.0.0'),
             'checks' => $checks,
             'response_time_ms' => round((microtime(true) - LARAVEL_START) * 1000, 2)
