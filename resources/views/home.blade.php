@@ -45,9 +45,9 @@
                 background:radial-gradient(ellipse, rgba(245,158,11,.16) 0%, transparent 70%);
                 filter:blur(45px)"></div>
 
-    {{-- ── LUMINOUS FOREGROUND GLASS CARD (Left Aligned) ─────── --}}
+    {{-- ── LUMINOUS FOREGROUND GLASS CARD (Balanced Left Placement) ── --}}
     <div class="absolute inset-0 z-30 flex items-center pointer-events-none">
-        <div class="w-full max-w-[1680px] mx-auto px-4 sm:px-8 md:px-12 lg:pl-16 xl:pl-24 lg:pr-8">
+        <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 md:px-14 lg:pl-20 xl:pl-28 lg:pr-8">
             <div class="hero-glass-card pointer-events-auto" id="heroCard">
 
                 {{-- slide counter --}}
