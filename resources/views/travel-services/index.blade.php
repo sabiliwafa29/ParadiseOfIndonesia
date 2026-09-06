@@ -33,7 +33,7 @@
             <div class="group bg-white rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
                 <!-- Image Section -->
                 <div class="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                    <img src="{{ asset($service->image) }}" 
+                    <img src="{{ $service->image_url }}" 
                          alt="{{ $service->name }}" 
                          class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>

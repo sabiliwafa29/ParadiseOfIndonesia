@@ -4,29 +4,77 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ProcessImageDerivatives;
-use Illuminate\Http\Request;
 use App\Models\TravelService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TravelServiceController extends Controller
 {
-    public function index()
+    protected array $defaultTypes = [
+        'Transport',
+        'Accommodation',
+        'Guide',
+        'Document',
+        'Insurance',
+        'Event',
+        'Package',
+        'Custom',
+    ];
+
+    public function index(Request $request)
     {
-        $services = TravelService::latest()->paginate(20);
-        return view('admin.travel-services.index', compact('services'));
+        $search = $request->input('search');
+        $currentType = $request->input('type');
+
+        $query = TravelService::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%");
+            });
+        }
+
+        if ($currentType && $currentType !== 'all') {
+            $query->where('type', $currentType);
+        }
+
+        $services = $query->latest()->paginate(12)->withQueryString();
+
+        $totalServices = TravelService::count();
+        $typesInDb = TravelService::whereNotNull('type')->where('type', '!=', '')->distinct()->pluck('type')->toArray();
+        $types = array_values(array_unique(array_merge($this->defaultTypes, $typesInDb)));
+        $totalTypes = count($typesInDb);
+        $avgPrice = TravelService::avg('price') ?? 0;
+
+        return view('admin.travel-services.index', compact(
+            'services',
+            'totalServices',
+            'totalTypes',
+            'avgPrice',
+            'types',
+            'currentType',
+            'search'
+        ));
     }
 
     public function create()
     {
-        return view('admin.travel-services.create');
+        $typesInDb = TravelService::whereNotNull('type')->where('type', '!=', '')->distinct()->pluck('type')->toArray();
+        $suggestedTypes = array_values(array_unique(array_merge($this->defaultTypes, $typesInDb)));
+
+        return view('admin.travel-services.create', compact('suggestedTypes'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'base_price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'type' => 'required|string|max:100',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
 
         if ($request->hasFile('image')) {
@@ -35,7 +83,6 @@ class TravelServiceController extends Controller
 
         $service = TravelService::create($validated);
 
-        // Dispatch derivative processing job if image was uploaded
         if ($request->hasFile('image') && isset($validated['image'])) {
             if (config('queue.default') === 'sync') {
                 ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $service);
@@ -44,47 +91,80 @@ class TravelServiceController extends Controller
             }
         }
 
-        return redirect()->route('admin.travel-services.index')->with('success', 'Service created');
+        return redirect()->route('admin.travel-services.index')->with('success', 'Travel service created successfully!');
     }
 
-    public function edit(TravelService $service)
+    public function show(TravelService $travel_service)
     {
-        return view('admin.travel-services.edit', compact('service'));
+        return redirect()->route('admin.travel-services.edit', $travel_service);
     }
 
-    public function update(Request $request, TravelService $service)
+    public function edit(TravelService $travel_service)
+    {
+        $service = $travel_service;
+        $typesInDb = TravelService::whereNotNull('type')->where('type', '!=', '')->distinct()->pluck('type')->toArray();
+        $suggestedTypes = array_values(array_unique(array_merge($this->defaultTypes, $typesInDb)));
+
+        return view('admin.travel-services.edit', compact('service', 'suggestedTypes'));
+    }
+
+    public function update(Request $request, TravelService $travel_service)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'base_price' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'type' => 'required|string|max:100',
+            'price' => 'required|numeric|min:0',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
 
         if ($request->hasFile('image')) {
-            if ($service->image && \Storage::disk('public')->exists($service->image)) {
-                \Storage::disk('public')->delete($service->image);
+            // Delete old stored image and derivatives if present in public disk
+            if ($travel_service->image && Storage::disk('public')->exists($travel_service->image)) {
+                Storage::disk('public')->delete($travel_service->image);
+
+                if ($travel_service->image_derivatives && is_array($travel_service->image_derivatives)) {
+                    foreach ($travel_service->image_derivatives as $derivativePath) {
+                        if (Storage::disk('public')->exists($derivativePath)) {
+                            Storage::disk('public')->delete($derivativePath);
+                        }
+                    }
+                }
             }
+
             $validated['image'] = $request->file('image')->store('travel-services', 'public');
+            $validated['image_derivatives'] = null;
         }
 
-        $service->update($validated);
+        $travel_service->update($validated);
 
-        // Dispatch derivative processing job if image was uploaded
         if ($request->hasFile('image') && isset($validated['image'])) {
             if (config('queue.default') === 'sync') {
-                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $service);
+                ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $travel_service);
             } else {
-                ProcessImageDerivatives::dispatch($validated['image'], 'public', $service);
+                ProcessImageDerivatives::dispatch($validated['image'], 'public', $travel_service);
             }
         }
 
-        return redirect()->route('admin.travel-services.index')->with('success', 'Service updated');
+        return redirect()->route('admin.travel-services.index')->with('success', 'Travel service updated successfully!');
     }
 
-    public function destroy(TravelService $service)
+    public function destroy(TravelService $travel_service)
     {
-        $service->delete();
-        return redirect()->route('admin.travel-services.index')->with('success', 'Service deleted');
+        if ($travel_service->image && Storage::disk('public')->exists($travel_service->image)) {
+            Storage::disk('public')->delete($travel_service->image);
+
+            if ($travel_service->image_derivatives && is_array($travel_service->image_derivatives)) {
+                foreach ($travel_service->image_derivatives as $derivativePath) {
+                    if (Storage::disk('public')->exists($derivativePath)) {
+                        Storage::disk('public')->delete($derivativePath);
+                    }
+                }
+            }
+        }
+
+        $travel_service->delete();
+
+        return redirect()->route('admin.travel-services.index')->with('success', 'Travel service deleted successfully!');
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Http;
 
 class PayPalService
 {
-    protected string $clientId;
-    protected string $secret;
+    protected ?string $clientId = null;
+    protected ?string $secret = null;
     protected bool $isProduction;
     protected string $baseUrl;
     protected ?string $lastError = null;
@@ -17,9 +17,9 @@ class PayPalService
 
     public function __construct()
     {
-        $this->clientId = config('services.paypal.client_id');
-        $this->secret = config('services.paypal.secret');
-        $this->isProduction = config('services.paypal.is_production', false);
+        $this->clientId = config('services.paypal.client_id') ?? '';
+        $this->secret = config('services.paypal.secret') ?? '';
+        $this->isProduction = (bool) config('services.paypal.is_production', false);
         $this->baseUrl = $this->isProduction
             ? 'https://api-m.paypal.com'
             : 'https://api-m.sandbox.paypal.com';

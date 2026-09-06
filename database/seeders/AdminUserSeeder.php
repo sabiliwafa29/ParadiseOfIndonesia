@@ -12,12 +12,13 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::firstOrCreate(
-            ['email' => 'admin@paradiseofindonesia.com'],
+        \App\Models\User::updateOrCreate(
+            ['email' => 'admin@pnbtravel.com'],
             [
-                'name' => 'Admin Paradise',
-                'password' => \Illuminate\Support\Facades\Hash::make('paradise123'),
+                'name' => 'Admin PNB Travel',
+                'password' => \Illuminate\Support\Facades\Hash::make('Pnbtravel#2026$'),
                 'role' => 'admin',
+                'email_verified_at' => now(),
             ]
         );
     }
