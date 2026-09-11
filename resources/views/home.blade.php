@@ -620,6 +620,47 @@
     startAutoplay();
 })();
 </script>
+
+<!-- ASITA Official Collaboration & Accreditation Banner -->
+<section class="relative bg-gradient-to-r from-slate-900 via-emerald-950 to-teal-950 py-8 md:py-10 border-y border-emerald-500/20 text-white overflow-hidden shadow-inner">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 sm:gap-6">
+                <div class="relative group shrink-0">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl blur-md opacity-40 group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative bg-white p-3 sm:p-4 rounded-2xl shadow-xl border border-white/20">
+                        <img src="{{ asset('images/logo-ASITA.png') }}" 
+                             alt="ASITA Logo - Association of The Indonesian Tours and Travel Agencies" 
+                             class="h-14 sm:h-16 w-auto object-contain">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center justify-center sm:justify-start space-x-2 mb-1.5">
+                        <span class="px-3 py-0.5 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                            {{ __('messages.asita_member') }}
+                        </span>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                        {{ __('messages.asita_collaboration') }}
+                    </h3>
+                    <p class="text-sm text-gray-300 max-w-2xl mt-1.5 leading-relaxed">
+                        {{ __('messages.asita_desc') }}
+                    </p>
+                </div>
+            </div>
+            <div class="shrink-0">
+                <div class="inline-flex items-center px-4 py-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 text-xs sm:text-sm font-semibold text-emerald-200 shadow-sm">
+                    <svg class="w-5 h-5 mr-2 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Association of The Indonesian Tours & Travel Agencies</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Travel Services Section - Main Content -->
 <section id="services" class="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

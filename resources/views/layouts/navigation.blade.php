@@ -7,14 +7,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20">
             <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <!-- Logo & Accreditation -->
+                <div class="shrink-0 flex items-center space-x-3">
                     <a href="{{ route('home') }}" aria-label="PNB Travel - Home">
                          <img src="{{ asset('logo-pnbtravel.jpeg') }}" 
                               alt="PNB Travel Logo" 
-                              class="h-10 w-auto"
+                              class="h-10 w-auto rounded-md"
                               loading="eager">
                     </a>
+                    <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
+                    <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 bg-emerald-50/90 border border-emerald-200/80 rounded-lg shadow-2xs" title="Official ASITA Member">
+                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-6 w-auto object-contain">
+                        <span class="text-[11px] font-bold tracking-tight text-slate-700">ASITA Member</span>
+                    </div>
                 </div>
 
                 <!-- Navigation Links with Mega Menu -->

@@ -9,6 +9,17 @@
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">{{ __('messages.about_paradise') }}</p>
                 
+                {{-- ASITA Accreditation Badge --}}
+                <div class="mt-4 p-3 bg-gray-800/80 border border-gray-700/60 rounded-xl flex items-center space-x-3">
+                    <div class="bg-white p-1 rounded-lg shadow-sm shrink-0">
+                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-9 w-auto object-contain">
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">{{ __('messages.asita_member') }}</p>
+                        <p class="text-[11px] text-gray-300 leading-tight">Association of The Indonesian Tours & Travel Agencies</p>
+                    </div>
+                </div>
+                
                 {{-- Social Media --}}
                 <div class="mt-6 flex space-x-4">
                     <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-emerald-600 rounded-full flex items-center justify-center transition-colors">

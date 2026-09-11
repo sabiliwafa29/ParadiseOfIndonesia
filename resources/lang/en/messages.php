@@ -468,6 +468,9 @@ Connecting tourism sectors and players',
     'hero_slide_avanza' => 'Toyota Avanza – Reliable Travel Partner',
     'hero_slide_bus' => 'Jetbus Tourism Bus – Exclusive Group Journey',
     'hero_slide_van' => 'Toyota Innova Zenix – Premium Executive Ride',
-    'hero_slide_jeep' => '4x4 Adventure Jeep – Bromo & Volcano Expeditions',
+    // ASITA Collaboration
+    'asita_collaboration' => 'In Official Collaboration with ASITA',
+    'asita_member' => 'Official ASITA Member',
+    'asita_desc' => 'PNB Travel is an official member of ASITA (Association of The Indonesian Tours and Travel Agencies), guaranteeing legal, trusted, and high-quality tourism services across Indonesia.',
 
 ];

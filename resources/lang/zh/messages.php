@@ -481,6 +481,9 @@ return [
     'hero_slide_avanza' => '丰田Avanza – 值得信赖的出行伙伴',
     'hero_slide_bus' => '豪华旅游大巴Jetbus – 专属团队畅游',
     'hero_slide_van' => '丰田Innova Zenix – 尊享品质商务座驾',
-    'hero_slide_jeep' => '4x4越野吉普车 – 婆罗摩火山探险之旅',
+    // ASITA Collaboration
+    'asita_collaboration' => 'ASITA 印度尼西亚旅游协会官方合作',
+    'asita_member' => 'ASITA 官方会员',
+    'asita_desc' => 'PNB Travel 是 ASITA（印度尼西亚旅游协会）官方认证会员，全印尼提供合法、可信赖的高品质旅游服务。',
 
 ];
