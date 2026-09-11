@@ -90,6 +90,10 @@
 
                 {{-- trust pills --}}
                 <div class="hero-trust-row" id="heroTrust">
+                    <div class="hero-trust-pill hero-asita-pill">
+                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-4 w-auto object-contain bg-white rounded-xs p-0.5 shadow-2xs">
+                        <span class="text-emerald-300 font-bold">ASITA Member</span>
+                    </div>
                     <div class="hero-trust-pill">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                         <span>Licensed & Official</span>
@@ -339,6 +343,12 @@
     white-space: nowrap;
 }
 .hero-trust-pill svg { flex-shrink: 0; color: #FCD34D; }
+.hero-asita-pill {
+    background: rgba(16, 185, 129, 0.22) !important;
+    border-color: rgba(52, 211, 153, 0.5) !important;
+    color: #A7F3D0 !important;
+    font-weight: 700 !important;
+}
 
 /* ── Progress bar ───────────────────────────────────────────── */
 .hero-progress-track {
@@ -622,39 +632,71 @@
 </script>
 
 <!-- ASITA Official Collaboration & Accreditation Banner -->
-<section class="relative bg-gradient-to-r from-slate-900 via-emerald-950 to-teal-950 py-8 md:py-10 border-y border-emerald-500/20 text-white overflow-hidden shadow-inner">
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent pointer-events-none"></div>
+<section class="relative py-12 md:py-16 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden border-y border-emerald-500/20">
+    <!-- Ambient Background Glows -->
+    <div class="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 sm:gap-6">
-                <div class="relative group shrink-0">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl blur-md opacity-40 group-hover:opacity-75 transition duration-500"></div>
-                    <div class="relative bg-white p-3 sm:p-4 rounded-2xl shadow-xl border border-white/20">
-                        <img src="{{ asset('images/logo-ASITA.png') }}" 
-                             alt="ASITA Logo - Association of The Indonesian Tours and Travel Agencies" 
-                             class="h-14 sm:h-16 w-auto object-contain">
+        <div class="bg-gradient-to-r from-slate-900/90 via-emerald-950/40 to-slate-900/90 backdrop-blur-xl border border-emerald-500/25 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-emerald-950/50">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                {{-- Logo & Emblem Column --}}
+                <div class="lg:col-span-4 flex flex-col sm:flex-row items-center lg:items-start text-center sm:text-left gap-5">
+                    <div class="relative group shrink-0">
+                        <div class="absolute -inset-1.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl blur-md opacity-45 group-hover:opacity-80 transition duration-500"></div>
+                        <div class="relative bg-white p-4 rounded-2xl shadow-xl border border-white/30 flex items-center justify-center">
+                            <img src="{{ asset('images/logo-ASITA.png') }}" 
+                                 alt="ASITA Logo - Association of The Indonesian Tours and Travel Agencies" 
+                                 class="h-16 sm:h-20 w-auto object-contain">
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <div class="flex items-center justify-center sm:justify-start space-x-2 mb-1.5">
-                        <span class="px-3 py-0.5 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-extrabold uppercase tracking-wider mb-2">
                             {{ __('messages.asita_member') }}
                         </span>
+                        <h3 class="text-2xl font-extrabold text-white tracking-tight leading-tight">
+                            ASITA Indonesia
+                        </h3>
+                        <p class="text-xs text-gray-300 mt-1 font-medium">
+                            Association of The Indonesian Tours and Travel Agencies
+                        </p>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                </div>
+
+                {{-- Headline & Info Column --}}
+                <div class="lg:col-span-8 flex flex-col justify-center border-t lg:border-t-0 lg:border-l border-white/10 pt-6 lg:pt-0 lg:pl-8">
+                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-3">
                         {{ __('messages.asita_collaboration') }}
                     </h3>
-                    <p class="text-sm text-gray-300 max-w-2xl mt-1.5 leading-relaxed">
+                    <p class="text-sm md:text-base text-gray-300 leading-relaxed mb-6">
                         {{ __('messages.asita_desc') }}
                     </p>
-                </div>
-            </div>
-            <div class="shrink-0">
-                <div class="inline-flex items-center px-4 py-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/15 text-xs sm:text-sm font-semibold text-emerald-200 shadow-sm">
-                    <svg class="w-5 h-5 mr-2 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>Association of The Indonesian Tours & Travel Agencies</span>
+
+                    {{-- Feature Badges --}}
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="flex items-center space-x-2.5 bg-white/5 border border-white/10 px-3.5 py-2.5 rounded-xl">
+                            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-200">Legal Tour Operator</span>
+                        </div>
+
+                        <div class="flex items-center space-x-2.5 bg-white/5 border border-white/10 px-3.5 py-2.5 rounded-xl">
+                            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-200">Official Membership</span>
+                        </div>
+
+                        <div class="flex items-center space-x-2.5 bg-white/5 border border-white/10 px-3.5 py-2.5 rounded-xl">
+                            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <span class="text-xs font-semibold text-gray-200">Certified Quality</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

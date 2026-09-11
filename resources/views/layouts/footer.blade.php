@@ -9,14 +9,17 @@
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">{{ __('messages.about_paradise') }}</p>
                 
-                {{-- ASITA Accreditation Badge --}}
-                <div class="mt-4 p-3 bg-gray-800/80 border border-gray-700/60 rounded-xl flex items-center space-x-3">
-                    <div class="bg-white p-1 rounded-lg shadow-sm shrink-0">
-                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-9 w-auto object-contain">
+                {{-- ASITA Accreditation Seal --}}
+                <div class="mt-5 p-3.5 bg-gradient-to-r from-gray-800/90 to-gray-900/90 border border-emerald-500/30 rounded-2xl flex items-center space-x-3.5 shadow-lg shadow-emerald-950/20 group transition hover:border-emerald-400/50">
+                    <div class="bg-white p-1.5 rounded-xl shadow-md shrink-0 group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-10 w-auto object-contain">
                     </div>
                     <div>
-                        <p class="text-xs font-bold text-emerald-400 uppercase tracking-wider">{{ __('messages.asita_member') }}</p>
-                        <p class="text-[11px] text-gray-300 leading-tight">Association of The Indonesian Tours & Travel Agencies</p>
+                        <div class="flex items-center space-x-1 mb-0.5">
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <p class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">{{ __('messages.asita_member') }}</p>
+                        </div>
+                        <p class="text-[11px] text-gray-300 font-medium leading-tight">Association of The Indonesian Tours & Travel Agencies</p>
                     </div>
                 </div>
                 

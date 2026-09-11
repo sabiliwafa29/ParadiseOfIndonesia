@@ -15,10 +15,11 @@
                               class="h-10 w-auto rounded-md"
                               loading="eager">
                     </a>
-                    <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
-                    <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 bg-emerald-50/90 border border-emerald-200/80 rounded-lg shadow-2xs" title="Official ASITA Member">
-                        <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-6 w-auto object-contain">
-                        <span class="text-[11px] font-bold tracking-tight text-slate-700">ASITA Member</span>
+                    <div class="hidden lg:flex items-center space-x-2 px-3 py-1 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-full shadow-2xs transition hover:border-emerald-300" title="Official ASITA Member (Association of The Indonesian Tours and Travel Agencies)">
+                        <div class="bg-white p-0.5 rounded-full shadow-2xs flex items-center justify-center">
+                            <img src="{{ asset('images/logo-ASITA.png') }}" alt="ASITA Logo" class="h-5 w-auto object-contain">
+                        </div>
+                        <span class="text-xs font-bold text-emerald-950 tracking-tight">ASITA Member</span>
                     </div>
                 </div>
 
