@@ -55,12 +55,12 @@ class TourActivityController extends Controller
             ProcessImageDerivatives::dispatch($path, 'public');
         }
 
-        // Convert arrays to JSON
+        // Filter arrays (Eloquent 'array' cast handles json encoding)
         if (isset($validated['highlights'])) {
-            $validated['highlights'] = json_encode(array_filter($validated['highlights']));
+            $validated['highlights'] = array_values(array_filter($validated['highlights']));
         }
         if (isset($validated['what_to_bring'])) {
-            $validated['what_to_bring'] = json_encode(array_filter($validated['what_to_bring']));
+            $validated['what_to_bring'] = array_values(array_filter($validated['what_to_bring']));
         }
 
         TourActivity::create($validated);
@@ -133,12 +133,12 @@ class TourActivityController extends Controller
             ProcessImageDerivatives::dispatch($path, 'public');
         }
 
-        // Convert arrays to JSON
+        // Filter arrays (Eloquent 'array' cast handles json encoding)
         if (isset($validated['highlights'])) {
-            $validated['highlights'] = json_encode(array_filter($validated['highlights']));
+            $validated['highlights'] = array_values(array_filter($validated['highlights']));
         }
         if (isset($validated['what_to_bring'])) {
-            $validated['what_to_bring'] = json_encode(array_filter($validated['what_to_bring']));
+            $validated['what_to_bring'] = array_values(array_filter($validated['what_to_bring']));
         }
 
         $tourActivity->update($validated);

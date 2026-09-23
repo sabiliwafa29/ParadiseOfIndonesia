@@ -74,6 +74,7 @@ class TourPackageController extends Controller
 
         // Default min_guests
         $validated['min_guests'] = (int) $request->input('min_guests', 1);
+        $validated['price'] = $validated['price'] ?? $validated['price_usd'] ?? $validated['price_idr'] ?? $validated['price_cny'] ?? 0;
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -155,6 +156,9 @@ class TourPackageController extends Controller
 
         // Default min_guests when updating
         $validated['min_guests'] = (int) $request->input('min_guests', $tourPackage->min_guests ?? 1);
+        if (isset($validated['price_usd']) || isset($validated['price_idr']) || isset($validated['price_cny'])) {
+            $validated['price'] = $validated['price'] ?? $validated['price_usd'] ?? $validated['price_idr'] ?? $validated['price_cny'] ?? $tourPackage->price ?? 0;
+        }
 
         // Handle image upload
         if ($request->hasFile('image')) {

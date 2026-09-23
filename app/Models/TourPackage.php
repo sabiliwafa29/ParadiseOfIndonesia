@@ -31,6 +31,8 @@ class TourPackage extends Model
         'includes_guide',
         'includes_transport',
         'itinerary',
+        'includes',
+        'excludes',
         'min_guests',
     ];
 
@@ -48,6 +50,17 @@ class TourPackage extends Model
         'includes_transport' => 'boolean',
         'min_guests' => 'integer',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($package) {
+            if (empty($package->price)) {
+                $package->price = $package->price_usd ?? $package->price_idr ?? $package->price_cny ?? 0;
+            }
+        });
+    }
 
     public function tours(): BelongsToMany
     {
@@ -71,9 +84,30 @@ class TourPackage extends Model
         return route('tour-packages.show', $this);
     }
 
+    public function getImageUrlAttribute(): string
+    {
+        if (!empty($this->image)) {
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+
+            if (file_exists(public_path($this->image))) {
+                return asset($this->image);
+            }
+
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->image)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url($this->image);
+            }
+
+            return asset('storage/' . ltrim($this->image, '/'));
+        }
+
+        return asset('images/Danau-Toba.png');
+    }
+
     public function getPrice(): float
     {
-        return (float) ($this->price ?? 0);
+        return (float) ($this->price ?? $this->price_usd ?? $this->price_idr ?? 0);
     }
 
     public function getFormattedPrice(): string

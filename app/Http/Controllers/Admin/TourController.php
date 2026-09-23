@@ -79,6 +79,8 @@ class TourController extends Controller
             'includes' => 'nullable|string',
             'excludes' => 'nullable|string',
             'min_guests' => 'nullable|integer|min:1',
+            'note' => 'nullable|string',
+            'booking_info' => 'nullable|string',
             'featured' => 'nullable|boolean',
         ]);
 
@@ -179,6 +181,8 @@ class TourController extends Controller
             'exchange_rate_idr' => 'nullable|numeric|min:0',
             'exchange_rate_cny' => 'nullable|numeric|min:0',
             'min_guests' => 'nullable|integer|min:1',
+            'note' => 'nullable|string',
+            'booking_info' => 'nullable|string',
         ]);
 
         // Set values

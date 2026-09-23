@@ -13,6 +13,7 @@ class TourActivity extends Model
     protected $fillable = [
         'tour_id',
         'name',
+        'time',
         'slug',
         'location',
         'photo',
@@ -64,5 +65,26 @@ class TourActivity extends Model
     public function getUrlAttribute(): string
     {
         return route('tour-activities.show', $this);
+    }
+
+    public function getPhotoUrlAttribute(): string
+    {
+        if (!empty($this->photo)) {
+            if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
+                return $this->photo;
+            }
+
+            if (file_exists(public_path($this->photo))) {
+                return asset($this->photo);
+            }
+
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->photo)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url($this->photo);
+            }
+
+            return asset('storage/' . ltrim($this->photo, '/'));
+        }
+
+        return asset('images/activities/default.jpg');
     }
 }
