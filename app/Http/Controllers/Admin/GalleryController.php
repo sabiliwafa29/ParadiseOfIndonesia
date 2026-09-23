@@ -5,86 +5,145 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
+use App\Models\Destination;
 use Illuminate\Support\Facades\Storage;
-
-// Intervention Image is optional; guard with class_exists to keep deploy-safe
 use App\Jobs\ProcessImageDerivatives;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class GalleryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $galleries = Gallery::latest()->paginate(20);
-        
-        // Calculate stats
+        $query = Gallery::with('destination')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('destination_id')) {
+            $query->where('destination_id', $request->destination_id);
+        }
+
+        $galleries = $query->paginate(20)->withQueryString();
         $totalImages = Gallery::count();
-        
-        return view('admin.gallery.index', compact('galleries', 'totalImages'));
+        $destinations = Destination::orderBy('name_en')->get();
+
+        return view('admin.gallery.index', compact('galleries', 'totalImages', 'destinations'));
     }
 
     public function create()
     {
-        return view('admin.gallery.create');
+        $destinations = Destination::orderBy('name_en')->get();
+        return view('admin.gallery.create', compact('destinations'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'image' => 'required|image|max:4096',
+            'destination_id' => 'nullable|exists:destinations,id',
+            'description' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:10240',
         ]);
 
+        $storedPath = null;
         if ($request->hasFile('image')) {
-            // Store original upload
-            $validated['image'] = $request->file('image')->store('gallery', 'public');
+            $storedPath = $request->file('image')->store('gallery', 'public');
         }
 
-        $gallery = Gallery::create($validated);
+        $gallery = Gallery::create([
+            'destination_id' => !empty($validated['destination_id']) ? $validated['destination_id'] : null,
+            'name' => $validated['title'],
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'path' => $storedPath,
+        ]);
 
-        // Dispatch background job to create derivatives (best-effort).
-        // If queue driver is 'sync', dispatchSync will run immediately.
-        if (config('queue.default') === 'sync') {
-            ProcessImageDerivatives::dispatchSync($validated['image'], 'public', $gallery);
-        } else {
-            ProcessImageDerivatives::dispatch($validated['image'], 'public', $gallery);
+        if ($storedPath) {
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($storedPath, 'public', $gallery);
+            } else {
+                ProcessImageDerivatives::dispatch($storedPath, 'public', $gallery);
+            }
         }
 
-        return redirect()->route('admin.gallery.index')->with('success', 'Image uploaded');
+        return redirect()->route('admin.gallery.index')->with('success', 'Gallery image uploaded successfully!');
     }
 
     public function edit(Gallery $gallery)
     {
-        return view('admin.gallery.edit', compact('gallery'));
+        $destinations = Destination::orderBy('name_en')->get();
+        return view('admin.gallery.edit', compact('gallery', 'destinations'));
     }
 
     public function update(Request $request, Gallery $gallery)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'image' => 'nullable|image|max:4096',
+            'destination_id' => 'nullable|exists:destinations,id',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:10240',
         ]);
 
+        $updateData = [
+            'destination_id' => !empty($validated['destination_id']) ? $validated['destination_id'] : null,
+            'name' => $validated['title'],
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+        ];
+
         if ($request->hasFile('image')) {
-            if ($gallery->image && \Storage::disk('public')->exists($gallery->image)) {
-                \Storage::disk('public')->delete($gallery->image);
+            // Delete old stored image and derivatives if present
+            $oldPath = $gallery->path;
+            if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             }
-            $validated['image'] = $request->file('image')->store('gallery', 'public');
+
+            if ($gallery->image_derivatives && is_array($gallery->image_derivatives)) {
+                foreach ($gallery->image_derivatives as $derivativePath) {
+                    if (Storage::disk('public')->exists($derivativePath)) {
+                        Storage::disk('public')->delete($derivativePath);
+                    }
+                }
+            }
+
+            $storedPath = $request->file('image')->store('gallery', 'public');
+            $updateData['path'] = $storedPath;
+            $updateData['image_derivatives'] = null;
+
+            if (config('queue.default') === 'sync') {
+                ProcessImageDerivatives::dispatchSync($storedPath, 'public', $gallery);
+            } else {
+                ProcessImageDerivatives::dispatch($storedPath, 'public', $gallery);
+            }
         }
 
-        $gallery->update($validated);
+        $gallery->update($updateData);
 
-        return redirect()->route('admin.gallery.index')->with('success', 'Gallery updated');
+        return redirect()->route('admin.gallery.index')->with('success', 'Gallery image updated successfully!');
     }
 
     public function destroy(Gallery $gallery)
     {
-        if ($gallery->image && \Storage::disk('public')->exists($gallery->image)) {
-            \Storage::disk('public')->delete($gallery->image);
+        $oldPath = $gallery->path ?? $gallery->image;
+        if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+            Storage::disk('public')->delete($oldPath);
+        }
+
+        if ($gallery->image_derivatives && is_array($gallery->image_derivatives)) {
+            foreach ($gallery->image_derivatives as $derivativePath) {
+                if (Storage::disk('public')->exists($derivativePath)) {
+                    Storage::disk('public')->delete($derivativePath);
+                }
+            }
         }
 
         $gallery->delete();
 
-        return redirect()->route('admin.gallery.index')->with('success', 'Gallery deleted');
+        return redirect()->route('admin.gallery.index')->with('success', 'Gallery image deleted successfully!');
     }
 }

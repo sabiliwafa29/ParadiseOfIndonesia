@@ -18,6 +18,3 @@ yarn-error.log
 /.idea
 /.vscode
 /bootstrap/cache/*.php
-.vercel
-vercel.json
-.vercelignore
